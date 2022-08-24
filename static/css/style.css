@@ -38,6 +38,7 @@ body {
 
 h1 {
     font-weight: '600';
+    color: var(--MainL);
 }
 
 h2 {
@@ -54,5 +55,9 @@ h4 {
 
 p {
     font-weight: '300';
+}
+
+header {
+    background-color: var(--Light);
 }
 
