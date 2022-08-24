@@ -1,0 +1,58 @@
+/* 
+*** Font Information ***
+Header:
+https://fonts.google.com/specimen/Pacifico?category=Handwriting&preview.text=Chary&preview.size=72&preview.text_type=custom
+font-family: 'Pacifico', cursive;
+
+Content:
+https://fonts.google.com/specimen/Kanit?category=Sans+Serif,Display,Monospace&thickness=3
+font-family: 'Kanit', sans-serif;
+*/
+
+/*
+*** Color Information***
+Defining color values to make it easier to change later on 
+*/
+:root {
+    --Background: #23060A;
+    --BAccent: #7FD1B9;
+    --Light: #EAC2C6;
+    --Grey: #B8A3A6;
+    --MainD: #A82130;
+    --MainL: #CD5F6A;
+    --ContrastD: #30A821; /*#74A821, #21A899*/
+    --ContrastL: #6ACD5F; /*#A1CD5F, #5FCDC2*/
+    --faded: rgb(0, 0, 0, .2);
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+body {
+    font-family: 'Kanit', sans-serif;
+    background-color: var(--Background);
+}
+
+h1 {
+    font-weight: '600';
+}
+
+h2 {
+    font-weight:'300';
+}
+
+h3 {
+    font-weight:'300';
+}
+
+h4 {
+    font-weight:'100';
+}
+
+p {
+    font-weight: '300';
+}
+
