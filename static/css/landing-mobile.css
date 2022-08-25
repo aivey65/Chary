@@ -7,12 +7,18 @@
     padding-top: 70px;
     min-height: 100vh;
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr 1fr 20px;
+    grid-template-rows: .5fr 1fr .6fr .4fr .5fr;
 }
 
 #hero1 {
     grid-row: 2/3;
 }
+
+#hero2 {
+    grid-row: 3/4;
+}
+
+#hero
 
 #landing-info {
     background-color: var(--Dark);
