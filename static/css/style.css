@@ -16,7 +16,7 @@ Defining color values to make it easier to change later on
 :root {
     --Background: #23060A;
     --BAccent: #7FD1B9;
-    --Light: #EAC2C6;
+    --Light: #f6d4d2;
     --Dark: #100007;
     --Grey: #B8A3A6;
     --MainD: #A82130;
@@ -47,6 +47,7 @@ h1 {
     font-weight: 600;
     color: var(--MainL);
     font-size: 3rem;
+    line-height: 4rem;
 }
 
 h2 {
@@ -69,13 +70,24 @@ p, button, a {
     font-size: 1rem;
 }
 
+/* More specific styles that still need to be reused */
+
 button {
-    background-color: var(--ContrastL);
-    border: none;
-    padding: 10px;
+    background-color: var(--Background);
+    color: var(--Light);
+    border: solid 2px var(--Light);
+    border-radius: 50rem 50rem 50rem 50rem;
+    padding: 10px 20px 10px 20px;
     font: inherit;
     cursor: pointer;
     outline: inherit;
+    width: fit-content;
+}
+
+.cta-button {
+    background-color: var(--ContrastL) !important;
+    color: var(--Dark);
+    border: none;
 }
 
 #header-container {
@@ -85,6 +97,40 @@ button {
 .content {
     max-width: 1200px;
 }
+
+.non-header .content {
+    min-width: 300px;
+    min-height: 300px;
+}
+
+.icon {
+    width: 2rem;
+    height: 2rem;
+}
+
+.icon:hover, #large-logo {
+    cursor: pointer;
+}
+
+.centered {
+    text-align: center;
+}
+
+/* Up-down animation */
+.floating {
+    animation: MoveUpDown 2s ease-in-out infinite;
+}
+
+@keyframes MoveUpDown {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(10px);
+    }
+}
+
+
 
 /*
 *** Navbar Styles***
@@ -141,7 +187,6 @@ Creating the navigation bar depending on the size of the user's screen
 
     nav li:hover {
         background-color: var(--MainD);
-        color: var(--Light);
     }
 
     nav li:hover a {
@@ -163,8 +208,6 @@ Creating the navigation bar depending on the size of the user's screen
         right: 0rem;
         margin-right: 0.8rem;
         margin-top: .3rem;
-        width: 2rem;
-        height: 2rem;
     }
 }
 

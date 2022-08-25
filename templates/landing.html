@@ -25,23 +25,31 @@
         <div id="header-container">
             <header class="content">
                 <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="logoAction()">
-                <img id='toggle-icon' class="hamburg" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
+                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
 
                 <nav>
                     <ul>
                         <li><a href="./landing.html">Home</a></li>
                         <li><a href="./about.html">About</a></li>
                         <li><a href="./login.html">Sign In</a></li>
-                        <li class='cta'><a href="./login.html">Sign Up</a></li>
+                        <li class='cta-link'><a href="./login.html">Sign Up</a></li>
                     </ul>
                 </nav>
             </header>
         </div>
+
         <div class="content non-header" id="landing-hero">
             <h1 id="hero1">Be chary when spending money</h1>
             <h4 id="hero2">Keep track of your daily expenses with Chary. Visualise your expenses and make budgeting plans to achieve your money-saving goals</h2>
-            <button class="cta" id="hero3">Get Started</button>
+            <div id="hero3">
+                <button id="hero-login">Log In</button>
+                <button class="cta-button">Get Started</button>
             </div>
+            <div class="centered" id="down-icon-container">
+                <img id='down-icon' class='icon floating' src="../static/images/down-icon-light.svg" onclick="downAction()">
+            </div>
+        </div>
+
         <div class="content non-header" id="landing-info">
             <h1>Be Chary with your money</h1>
             <h2>Keep track of your daily expenses to see where you can save. </h2>

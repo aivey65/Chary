@@ -1,4 +1,3 @@
-/* Tmeporary belwo */
 .non-header {
     padding-left: 15px;
     padding-right: 15px;
@@ -6,26 +5,33 @@
 
 #landing-hero {
     padding-top: 70px;
-    height: 80vh;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr 20px;
 }
 
 #hero1 {
-    position: absolute;
-    top:25%;
-}
-
-#hero2 {
-    position: absolute;
-    top:40%;
-}
-
-#hero3 {
-    position: absolute;
-    top: 60%;
+    grid-row: 2/3;
 }
 
 #landing-info {
     background-color: var(--Dark);
+}
+
+#hero-login {
+    margin-right: 15px;
+}
+
+#down-icon-container {
+    display: flex;
+    flex-grow: .5;
+    justify-content: center;
+    align-items: end;
+    padding-bottom: 20px;
+}
+
+#down-icon:hover {
+    cursor: pointer;
 }
 
 h1 {
