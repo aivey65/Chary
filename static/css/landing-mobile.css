@@ -1,7 +1,31 @@
 /* Tmeporary belwo */
+.non-header {
+    padding-left: 15px;
+    padding-right: 15px;
+}
 
-#landing-content {
-    height: 200vh;
+#landing-hero {
+    padding-top: 70px;
+    height: 80vh;
+}
+
+#hero1 {
+    position: absolute;
+    top:25%;
+}
+
+#hero2 {
+    position: absolute;
+    top:40%;
+}
+
+#hero3 {
+    position: absolute;
+    top: 60%;
+}
+
+#landing-info {
+    background-color: var(--Dark);
 }
 
 h1 {

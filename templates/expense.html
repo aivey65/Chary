@@ -1,11 +1,44 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <Title>Chary | Expenses</Title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel='shortcut icon' sizes='256x256' href='../static/images/CharyLogoSmall.svg'>
 
+        <!-- Google Font imports -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,300;0,600;1,100;1,300;1,600&family=Pacifico&display=swap" rel="stylesheet">
+
+        <!-- CSS Stylesheets -->
+        <link rel='stylesheet' href='../static/css/style.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/landing.css'>
+        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/landing-mobile.css'>
+
+        <!-- JavaScript links -->
+        <script src='../static/javascript/landing.js'></script>
+        <script src='../static/javascript/script.js'></script>
+
+        <Title>Chary</Title>
     </head>
 
     <body>
+        <div id="header-container">
+            <header class="content">
+                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="logoAction()">
+                <img id='toggle-icon' class="hamburg" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
 
+                <nav>
+                    <ul>
+                        <li><a href="./landing.html">Home</a></li>
+                        <li><a href="./about.html">About</a></li>
+                        <li><a href="./login.html">Sign In</a></li>
+                        <li class='cta'><a href="./login.html">Sign Up</a></li>
+                    </ul>
+                </nav>
+            </header>
+        </div>
+        <div class="content" id="landing-content">
+            <h1>Be Chary with how you spend your money</h1>
+        </div>
     </body>
 </html>

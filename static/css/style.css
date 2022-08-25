@@ -46,10 +46,12 @@ body {
 h1 {
     font-weight: 600;
     color: var(--MainL);
+    font-size: 3rem;
 }
 
 h2 {
     font-weight: 300;
+    color: var(--Light)
 }
 
 h3 {
@@ -58,10 +60,22 @@ h3 {
 
 h4 {
     font-weight: 100;
+    font-size: 1.2rem;
+    color: var(--Light)
 }
 
-p {
+p, button, a {
     font-weight: 300;
+    font-size: 1rem;
+}
+
+button {
+    background-color: var(--ContrastL);
+    border: none;
+    padding: 10px;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
 }
 
 #header-container {
@@ -84,8 +98,9 @@ Creating the navigation bar depending on the size of the user's screen
         position: fixed;
         width: 100%;
         padding-top: 10px;
-        transition: translateY .4s ease-in-out;
+        transition: .4s ease-in-out;
         background-color: var(--Light);
+        z-index: 10;
     }
 
     #large-logo {
@@ -156,7 +171,7 @@ Creating the navigation bar depending on the size of the user's screen
 /* Larger Device (tablet, desktop, etc.) */
 @media screen and (min-width:768px) {
     #header-container {
-        border-bottom: solid 3px var(--MainL);
+        border-bottom: solid 2px var(--MainL);
     }
 
     header {
@@ -187,6 +202,7 @@ Creating the navigation bar depending on the size of the user's screen
         color: var(--Dark);
         text-decoration: none;
         font-size: 1rem;
+        transition: .3s;
     }
     
     nav li {
@@ -200,10 +216,6 @@ Creating the navigation bar depending on the size of the user's screen
     
     nav li:active a {
         color: var(--ContrastD);
-    }
-    
-    .active {
-        font-weight: 600;
     }
     
     #large-logo {
