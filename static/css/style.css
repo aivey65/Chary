@@ -64,7 +64,162 @@ p {
     font-weight: 300;
 }
 
-header {
+#header-container {
     background-color: var(--Light);
 }
 
+.content {
+    max-width: 1200px;
+}
+
+/*
+*** Navbar Styles***
+Creating the navigation bar depending on the size of the user's screen 
+*/
+
+/* Mobile screen navbar */
+@media screen and (max-width:768px) {
+    header {
+        text-align: center;
+        position: fixed;
+        width: 100%;
+        padding-top: 10px;
+        transition: translateY .4s ease-in-out;
+        background-color: var(--Light);
+    }
+
+    #large-logo {
+        height: 50px;
+        width: auto;
+    }
+
+    nav {
+        /* Positioning the navbar contents */
+        position: absolute;
+        text-align: left;
+        width: 0%;
+        height: 100vh;
+        top: 100%;
+        right: 0;
+
+        /* Styling navbar behavior */
+        overflow: hidden;
+        white-space: nowrap;
+        background-color: var(--Light);
+        transition: .8s ease-in-out;
+        padding-top: 2.8rem;
+    }
+
+    nav ul {
+        margin: 0rem;
+        padding: 0rem;
+        list-style: none;
+    }
+
+    nav li {
+        margin-bottom: 1.2rem;
+        margin-left: 2rem;
+        padding: .5rem .5rem .5rem 1.2rem;
+        border-radius: 50rem 0rem 0rem 50rem;
+        transition: .3s ease-in-out;
+    }
+
+    nav li:hover {
+        background-color: var(--MainD);
+        color: var(--Light);
+    }
+
+    nav li:hover a {
+        color: var(--Light);
+    }
+
+    nav li:active a {
+        color: var(--ContrastL)
+    }
+
+    nav a {
+        color: var(--Dark);
+        text-decoration: none;
+        font-size: 1.4rem;
+    }
+
+    #toggle-icon {
+        position: absolute;
+        right: 0rem;
+        margin-right: 0.8rem;
+        margin-top: .3rem;
+        width: 2rem;
+        height: 2rem;
+    }
+}
+
+/* Larger Device (tablet, desktop, etc.) */
+@media screen and (min-width:768px) {
+    #header-container {
+        border-bottom: solid 3px var(--MainL);
+    }
+
+    header {
+        display: grid;
+        align-items: center;
+        background-size: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        grid-template-columns: auto minmax(200px, 1fr) minmax(200px, 1fr);
+    }
+    
+    nav {
+        grid-column: 3/4;
+        height: fit-content;
+        margin: 0;
+        position: relative;
+    }
+    
+    nav ul {
+        margin: 0rem;
+        padding: 0rem;
+        list-style: none;
+        display: flex;
+        justify-content: space-around;
+    }
+    
+    nav a {
+        color: var(--Dark);
+        text-decoration: none;
+        font-size: 1rem;
+    }
+    
+    nav li {
+        padding: 10px 25px 10px 25px;
+        white-space: nowrap;
+    }
+    
+    nav li:hover a {
+        color: var(--MainD);
+    }
+    
+    nav li:active a {
+        color: var(--ContrastD);
+    }
+    
+    .active {
+        font-weight: 600;
+    }
+    
+    #large-logo {
+        height: 40px;
+        width: auto;
+        grid-column: 2/3;
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    
+    #large-logo:hover {
+        cursor: pointer;
+    }
+    
+    #toggle-icon {
+        display: none;
+    }
+}

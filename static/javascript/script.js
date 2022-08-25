@@ -17,7 +17,7 @@ function closeMenu() {
         // The menu is 'close' (or the 'X' icon). Change to hamburg
         logo.src = "../static/images/hamburger-icon.svg";
         logo.classList.replace('close', 'hamburg');
-        navbar.style.height = '0px';
+        navbar.style.width = '0%'
     }
 }
 
@@ -30,12 +30,31 @@ function toggleMenu() {
             // Change to 'x' icon
             logo.src = "../static/images/x-icon.svg";
             logo.classList.replace('hamburg', 'close');
-            navbar.style.height = 'fit-content';
+            navbar.style.width = '70%';
         } else {
             // Change to 'hamburger' icon
             logo.src = "../static/images/hamburger-icon.svg";
             logo.classList.replace('close', 'hamburg');
-            navbar.style.height = '0px';
+            navbar.style.width = '0%';
         }
     }
 }
+
+////////////////////
+// Scroll Functions //
+////////////////////
+var prevScrollpos = window.pageYOffset;
+window.addEventListener('scroll', () => {
+    const currentScrollPos = window.pageYOffset;
+
+    // Hide/show nav bar when scrolling
+    const logo = document.getElementById('toggle-icon')
+    if(logo.display != 'none' && logo.classList.contains('hamburg')) {
+        if (prevScrollpos > currentScrollPos) {
+            document.getElementsByTagName("header")[0].style.transform = "translateY(0px)";
+        } else {
+            document.getElementsByTagName("header")[0].style.transform = "translateY(-70px)";
+        }
+        prevScrollpos = currentScrollPos;
+    }
+});
