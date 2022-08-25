@@ -1,0 +1,58 @@
+/* Navigation bar styles */
+header {
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    padding-top: 10px;
+}
+
+#large-logo {
+    height: 50px;
+    width: auto;
+}
+
+nav {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    background-color: var(--Light);
+    height: 0;
+    overflow: hidden;
+    transition: .8s ease-in-out;
+}
+
+nav ul {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+nav li {
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+nav a {
+    color: var(--Dark);
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+#toggle-icon {
+    position: absolute;
+    right: 0px;
+    margin-right: 10px;
+    margin-top: 5px;
+    width: 32px;
+    height: 32px;
+}
+
+/* Tmeporary belwo */
+
+#landing-content {
+    height: 200%;
+}
+
+h1 {
+    margin: 0;
+}

@@ -17,6 +17,7 @@ Defining color values to make it easier to change later on
     --Background: #23060A;
     --BAccent: #7FD1B9;
     --Light: #EAC2C6;
+    --Dark: #100007;
     --Grey: #B8A3A6;
     --MainD: #A82130;
     --MainL: #CD5F6A;
@@ -31,30 +32,36 @@ Defining color values to make it easier to change later on
     -webkit-box-sizing: border-box;
 }
 
+html {
+    margin: 0;
+    scroll-behavior: smooth;
+}
+
 body {
+    margin: 0;
     font-family: 'Kanit', sans-serif;
     background-color: var(--Background);
 }
 
 h1 {
-    font-weight: '600';
+    font-weight: 600;
     color: var(--MainL);
 }
 
 h2 {
-    font-weight:'300';
+    font-weight: 300;
 }
 
 h3 {
-    font-weight:'300';
+    font-weight: 300;
 }
 
 h4 {
-    font-weight:'100';
+    font-weight: 100;
 }
 
 p {
-    font-weight: '300';
+    font-weight: 300;
 }
 
 header {

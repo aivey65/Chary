@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
         <!-- Google Font imports -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -8,27 +10,35 @@
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
-        <link rel='stylesheet' href='../static/css/landing.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/landing.css'>
+        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/landing-mobile.css'>
 
-        <Title>Chary | Landing</Title>
+        <!-- JavaScript links -->
+        <script src='../static/javascript/landing.js'></script>
+        <script src='../static/javascript/script.js'></script>
+
+        <Title>Chary | Home</Title>
     </head>
 
     <body>
         <header>
-            <img id='large-logo' src="../static/images/CharyLogo.svg"></img>
-            <img id='small-logo' src="../static/images/CharyLogoSmall.svg"></img>
+            <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="logoAction()">
+            <img id='toggle-icon' class="hamburg" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
 
             <nav>
                 <ul>
                     <li><a href="./about.html">Home</a></li>
                     <li><a href="./about.html">About</a></li>
                     <li><a href="./login.html">Sign In</a></li>
-                    <li><a href="./login.html">Get Started</a></li>
+                    <li class='cta'><a href="./login.html">Sign Up</a></li>
 
                 </ul>
             </nav>
         </header>
-        <h1>Be Chary with how you spend your money</h1>
+        <div id="landing-content">
+            <h1>Be Chary with how you spend your money</h1>
+        </div>
+        
 
     </body>
 </html>
