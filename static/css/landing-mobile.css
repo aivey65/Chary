@@ -8,6 +8,7 @@
     min-height: 100vh;
     display: grid;
     grid-template-rows: .5fr 1fr .6fr .4fr .5fr;
+    align-items: center;
 }
 
 #hero1 {
@@ -18,7 +19,9 @@
     grid-row: 3/4;
 }
 
-#hero
+#hero3 {
+    grid-row: 4/5;
+}
 
 #landing-info {
     background-color: var(--Dark);
@@ -29,6 +32,7 @@
 }
 
 #down-icon-container {
+    grid-row: 5/6;
     display: flex;
     flex-grow: .5;
     justify-content: center;

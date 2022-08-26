@@ -4,6 +4,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel='shortcut icon' sizes='256x256' href='../static/images/CharyLogoSmall.svg'>
 
+        <!-- Script to load Google client library -->
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+
         <!-- Google Font imports -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,20 +28,26 @@
         <div id="header-container">
             <header class="content">
                 <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="logoAction()">
-                <img id='toggle-icon' class="hamburg" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
+                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
 
                 <nav>
                     <ul>
                         <li><a href="./landing.html">Home</a></li>
                         <li><a href="./about.html">About</a></li>
                         <li><a href="./login.html">Sign In</a></li>
-                        <li class='cta'><a href="./login.html">Sign Up</a></li>
+                        <li class='cta-link'><a href="./login.html">Sign Up</a></li>
                     </ul>
                 </nav>
             </header>
         </div>
-        <div class="content" id="landing-content">
-            <h1>Be Chary with how you spend your money</h1>
+
+        <div class="content non-header" id="login">
+            <a href="/login">
+                <img id="google"
+                   src="https://img.shields.io/badge/Google-Connect-brightgreen?style=for-the-badge&labelColor=black&logo=google"
+                   alt="Google"> <br>
+            </a>
         </div>
+           
     </body>
 </html>
