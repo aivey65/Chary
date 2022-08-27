@@ -1,6 +1,19 @@
-// Menu functions
-function logoAction() {
-    document.getElementById('top').scrollIntoView();
+// Navigation functions
+function homeAction() {
+    window.scrollTo(0, 0);
+    window.location = '/';
+    closeMenu()
+}
+
+function loginAction() {
+    window.scrollTo(0, 0);
+    window.location = '/login';
+    closeMenu()
+}
+
+function dashboardAction() {
+    window.scrollTo(0, 0);
+    window.location = '/dashboard';
     closeMenu()
 }
 

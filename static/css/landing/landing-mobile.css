@@ -5,9 +5,9 @@
 
 #landing-hero {
     padding-top: 70px;
-    min-height: 100vh;
+    height: 100vh;
     display: grid;
-    grid-template-rows: .5fr 1fr .6fr .4fr .5fr;
+    grid-template-rows: 1fr .5fr 0fr .4fr 1fr;
     align-items: center;
 }
 

@@ -1,0 +1,27 @@
+.non-header {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+button {
+    margin-right: 15px;
+}
+
+#error-page {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: .6fr .2fr .2fr .8fr .6fr;
+    justify-content: center;
+}
+
+#error-h1{
+    grid-row: 2;
+} 
+
+#error-h2 {
+    grid-row: 3;
+} 
+
+#error-buttons {
+    grid-row: 4;
+}

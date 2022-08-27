@@ -11,8 +11,8 @@
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
-        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/landing.css'>
-        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/landing-mobile.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/landing/landing.css'>
+        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/landing/landing-mobile.css'>
 
         <!-- JavaScript links -->
         <script src='../static/javascript/landing.js'></script>
@@ -24,15 +24,15 @@
     <body>
         <div id="header-container">
             <header class="content">
-                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="logoAction()">
+                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()">
                 <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
 
                 <nav>
                     <ul>
-                        <li><a href="./landing.html">Home</a></li>
-                        <li><a href="./about.html">About</a></li>
-                        <li><a href="./login.html">Sign In</a></li>
-                        <li class='cta-link'><a href="./login.html">Sign Up</a></li>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/login">Sign In</a></li>
+                        <li class='cta-link'><a href="/login">Sign Up</a></li>
                     </ul>
                 </nav>
             </header>
@@ -42,8 +42,8 @@
             <h1 id="hero1">Be chary when spending money</h1>
             <h4 id="hero2">Keep track of your daily spendings with Chary. Visualise your expenses and make budgeting plans to achieve your money-saving goals</h2>
             <div id="hero3">
-                <button id="hero-login">Log In</button>
-                <button class="cta-button">Get Started</button>
+                <button id="hero-login" onclick="loginAction()">Log In</button>
+                <button class="cta-button" onclick="loginAction()">Get Started</button>
             </div>
             <div class="centered" id="down-icon-container">
                 <img id='down-icon' class='icon floating' src="../static/images/down-icon-light.svg" onclick="downAction()">

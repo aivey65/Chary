@@ -4,6 +4,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel='shortcut icon' sizes='256x256' href='../static/images/CharyLogoSmall.svg'>
 
+        <!-- Script to load Google client library -->
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+
         <!-- Google Font imports -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,34 +14,44 @@
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
-        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/landing.css'>
-        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/landing-mobile.css'>
+        <link rel='stylesheet' href='../static/css/error/error.css'>
 
         <!-- JavaScript links -->
         <script src='../static/javascript/landing.js'></script>
         <script src='../static/javascript/script.js'></script>
 
-        <Title>Chary</Title>
+        <Title>Chary | Something went wrong...</Title>
     </head>
 
     <body>
         <div id="header-container">
             <header class="content">
                 <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="logoAction()">
-                <img id='toggle-icon' class="hamburg" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
+                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
 
                 <nav>
                     <ul>
                         <li><a href="/">Home</a></li>
                         <li><a href="/about">About</a></li>
                         <li><a href="/login">Sign In</a></li>
-                        <li class='cta-link'><a href="/login">Sign Up</a></li>
+                        <li class='cta-link'><a href="/google">Sign Up</a></li>
                     </ul>
                 </nav>
             </header>
         </div>
-        <div class="content" id="landing-content">
-            <h1>protected</h1>
+
+        <div class="content non-header" id="error-page">
+            <h1 id="error-h1">{{ error[0] }}</h1>
+            <h2 id="error-h2">{{ error[1] }}</h2>
+            <div id="error-buttons">
+                <button onclick="homeAction()">Back to Home</button>
+                {% if showLogin %}
+                    <button class='cta-button' onclick="loginAction()">Log In</button>
+                {% endif %}
+                {% if showDashboard %}
+                    <button class='cta-button' onclick="dashboardAction()">Dashboard</button>
+                {% endif %}
+            </div>
         </div>
     </body>
 </html>
