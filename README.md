@@ -8,9 +8,8 @@ Definition:
     
          b. slow to grant, accept, or expend
          
-*“Chary.” Merriam-Webster.com Dictionary, Merriam-Webster, 
-
-https://www.merriam-webster.com/dictionary/chary.*
+*“Chary.” Merriam-Webster.com Dictionary, Merriam-Webster,*
+*https://www.merriam-webster.com/dictionary/chary.*
 
 ## Summary
 Chary is a **budgeting application** that keeps track of a user's budgets and expenses to help them reach their financial goals and spend less. Chary creates visuals that help users see exactly how much of their money goes into their set categories. For example, a user could have Chary keep track of how much money they spend a month on groceries versus takeout.
