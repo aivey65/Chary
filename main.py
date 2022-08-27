@@ -18,7 +18,6 @@ os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-CONFIG_URL = os.getenv("CONFIG_URL")
 
 # Get the path to the client secret JSON file generated 
 # using Google Cloud Platform
