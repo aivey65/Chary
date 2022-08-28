@@ -29,6 +29,11 @@ to install them all at once.
 2. Download the generated client secret JSON file and add it to the project's parent folder (so as not to include it in the project files or accidentally upload online) as 'client_secret.json', or change the path referencing it in main.py.
 3. Add the client id, client secret, and a [randomly generated secret_key](https://pyquestions.com/where-do-i-get-a-secret-key-for-flask) to a .env file using the provided .env.template file. 
 
+#### Configuration for Google Cloud Firestore
+You need to [create a service account](https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances) and get a JSON key on GCP console. Add this service account to the parent folder of the project (so as not to include it in the project files or accidentally upload online). Then set the credential environmental variable in your .env file:
+
+> GOOGLE_APPLICATION_CREDENTIALS=[PATH TO SERVICE ACCOUNT JSON]
+
 #### Running Flask server locally
 You need to make sure that Flask knows where your app code is. You need to specify the file name of the flask app:
 

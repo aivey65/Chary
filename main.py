@@ -1,3 +1,4 @@
+import imp
 import os
 from dotenv import load_dotenv
 import pathlib
@@ -8,6 +9,8 @@ from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
 from functools import wraps
+
+from database import getUser
 
 app = Flask(__name__, template_folder="templates")
 # Load environment variables and set secret key
@@ -90,9 +93,13 @@ def google_auth():
         audience=CLIENT_ID
     )
 
-    session["google_id"] = id_info.get("sub")
-    session["name"] = id_info.get("name")
-    return redirect("/dashboard")
+    if (id_info.get("email_verified") == True):
+        session["google_id"] = id_info.get("sub")
+        session["name"] = id_info.get("name")
+        session["email"] = id_info.get("email")
+        return redirect("/dashboard")
+    else:
+        abort(403)
 
 
 #######################################
@@ -102,7 +109,12 @@ def google_auth():
 @app.route("/dashboard")
 @login_is_required
 def renderDashboard():
-    return render_template('dashboard.html', user_name=session["name"])
+    return render_template('dashboard.html')
+
+@app.route("/dashboard/data")
+@login_is_required
+def getUserData():
+    return getUser(session["email"])
 
 @app.route("/budget")
 @login_is_required
@@ -119,10 +131,18 @@ def renderExpense():
 ##########################################################
 
 @app.errorhandler(401)
-def page_not_found(error):
+def notLoggedInError(error):
     error=[
         "Wait! You're not logged in yet!",
         "To view this page, you have to first log in. "
+    ]
+    return render_template('errorPage.html', error=error, showLogin=True, showDashboard=False), 404
+
+@app.errorhandler(403)
+def loginFailed(error):
+    error=[
+        "Login failed :(",
+        "Something went wrong while logging in. Please try again."
     ]
     return render_template('errorPage.html', error=error, showLogin=True, showDashboard=False), 404
 

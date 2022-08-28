@@ -11,17 +11,17 @@
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
-        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/landing.css'>
-        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/landing-mobile.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/dashboard/dashboard.css'>
+        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/dashboard/dashboard-mobile.css'>
 
         <!-- JavaScript links -->
-        <script src='../static/javascript/landing.js'></script>
+        <script src='../static/javascript/dashboard.js'></script>
         <script src='../static/javascript/script.js'></script>
 
         <Title>Chary</Title>
     </head>
 
-    <body>
+    <body onload="getUserData()">
         <div id="header-container">
             <header class="content">
                 <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="logoAction()">
@@ -38,7 +38,7 @@
             </header>
         </div>
         <div class="content" id="landing-content">
-            Hello {{user_name}}! <br/> <a href='/logout'><button>Logout</button></a>
+            Hello! <br/> <a href='/logout'><button>Logout</button></a>
         </div>
     </body>
 </html>
