@@ -1,0 +1,75 @@
+h1 {
+    margin: 0rem;
+}
+
+.non-header {
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+/* Landing hero styles */
+
+#landing-hero {
+    padding-top: 70px;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 530px 1fr;
+    grid-template-rows: 1fr .5fr 0fr .4fr 1fr;
+    align-items: center;
+}
+
+#hero1 {
+    grid-row: 2/3;
+}
+
+#hero2 {
+    grid-row: 3/4;
+}
+
+#hero3 {
+    grid-row: 4/5;
+}
+
+#hero-login {
+    margin-right: 15px;
+}
+
+#down-icon-container {
+    grid-row: 5/6;
+    grid-column: span 2;
+    display: flex;
+    flex-grow: .5;
+    justify-content: center;
+    align-items: end;
+    padding-bottom: 20px;
+}
+
+#down-icon:hover {
+    cursor: pointer;
+}
+
+/* Information section styles */
+
+#landing-info {
+    background-color: var(--Dark);
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.number {
+    background-color: var(--MainD);
+    color:var(--Light);
+    font-size: 3rem;
+    padding: 10px;
+    margin-right: 20px;
+    border-radius: 50%;
+    text-align: center;
+    align-items: center;
+    font-family: 'Pacifico', cursive;
+}
+
+.info-box {
+    display: grid;
+    grid-template-columns: 30% auto;
+    align-items: center;
+}

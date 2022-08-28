@@ -11,8 +11,8 @@
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
-        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/landing.css'>
-        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/landing-mobile.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/landing/landing.css'>
+        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/landing/landing-mobile.css'>
 
         <!-- JavaScript links -->
         <script src='../static/javascript/landing.js'></script>
@@ -24,8 +24,8 @@
     <body>
         <div id="header-container">
             <header class="content">
-                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="logoAction()">
-                <img id='toggle-icon' class="hamburg" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
+                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()">
+                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
 
                 <nav>
                     <ul>
@@ -37,8 +37,50 @@
                 </nav>
             </header>
         </div>
-        <div class="content" id="landing-content">
-            <h1>Be Chary with how you spend your money</h1>
+
+        <div class="content non-header" id="about">
+            <div id="definition">
+                <h1 id="about-header">About</h1>
+                <h3 id="dict-header">chary</h3><h4 id='dict-ipa'>/ˈtʃɛər i/</h4>
+                <p>adjective</p>
+                <ol>
+                    <li>discreetly cautious</li>
+                    <ol type="a">
+                        <li>hesitant and vigilant about dangers and risks</li>
+                        <li>slow to grant, accept, or expend</li>
+                    </ol>
+                </ol>
+            </div>
+            <div id="about-app">
+                <img src="../static/images/profilepic.jpg">
+                <h4 id="about-app">This app uses Google Cloud's firestore to store data and is hosted using Google App Engine.</h2>
+            </div>
+            <div id="about-asha">
+                <h4 id="about-asha">Chary was created by Asha Ivey, a software developer. She graduated from the University of Illinois at Urbana-Champaign in 2022.</h2>
+            </div>
+        </div>
+
+        <div class="content non-header footer">
+            <div class='contact-methods'> 
+                <div class='contact-icon'>
+                    <a  target="_blank" rel="noopener noreferrer" href='https://github.com/aivey65'>
+                        <img src="../static/images/GitHub-Mark-Light-64px.png">
+                    </a>
+                </div> 
+                <div class='contact-icon'>
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.linkedin.com/in/ashaiv/'>
+                        <img src="../static/images/LI-In-Bug.png">
+                    </a>
+                </div>
+                <div class='contact-icon'>
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.ashaiv.com'>
+                        <img src="../static/images/AshaIV-logo-light.svg">
+                    </a>
+                </div>
+            </div> 
+            <div class="btt-icon" onclick="bttAction()">
+                <img class="icon" src="../static/images/CharyLogoSmall.svg">            
+            </div>
         </div>
     </body>
 </html>
