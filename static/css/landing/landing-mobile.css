@@ -51,6 +51,7 @@ h1 {
 #landing-info {
     background-color: var(--Dark);
     padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .number {

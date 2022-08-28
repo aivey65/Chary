@@ -23,6 +23,7 @@ Defining color values to make it easier to change later on
     --MainL: #CD5F6A;
     --ContrastD: #30A821; /*#74A821, #21A899*/
     --ContrastL: #6ACD5F; /*#A1CD5F, #5FCDC2*/
+    --ContrastDD: #065e10;
     --faded: rgb(0, 0, 0, .2);
 }
 
@@ -57,6 +58,7 @@ h2 {
 
 h3 {
     font-weight: 300;
+    color: var(--Light)
 }
 
 h4 {
@@ -68,6 +70,38 @@ h4 {
 p, button, a {
     font-weight: 300;
     font-size: 1rem;
+}
+
+img {
+    height: auto;
+    width: 100%;
+}
+
+img:hover {
+    background-color: none;
+}
+
+a {
+    color: var(--Dark);
+    font-size: 1.2rem;
+    text-decoration: none;
+    width: fit-content;
+}
+
+a.normal-link:link {
+    border-bottom: solid 2px var(--ContrastL);
+}
+
+a.normal-link:visited {
+    border-bottom: solid 2px var(--ContrastDD);
+}
+
+a.normal-link:hover {
+    color: var(--MainD);
+}
+
+a.normal-link:active {
+    color: var(--ContrastDD);
 }
 
 /* More specific styles that still need to be reused */
@@ -114,6 +148,59 @@ button {
 
 .centered {
     text-align: center;
+}
+
+/* Footer styles */
+
+.contact-icon {
+    max-width: 50px;
+    text-align: center;
+    align-items: center;
+}
+
+.footer {
+    background-color: var(--Background);
+    display: grid;
+    color: var(--Dark);
+    grid-template-rows: 1fr .8fr .5fr .5fr 1fr;
+    align-items: center;
+    height: 15rem;
+}
+
+.footer h3 {
+    color: var(--Dark);
+}
+
+.footer-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-methods {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    grid-row: 2;
+}
+
+.btt-icon {
+    background-color: var(--Light);
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    transition: .2s;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    grid-row: 4;
+}
+
+.btt-icon:hover {
+    transform: rotate(25deg);
 }
 
 /* Up-down animation */

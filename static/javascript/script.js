@@ -1,18 +1,20 @@
 // Navigation functions
 function homeAction() {
-    window.scrollTo(0, 0);
     window.location = '/';
     closeMenu()
 }
 
-function loginAction() {
+function bttAction() {
     window.scrollTo(0, 0);
+    closeMenu()
+}
+
+function loginAction() {
     window.location = '/login';
     closeMenu()
 }
 
 function dashboardAction() {
-    window.scrollTo(0, 0);
     window.location = '/dashboard';
     closeMenu()
 }

@@ -24,7 +24,7 @@
     <body>
         <div id="header-container">
             <header class="content">
-                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()">
+                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="bttAction()">
                 <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
 
                 <nav>
@@ -60,43 +60,32 @@
                 <h4>As you make purchases, add the amount you spent into your expenses</h4>
             </div>
             <div class="info-box" id="info3">
-                <div class="number">3</div>
-                <h4>We'll let you know how you are doing--and if you need to cut to reach your goals</h4>
+                <p class="number">3</p>
+                <h4>We'll let you know how you are doing—and if you need to cut to reach your goals</h4>
             </div>
         </div>
 
-        <div id="footer">
-            <div id="footer-nav">
-                <h3>Navigation</h3>
-                <a href="/">Home</a>
-                <a href="/login">Log In</a>
-                <a href="/about">About</a>
-            </div>
-            <div>
-                <h3>More Links</h3>
-                <div id='contact-methods'> 
-                    <div class='contact-icon'>
-                        <a target="_blank" rel="noopener noreferrer" href='https://github.com/aivey65'>
-                            <img src="../static/images/GitHub-Mark-Light-64px.png">
-                            <p class="link-bold">Github</p>
-                        </a>
-                    </div> 
-                    <div class='contact-icon'>
-                        <a target="_blank" rel="noopener noreferrer" href='https://www.linkedin.com/in/ashaiv/'>
-                            <img src="../static/images/LI-In-Bug.png">
-                            <p class="link-bold">LinkedIn</p>
-                        </a>
-                    <div>
-                    <div class='contact-icon'>
-                        <a target="_blank" rel="noopener noreferrer" href='https://www.ashaiv.com'>
-                            <img src="../static/images/LI-In-Bug.png">
-                            <p class="link-bold">LinkedIn</p>
-                        </a>
-                    <div>
+        <div class="content non-header footer">
+            <div class='contact-methods'> 
+                <div class='contact-icon'>
+                    <a  target="_blank" rel="noopener noreferrer" href='https://github.com/aivey65'>
+                        <img src="../static/images/GitHub-Mark-Light-64px.png">
+                    </a>
                 </div> 
+                <div class='contact-icon'>
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.linkedin.com/in/ashaiv/'>
+                        <img src="../static/images/LI-In-Bug.png">
+                    </a>
+                </div>
+                <div class='contact-icon'>
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.ashaiv.com'>
+                        <img src="../static/images/AshaIV-logo-light.svg">
+                    </a>
+                </div>
+            </div> 
+            <div class="btt-icon" onclick="bttAction()">
+                <img class="icon" src="../static/images/CharyLogoSmall.svg">            
             </div>
-            
-
         </div>
     </body>
 </html>
