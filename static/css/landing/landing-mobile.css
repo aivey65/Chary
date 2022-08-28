@@ -1,7 +1,13 @@
+h1 {
+    margin: 0rem;
+}
+
 .non-header {
     padding-left: 15px;
     padding-right: 15px;
 }
+
+/* Landing hero styles */
 
 #landing-hero {
     padding-top: 70px;
@@ -23,10 +29,6 @@
     grid-row: 4/5;
 }
 
-#landing-info {
-    background-color: var(--Dark);
-}
-
 #hero-login {
     margin-right: 15px;
 }
@@ -44,6 +46,27 @@
     cursor: pointer;
 }
 
-h1 {
-    margin: 0rem;
+/* Information section styles */
+
+#landing-info {
+    background-color: var(--Dark);
+    padding-top: 20px;
+}
+
+.number {
+    background-color: var(--MainD);
+    color:var(--Light);
+    font-size: 3rem;
+    padding: 10px;
+    margin-right: 20px;
+    border-radius: 50%;
+    text-align: center;
+    align-items: center;
+    font-family: 'Pacifico', cursive;
+}
+
+.info-box {
+    display: grid;
+    grid-template-columns: 30% auto;
+    align-items: center;
 }
