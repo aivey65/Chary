@@ -14,8 +14,8 @@
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
-        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/landing.css'>
-        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/landing-mobile.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/login/login.css'>
+        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/login/login-mobile.css'>
 
         <!-- JavaScript links -->
         <script src='../static/javascript/landing.js'></script>
@@ -34,18 +34,20 @@
                     <ul>
                         <li><a href="/">Home</a></li>
                         <li><a href="/about">About</a></li>
-                        <li><a href="/login">Sign In</a></li>
-                        <li class='cta-link'><a href="/google">Sign Up</a></li>
+                        <li class="nav-show"><a href="/login">Sign In</a></li>
+                        <li class='cta-link nav-show'><a href="/login">Sign Up</a></li>
+                        <li class='nav-noshow'><a href="/login">Dashboard</a></li>
+                        <li class='nav-noshow'><a href="/login">Log Out</a></li>
                     </ul>
                 </nav>
             </header>
         </div>
 
         <div class="content non-header" id="login">
-            <a href="/google">
-                <img id="google"
-                   src="https://img.shields.io/badge/Google-Connect-brightgreen?style=for-the-badge&labelColor=black&logo=google"
-                   alt="Google"> <br>
+            <h1>Log In</h1>
+            <a id="login-button" href="/google">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg"/>
+                Login with Google
             </a>
         </div>
            

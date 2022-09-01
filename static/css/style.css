@@ -49,26 +49,30 @@ h1 {
     color: var(--MainL);
     font-size: 3rem;
     line-height: 4rem;
+    margin: 0rem;
 }
 
 h2 {
     font-weight: 300;
+    font-size: 2rem;
     color: var(--Light)
 }
 
 h3 {
-    font-weight: 300;
+    font-weight: 200;
+    font-size: 1.3rem;
     color: var(--Light)
 }
 
 h4 {
     font-weight: 100;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     color: var(--Light)
 }
 
-p, button, a {
-    font-weight: 300;
+p, button, a, li {
+    color: var(--Light);
+    font-weight: 200;
     font-size: 1rem;
 }
 
@@ -88,11 +92,18 @@ a {
     width: fit-content;
 }
 
+a.normal-link {
+    color: var(--ContrastL);
+    font-size: 1rem;
+}
+
 a.normal-link:link {
+    color: var(--ContrastL);
     border-bottom: solid 2px var(--ContrastL);
 }
 
 a.normal-link:visited {
+    color: var(--ContrastD);
     border-bottom: solid 2px var(--ContrastDD);
 }
 
@@ -150,10 +161,20 @@ button {
     text-align: center;
 }
 
+/* Navigation styles */
+.nav-show {
+    display: block;
+}
+
+.nav-noshow {
+    display: none;
+}
+
 /* Footer styles */
 
 .contact-icon {
-    max-width: 50px;
+    max-width: 30px;
+    margin-left: 10px;
     text-align: center;
     align-items: center;
 }
@@ -162,7 +183,7 @@ button {
     background-color: var(--Background);
     display: grid;
     color: var(--Dark);
-    grid-template-rows: 1fr .8fr .5fr .5fr 1fr;
+    grid-template-rows: 1fr .8fr .5fr .5fr .5fr;
     align-items: center;
     height: 15rem;
 }
@@ -179,7 +200,7 @@ button {
 .contact-methods {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-evenly;
     align-items: center;
     grid-row: 2;
 }
@@ -217,6 +238,21 @@ button {
     }
 }
 
+/* Mobile-specific styles (not nav)*/
+@media screen and (max-width:767px) {
+    .non-header {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+/* Desktop specific styles (not nav) */
+@media screen and (min-width:767px) {
+    .non-header {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+}
 
 
 /*

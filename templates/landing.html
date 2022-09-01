@@ -7,7 +7,7 @@
         <!-- Google Font imports -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,300;0,600;1,100;1,300;1,600&family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,600;1,100;1,200;1,300;1,600&family=Pacifico&display=swap" rel="stylesheet">
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
@@ -31,8 +31,10 @@
                     <ul>
                         <li><a href="/">Home</a></li>
                         <li><a href="/about">About</a></li>
-                        <li><a href="/login">Sign In</a></li>
-                        <li class='cta-link'><a href="/login">Sign Up</a></li>
+                        <li class="nav-show"><a href="/login">Sign In</a></li>
+                        <li class='cta-link nav-show'><a href="/login">Sign Up</a></li>
+                        <li class='nav-noshow'><a href="/login">Dashboard</a></li>
+                        <li class='nav-noshow'><a href="/login">Log Out</a></li>
                     </ul>
                 </nav>
             </header>
@@ -40,7 +42,7 @@
 
         <div class="content non-header" id="landing-hero">
             <h1 id="hero1">Be chary when spending money</h1>
-            <h4 id="hero2">Keep track of your daily spendings with Chary. Visualise your expenses and make budgeting plans to achieve your money-saving goals</h2>
+            <h3 id="hero2">Keep track of your daily spendings with Chary. Visualise your expenses and make budgeting plans to achieve your money-saving goals</h3>
             <div id="hero3">
                 <button id="hero-login" onclick="loginAction()">Log In</button>
                 <button class="cta-button" onclick="loginAction()">Get Started</button>
@@ -53,15 +55,15 @@
         <div class="content non-header" id="landing-info">
             <div class="info-box" id="info1">
                 <p class="number">1</p>
-                <h4>Create custom budgets and set a dollar amount limit </h4>
+                <h3>Create custom budgets and set a dollar amount limit </h3>
             </div>
             <div class="info-box" id="info2">
                 <p class="number">2</p>
-                <h4>As you make purchases, add the amount you spent into your expenses</h4>
+                <h3>As you make purchases, add the amount you spent into your expenses</h3>
             </div>
             <div class="info-box" id="info3">
                 <p class="number">3</p>
-                <h4>We'll let you know how you are doing—and if you need to cut to reach your goals</h4>
+                <h3>We'll let you know how you are doing—and if you need to cut to reach your goals</h3>
             </div>
         </div>
 

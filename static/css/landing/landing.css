@@ -1,14 +1,4 @@
-h1 {
-    margin: 0rem;
-}
-
-.non-header {
-    padding-left: 40px;
-    padding-right: 40px;
-}
-
 /* Landing hero styles */
-
 #landing-hero {
     padding-top: 70px;
     height: 100vh;

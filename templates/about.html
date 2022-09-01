@@ -7,12 +7,12 @@
         <!-- Google Font imports -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,300;0,600;1,100;1,300;1,600&family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,600;1,100;1,200;1,300;1,600&family=Pacifico&display=swap" rel="stylesheet">
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
-        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/landing/landing.css'>
-        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/landing/landing-mobile.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/about/about.css'>
+        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/about/about-mobile.css'>
 
         <!-- JavaScript links -->
         <script src='../static/javascript/landing.js'></script>
@@ -31,17 +31,19 @@
                     <ul>
                         <li><a href="/">Home</a></li>
                         <li><a href="/about">About</a></li>
-                        <li><a href="/login">Sign In</a></li>
-                        <li class='cta-link'><a href="/login">Sign Up</a></li>
+                        <li class="nav-show"><a href="/login">Sign In</a></li>
+                        <li class='cta-link nav-show'><a href="/login">Sign Up</a></li>
+                        <li class='nav-noshow'><a href="/login">Dashboard</a></li>
+                        <li class='nav-noshow'><a href="/login">Log Out</a></li>
                     </ul>
                 </nav>
             </header>
         </div>
 
         <div class="content non-header" id="about">
+            <h1 id="about-header">About</h1>
             <div id="definition">
-                <h1 id="about-header">About</h1>
-                <h3 id="dict-header">chary</h3><h4 id='dict-ipa'>/ˈtʃɛər i/</h4>
+                <h3 id="dict-header">chary • <span id='dict-ipa'>/ˈtʃɛər i/</span></h3>
                 <p>adjective</p>
                 <ol>
                     <li>discreetly cautious</li>
@@ -50,13 +52,31 @@
                         <li>slow to grant, accept, or expend</li>
                     </ol>
                 </ol>
+                <p id="citation">“Chary.” Merriam-Webster.com Dictionary, Merriam-Webster, <a class="normal-link" href="https://www.merriam-webster.com/dictionary/chary">https://www.merriam-webster.com/dictionary/chary</a>.</p>
+            </div>
+            <div id="summary">
+                <p>Chary is a tool to help users become 
+                    more cautious and thoughtful with how they spend their money. 
+                    Chary makes budgeting easy. Users can keep track of their 
+                    expenses, set spending goals, and visualise how well they do over 
+                    time. And because 'chary' sounds like 'cherry', we embraced the 
+                    pun and made Chary to be cherry-themed!</p>
             </div>
             <div id="about-app">
-                <img src="../static/images/profilepic.jpg">
-                <h4 id="about-app">This app uses Google Cloud's firestore to store data and is hosted using Google App Engine.</h2>
+                <h2>App Details</h2>
+                <p>This app was created during the summer of 2022 as 
+                    a passion project. It uses Python and the framework Flask for 
+                    the backend. Regular HTML, CSS, and Javascript was used for the 
+                    frontend. This app uses Google Cloud's firestore to store data 
+                    and is hosted using Google App Engine. This app also takes advantage
+                    of Google's OAuth for signing users in.</p>
+
+                <p><a class="normal-link" href="https://github.com/aivey65/Chary">Click here</a> to view the Github repository for Chary. </p>
             </div>
             <div id="about-asha">
-                <h4 id="about-asha">Chary was created by Asha Ivey, a software developer. She graduated from the University of Illinois at Urbana-Champaign in 2022.</h2>
+                <h2>About the Creator</h2>
+                <img src="../static/images/profilepic.jpg">
+                <p> Chary was created by Asha Ivey, a software developer. She graduated from the University of Illinois at Urbana-Champaign in 2022.</p>
             </div>
         </div>
 
