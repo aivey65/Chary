@@ -1,0 +1,29 @@
+#login {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr .5fr .5fr 1fr;
+    justify-content: center;
+}
+
+#login h1 {
+    text-align: center;
+    grid-row: 2;
+}
+
+#login-button {
+    display: flex;
+    align-content: center;
+    background-color:var(--Light);
+    grid-row: 3;
+    border: solid 1px var(--Light);
+    border-radius: 5px;   
+    padding:10px;
+    height: fit-content;
+}
+
+#login-button img {
+    height: 25px;
+    width: 25px;
+    margin-right: 10px;
+}
+

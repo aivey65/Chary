@@ -180,12 +180,13 @@ button {
 }
 
 .footer {
-    background-color: var(--Background);
+    background-color: var(--Dark);
     display: grid;
     color: var(--Dark);
     grid-template-rows: 1fr .8fr .5fr .5fr .5fr;
     align-items: center;
     height: 15rem;
+    width: 100vw;
 }
 
 .footer h3 {

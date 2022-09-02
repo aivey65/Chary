@@ -1,0 +1,90 @@
+/* About Asha section */
+p {
+    font-size: 1.1rem;
+}
+
+ol li {
+    font-weight: 100;
+}
+
+#about {
+    display: grid;
+    grid-template-rows: .2fr .2fr .5fr .9fr .5fr;
+    grid-template-columns: 1fr 1fr;
+}
+
+#about-header {
+    grid-row: 2;
+}
+
+#definition {
+    grid-row: 3;
+    grid-column: 2;
+    background-color: var(--Dark);
+    padding: 30px;
+    border-radius: 20px;
+}
+
+#definition h2 {
+    text-align: center;
+    margin-top: 0px;
+}
+
+#definition h3 {
+    font-size: 1.6rem;
+    margin: 0px;
+}
+
+#dict-ipa {
+    font-size: 1rem;
+    font-style: italic;
+    margin: 0px;
+}
+
+#citation {
+    font-size: 1rem;
+    font-style: italic;
+}
+
+#summary {
+    margin-right: 20px;
+    grid-row: 3;
+    grid-column: 1;
+}
+
+#about-app {
+    grid-row: 4;
+    grid-column: span 2;
+}
+
+#about-asha {
+    grid-row: 5;
+    grid-column: span 2;
+
+    display: grid;
+    grid-template-columns: 1fr .7fr;
+    grid-template-rows: .2fr 1fr;
+
+}
+
+#about-asha h2 {
+    grid-column: 1;
+}
+
+#about-asha img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    grid-column: 2;
+    grid-row: span 2;
+    border-radius: 50%;
+    justify-self: center;
+    align-self: center;
+}
+
+#about-asha p {
+    grid-column: 1;
+    grid-row: 2;
+    margin-right: 20px;
+    margin-top: 0px;
+}
