@@ -55,6 +55,7 @@ ol li {
 
 #about-asha {
     grid-row: 6;
+    margin-bottom: 20px;
 
     display: grid;
     grid-template-columns: .5fr 1fr;

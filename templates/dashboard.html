@@ -15,8 +15,9 @@
         <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/dashboard/dashboard-mobile.css'>
 
         <!-- JavaScript links -->
-        <script src='../static/javascript/dashboard.js'></script>
         <script src='../static/javascript/script.js'></script>
+        <script src='../static/javascript/dashboard.js'></script>
+        
 
         <Title>Chary</Title>
     </head>
@@ -24,8 +25,8 @@
     <body onload="getUserData()">
         <div id="header-container">
             <header class="content">
-                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="logoAction()">
-                <img id='toggle-icon' class="hamburg" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
+                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()">
+                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
 
                 <nav>
                     <ul>
@@ -39,8 +40,7 @@
                 </nav>
             </header>
         </div>
-        <div class="content" id="landing-content">
-            Hello! <br/> <a href='/logout'><button>Logout</button></a>
+        <div class="content non-header" id="dashboard-content">
         </div>
     </body>
 </html>

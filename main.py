@@ -10,7 +10,7 @@ from pip._vendor import cachecontrol
 import google.auth.transport.requests
 from functools import wraps
 
-from database import getUser
+from database import getAll, getUser, getBudgets, getExpenses
 
 app = Flask(__name__, template_folder="templates")
 # Load environment variables and set secret key
@@ -66,7 +66,10 @@ def login_is_required(function):
 @login_is_required
 @app.route("/google")
 def googleLogin():
-    authorization_url, state = flow.authorization_url()
+    authorization_url, state = flow.authorization_url(
+        access_type='offline',
+        include_granted_scopes='true'
+    )
     session["state"] = state
     return redirect(authorization_url)
 
@@ -79,6 +82,7 @@ def logout():
 @app.route("/google/auth")
 def google_auth(): 
     flow.fetch_token(authorization_response=request.url)
+
     if not session["state"] == request.args["state"]:
         abort(500)
 
@@ -97,6 +101,11 @@ def google_auth():
         session["google_id"] = id_info.get("sub")
         session["name"] = id_info.get("name")
         session["email"] = id_info.get("email")
+        session["credentials"] = {
+            'token': credentials.token,
+            'refresh_token': credentials.refresh_token
+        }
+        print("//////////////////Data saved")
         return redirect("/dashboard")
     else:
         abort(403)
@@ -111,11 +120,6 @@ def google_auth():
 def renderDashboard():
     return render_template('dashboard.html')
 
-@app.route("/dashboard/data")
-@login_is_required
-def getUserData():
-    return getUser(session["email"])
-
 @app.route("/budget")
 @login_is_required
 def renderBudget():
@@ -125,6 +129,31 @@ def renderBudget():
 @login_is_required
 def renderExpense():
     return render_template('expense.html')
+
+###########################################
+# Routes for getting database information #
+###########################################
+
+@app.route("/data/all")
+@login_is_required
+def getAllData():
+    return getAll(session["email"])
+
+@app.route("/data/user")
+@login_is_required
+def getUserData():
+    return getUser(session["email"])
+
+@app.route("/data/budgets")
+@login_is_required
+def getBudgetData():
+    return getBudgets(session["email"])
+
+@app.route("/data/expenses")
+@login_is_required
+def getExpenseData():
+    return getExpenses(session["email"])
+
 
 ##########################################################
 # Error handling to tell users more helpful information  #
