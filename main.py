@@ -105,7 +105,6 @@ def google_auth():
             'token': credentials.token,
             'refresh_token': credentials.refresh_token
         }
-        print("//////////////////Data saved")
         return redirect("/dashboard")
     else:
         abort(403)
