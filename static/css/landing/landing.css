@@ -41,25 +41,33 @@
 /* Information section styles */
 
 #landing-info {
-    background-color: var(--Dark);
     padding-top: 20px;
     padding-bottom: 20px;
 }
 
 .number {
-    background-color: var(--MainD);
-    color:var(--Light);
-    font-size: 3rem;
-    padding: 10px;
-    margin-right: 20px;
-    border-radius: 50%;
-    text-align: center;
-    align-items: center;
-    font-family: 'Pacifico', cursive;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.max-width {
+    width:300px;
+    height:300px;
+    border-radius: 25%;
+}
+
+.light-back {
+    background-color: var(--Light);
+}
+
+.mid-width {
+    width: 250px;
+    height: 300px;
+    border-radius: 75px;
 }
 
 .info-box {
     display: grid;
-    grid-template-columns: 30% auto;
+    grid-template-columns: 50% auto;
     align-items: center;
 }
