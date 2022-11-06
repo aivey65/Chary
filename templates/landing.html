@@ -24,8 +24,8 @@
     <body>
         <div id="header-container">
             <header class="content">
-                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()">
-                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
+                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()" alt='Chary logo'>
+                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()" alt="toggle menu button">
 
                 <nav>
                     <ul>
@@ -48,22 +48,24 @@
                 <button class="cta-button" onclick="loginAction()">Get Started</button>
             </div>
             <div class="centered" id="down-icon-container">
-                <img id='down-icon' class='icon floating' src="../static/images/down-icon-light.svg" onclick="downAction()">
+                <img id='down-icon' class='icon floating' src="../static/images/down-icon-light.svg" onclick="downAction()" alt="Down arrow to read more">
             </div>
-            <div></div>
+            <div id="hero-img">
+                <img id="hero-img-svg" src="../static/images/undraw_credit_card_payments.svg">
+            </div>
         </div>
 
-        <div class="content non-header" id="landing-info">
+        <div class="non-header" id="landing-info">
             <div class="info-box" id="info1">
-                <img class="number light-back mid-width" src="../static/images/undraw_personal_finance.svg">
+                <img class="number" src="../static/images/undraw_pie_chart.svg">
                 <h3>Create custom budgets and set a dollar amount limit </h3>
             </div>
             <div class="info-box" id="info2">
-                <img class="number max-width" src="../static/images/undraw_personal_goals.svg">
+                <img class="number" src="../static/images/undraw_gone_shopping.svg">
                 <h3>As you make purchases, add the amount you spent into your expenses</h3>
             </div>
             <div class="info-box" id="info3">
-                <img class="number light-back max-width" src="../static/images/undraw_statistics.svg">
+                <img class="number" src="../static/images/undraw_statistics.svg">
                 <h3>We'll let you know how you are doing—and if you need to cut to reach your goals</h3>
             </div>
         </div>

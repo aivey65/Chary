@@ -82,8 +82,9 @@ window.addEventListener('scroll', () => {
  * 
  * @param balance (int): Number value for user's balance
  * @param username (string): User's username
+ * @param img (string): link to user's profile image
  */
-function loadUserInfo(balance, username) {
+function loadUserInfo(balance, username, img) {
     infoPanel = document.createElement('div');
     infoPanel.classList.add('user-info');
     
@@ -93,7 +94,10 @@ function loadUserInfo(balance, username) {
     user_balance = document.createElement('h3');
     user_balance.innerHTML = balance;
 
-    infoPanel.append(user_name, user_balance);
+    user_img = document.createElement('img');
+    user_img.src = img;
+
+    infoPanel.append(user_name, user_balance, user_img);
     return infoPanel;
 }
 

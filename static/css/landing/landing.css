@@ -20,6 +20,16 @@
     grid-row: 4/5;
 }
 
+#hero-img {
+    grid-column: 2;
+    grid-row: span 2/4;
+    text-align: end;
+}
+
+#hero-img-svg {
+    transform: scale(-1, 1);
+}
+
 #hero-login {
     margin-right: 15px;
 }
@@ -41,6 +51,7 @@
 /* Information section styles */
 
 #landing-info {
+    max-width: 700px;
     padding-top: 20px;
     padding-bottom: 20px;
 }
@@ -48,26 +59,15 @@
 .number {
     margin-left: auto;
     margin-right: auto;
-}
-
-.max-width {
-    width:300px;
-    height:300px;
+    background-color: var(--Grey);
+    width:150px;
+    height:150px;
     border-radius: 25%;
-}
-
-.light-back {
-    background-color: var(--Light);
-}
-
-.mid-width {
-    width: 250px;
-    height: 300px;
-    border-radius: 75px;
 }
 
 .info-box {
     display: grid;
-    grid-template-columns: 50% auto;
+    grid-template-columns: 35% auto;
     align-items: center;
+    margin-top: 30px;
 }

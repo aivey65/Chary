@@ -62,3 +62,7 @@ def getExpenses(email):
         expensesDict[expenseDoc.id] = expenseDoc.to_dict()
 
     return {"data":expensesDict}
+
+def getImageURL(imageID):
+    imageDoc = db.collection(u'profileImages').document(imageID).get()
+    return {"data":imageDoc}

@@ -10,7 +10,7 @@ from pip._vendor import cachecontrol
 import google.auth.transport.requests
 from functools import wraps
 
-from database import getAll, getUser, getBudgets, getExpenses
+from database import getAll, getUser, getBudgets, getExpenses, getImageURL
 
 app = Flask(__name__, template_folder="templates")
 # Load environment variables and set secret key
@@ -152,6 +152,11 @@ def getBudgetData():
 @login_is_required
 def getExpenseData():
     return getExpenses(session["email"])
+
+@app.route("/data/images/<imageID>")
+@login_is_required
+def getImageURL(imageID):
+    return getImageURL(imageID)
 
 
 ##########################################################
