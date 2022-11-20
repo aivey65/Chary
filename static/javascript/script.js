@@ -84,7 +84,7 @@ window.addEventListener('scroll', () => {
  * @param username (string): User's username
  * @param img (string): link to user's profile image
  */
-function loadUserInfo(balance, username, img) {
+function loadUserInfo(balance, username,color, img) {
     infoPanel = document.createElement('div');
     infoPanel.classList.add('user-info');
     
@@ -95,7 +95,8 @@ function loadUserInfo(balance, username, img) {
     user_balance.innerHTML = balance;
 
     user_img = document.createElement('img');
-    user_img.src = img;
+    user_img.src = "static/images/profileImages/" + img + ".svg";
+    user_img.classList.add("thumbnail");
 
     infoPanel.append(user_name, user_balance, user_img);
     return infoPanel;
@@ -116,7 +117,7 @@ function loadBudgets(budgets) {
         budget_name.innerHTML = budgets[key].name;
 
         budget_amount = document.createElement('h3');
-        budget_amount.innerHTML = budgets[key].budgetAmount;
+        budget_amount.innerHTML = budgets[key].actualBudgetAmount;
 
         budget_des = document.createElement('p');
         budget_des.innerHTML = budgets[key].description;
@@ -127,7 +128,11 @@ function loadBudgets(budgets) {
         budget_end_date = document.createElement('h4');
         budget_end_date.innerHTML = budgets[key].endDate;
 
-        budgetPanel.append(budget_name, budget_des, budget_used, budget_amount, budget_end_date);
+        budget_img = document.createElement('img');
+        budget_img.src = "static/images/categoryImages/" + budgets[key].icon + ".svg";
+        budget_img.classList.add("thumbnail");
+
+        budgetPanel.append(budget_name, budget_des, budget_used, budget_amount, budget_end_date, budget_img);
     }
 
     return budgetPanel;

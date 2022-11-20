@@ -161,6 +161,13 @@ button {
     text-align: center;
 }
 
+.thumbnail {
+    width: 7rem;
+    height: 7rem;
+    background-color: var(--Grey);
+    border-radius: 50%;
+}
+
 /* Navigation styles */
 .nav-show {
     display: block;

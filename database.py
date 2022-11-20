@@ -6,6 +6,10 @@ from flask import jsonify
 app = firebase_admin.initialize_app()
 db = firestore.client()
 
+
+####################
+# Getter functions #
+####################
 # Get all data associated with a user (basic data, expenses, and budgets)
 def getAll(email):
     user = getUser(email)['data']
@@ -63,6 +67,14 @@ def getExpenses(email):
 
     return {"data":expensesDict}
 
-def getImageURL(imageID):
-    imageDoc = db.collection(u'profileImages').document(imageID).get()
-    return {"data":imageDoc}
+####################
+# Setter functions #
+####################
+def setUser(email):
+    pass
+
+def setBudgets(email):
+    pass
+
+def setExpenses(email):
+    pass
