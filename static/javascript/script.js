@@ -98,7 +98,7 @@ function loadUserInfo(balance, username,color, img) {
     user_img.src = "static/images/profileImages/" + img + ".svg";
     user_img.classList.add("thumbnail");
 
-    infoPanel.append(user_name, user_balance, user_img);
+    infoPanel.append(user_img, user_name); //TODO: Add user_balance when you know what to do with it
     return infoPanel;
 }
 
@@ -109,10 +109,13 @@ function loadUserInfo(balance, username,color, img) {
  *      stored in the database.
  */
 function loadBudgets(budgets) {
-    budgetPanel = document.createElement('div');
-    budgetPanel.classList.add('budget-info');
-
+    budgetContainer = document.createElement('div');
+    budgetContainer.id = "budget-container";
+    
     for (const key in budgets) {
+        budgetPanel = document.createElement('div');
+        budgetPanel.classList.add('budget-info');
+        
         budget_name = document.createElement('h2');
         budget_name.innerHTML = budgets[key].name;
 
@@ -132,10 +135,12 @@ function loadBudgets(budgets) {
         budget_img.src = "static/images/categoryImages/" + budgets[key].icon + ".svg";
         budget_img.classList.add("thumbnail");
 
-        budgetPanel.append(budget_name, budget_des, budget_used, budget_amount, budget_end_date, budget_img);
+        budgetPanel.append(budget_img, budget_name, budget_des, budget_used, budget_amount, budget_end_date);
+        
+        budgetContainer.append(budgetPanel)
     }
 
-    return budgetPanel;
+    return budgetContainer;
 }
 
 /* First, makes request to server for a user's expense information.
@@ -145,10 +150,13 @@ function loadBudgets(budgets) {
  * @param username (string): User's username
  */
 function loadExpenses(expenses) {
-    expensePanel = document.createElement('div');
-    expensePanel.classList.add('expense-info');
+    expenseContainer = document.createElement('div');
+    expenseContainer.id = "expense-info";
     
     for (const key in expenses) {
+        expensePanel = document.createElement('div');
+        expensePanel.classList.add('expense-info');
+
         expense_category = document.createElement('h4');
         expense_category.innerHTML = expenses[key].budgetCategory;
 
@@ -168,7 +176,9 @@ function loadExpenses(expenses) {
         expense_date.innerHTML = expenses[key].date;
 
         expensePanel.append(expense_category, expense_icon, expense_name, expense_des, expense_amount, expense_date, );
+    
+        expenseContainer.append(expensePanel)
     }
 
-    return expensePanel;
+    return expenseContainer;
 }

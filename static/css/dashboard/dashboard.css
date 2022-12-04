@@ -1,0 +1,41 @@
+#dashboard-content {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    padding: 0px;
+}
+
+#profile-section {
+    grid-column: 1;
+    height: 100vh;
+    width: 100%;
+}
+
+.user-info {
+    text-align: center;
+}
+
+/* Styles for the budget section */
+#budget-section {
+    grid-column: 2;
+}
+
+#budget-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.budget-info {
+    padding: 10px;
+    margin: 10px;
+    background-color: var(--faded);
+}
+
+.budget-info img {
+    width: 1.3em;
+    height: auto;
+}
+
+/* Styles for the expense section */
+#expense-section {
+    grid-column: 2;
+}

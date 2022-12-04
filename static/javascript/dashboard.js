@@ -4,15 +4,15 @@ function getUserData() {
         
         infoPanel = loadUserInfo(data.balance, data.username, data.profileColor, data.profileImage)
         userContent = document.getElementById('profile-section');
-        userContent.append(infoPanel)
+        userContent.append(infoPanel);
 
         budgetPanel = loadBudgets(data.budgets)
-        budgetContent = document.getElementById('budget-section');
-        budgetContent.append(budgetPanel)
+        budgetContent = document.getElementById('budget-container');
+        budgetContent.append(budgetPanel);
 
 
         expensePanel = loadExpenses(data.expenses)
-        expenseContent = document.getElementById('expense-section');
-        expenseContent.append(expensePanel)
+        expenseContent = document.getElementById('expense-container');
+        expenseContent.append(expenseHeading, expensePanel);
     })
 }
