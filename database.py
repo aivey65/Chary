@@ -70,11 +70,14 @@ def getExpenses(email):
 ####################
 # Setter functions #
 ####################
-def setUser(email):
+def updateUser(email):
     pass
 
-def setBudgets(email):
+def updateBudget(email):
     pass
 
-def setExpenses(email):
+def updateExpense(email):
+    pass
+
+def updateEarnings(email):
     pass

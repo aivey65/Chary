@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel='shortcut icon' sizes='256x256' href='../static/images/CharyLogoSmall.svg'>
+
+        <!-- Google Font imports -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,600;1,100;1,200;1,300;1,600&family=Pacifico&display=swap" rel="stylesheet">
+
+        <!-- CSS Stylesheets -->
+        <link rel='stylesheet' href='../static/css/style.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/about/about.css'>
+        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/about/about-mobile.css'>
+
+        <!-- JavaScript links -->
+        <script src='../static/javascript/landing.js'></script>
+        <script src='../static/javascript/script.js'></script>
+
+        <Title>Chary</Title>
+    </head>
+
+    <body>
+        <div id="header-container">
+            <header class="content">
+                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()">
+                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
+
+                <nav>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li class="nav-show"><a href="/login">Sign In</a></li>
+                        <li class='cta-link nav-show'><a href="/login">Sign Up</a></li>
+                        <li class='nav-noshow'><a href="/login">Dashboard</a></li>
+                        <li class='nav-noshow'><a href="/login">Log Out</a></li>
+                    </ul>
+                </nav>
+            </header>
+        </div>
+
+        <div class="content non-header" id="acd-expenses">
+            <form action="acd-expense">
+                <label for="exname">Expense Name</label><br>
+                <input type="text" id="exname" name="exname" required><br>
+
+                <label for="exdescription">Expense Description</label><br>
+                <input type="text" id="exdescription" name="exdescription"><br>
+
+                <label for="examount">Expense Amount</label><br>
+                <input type="text" id="examount" name="examount" required><br>
+
+                <label for="examountused">Expense Amount Used</label><br>
+                <input type="text" id="examount-used" name="examountused"><br>
+
+                <!-- Radio buttons for the expense period -->
+                <label class="expense-period">
+                    <input type="checkbox" id="exweekly" name="exweekly" value="Weekly">
+                    Weekly
+                </label><br>
+                <label class="expense-period">
+                    <input type="checkbox" id="exbiweekly" name="exbiweekly" value="Biweekly">
+                    Biweekly
+                </label><br>
+                <label class="expense-period">
+                    <input type="checkbox" id="exmonthly" name="exmonthly" value="Monthly">
+                    Monthly
+                </label><br>
+                <label class="expense-period">
+                    <input type="checkbox" id="exyearly" name="exyearly" value="Yearly">
+                    Yearly
+                </label><br>
+
+                <label for="exstart">Expense Start Date</label><br>
+                <input type="date" id="exstart-date" name="exstart"><br>
+
+                <label for="exrecurring"> Is this expense and amount recurring?</label><br>
+                <input type="checkbox" id="exrecurring" name="exrecurring" value="true">
+            </form>
+        </div>
+
+        <div class="footer">
+            <div class='contact-methods'> 
+                <div class='contact-icon'>
+                    <a  target="_blank" rel="noopener noreferrer" href='https://github.com/aivey65'>
+                        <img src="../static/images/GitHub-Mark-Light-64px.png">
+                    </a>
+                </div> 
+                <div class='contact-icon'>
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.linkedin.com/in/ashaiv/'>
+                        <img src="../static/images/LI-In-Bug.png">
+                    </a>
+                </div>
+                <div class='contact-icon'>
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.ashaiv.com'>
+                        <img src="../static/images/AshaIV-logo-light.svg">
+                    </a>
+                </div>
+            </div> 
+            <div class="btt-icon" onclick="bttAction()">
+                <img class="icon" src="../static/images/CharyLogoSmall.svg">            
+            </div>
+        </div>
+    </body>
+</html>

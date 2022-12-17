@@ -16,3 +16,15 @@ function getUserData() {
         expenseContent.append(expenseHeading, expensePanel);
     })
 }
+
+function goToBudgetForm() {
+    window.location.href = "/acd-budget";
+}
+
+function goToEarningForm() {
+    window.location.href = "/acd-earning";
+}
+
+function goToExpenseForm() {
+    window.location.href = "/acd-expense";
+}

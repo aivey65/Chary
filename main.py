@@ -129,9 +129,24 @@ def renderBudget():
 def renderExpense():
     return render_template('expense.html')
 
-###########################################
-# Routes for getting database information #
-###########################################
+@app.route("/acd-budget")
+@login_is_required
+def renderACDBudget():
+    return render_template('acd-budget.html')
+
+@app.route("/acd-earning")
+@login_is_required
+def renderACDEarning():
+    return render_template('acd-earning.html')
+
+@app.route("/acd-expense")
+@login_is_required
+def renderACDExpense():
+    return render_template('acd-expense.html')
+
+####################################################
+# Routes for getting/updating database information #
+####################################################
 
 @app.route("/data/all")
 @login_is_required
