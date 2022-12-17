@@ -11,8 +11,8 @@
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
-        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/about/about.css'>
-        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/about/about-mobile.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/form/form.css'>
+        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/form/form-mobile.css'>
 
         <!-- JavaScript links -->
         <script src='../static/javascript/landing.js'></script>
@@ -42,38 +42,40 @@
 
         <div class="content non-header" id="acd-earnings">
             <form action="acd-earning">
-                <label for="ename">Earning Name</label><br>
+                <label class="acd-form" for="ename">Earning Name</label><br>
                 <input type="text" id="ename" name="ename" required><br>
 
-                <label for="edescription">Earning Description</label><br>
-                <input type="text" id="bdescription" name="edescription"><br>
+                <label class="acd-form" for="edescription">Earning Description</label><br>
+                <textarea id="bdescription" name="edescription" rows="4" cols="50"></textarea>><br>
 
-                <label for="eamount">Earning Amount</label><br>
+                <label class="acd-form" for="eamount">Earning Amount</label><br>
                 <input type="text" id="eamount" name="eamount" required><br>
 
                 <!-- Radio buttons for the earning period -->
-                <label class="earning-period">
-                    <input type="checkbox" id="eweekly" name="eweekly" value="Weekly">
+                <label class="acd-form" class="earning-period">
+                    <input type="checkbox" id="eweekly" name="eradio" value="Weekly">
                     Weekly
                 </label><br>
-                <label class="earning-period">
-                    <input type="checkbox" id="ebiweekly" name="ebiweekly" value="Biweekly">
+                <label class="acd-form" class="earning-period">
+                    <input type="checkbox" id="ebiweekly" name="eradio" value="Biweekly">
                     Biweekly
                 </label><br>
-                <label class="earning-period">
-                    <input type="checkbox" id="emonthly" name="emonthly" value="Monthly">
+                <label class="acd-form" class="earning-period">
+                    <input type="checkbox" id="emonthly" name="eradio" value="Monthly">
                     Monthly
                 </label><br>
-                <label class="earning-period">
-                    <input type="checkbox" id="eyearly" name="eyearly" value="Yearly">
+                <label class="acd-form" class="earning-period">
+                    <input type="checkbox" id="eyearly" name="eradio" value="Yearly">
                     Yearly
                 </label><br>
 
-                <label for="estart">Earning Start Date</label><br>
+                <label class="acd-form" for="estart">Earning Start Date</label><br>
                 <input type="date" id="estart-date" name="estart"><br>
 
-                <label for="erecurring"> Is this earning type and amount recurring?</label><br>
-                <input type="checkbox" id="erecurring" name="erecurring" value="true">
+                <label class="acd-form" for="erecurring"> Is this earning type and amount recurring?</label><br>
+                <input type="checkbox" id="erecurring" name="erecurring" value="true"><br>
+
+                <button class="cta-button" type="submit" value="Submit">Submit</button>
             </form>
         </div>
 

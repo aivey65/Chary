@@ -11,8 +11,8 @@
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
-        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/about/about.css'>
-        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/about/about-mobile.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/form/form.css'>
+        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/form/form-mobile.css'>
 
         <!-- JavaScript links -->
         <script src='../static/javascript/landing.js'></script>
@@ -42,39 +42,45 @@
 
         <div class="content non-header" id="acd-budgets">
             <form action="/acd-budget">
-                <input type="hidden" name="new" value="bar" />
+                <!-- <input type="hidden" name="new" value="bar" /> -->
 
-                <label for="bname">Budget Name</label><br>
+                <label class="acd-form" for="bname">Budget Name</label><br>
                 <input type="text" id="bname" name="bname" required><br>
 
-                <label for="bdescription">Budget Description</label><br>
-                <input type="text" id="bdescription" name="bdescription"><br>
+                <label class="acd-form" for="bdescription">Budget Description</label><br>
+                <textarea id="bdescription" name="bdescription" rows="4" cols="50"></textarea>><br>
 
-                <label for="bamount">Budget Amount</label><br>
+                <label class="acd-form" for="bamount">Budget Amount</label><br>
                 <input type="text" id="bamount" name="bamount" required><br>
 
-                <label for="bamountused">Budget Amount Used</label><br>
+                <label class="acd-form" for="bamountused">Budget Amount Used</label><br>
                 <input type="text" id="bamount-used" name="bamountused"><br>
 
                 <!-- Radio buttons for the budget period -->
-                <label class="budget-period">
-                    <input type="checkbox" id="bweekly" name="bweekly" value="Weekly">
+                <label class="acd-form" class="budget-period">
+                    <input type="radio" id="bweekly" name="bradio" value="Weekly">
                     Weekly
                 </label><br>
-                <label class="budget-period">
-                    <input type="checkbox" id="bbiweekly" name="bbiweekly" value="Biweekly">
+                <label class="acd-form" class="budget-period">
+                    <input type="radio" id="bbiweekly" name="bradio" value="Biweekly">
                     Biweekly
                 </label><br>
-                <label class="budget-period">
-                    <input type="checkbox" id="bmonthly" class="budget-period" name="bmonthly" value="Monthly">
+                <label class="acd-form" class="budget-period">
+                    <input type="radio" id="bmonthly" name="bradio" value="Monthly">
                     Monthly
                 </label><br>
+                <label class="acd-form" class="budget-period">
+                    <input type="radio" id="byearly" name="bradio" value="Yearly">
+                    Yearly
+                </label><br>
 
-                <label for="bstart">Budget Start Date</label><br>
+                <label class="acd-form" for="bstart">Budget Start Date</label><br>
                 <input type="date" id="bstart-date" name="bstart"><br>
 
-                <label for="brecurring"> Is this budget and amount recurring?</label><br>
-                <input type="checkbox" id="brecurring" name="brecurring" value="true">
+                <label class="acd-form" for="brecurring"> Is this budget and amount recurring?</label><br>
+                <input type="checkbox" id="brecurring" name="brecurring" value="true"><br>
+
+                <button class="cta-button" type="submit" value="Submit">Submit</button>
             </form>
         </div>
 

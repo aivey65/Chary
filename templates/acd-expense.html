@@ -11,8 +11,8 @@
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
-        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/about/about.css'>
-        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/about/about-mobile.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/form/form.css'>
+        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/form/form-mobile.css'>
 
         <!-- JavaScript links -->
         <script src='../static/javascript/landing.js'></script>
@@ -42,41 +42,43 @@
 
         <div class="content non-header" id="acd-expenses">
             <form action="acd-expense">
-                <label for="exname">Expense Name</label><br>
+                <label class="acd-form" for="exname">Expense Name</label><br>
                 <input type="text" id="exname" name="exname" required><br>
 
-                <label for="exdescription">Expense Description</label><br>
-                <input type="text" id="exdescription" name="exdescription"><br>
+                <label class="acd-form" for="exdescription">Expense Description</label><br>
+                <textarea id="exdescription" name="exdescription" rows="4" cols="50">><br>
 
-                <label for="examount">Expense Amount</label><br>
+                <label class="acd-form" for="examount">Expense Amount</label><br>
                 <input type="text" id="examount" name="examount" required><br>
 
-                <label for="examountused">Expense Amount Used</label><br>
+                <label class="acd-form" for="examountused">Expense Amount Used</label><br>
                 <input type="text" id="examount-used" name="examountused"><br>
 
                 <!-- Radio buttons for the expense period -->
-                <label class="expense-period">
-                    <input type="checkbox" id="exweekly" name="exweekly" value="Weekly">
+                <label class="acd-form" class="expense-period">
+                    <input type="checkbox" id="exweekly" name="exradio" value="Weekly">
                     Weekly
                 </label><br>
-                <label class="expense-period">
-                    <input type="checkbox" id="exbiweekly" name="exbiweekly" value="Biweekly">
+                <label class="acd-form" class="expense-period">
+                    <input type="checkbox" id="exbiweekly" name="exradio" value="Biweekly">
                     Biweekly
                 </label><br>
-                <label class="expense-period">
-                    <input type="checkbox" id="exmonthly" name="exmonthly" value="Monthly">
+                <label class="acd-form" class="expense-period">
+                    <input type="checkbox" id="exmonthly" name="exradio" value="Monthly">
                     Monthly
                 </label><br>
-                <label class="expense-period">
-                    <input type="checkbox" id="exyearly" name="exyearly" value="Yearly">
+                <label class="acd-form" class="expense-period">
+                    <input type="checkbox" id="exyearly" name="exradio" value="Yearly">
                     Yearly
                 </label><br>
 
-                <label for="exstart">Expense Start Date</label><br>
+                <label class="acd-form" for="exstart">Expense Start Date</label><br>
                 <input type="date" id="exstart-date" name="exstart"><br>
 
-                <label for="exrecurring"> Is this expense and amount recurring?</label><br>
-                <input type="checkbox" id="exrecurring" name="exrecurring" value="true">
+                <label class="acd-form" for="exrecurring"> Is this expense and amount recurring?</label><br>
+                <input type="checkbox" id="exrecurring" name="exrecurring" value="true"><br>
+
+                <button class="cta-button" type="submit" value="Submit">Submit</button>
             </form>
         </div>
 
