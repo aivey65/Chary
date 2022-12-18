@@ -131,11 +131,7 @@ function loadBudgets(budgets) {
         budget_end_date = document.createElement('h4');
         budget_end_date.innerHTML = budgets[key].endDate;
 
-        budget_img = document.createElement('img');
-        budget_img.src = "static/images/categoryImages/" + budgets[key].icon + ".svg";
-        budget_img.classList.add("thumbnail");
-
-        budgetPanel.append(budget_img, budget_name, budget_des, budget_used, budget_amount, budget_end_date);
+        budgetPanel.append(budget_name, budget_des, budget_used, budget_amount, budget_end_date);
         
         budgetContainer.append(budgetPanel)
     }

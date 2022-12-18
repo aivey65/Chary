@@ -41,22 +41,27 @@
             </header>
         </div>
         <div class="content non-header" id="dashboard-content">
-            <div id="profile-section"></div>
-            <div id="budget-section">
-                <h1>Your Budgets</h1>
-                <button id="add-budget-button" class="cta-button" onclick="goToBudgetForm()">+ Add Budget</button>
-                <div id="budget-container"></div>
+            <div id="dashboard-non-scrollable">
+                <div id="profile-section"></div>
             </div>
-            <div id="earning-section">
-                <h1>Your Recent Earnings</h1>
-                <button id="add-earning-button" class="cta-button" onclick="goToEarningForm()">+ Add Earning</button>
-                <div id="earning-container"></div>
+            <div id="dashboard-scrollable">
+                <div id="budget-section">
+                    <h1>Budgets</h1>
+                    <button id="add-budget-button" class="cta-button" onclick="goToBudgetForm()">+ Add Budget</button>
+                    <div id="budget-container"></div>
+                </div>
+                <div id="earning-section">
+                    <h1>Recent Earnings</h1>
+                    <button id="add-earning-button" class="cta-button" onclick="goToEarningForm()">+ Add Earning</button>
+                    <div id="earning-container"></div>
+                </div>
+                <div id="expense-section">
+                    <h1>Recent Expenses</h1>
+                    <button id="add-expense-button" class="cta-button" onclick="goToExpenseForm()">+ Add Expense</button>
+                    <div id="expense-container"></div>
+                </div>
             </div>
-            <div id="expense-section">
-                <h1>Your Recent Expenses</h1>
-                <button id="add-expense-button" class="cta-button" onclick="goToExpenseForm()">+ Add Expense</button>
-                <div id="expense-container"></div>
-            </div>
+            
         </div>
     </body>
 </html>

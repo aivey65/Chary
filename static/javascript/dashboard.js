@@ -13,7 +13,7 @@ function getUserData() {
 
         expensePanel = loadExpenses(data.expenses)
         expenseContent = document.getElementById('expense-container');
-        expenseContent.append(expenseHeading, expensePanel);
+        expenseContent.append(expensePanel);
     })
 }
 

@@ -1,6 +1,6 @@
 #dashboard-content {
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1fr 4fr;
     padding: 0px;
 }
 
@@ -8,20 +8,37 @@
     grid-column: 1;
     height: 100vh;
     width: 100%;
+    padding: 2em;
 }
 
 .user-info {
     text-align: center;
 }
 
+#dashboard-non-scrollable {
+    grid-column: 1;
+    overflow: hidden;
+}
+
+#dashboard-scrollable {
+    grid-column: 2;
+    overflow: scroll;
+}
+
+#add-budget-button, #add-earning-button, #add-expense-button {
+    margin-left: 1em;
+}
+
 /* Styles for the budget section */
 #budget-section {
-    grid-column: 2;
+    display: grid;
+    grid-template-columns: auto 1fr;
 }
 
 #budget-container {
     display: flex;
     flex-direction: row;
+    grid-column: span 2;
 }
 
 .budget-info {
@@ -35,7 +52,26 @@
     height: auto;
 }
 
+/* Styles for the earning section */
+#earning-section {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+#earning-container {
+    display: flex;
+    flex-direction: row;
+    grid-column: span 2;
+}
+
 /* Styles for the expense section */
 #expense-section {
-    grid-column: 2;
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+#expense-container {
+    display: flex;
+    flex-direction: row;
+    grid-column: span 2;
 }
