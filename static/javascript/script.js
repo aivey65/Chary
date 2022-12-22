@@ -55,6 +55,10 @@ function toggleMenu() {
     }
 }
 
+function back() {
+    window.history.back();
+}
+
 //////////////////////
 // Scroll Functions //
 //////////////////////
@@ -131,7 +135,11 @@ function loadBudgets(budgets) {
         budget_end_date = document.createElement('h4');
         budget_end_date.innerHTML = budgets[key].endDate;
 
-        budgetPanel.append(budget_name, budget_des, budget_used, budget_amount, budget_end_date);
+        budget_update = document.createElement("button");
+        budget_update.innerHTML = "Update";
+        budget_update.addEventListener("onclick", "acd('budget', " + key + ")")
+
+        budgetPanel.append(budget_name, budget_des, budget_used, budget_amount, budget_end_date, budget_update);
         
         budgetContainer.append(budgetPanel)
     }
@@ -171,10 +179,20 @@ function loadExpenses(expenses) {
         expense_date = document.createElement('h4');
         expense_date.innerHTML = expenses[key].date;
 
-        expensePanel.append(expense_category, expense_icon, expense_name, expense_des, expense_amount, expense_date, );
+        expense_update = document.createElement("button");
+        expense_update.innerHTML = "Update";
+        expense_update.addEventListener("onclick", "acd('expense', " + key + ")")
+
+        expensePanel.append(expense_category, expense_icon, expense_name, expense_des, expense_amount, expense_date, expense_update);
     
         expenseContainer.append(expensePanel)
     }
 
     return expenseContainer;
+}
+
+function acd(type, id) {
+    fetch('/acd-' + type + '/' + id).then(response => response.json()).then((responseData) => {
+        console.log(responseData)
+    })
 }

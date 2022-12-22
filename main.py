@@ -129,20 +129,20 @@ def renderBudget():
 def renderExpense():
     return render_template('expense.html')
 
-@app.route("/acd-budget")
+@app.route("/acd-budget/<id>")
 @login_is_required
 def renderACDBudget():
-    return render_template('acd-budget.html')
+    return render_template('acd-budget.html', id=id)
 
-@app.route("/acd-earning")
+@app.route("/acd-earning/<id>")
 @login_is_required
 def renderACDEarning():
-    return render_template('acd-earning.html')
+    return render_template('acd-earning.html', id=id)
 
-@app.route("/acd-expense")
+@app.route("/acd-expense/<id>")
 @login_is_required
 def renderACDExpense():
-    return render_template('acd-expense.html')
+    return render_template('acd-expense.html', id=id)
 
 ####################################################
 # Routes for getting/updating database information #
@@ -168,6 +168,25 @@ def getBudgetData():
 def getExpenseData():
     return getExpenses(session["email"])
 
+@app.route("/data/acd-user")
+@login_is_required
+def updateUser():
+    return updateUser(session["email"])
+
+@app.route("/data/acd-budget")
+@login_is_required
+def updateBudget(id):
+    return updateBudget(session["email"], id)
+
+@app.route("/data/acd-earning")
+@login_is_required
+def updateEarning(id):
+    return updateEarning(session["email"], id)
+
+@app.route("/data/acd-expense")
+@login_is_required
+def updateExpense(id):
+    return updateExpense(session["email"], id)
 
 ##########################################################
 # Error handling to tell users more helpful information  #

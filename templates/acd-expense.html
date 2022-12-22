@@ -41,7 +41,9 @@
         </div>
 
         <div class="content non-header" id="acd-expenses">
-            <form action="acd-expense">
+            <form action="data/acd-expense">
+                <input type="hidden" name="Id" value={{id}} />
+
                 <label class="acd-form" for="exname">Expense Name</label><br>
                 <input type="text" id="exname" name="exname" required><br>
 

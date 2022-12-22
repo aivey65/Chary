@@ -41,8 +41,8 @@
         </div>
 
         <div class="content non-header" id="acd-budgets">
-            <form action="/acd-budget">
-                <!-- <input type="hidden" name="new" value="bar" /> -->
+            <form action="/data/acd-budget">
+                <input type="hidden" name="Id" value={{id}} />
 
                 <label class="acd-form" for="bname">Budget Name</label><br>
                 <input type="text" id="bname" name="bname" required><br>
@@ -81,6 +81,8 @@
                 <input type="checkbox" id="brecurring" name="brecurring" value="true"><br>
 
                 <button class="cta-button" type="submit" value="Submit">Submit</button>
+                <button onclick="back()" value="Back">Cancel</button>
+
             </form>
         </div>
 

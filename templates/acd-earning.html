@@ -41,7 +41,9 @@
         </div>
 
         <div class="content non-header" id="acd-earnings">
-            <form action="acd-earning">
+            <form action="data/acd-earning">
+                <input type="hidden" name="Id" value={{id}} />
+
                 <label class="acd-form" for="ename">Earning Name</label><br>
                 <input type="text" id="ename" name="ename" required><br>
 

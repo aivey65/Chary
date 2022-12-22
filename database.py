@@ -6,7 +6,6 @@ from flask import jsonify
 app = firebase_admin.initialize_app()
 db = firestore.client()
 
-
 ####################
 # Getter functions #
 ####################
@@ -33,7 +32,7 @@ def getAll(email):
 
     return {"data":user}
 
-# Get a user's basic information
+# Get a user's basic information, needed to get list of budgets, expenses, etc.
 def getUser(email):
     # Note: Use of CollectionRef stream() is prefered to get()
     docs = db.collection(u'users').where(u'email', u'==', email).stream()
@@ -73,11 +72,11 @@ def getExpenses(email):
 def updateUser(email):
     pass
 
-def updateBudget(email):
-    pass
+def updateBudget(email, data):
+    budgetList = getUser(email)['data']['budgets']
 
 def updateExpense(email):
     pass
 
-def updateEarnings(email):
+def updateEarning(email):
     pass
