@@ -54,30 +54,35 @@
                 <input type="text" id="eamount" name="eamount" required><br>
 
                 <!-- Radio buttons for the earning period -->
-                <label class="acd-form" class="earning-period">
+                <label class="acd-form earning-period">
+                    <input type="checkbox" id="eonetime" name="eradio" value="One Time">
+                    One Time
+                </label><br>
+                <label class="acd-form earning-period">
                     <input type="checkbox" id="eweekly" name="eradio" value="Weekly">
                     Weekly
                 </label><br>
-                <label class="acd-form" class="earning-period">
+                <label class="acd-form earning-period">
                     <input type="checkbox" id="ebiweekly" name="eradio" value="Biweekly">
                     Biweekly
                 </label><br>
-                <label class="acd-form" class="earning-period">
+                <label class="acd-form earning-period">
                     <input type="checkbox" id="emonthly" name="eradio" value="Monthly">
                     Monthly
                 </label><br>
-                <label class="acd-form" class="earning-period">
+                <label class="acd-form earning-period">
                     <input type="checkbox" id="eyearly" name="eradio" value="Yearly">
                     Yearly
                 </label><br>
 
                 <label class="acd-form" for="estart">Earning Start Date</label><br>
-                <input type="date" id="estart-date" name="estart"><br>
+                <input type="date" id="estart-date" name="estart" required><br>
 
                 <label class="acd-form" for="erecurring"> Is this earning type and amount recurring?</label><br>
                 <input type="checkbox" id="erecurring" name="erecurring" value="true"><br>
 
                 <button class="cta-button" type="submit" value="Submit">Submit</button>
+                <button onclick="back()" value="Back">Cancel</button>
             </form>
         </div>
 

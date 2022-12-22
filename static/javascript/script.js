@@ -173,9 +173,6 @@ function loadExpenses(expenses) {
         expense_des = document.createElement('p');
         expense_des.innerHTML = expenses[key].description;
 
-        expense_icon = document.createElement('h3');
-        expense_icon.innerHTML = expenses[key].icon;
-
         expense_date = document.createElement('h4');
         expense_date.innerHTML = expenses[key].date;
 
@@ -183,7 +180,7 @@ function loadExpenses(expenses) {
         expense_update.innerHTML = "Update";
         expense_update.addEventListener("onclick", "acd('expense', " + key + ")")
 
-        expensePanel.append(expense_category, expense_icon, expense_name, expense_des, expense_amount, expense_date, expense_update);
+        expensePanel.append(expense_category, expense_name, expense_des, expense_amount, expense_date, expense_update);
     
         expenseContainer.append(expensePanel)
     }
@@ -192,7 +189,5 @@ function loadExpenses(expenses) {
 }
 
 function acd(type, id) {
-    fetch('/acd-' + type + '/' + id).then(response => response.json()).then((responseData) => {
-        console.log(responseData)
-    })
+    window.location = '/acd-' + type + '/' + id;
 }

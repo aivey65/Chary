@@ -57,25 +57,29 @@
                 <input type="text" id="bamount-used" name="bamountused"><br>
 
                 <!-- Radio buttons for the budget period -->
-                <label class="acd-form" class="budget-period">
+                <label class="acd-form budget-period">
+                    <input type="checkbox" id="bonetime" name="bradio" value="One Time">
+                    One Time
+                </label><br>
+                <label class="acd-form budget-period">
                     <input type="radio" id="bweekly" name="bradio" value="Weekly">
                     Weekly
                 </label><br>
-                <label class="acd-form" class="budget-period">
+                <label class="acd-form budget-period">
                     <input type="radio" id="bbiweekly" name="bradio" value="Biweekly">
                     Biweekly
                 </label><br>
-                <label class="acd-form" class="budget-period">
+                <label class="acd-form budget-period">
                     <input type="radio" id="bmonthly" name="bradio" value="Monthly">
                     Monthly
                 </label><br>
-                <label class="acd-form" class="budget-period">
+                <label class="acd-form budget-period">
                     <input type="radio" id="byearly" name="bradio" value="Yearly">
                     Yearly
                 </label><br>
 
                 <label class="acd-form" for="bstart">Budget Start Date</label><br>
-                <input type="date" id="bstart-date" name="bstart"><br>
+                <input type="date" id="bstart-date" name="bstart" required><br>
 
                 <label class="acd-form" for="brecurring"> Is this budget and amount recurring?</label><br>
                 <input type="checkbox" id="brecurring" name="brecurring" value="true"><br>

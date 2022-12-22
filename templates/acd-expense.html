@@ -53,34 +53,36 @@
                 <label class="acd-form" for="examount">Expense Amount</label><br>
                 <input type="text" id="examount" name="examount" required><br>
 
-                <label class="acd-form" for="examountused">Expense Amount Used</label><br>
-                <input type="text" id="examount-used" name="examountused"><br>
-
                 <!-- Radio buttons for the expense period -->
                 <label class="acd-form" class="expense-period">
+                    <input type="checkbox" id="exonetime" name="exradio" value="One Time">
+                    One Time
+                </label><br>
+                <label class="acd-form expense-period">
                     <input type="checkbox" id="exweekly" name="exradio" value="Weekly">
                     Weekly
                 </label><br>
-                <label class="acd-form" class="expense-period">
+                <label class="acd-form expense-period">
                     <input type="checkbox" id="exbiweekly" name="exradio" value="Biweekly">
                     Biweekly
                 </label><br>
-                <label class="acd-form" class="expense-period">
+                <label class="acd-form expense-period">
                     <input type="checkbox" id="exmonthly" name="exradio" value="Monthly">
                     Monthly
                 </label><br>
-                <label class="acd-form" class="expense-period">
+                <label class="acd-form expense-period">
                     <input type="checkbox" id="exyearly" name="exradio" value="Yearly">
                     Yearly
                 </label><br>
 
                 <label class="acd-form" for="exstart">Expense Start Date</label><br>
-                <input type="date" id="exstart-date" name="exstart"><br>
+                <input type="date" id="exstart-date" name="exstart" required><br>
 
                 <label class="acd-form" for="exrecurring"> Is this expense and amount recurring?</label><br>
                 <input type="checkbox" id="exrecurring" name="exrecurring" value="true"><br>
 
                 <button class="cta-button" type="submit" value="Submit">Submit</button>
+                <button onclick="back()" value="Back">Cancel</button>
             </form>
         </div>
 

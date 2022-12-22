@@ -14,12 +14,16 @@ def getAll(email):
     user = getUser(email)['data']
     budgetsDict = {}
     expensesDict = {}
+    budgetCategories = []
 
     for budgetID in user['budgets']:
         if budgetID == "":
             continue
         budgetDoc = db.collection(u'budgets').document(budgetID).get()
         budgetsDict[budgetDoc.id] = budgetDoc.to_dict()
+
+        print(budgetDoc["name"])
+        budgetCategories.append(budgetDoc["name"])
     
     for expenseID in user['expenses']:
         if expenseID == "":
@@ -29,6 +33,7 @@ def getAll(email):
 
     user['budgets'] = budgetsDict
     user['expenses'] = expensesDict
+    user['budgetCategories'] = budgetCategories
 
     return {"data":user}
 
@@ -56,7 +61,8 @@ def getBudgets(email):
 
 # Get a user's expenses
 def getExpenses(email):
-    expenseList = getUser(email)['data']['expenses']
+    user = getUser(email)['data']
+    expenseList = user['expenses']
     expensesDict = {}
     
     # Loop through the expenselist, making requests to the database
@@ -64,7 +70,15 @@ def getExpenses(email):
         expenseDoc = db.collection(u'expenses').document(expenseID).get()
         expensesDict[expenseDoc.id] = expenseDoc.to_dict()
 
-    return {"data":expensesDict}
+    # Get a list of budget categories
+    budgetList = user['budgets']
+    budgetCategories = []
+    for budgetID in budgetList:
+        budgetName = db.collection(u'budgets').document(budgetID).select("name").get()
+        print(budgetName)
+        budgetCategories.append(budgetName)
+
+    return {"data":expensesDict, "categories":budgetCategories}
 
 ####################
 # Setter functions #
@@ -72,11 +86,21 @@ def getExpenses(email):
 def updateUser(email):
     pass
 
-def updateBudget(email, data):
+def updateBudget(email, id, name, amount, startDate, description="", amountUsed="", earningPeriod="One Time", recurring=False):
     budgetList = getUser(email)['data']['budgets']
 
-def updateExpense(email):
-    pass
+    # Check to make sure that the id passed in corresponds to an item in the user's database
+    if id in budgetList:
+        print("Budget exists, update possible.")
 
-def updateEarning(email):
+def updateExpense(email, id, name, amount, startDate, description="", earningPeriod="One Time", recurring=False):
+    expenseList = getUser(email)['data']['expenses']
+
+    # Check to make sure that the id passed in corresponds to an item in the user's database
+    if id in expenseList:
+        print("Expense exists, update possible.")
+
+
+
+def updateEarning(email, id, name, amount, startDate, description="", earningPeriod="One Time", recurring=False):
     pass

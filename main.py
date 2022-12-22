@@ -175,19 +175,71 @@ def updateUser():
 
 @app.route("/data/acd-budget")
 @login_is_required
-def updateBudget(id):
-    return updateBudget(session["email"], id)
+def updateBudget():
+    id = request.form.get("Id")
+    name = request.form.get("bname")
+    description = request.form.get("bdescription")
+    amount = request.form.get("bamount")
+    amountUsed = request.form.get("bamountused")
+    earningPeriod = request.form.get("bradio")
+    startDate = request.form.get("bstart")
+    recurring = request.form.get("brecurring")
+
+    return updateBudget(
+        session["email"], 
+        id, 
+        name, 
+        description, 
+        amount,
+        startDate,
+        amountUsed,
+        earningPeriod, 
+        recurring
+    )
 
 @app.route("/data/acd-earning")
 @login_is_required
-def updateEarning(id):
-    return updateEarning(session["email"], id)
+def updateEarning():
+    id = request.form.get("Id")
+    name = request.form.get("ename")
+    description = request.form.get("edescription")
+    amount = request.form.get("eamount")
+    earningPeriod = request.form.get("eradio")
+    startDate = request.form.get("estart")
+    recurring = request.form.get("erecurring")
+
+    return updateEarning(
+        session["email"], 
+        id, 
+        name, 
+        description, 
+        amount,
+        startDate,
+        earningPeriod, 
+        recurring
+    )
 
 @app.route("/data/acd-expense")
 @login_is_required
-def updateExpense(id):
-    return updateExpense(session["email"], id)
+def updateExpense():
+    id = request.form.get("Id")
+    name = request.form.get("exname")
+    description = request.form.get("exdescription")
+    amount = request.form.get("examount")
+    earningPeriod = request.form.get("exradio")
+    startDate = request.form.get("exstart")
+    recurring = request.form.get("exrecurring")
 
+    return updateExpense(
+        session["email"], 
+        id, 
+        name, 
+        description, 
+        amount,
+        startDate,
+        earningPeriod, 
+        recurring
+    )
 ##########################################################
 # Error handling to tell users more helpful information  #
 ##########################################################
