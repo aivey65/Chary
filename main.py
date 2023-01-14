@@ -129,20 +129,20 @@ def renderBudget():
 def renderExpense():
     return render_template('expense.html')
 
-@app.route("/acd-budget/<id>")
+@app.route("/acd-budget/<budgetId>")
 @login_is_required
-def renderACDBudget():
-    return render_template('acd-budget.html', id=id)
+def renderACDBudget(budgetId):
+    return render_template('acd-budget.html', id=budgetId)
 
-@app.route("/acd-earning/<id>")
+@app.route("/acd-earning/<earningId>")
 @login_is_required
-def renderACDEarning():
-    return render_template('acd-earning.html', id=id)
+def renderACDEarning(earningId):
+    return render_template('acd-earning.html', id=earningId)
 
-@app.route("/acd-expense/<id>")
+@app.route('/acd-expense/<expenseId>')
 @login_is_required
-def renderACDExpense():
-    return render_template('acd-expense.html', id=id)
+def renderACDExpense(expenseId):
+    return render_template('acd-expense.html', id=expenseId)
 
 ####################################################
 # Routes for getting/updating database information #
@@ -177,13 +177,13 @@ def updateUser():
 @login_is_required
 def updateBudget():
     id = request.form.get("Id")
-    name = request.form.get("bname")
-    description = request.form.get("bdescription")
-    amount = request.form.get("bamount")
-    amountUsed = request.form.get("bamountused")
-    earningPeriod = request.form.get("bradio")
-    startDate = request.form.get("bstart")
-    recurring = request.form.get("brecurring")
+    name = request.form.get("name")
+    description = request.form.get("description")
+    amount = request.form.get("amount")
+    amountUsed = request.form.get("amountused")
+    earningPeriod = request.form.get("radio")
+    startDate = request.form.get("start")
+    recurring = request.form.get("recurring")
 
     return updateBudget(
         session["email"], 
@@ -201,12 +201,12 @@ def updateBudget():
 @login_is_required
 def updateEarning():
     id = request.form.get("Id")
-    name = request.form.get("ename")
-    description = request.form.get("edescription")
-    amount = request.form.get("eamount")
-    earningPeriod = request.form.get("eradio")
-    startDate = request.form.get("estart")
-    recurring = request.form.get("erecurring")
+    name = request.form.get("name")
+    description = request.form.get("description")
+    amount = request.form.get("amount")
+    earningPeriod = request.form.get("radio")
+    startDate = request.form.get("start")
+    recurring = request.form.get("recurring")
 
     return updateEarning(
         session["email"], 
@@ -223,12 +223,12 @@ def updateEarning():
 @login_is_required
 def updateExpense():
     id = request.form.get("Id")
-    name = request.form.get("exname")
-    description = request.form.get("exdescription")
-    amount = request.form.get("examount")
-    earningPeriod = request.form.get("exradio")
-    startDate = request.form.get("exstart")
-    recurring = request.form.get("exrecurring")
+    name = request.form.get("name")
+    description = request.form.get("description")
+    amount = request.form.get("amount")
+    earningPeriod = request.form.get("radio")
+    startDate = request.form.get("start")
+    recurring = request.form.get("recurring")
 
     return updateExpense(
         session["email"], 

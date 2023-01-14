@@ -15,7 +15,7 @@
         <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/form/form-mobile.css'>
 
         <!-- JavaScript links -->
-        <script src='../static/javascript/landing.js'></script>
+        <script src='../static/javascript/form.js'></script>
         <script src='../static/javascript/script.js'></script>
 
         <Title>Chary</Title>
@@ -44,45 +44,45 @@
             <form action="/data/acd-budget">
                 <input type="hidden" name="Id" value={{id}} />
 
-                <label class="acd-form" for="bname">Budget Name</label><br>
-                <input type="text" id="bname" name="bname" required><br>
+                <label class="acd-form" for="name">Budget Name</label><br>
+                <input type="text" id="name" name="name" required><br>
 
-                <label class="acd-form" for="bdescription">Budget Description</label><br>
-                <textarea id="bdescription" name="bdescription" rows="4" cols="50"></textarea>><br>
+                <label class="acd-form" for="description">Budget Description</label><br>
+                <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
 
-                <label class="acd-form" for="bamount">Budget Amount</label><br>
-                <input type="text" id="bamount" name="bamount" required><br>
+                <label class="acd-form" for="amount">Budget Amount</label><br>
+                <input type="text" id="bamount" name="amount" required><br>
 
-                <label class="acd-form" for="bamountused">Budget Amount Used</label><br>
-                <input type="text" id="bamount-used" name="bamountused"><br>
+                <label class="acd-form" for="amountused">Budget Amount Used</label><br>
+                <input type="text" id="amount-used" name="amountused"><br>
 
                 <!-- Radio buttons for the budget period -->
                 <label class="acd-form budget-period">
-                    <input type="checkbox" id="bonetime" name="bradio" value="One Time">
+                    <input type="checkbox" id="onetime" name="radio" value="One Time">
                     One Time
                 </label><br>
                 <label class="acd-form budget-period">
-                    <input type="radio" id="bweekly" name="bradio" value="Weekly">
+                    <input type="radio" id="weekly" name="radio" value="Weekly">
                     Weekly
                 </label><br>
                 <label class="acd-form budget-period">
-                    <input type="radio" id="bbiweekly" name="bradio" value="Biweekly">
+                    <input type="radio" id="biweekly" name="radio" value="Biweekly">
                     Biweekly
                 </label><br>
                 <label class="acd-form budget-period">
-                    <input type="radio" id="bmonthly" name="bradio" value="Monthly">
+                    <input type="radio" id="monthly" name="radio" value="Monthly">
                     Monthly
                 </label><br>
                 <label class="acd-form budget-period">
-                    <input type="radio" id="byearly" name="bradio" value="Yearly">
+                    <input type="radio" id="yearly" name="radio" value="Yearly">
                     Yearly
                 </label><br>
 
-                <label class="acd-form" for="bstart">Budget Start Date</label><br>
-                <input type="date" id="bstart-date" name="bstart" required><br>
+                <label class="acd-form" for="start">Budget Start Date</label><br>
+                <input type="date" id="start-date" name="start" required><br>
 
-                <label class="acd-form" for="brecurring"> Is this budget and amount recurring?</label><br>
-                <input type="checkbox" id="brecurring" name="brecurring" value="true"><br>
+                <label class="acd-form" for="recurring"> Is this budget and amount recurring?</label><br>
+                <input type="checkbox" id="recurring" name="recurring" value="true"><br>
 
                 <button class="cta-button" type="submit" value="Submit">Submit</button>
                 <button onclick="back()" value="Back">Cancel</button>

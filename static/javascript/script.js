@@ -137,7 +137,9 @@ function loadBudgets(budgets) {
 
         budget_update = document.createElement("button");
         budget_update.innerHTML = "Update";
-        budget_update.addEventListener("onclick", "acd('budget', " + key + ")")
+        budget_update.addEventListener("click", function() {
+            window.location = '/acd-expense/' + key;
+        })
 
         budgetPanel.append(budget_name, budget_des, budget_used, budget_amount, budget_end_date, budget_update);
         
@@ -178,7 +180,9 @@ function loadExpenses(expenses) {
 
         expense_update = document.createElement("button");
         expense_update.innerHTML = "Update";
-        expense_update.addEventListener("onclick", "acd('expense', " + key + ")")
+        expense_update.addEventListener("click", function() {
+            window.location = '/acd-expense/' + key;
+        })
 
         expensePanel.append(expense_category, expense_name, expense_des, expense_amount, expense_date, expense_update);
     

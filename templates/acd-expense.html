@@ -15,13 +15,13 @@
         <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/form/form-mobile.css'>
 
         <!-- JavaScript links -->
-        <script src='../static/javascript/landing.js'></script>
+        <script src='../static/javascript/form.js'></script>
         <script src='../static/javascript/script.js'></script>
 
         <Title>Chary</Title>
     </head>
 
-    <body>
+    <body onload="getBudgetData()">
         <div id="header-container">
             <header class="content">
                 <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()">
@@ -45,41 +45,41 @@
                 <input type="hidden" name="Id" value={{id}} />
 
                 <label class="acd-form" for="exname">Expense Name</label><br>
-                <input type="text" id="exname" name="exname" required><br>
+                <input type="text" id="name" name="name" required><br>
 
                 <label class="acd-form" for="exdescription">Expense Description</label><br>
-                <textarea id="exdescription" name="exdescription" rows="4" cols="50">><br>
+                <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
 
                 <label class="acd-form" for="examount">Expense Amount</label><br>
-                <input type="text" id="examount" name="examount" required><br>
+                <input type="text" id="amount" name="amount" required><br>
 
                 <!-- Radio buttons for the expense period -->
                 <label class="acd-form" class="expense-period">
-                    <input type="checkbox" id="exonetime" name="exradio" value="One Time">
+                    <input type="checkbox" id="onetime" name="radio" value="One Time">
                     One Time
                 </label><br>
                 <label class="acd-form expense-period">
-                    <input type="checkbox" id="exweekly" name="exradio" value="Weekly">
+                    <input type="checkbox" id="weekly" name="radio" value="Weekly">
                     Weekly
                 </label><br>
                 <label class="acd-form expense-period">
-                    <input type="checkbox" id="exbiweekly" name="exradio" value="Biweekly">
+                    <input type="checkbox" id="biweekly" name="radio" value="Biweekly">
                     Biweekly
                 </label><br>
                 <label class="acd-form expense-period">
-                    <input type="checkbox" id="exmonthly" name="exradio" value="Monthly">
+                    <input type="checkbox" id="monthly" name="radio" value="Monthly">
                     Monthly
                 </label><br>
                 <label class="acd-form expense-period">
-                    <input type="checkbox" id="exyearly" name="exradio" value="Yearly">
+                    <input type="checkbox" id="yearly" name="radio" value="Yearly">
                     Yearly
                 </label><br>
 
                 <label class="acd-form" for="exstart">Expense Start Date</label><br>
-                <input type="date" id="exstart-date" name="exstart" required><br>
+                <input type="date" id="start-date" name="start" required><br>
 
                 <label class="acd-form" for="exrecurring"> Is this expense and amount recurring?</label><br>
-                <input type="checkbox" id="exrecurring" name="exrecurring" value="true"><br>
+                <input type="checkbox" id="recurring" name="recurring" value="true"><br>
 
                 <button class="cta-button" type="submit" value="Submit">Submit</button>
                 <button onclick="back()" value="Back">Cancel</button>

@@ -22,8 +22,7 @@ def getAll(email):
         budgetDoc = db.collection(u'budgets').document(budgetID).get()
         budgetsDict[budgetDoc.id] = budgetDoc.to_dict()
 
-        print(budgetDoc["name"])
-        budgetCategories.append(budgetDoc["name"])
+        budgetCategories.append(budgetsDict[budgetDoc.id]['name'])
     
     for expenseID in user['expenses']:
         if expenseID == "":
@@ -51,13 +50,18 @@ def getUser(email):
 def getBudgets(email):
     budgetList = getUser(email)['data']['budgets']
     budgetsDict = {}
+    budgetCategories = []
     
     # Loop through the budgetlist, making requests to the database
     for budgetID in budgetList:
+        if budgetID == "":
+            continue
         budgetDoc = db.collection(u'budgets').document(budgetID).get()
         budgetsDict[budgetDoc.id] = budgetDoc.to_dict()
 
-    return {"data":budgetsDict}
+        budgetCategories.append(budgetsDict[budgetDoc.id]['name'])
+
+    return {"data":budgetsDict, "categories":budgetCategories}
 
 # Get a user's expenses
 def getExpenses(email):
@@ -67,6 +71,8 @@ def getExpenses(email):
     
     # Loop through the expenselist, making requests to the database
     for expenseID in expenseList:
+        if expenseID == "":
+            continue
         expenseDoc = db.collection(u'expenses').document(expenseID).get()
         expensesDict[expenseDoc.id] = expenseDoc.to_dict()
 
