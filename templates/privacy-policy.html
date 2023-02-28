@@ -40,35 +40,16 @@
             </header>
         </div>
 
-        <div class="content non-header" id="landing-hero">
-            <h1 id="hero1">Be chary when spending money</h1>
-            <h3 id="hero2">Keep track of your daily spendings with Chary. Visualise your expenses and make budgeting plans to achieve your money-saving goals</h3>
-            <div id="hero3">
-                <button id="hero-login" onclick="loginAction()">Log In</button>
-                <button class="cta-button" onclick="loginAction()">Get Started</button>
-            </div>
-            <div class="centered" id="down-icon-container">
-                <img id='down-icon' class='icon floating' src="../static/images/down-icon-light.svg" onclick="downAction()" alt="Down arrow to read more">
-            </div>
-            <div id="hero-img">
-                <img id="hero-img-svg" src="../static/images/undraw_credit_card_payments.svg">
-            </div>
-        </div>
-
-        <div class="non-header" id="landing-info">
-            <div class="info-box" id="info1">
-                <img class="number" src="../static/images/undraw_pie_chart.svg">
-                <h3>Create custom budgets and set a dollar amount limit </h3>
-            </div>
-            <div class="info-box" id="info2">
-                <img class="number" src="../static/images/undraw_gone_shopping.svg">
-                <h3>As you make purchases, add the amount you spent into your expenses</h3>
-            </div>
-            <div class="info-box" id="info3">
-                <img class="number" src="../static/images/undraw_statistics.svg">
-                <h3>We'll let you know how you are doing—and if you need to reduce spending to reach your goals</h3>
-            </div>
-        </div>
+        <h1>
+            Privacy Policy
+        </h1>
+        <button onclick="homeAction()">Back to Home</button>
+        {% if showLogin %}
+            <button class='cta-button' onclick="loginAction()">Log In</button>
+        {% endif %}
+        {% if showDashboard %}
+            <button class='cta-button' onclick="dashboardAction()">Dashboard</button>
+        {% endif %}
 
         <div class="footer">
             <div class='contact-methods'> 
@@ -90,7 +71,7 @@
             </div> 
             <div id="legal">
                 <div class="legal-button">
-                    <a href="/privacy">Privacy Policy</a>
+                    <a>Privacy Policy</a>
                 </div>
                 <span>|</span>
                 <div class="legal-button">

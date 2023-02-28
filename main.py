@@ -10,7 +10,7 @@ from pip._vendor import cachecontrol
 import google.auth.transport.requests
 from functools import wraps
 
-from database import getAll, getUser, getBudgets, getExpenses
+from database import getAll, getUser, getAllBudgets, getAllExpenses, getBudget, getExpense, getEarning
 
 app = Flask(__name__, template_folder="templates")
 # Load environment variables and set secret key
@@ -48,6 +48,10 @@ def renderAbout():
 @app.route("/login")
 def renderLogin():
     return render_template('login.html')
+
+@app.route("/privacy")
+def renderPrivacyPolicy():
+    return render_template('privacy-policy.html')
 
 ####################################
 # Functions for logging in and out #
@@ -131,17 +135,17 @@ def renderExpense():
 
 @app.route("/acd-budget/<budgetId>")
 @login_is_required
-def renderACDBudget(budgetId):
+def renderACDBudget(budgetId=-1):
     return render_template('acd-budget.html', id=budgetId)
 
 @app.route("/acd-earning/<earningId>")
 @login_is_required
-def renderACDEarning(earningId):
+def renderACDEarning(earningId=-1):
     return render_template('acd-earning.html', id=earningId)
 
 @app.route('/acd-expense/<expenseId>')
 @login_is_required
-def renderACDExpense(expenseId):
+def renderACDExpense(expenseId=-1):
     return render_template('acd-expense.html', id=expenseId)
 
 ####################################################
@@ -161,19 +165,34 @@ def getUserData():
 @app.route("/data/budgets")
 @login_is_required
 def getBudgetData():
-    return getBudgets(session["email"])
+    return getAllBudgets(session["email"])
 
 @app.route("/data/expenses")
 @login_is_required
 def getExpenseData():
-    return getExpenses(session["email"])
+    return getAllExpenses(session["email"])
 
-@app.route("/data/acd-user")
+@app.route("/data/get-budget")
+@login_is_required
+def getBudget():
+    return getBudget()
+    
+@app.route("/data/get-expense")
+@login_is_required
+def getExpense():
+    return getExpense()
+
+@app.route("/data/get-earning")
+@login_is_required
+def getEarning():
+    return getEarning()
+
+@app.route("/data/set-user")
 @login_is_required
 def updateUser():
     return updateUser(session["email"])
 
-@app.route("/data/acd-budget")
+@app.route("/data/set-budget")
 @login_is_required
 def updateBudget():
     id = request.form.get("Id")
@@ -197,7 +216,7 @@ def updateBudget():
         recurring
     )
 
-@app.route("/data/acd-earning")
+@app.route("/data/set-earning")
 @login_is_required
 def updateEarning():
     id = request.form.get("Id")
@@ -219,7 +238,7 @@ def updateEarning():
         recurring
     )
 
-@app.route("/data/acd-expense")
+@app.route("/data/set-expense")
 @login_is_required
 def updateExpense():
     id = request.form.get("Id")

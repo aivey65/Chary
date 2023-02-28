@@ -47,7 +47,7 @@ def getUser(email):
     return 
 
 # Get a user's budgets
-def getBudgets(email):
+def getAllBudgets(email):
     budgetList = getUser(email)['data']['budgets']
     budgetsDict = {}
     budgetCategories = []
@@ -64,7 +64,7 @@ def getBudgets(email):
     return {"data":budgetsDict, "categories":budgetCategories}
 
 # Get a user's expenses
-def getExpenses(email):
+def getAllExpenses(email):
     user = getUser(email)['data']
     expenseList = user['expenses']
     expensesDict = {}
@@ -85,6 +85,15 @@ def getExpenses(email):
         budgetCategories.append(budgetName)
 
     return {"data":expensesDict, "categories":budgetCategories}
+
+def getExpense():
+    pass
+
+def getBudget():
+    pass
+
+def getEarning():
+    pass
 
 ####################
 # Setter functions #
