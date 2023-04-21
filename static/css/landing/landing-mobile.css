@@ -3,9 +3,14 @@
 #landing-hero {
     padding-top: 70px;
     height: 100vh;
-    display: grid;
+    background-color: var(--faded);
+}
+
+#hero-text {
     grid-template-rows: 1fr .5fr 0fr .4fr 1fr;
     align-items: center;
+    display: grid;
+    height: 100%;
 }
 
 #hero1 {
@@ -13,6 +18,11 @@
 }
 
 #hero2 {
+    display: none;
+}
+
+#hero2-mobile {
+    display: block;
     grid-row: 3/4;
 }
 
@@ -22,6 +32,19 @@
 
 #hero-login {
     margin-right: 15px;
+}
+
+#hero-img {
+    display: none;
+}
+
+#hero-img-mobile {
+    display: block;
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    top: 40%;
+    max-width: 100%;
 }
 
 #down-icon-container {
@@ -46,10 +69,12 @@
 }
 
 .number {
-    background-color: var(--MainD);
+    background-color: var(--Grey);
     color:var(--Light);
     font-size: 3rem;
     padding: 10px;
+    width:150px;
+    height:150px;
     margin-right: 20px;
     border-radius: 50%;
     text-align: center;
@@ -59,6 +84,7 @@
 
 .info-box {
     display: grid;
-    grid-template-columns: 30% auto;
+    grid-template-columns: auto auto;
     align-items: center;
+    margin-bottom: 20px;
 }

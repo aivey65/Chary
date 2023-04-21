@@ -24,7 +24,7 @@ Defining color values to make it easier to change later on
     --ContrastD: #30A821; /*#74A821, #21A899*/
     --ContrastL: #6ACD5F; /*#A1CD5F, #5FCDC2*/
     --ContrastDD: #065e10;
-    --faded: rgb(0, 0, 0, .2);
+    --faded: rgb(0, 0, 0, .6);
 }
 
 *, *::before, *::after {
@@ -194,7 +194,7 @@ button {
     grid-template-rows: 1fr .8fr .5fr .5fr .5fr .5fr;
     align-items: center;
     height: 15rem;
-    width: 100vw;
+    width: 100%;
 }
 
 .footer h3 {
@@ -265,6 +265,10 @@ button {
     .non-header {
         padding-left: 15px;
         padding-right: 15px;
+    }
+
+    .legal-button a, span {
+        font-size: 1em;
     }
 }
 
@@ -372,7 +376,7 @@ Creating the navigation bar depending on the size of the user's screen
     }
     
     nav {
-        grid-column: 3/4;
+        grid-column: 4;
         height: fit-content;
         margin: 0;
         position: relative;
@@ -383,7 +387,7 @@ Creating the navigation bar depending on the size of the user's screen
         padding: 0rem;
         list-style: none;
         display: flex;
-        justify-content: space-around;
+        justify-content: end;
     }
     
     nav a {

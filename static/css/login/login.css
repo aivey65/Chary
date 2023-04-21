@@ -1,29 +1,116 @@
-#login {
-    height: 100vh;
-    display: grid;
-    grid-template-rows: .5fr .5fr .5fr 1fr;
-    justify-content: center;
+body {
+    background-color: var(--Background);
+    background-image: url("../../images/Background_chary.svg");
+    background-repeat: repeat;
+    background-attachment: fixed;
+    background-size: 90%;
 }
 
-#login h1 {
-    text-align: center;
-    grid-row: 2;
+#login {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #login-button {
+    color: var(--Dark);
+    border-radius: 50rem 50rem 50rem 50rem;
+    padding: 10px 20px 10px 20px;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    width: fit-content;
     display: flex;
     align-content: center;
-    background-color:var(--Light);
-    grid-row: 3;
-    border: solid 1px var(--Light);
-    border-radius: 5px;   
-    padding:10px;
+    background-color:var(--ContrastL);
+    grid-row: 5;
+    border: solid 1px var(--ContrastL);
     height: fit-content;
+    align-items: center;
 }
 
 #login-button img {
-    height: 25px;
-    width: 25px;
+    height: 35px;
+    width: 35px;
     margin-right: 10px;
+    background-color: var(--Light);
+    border-radius: 50%;
+    padding: 5px;
 }
 
+#login-container {
+    height: 60%;
+    min-height: 420px;
+    background-color: var(--MainL);
+    display: grid;
+    grid-template-columns: 50% auto;
+    grid-template-rows: auto;
+    align-items: center;
+    justify-items: center;
+    border-radius: 1em;
+    box-shadow: -20px 20px 15px var(--Dark);
+}
+
+#login-card {
+    height: 80%;
+    width: 90%;
+    grid-column: 2;
+    display: grid;
+    grid-template-rows: .3fr .5fr 1fr .1fr .5fr .3fr;
+    justify-content: center;
+    background-color: var(--Light);
+    border-radius: 2em;
+}
+
+#login-card hr {
+    grid-row: 4;
+    width: 100%;
+    border-style: solid;
+    height: 2px;
+    color: var(--Background)
+}
+
+#login-card h1 {
+    color: var(--Background);
+    text-align: center;
+    grid-row: 2;
+    font-weight: 400;
+    font-size: 2rem;
+}
+
+#unavailable-img {
+    grid-row: 3;
+    z-index: 1;
+    grid-column: 1;
+    width:220px;
+    height: auto;
+    background-color: var(--faded);
+}
+
+#login-form {
+    z-index: 0;
+    grid-row: 3;
+    grid-column: 1;
+}
+
+#login-form input {
+    border-radius: 50rem 50rem 50rem 50rem;
+    margin-top: 5px;
+    padding: 10px 20px 10px 20px;
+    border: 2px solid white;
+    background-color: var(--Light);
+}
+
+#login-form input:active, input:focus-visible {
+    border-radius: 50rem 50rem 50rem 50rem;
+    margin-top: 5px;
+    padding: 10px 20px 10px 20px;
+    border: 2px solid var(--MainL);
+    outline: var(--MainL) auto 1px;
+    background-color: var(--Light);
+}
+
+#image-card {
+    grid-column: 1;
+}
