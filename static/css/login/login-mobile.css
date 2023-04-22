@@ -1,24 +1,17 @@
 #login {
     height: 100vh;
-    display: grid;
-    grid-template-rows: .5fr .5fr .5fr 1fr;
     justify-content: center;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    padding-top: 56px;
+    background-color: var(--Light);
+    border-top: solid 1px var(--Dark);
 }
 
 #login h1 {
     text-align: center;
     grid-row: 2;
-}
-
-#login-button {
-    display: flex;
-    align-content: center;
-    background-color:var(--Light);
-    grid-row: 3;
-    border: solid 1px var(--Light);
-    border-radius: 5px;   
-    padding:10px;
-    height: fit-content;
 }
 
 #login-button img {
@@ -27,3 +20,113 @@
     margin-right: 10px;
 }
 
+#login-button {
+    color: var(--Dark);
+    border-radius: 50rem 50rem 50rem 50rem;
+    padding: 10px 20px 10px 20px;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    width: fit-content;
+    display: flex;
+    align-content: center;
+    background-color:var(--ContrastL);
+    grid-row: 5;
+    border: solid 1px var(--ContrastL);
+    height: fit-content;
+    align-items: center;
+}
+
+#login-button img {
+    height: 35px;
+    width: 35px;
+    margin-right: 10px;
+    background-color: var(--Light);
+    border-radius: 50%;
+    padding: 5px;
+}
+
+#login-container {
+    height: 90%;
+    min-height: 420px;
+    display: grid;
+    grid-template-rows: 1fr .3fr;
+    align-items: center;
+    justify-items: center;
+}
+
+#login-card {
+    width: 100%;
+    grid-column: 1;
+    grid-row: 1;
+    display: grid;
+    grid-template-rows: .1fr .3fr 1fr .1fr .3fr .1fr;
+    justify-content: center;
+}
+
+#image-card {
+    width: 90%;
+    height: 100%;
+    grid-row: 2;
+    padding: 15px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#image-card img {
+    width: 90%;
+    height: auto;
+
+}
+
+#login-card hr {
+    grid-row: 4;
+    width: 100%;
+    border-style: solid;
+    height: 2px;
+    color: var(--Background)
+}
+
+#login-card h1 {
+    color: var(--Background);
+    text-align: center;
+    grid-row: 2;
+    font-weight: 400;
+    font-size: 2rem;
+}
+
+#unavailable-img {
+    grid-row: 3;
+    z-index: 1;
+    grid-column: 1;
+    width:220px;
+    height: auto;
+    background-color: var(--faded);
+}
+
+#login-form {
+    z-index: 0;
+    grid-row: 3;
+    grid-column: 1;
+}
+
+#login-form input {
+    border-radius: 50rem 50rem 50rem 50rem;
+    margin-top: 5px;
+    padding: 10px 20px 10px 20px;
+    border: 2px solid white;
+    background-color: var(--Light);
+}
+
+#login-form input:active, input:focus-visible {
+    border-radius: 50rem 50rem 50rem 50rem;
+    margin-top: 5px;
+    padding: 10px 20px 10px 20px;
+    border: 2px solid var(--MainL);
+    outline: var(--MainL) auto 1px;
+    background-color: var(--Light);
+}
+
+#image-card {
+    grid-column: 1;
+}
