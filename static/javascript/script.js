@@ -123,14 +123,39 @@ function loadBudgets(budgets) {
         budget_name = document.createElement('h2');
         budget_name.innerHTML = budgets[key].name;
 
-        budget_amount = document.createElement('h3');
-        budget_amount.innerHTML = budgets[key].actualBudgetAmount;
-
         budget_des = document.createElement('p');
         budget_des.innerHTML = budgets[key].description;
 
         budget_used = document.createElement('h3');
         budget_used.innerHTML = budgets[key].usedAmount;
+
+        budget_amount = document.createElement('h3');
+        budget_amount.innerHTML = budgets[key].actualBudgetAmount;
+
+        // Progess SVG
+        var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        var path1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+        var path2 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+
+        svg.setAttribute('width', '200');
+        svg.setAttribute('height', '150');
+        svg.setAttribute('viewbox', '0 0 20 150');
+        svg.classList.add('progress-svg');
+
+        path1.setAttribute('d', 'M15,60 a60,60 0 0,1 115,0');
+        path1.classList.add('outer-progress');
+        path2.setAttribute('d', 'M15,60 a60,60 0 0,1 115,0');
+        path2Length = path2.getTotalLength();
+        path2.setAttribute('stroke-dasharray', (budgets[key].usedAmount/budgets[key].actualBudgetAmount) * path2Length + ' ' + path2Length);
+        path2.classList.add('inner-progress');
+
+        svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+        path1.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+        path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+        
+        svg.append(path1, path2);
+
+        // End progress svg
 
         budget_end_date = document.createElement('h4');
         budget_end_date.innerHTML = budgets[key].endDate;
@@ -141,7 +166,7 @@ function loadBudgets(budgets) {
             window.location = '/acd-expense/' + key;
         })
 
-        budgetPanel.append(budget_name, budget_des, budget_used, budget_amount, budget_end_date, budget_update);
+        budgetPanel.append(budget_name, budget_des, svg, budget_used, budget_amount, budget_end_date, budget_update);
         
         budgetContainer.append(budgetPanel)
     }

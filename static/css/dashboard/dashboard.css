@@ -47,9 +47,27 @@
     background-color: var(--faded);
 }
 
+.budget-info p, h4{
+    display: none;
+}
+
 .budget-info img {
     width: 1.3em;
     height: auto;
+}
+
+.outer-progress {
+    fill: none;
+    stroke-width: 23;
+    stroke-linecap: round;
+    stroke: var(--Grey);
+}
+
+.inner-progress {
+    fill: none;
+    stroke-width: 20;
+    stroke-linecap: round;
+    stroke: var(--ContrastL);
 }
 
 /* Styles for the earning section */
