@@ -135,17 +135,17 @@ def renderExpense():
 
 @app.route("/acd-budget/<budgetId>")
 @login_is_required
-def renderACDBudget(budgetId=-1):
+def renderACDBudget(budgetId="-1"):
     return render_template('acd-budget.html', id=budgetId)
 
 @app.route("/acd-earning/<earningId>")
 @login_is_required
-def renderACDEarning(earningId=-1):
+def renderACDEarning(earningId="-1"):
     return render_template('acd-earning.html', id=earningId)
 
 @app.route('/acd-expense/<expenseId>')
 @login_is_required
-def renderACDExpense(expenseId=-1):
+def renderACDExpense(expenseId="-1"):
     return render_template('acd-expense.html', id=expenseId)
 
 ####################################################

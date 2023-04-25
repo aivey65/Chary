@@ -121,6 +121,7 @@ function loadBudgets(budgets) {
         budgetPanel.classList.add('budget-info');
         
         budget_name = document.createElement('h2');
+        budget_name.classList.add("budget-name");
         budget_name.innerHTML = budgets[key].name;
 
         budget_des = document.createElement('p');
@@ -173,10 +174,16 @@ function loadBudgets(budgets) {
         budget_update = document.createElement("button");
         budget_update.innerHTML = "Update";
         budget_update.addEventListener("click", function() {
-            window.location = '/acd-expense/' + key;
+            window.location = '/acd-budget/' + key;
         })
 
-        budgetPanel.append(budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_update);
+        budget_more = document.createElement("button");
+        budget_more.innerHTML = "See More";
+        budget_more.addEventListener("click", function() {
+            window.location = '/expand-budget/' + key;
+        })
+
+        budgetPanel.append(budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_more, budget_update);
         
         budgetContainer.append(budgetPanel)
     }

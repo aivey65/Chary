@@ -15,9 +15,10 @@ Defining color values to make it easier to change later on
 */
 :root {
     --Background: #23060A;
-    --BAccent: #7FD1B9;
+    --BAccent: #f6f04a;
     --Light: #f6d4d2;
     --Dark: #100007;
+    --Navy: #2F2E41;
     --Grey: #CCCCCC;
     --MainD: #A82130;
     --MainL: #CD5F6A;
