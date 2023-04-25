@@ -45,10 +45,45 @@
     padding: 10px;
     margin: 10px;
     background-color: var(--faded);
+    width: 250px;
+    display: grid;
+    grid-template-rows: 1fr .2fr 1fr .5fr;
+    grid-template-columns: 1fr;
+    justify-items: center;
+}
+
+.svg-div {
+    position: relative;
+    grid-row: 2;
+    grid-column: 1;
+}
+
+.budget-info svg {
+    position: absolute;
 }
 
 .budget-info p, h4{
     display: none;
+}
+
+.budget-info button {
+    display: block;
+    grid-row: 4;
+    grid-column: 1;
+}
+
+.fraction-top, .fraction-bottom, .fraction-slash {
+    display: inline-block;
+    grid-row: 3;
+    grid-column: 1;
+}
+
+.fraction-top {
+    transform: translate(-20px, 0px);
+}
+
+.fraction-bottom {
+    transform: translate(30px, 20px);
 }
 
 .budget-info img {
