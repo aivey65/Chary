@@ -4,15 +4,15 @@ function getUserData() {
         
         data = responseData.data
         
-        infoPanel = loadUserInfo(data.balance, data.username, data.profileColor, data.profileImage)
+        infoPanel = loadUserInfo(data.balance, data.username, data.profileColor, data.profileImage, data.currency)
         userContent = document.getElementById('profile-section');
         userContent.append(infoPanel);
 
-        budgetPanel = loadBudgets(data.budgets)
+        budgetPanel = loadBudgets(data.budgets, data.currency)
         budgetContent = document.getElementById('budget-container');
         budgetContent.append(budgetPanel);
 
-        expensePanel = loadExpenses(data.expenses)
+        expensePanel = loadExpenses(data.expenses, data.currency)
         expenseContent = document.getElementById('expense-container');
         expenseContent.append(expensePanel);
     })

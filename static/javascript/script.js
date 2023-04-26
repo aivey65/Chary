@@ -88,7 +88,7 @@ window.addEventListener('scroll', () => {
  * @param username (string): User's username
  * @param img (string): link to user's profile image
  */
-function loadUserInfo(balance, username,color, img) {
+function loadUserInfo(balance, username, color, img) {
     infoPanel = document.createElement('div');
     infoPanel.classList.add('user-info');
     
@@ -112,7 +112,7 @@ function loadUserInfo(balance, username,color, img) {
  * @param budgets (list): A list of IDs that each correspond to a budget
  *      stored in the database.
  */
-function loadBudgets(budgets) {
+function loadBudgets(budgets, currency) {
     budgetContainer = document.createElement('div');
     budgetContainer.id = "budget-container";
     
@@ -129,7 +129,7 @@ function loadBudgets(budgets) {
 
         budget_used = document.createElement('h3');
         budget_used.classList.add("fraction-top");
-        budget_used.innerHTML = budgets[key].usedAmount;
+        budget_used.innerHTML = currency + budgets[key].usedAmount;
 
         budget_slash = document.createElement('h2');
         budget_slash.classList.add('fraction-slash');
@@ -137,7 +137,7 @@ function loadBudgets(budgets) {
 
         budget_amount = document.createElement('h3');
         budget_amount.classList.add("fraction-bottom");
-        budget_amount.innerHTML = budgets[key].actualBudgetAmount;
+        budget_amount.innerHTML = currency + budgets[key].actualBudgetAmount;
 
         // Progess SVG
         var svgDiv = document.createElement('div');
@@ -197,7 +197,7 @@ function loadBudgets(budgets) {
  * @param balance (int): Number value for user's balance
  * @param username (string): User's username
  */
-function loadExpenses(expenses) {
+function loadExpenses(expenses, currency) {
     expenseContainer = document.createElement('div');
     expenseContainer.id = "expense-info";
     
