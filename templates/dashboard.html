@@ -22,7 +22,7 @@
         <Title>Chary</Title>
     </head>
 
-    <body onload="getUserData()">
+    <body onload="loadDashboard()">
         <div id="header-container">
             <header>
                 <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()">
@@ -40,14 +40,26 @@
                 </nav>
             </header>
         </div>
-        <div class="content non-header" id="dashboard-content">
+        <div class="non-header" id="dashboard-content">
             <div id="dashboard-non-scrollable">
                 <div id="profile-section"></div>
+                <div id="dashboard-tabs">
+                    <ul>
+                        <li onclick="overviewTab()" id="overview-tab" class="dashTab">Overview</li>
+                        <li onclick="budgetTab()" id="budget-tab" class="dashTab">Budgets</li>
+                        <li onclick="earningTab()" id="earning-tab" class="dashTab">Earnings</li>
+                        <li onclick="expenseTab()" id="expense-tab" class="dashTab">Expenses</li>
+                    </ul>
+                </div>
             </div>
-            <div id="dashboard-scrollable">
-                <div id="trend-section">
-                    <h1>Trends</h1>
-                    <p>insert graphs here</p>
+            <div class="content" id="dashboard-scrollable">
+                <div id="overview-section">
+                    <div id="trend-section">
+                        <p>insert graphs here</p>
+                    </div>
+                    <div id="overview-container">
+
+                    </div>
                 </div>
                 <div id="budget-section">
                     <h1>Budgets</h1>

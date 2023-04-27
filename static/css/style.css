@@ -318,7 +318,7 @@ Creating the navigation bar depending on the size of the user's screen
         overflow: hidden;
         white-space: nowrap;
         background-color: var(--Light);
-        transition: .8s ease-in-out;
+        transition: .6s ease-in-out;
         padding-top: 2.8rem;
         border-left: solid 1px var(--Dark);
     }
@@ -341,12 +341,16 @@ Creating the navigation bar depending on the size of the user's screen
         background-color: var(--MainD);
     }
 
+    nav li:active {
+        background-color: var(--MainD);
+    }
+
     nav li:hover a {
         color: var(--Light);
     }
 
     nav li:active a {
-        color: var(--ContrastL)
+        color: var(--Light);
     }
 
     nav a {
@@ -383,6 +387,7 @@ Creating the navigation bar depending on the size of the user's screen
         height: fit-content;
         margin: 0;
         position: relative;
+        width: fit-content !important;
     }
     
     nav ul {

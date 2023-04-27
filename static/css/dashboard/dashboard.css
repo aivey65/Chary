@@ -8,28 +8,70 @@ h4 {
 
 #dashboard-content {
     display: grid;
-    grid-template-columns: 1fr 4fr;
-    padding: 0px;
-}
-
-#profile-section {
-    grid-column: 1;
-    height: 100vh;
-    width: 100%;
-    padding: 2em;
-}
-
-.user-info {
-    text-align: center;
+    grid-template-columns: auto 1fr;
+    padding-left: 0px;
 }
 
 #dashboard-non-scrollable {
     grid-column: 1;
+    grid-row: 1;
+    height: 100vh;
+    min-width: fit-content;
+    max-width: max-content;
     overflow: hidden;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    margin-right: 2.5em;
+    padding-top: 2.5em;
+    text-align: left;
+}
+
+#profile-section {
+    grid-row: 1;
+    width: 100%;
+    padding-left: 2.5em;
+}
+
+.user-info img {
+    text-align: center;
+}
+
+#dashboard-tabs {
+    grid-row: 2;
+}
+
+#dashboard-tabs ul {
+    margin: 0rem;
+    padding: 0rem;
+    list-style: none;
+}
+
+#dashboard-tabs li {
+    margin-bottom: 2rem;
+    border-radius: 0rem 50rem 50rem 0rem;
+    padding: .5em .5em .5em 2.5em;
+}
+
+.dashTab {
+    cursor: pointer;
+}
+
+.dashTab:hover {
+    background-color: var(--MainD);
+}
+
+.active {
+    background-color: var(--Navy);
 }
 
 #dashboard-scrollable {
     grid-column: 2;
+    grid-row: 1;
+    overflow: hidden;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 2.5em;
 }
 
 #add-budget-button, #add-earning-button, #add-expense-button {
