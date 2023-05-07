@@ -133,20 +133,35 @@ def renderBudget():
 def renderExpense():
     return render_template('expense.html')
 
-@app.route("/acd-budget/<budgetId>")
+@app.route("/acd-budget")
 @login_is_required
-def renderACDBudget(budgetId="-1"):
+def renderACDBudget():
+    budgetId = request.args.get("id")
     return render_template('acd-budget.html', id=budgetId)
 
-@app.route("/acd-earning/<earningId>")
+@app.route("/acd-earning")
 @login_is_required
-def renderACDEarning(earningId="-1"):
+def renderACDEarning():
+    earningId = request.args.get("id")
     return render_template('acd-earning.html', id=earningId)
 
-@app.route('/acd-expense/<expenseId>')
+@app.route('/acd-expense')
 @login_is_required
-def renderACDExpense(expenseId="-1"):
-    return render_template('acd-expense.html', id=expenseId)
+def renderACDExpense():
+    expenseId = request.args.get("id")
+    if (expenseId != "-1"):
+        try:
+            expenseInfo = getExpense(expenseId, session["email"])
+
+            print(expenseInfo)
+            return render_template('acd-expense.html', id=expenseId)
+        except Exception as e:
+            print(e.args)
+            abort(405)
+
+    else:
+        return render_template('acd-expense.html', id=expenseId)
+
 
 ####################################################
 # Routes for getting/updating database information #
@@ -159,33 +174,36 @@ def getAllData():
 
 @app.route("/data/user")
 @login_is_required
-def getUserData():
+def getAllUserData():
     return getUser(session["email"])
 
 @app.route("/data/budgets")
 @login_is_required
-def getBudgetData():
+def getAllBudgetData():
     return getAllBudgets(session["email"])
 
 @app.route("/data/expenses")
 @login_is_required
-def getExpenseData():
+def getAllExpenseData():
     return getAllExpenses(session["email"])
 
 @app.route("/data/get-budget")
 @login_is_required
-def getBudget():
-    return getBudget()
+def getOneBudget():
+    budgetId = request.args.get("id")
+    return getBudget(budgetId, session["email"])
     
-@app.route("/data/get-expense")
+@app.route("/data/get-expense/")
 @login_is_required
-def getExpense():
-    return getExpense()
+def getOneExpense():
+    expenseId = request.args.get("id")
+    return getExpense(expenseId, session["email"])
 
 @app.route("/data/get-earning")
 @login_is_required
-def getEarning():
-    return getEarning()
+def getOneEarning():
+    earningId = request.args.get("id")
+    return getEarning(earningId, session["email"])
 
 @app.route("/data/set-user")
 @login_is_required
@@ -268,6 +286,14 @@ def notLoggedInError(error):
     error=[
         "Wait! You're not logged in yet!",
         "To view this page, you have to first log in. "
+    ]
+    return render_template('errorPage.html', error=error, showLogin=True, showDashboard=False), 404
+
+@app.errorhandler(405)
+def unauthorizedAccessAttempt(error):
+    error=[
+        "You don't have the authority to view this page!",
+        "Make sure you are properly logged in to the correct account. "
     ]
     return render_template('errorPage.html', error=error, showLogin=True, showDashboard=False), 404
 

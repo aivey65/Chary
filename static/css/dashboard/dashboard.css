@@ -202,8 +202,42 @@ h4 {
     grid-template-columns: auto 1fr;
 }
 
-#expense-container {
-    display: flex;
-    flex-direction: row;
-    grid-column: span 2;
+/* Expense container is a table, so we will need table styling. */
+#expense-table {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#expense-table th {
+    background-color: var(--MainL);
+    color: var(--Dark);
+    font-size: 1em;
+    font-weight: 300;
+    padding: 10px;
+}
+
+#expense-table td {
+    color:var(--Light);
+    font-size: 1em;
+    font-weight: 200;
+    padding: 10px;
+}
+
+#expense-table td img {
+    width: 1.5em;
+    height: auto;
+}
+
+#expense-table td img:hover {
+    cursor: pointer;
+}
+
+#expense-table tr:nth-child(even) td {
+    background-color: var(--Dark);
+}
+
+#expense-table tr:nth-child(odd) td {
+    background-color: var(--Navy);
 }

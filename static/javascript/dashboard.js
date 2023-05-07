@@ -1,4 +1,4 @@
-var userData;
+var userData = null;
 
 function setLocalData(newData) {
     userData = newData;
@@ -6,7 +6,7 @@ function setLocalData(newData) {
 
 // Function gets called everytime the dashboard is visited or refreshed
 function loadDashboard() {
-    var needRefresh = false;
+    var needRefresh = true;
     var loadOverview = true;
     updateUserData(needRefresh, loadOverview);
 }
@@ -14,7 +14,7 @@ function loadDashboard() {
 // Refresh boolean should be set to true when there is already user data saved, but it
 // needs to be updated.
 function updateUserData(refresh, overview) {
-    if (userData == undefined || refresh) {
+    if (userData == null || refresh) {
         fetch('/data/all').then(response => response.json()).then((responseData) => {
             userData = responseData.data;
         }).then(() => {
@@ -59,25 +59,25 @@ function getBudgetData() {
 function getEarningData() {
     earningPanel = loadEarnings(userData.earnings, userData.currency);
     earningContent = document.getElementById('earning-container');
-    earningContent.append(earningPanel);
+    // earningContent.append(...earningPanel.children);
 }
 
 function getExpenseData() {
     expensePanel = loadExpenses(userData.expenses, userData.currency);
     expenseContent = document.getElementById('expense-container');
-    expenseContent.append(expensePanel);
+    expenseContent.append(...expensePanel.children);
 }
 
 function goToBudgetForm() {
-    window.location.href = "/acd-budget/-1";
+    window.location.href = "/acd-budget?id=-1";
 }
 
 function goToEarningForm() {
-    window.location.href = "/acd-earning/-1";
+    window.location.href = "/acd-earning?id=-1";
 }
 
 function goToExpenseForm() {
-    window.location.href = "/acd-expense/-1";
+    window.location.href = "/acd-expense?id=-1";
 }
 
 // Functions for different Dashboard tabs. Clunky, but I can't think of a better and more readable way to do this at the moment.
@@ -314,7 +314,7 @@ function loadBudgets(budgets, currency) {
         budget_more = document.createElement("button");
         budget_more.textContent = "See More";
         budget_more.addEventListener("click", function() {
-            window.location = '/expand-budget/' + key;
+            window.location = '/expand-budget?id=' + key;
         })
 
         budgetPanel.append(budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_more, budget_update);
@@ -334,42 +334,58 @@ function loadEarnings(earnings, currency) {
 }
 
 /* Creates and displays UI for all expense information
+ * Going with a table layout for the expense data.
  * 
  * @param expenses (List): List of a user's expenses
  * @param currency (string): A single character representing the user's currency symbol
  */
 function loadExpenses(expenses, currency) {
     expenseContainer = document.createElement('div');
-    expenseContainer.id = "expense-info";
     
     for (const key in expenses) {
-        expensePanel = document.createElement('div');
-        expensePanel.classList.add('expense-info');
+        expenseRow = document.createElement('tr');
+        expenseRow.classList.add('expense-row');
 
-        expense_category = document.createElement('h4');
-        expense_category.textContent = expenses[key].budgetCategory;
-
-        expense_name = document.createElement('h2');
+        expense_name = document.createElement('td');
         expense_name.textContent = expenses[key].name;
 
-        expense_amount = document.createElement('h3');
-        expense_amount.textContent = expenses[key].moneyAmount;
+        expense_amount = document.createElement('td');
+        expense_amount.textContent = currency + expenses[key].actualAmount;
 
-        expense_des = document.createElement('p');
+        expense_category = document.createElement('td');
+        expense_category.textContent = expenses[key].budgetCategory;
+
+        expense_des = document.createElement('td');
         expense_des.textContent = expenses[key].description;
 
-        expense_date = document.createElement('h4');
+        expense_predict = document.createElement('td');
+        predict_amount = expenses[key].expectedAmount;
+        if (predict_amount >= 0) {
+            expense_predict.textContent = currency + expenses[key].expectedAmount;
+        }
+
+        expense_date = document.createElement('td');
         expense_date.textContent = expenses[key].date;
 
-        expense_update = document.createElement("button");
-        expense_update.textContent = "Update";
-        expense_update.addEventListener("click", function() {
-            window.location = '/acd-expense/' + key;
-        })
+        expense_recur = document.createElement('td');
+        if (expenses[key].recurring) {
+            recur_img = document.createElement('img');
+            recur_img.classList.add('recur-img');
+            recur_img.src = "static/images/recurIcon.svg";
+            recur_img.title = "This expense is recurring over a specified period of time";
+            expense_recur.append(recur_img);
+        }
 
-        expensePanel.append(expense_category, expense_name, expense_des, expense_amount, expense_date, expense_update);
-    
-        expenseContainer.append(expensePanel)
+        expense_update = document.createElement("td");
+        expense_update_img = document.createElement("img");
+        expense_update_img.src = "static/images/EditButtonSM.svg"
+        expense_update_img.addEventListener("click", function() {
+            window.location = '/acd-expense?id=' + key;
+        })
+        expense_update.append(expense_update_img);
+
+        expenseRow.append(expense_name, expense_amount, expense_category, expense_des, expense_predict, expense_date, expense_recur, expense_update);
+        expenseContainer.append(expenseRow)
     }
 
     return expenseContainer;

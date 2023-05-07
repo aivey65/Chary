@@ -77,23 +77,60 @@ def getAllExpenses(email):
         expensesDict[expenseDoc.id] = expenseDoc.to_dict()
 
     # Get a list of budget categories
-    budgetList = user['budgets']
-    budgetCategories = []
-    for budgetID in budgetList:
-        budgetName = db.collection(u'budgets').document(budgetID).select("name").get()
-        print(budgetName)
-        budgetCategories.append(budgetName)
+    budgetCategories = getBudgetCategories(email)
 
     return {"data":expensesDict, "categories":budgetCategories}
 
-def getExpense():
-    pass
+# Get a list of budget categories associated with a given user
+def getBudgetCategories(email):
+    user = getUser(email)['data']
+    budgetList = user['budgets']
+    budgetCategories = []
 
-def getBudget():
-    pass
+    for budgetID in budgetList:
+        print(db.collection(u'budgets').document(budgetID).get())
+        budgetName = db.collection(u'budgets').document(budgetID).select("name").get()
+        budgetCategories.append(budgetName)
 
-def getEarning():
-    pass
+    return budgetCategories
+
+
+def getExpense(expenseId, userEmail):
+    if (expenseId == "" or userEmail == ""):
+        raise RuntimeError("No expense ID or email provided.")
+    
+    user = getUser(userEmail)['data']
+    if (expenseId not in user['expenses']):
+        raise RuntimeError("User email does not match expense!")
+    
+    expenseDoc = db.collection(u'expenses').document(expenseId).get()
+    budgetCategories = getBudgetCategories(userEmail)
+
+    return {"expense":expenseDoc.to_dict(), "budgetCategories":budgetCategories}
+
+def getBudget(budgetId, userEmail):
+    if (budgetId == "" or userEmail == ""):
+        raise RuntimeError("No budget ID or email provided.")
+    
+    user = getUser(userEmail)['data']
+    if (budgetId not in user['budgets']):
+        raise RuntimeError("User email does not match budget!")
+    
+    budgetDoc = db.collection(u'budgets').document(budgetId).get()
+
+    return budgetDoc.to_dict()
+
+def getEarning(earningId, userEmail):
+    if (earningId == "" or userEmail == ""):
+        raise RuntimeError("No earning ID or email provided.")
+    
+    user = getUser(userEmail)['data']
+    if (earningId not in user['earnings']):
+        raise RuntimeError("User email does not match earning!")
+    
+    earningDoc = db.collection(u'earnings').document(earningId).get()
+
+    return earningDoc.to_dict()
 
 ####################
 # Setter functions #
