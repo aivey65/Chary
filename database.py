@@ -2,6 +2,19 @@ import firebase_admin
 from firebase_admin import firestore
 from flask import jsonify
 
+import argon2
+# Used to hash IDs of entities when they are returned to the client for updating
+# This will be a second security measure to make sure that only the correct
+# user, updating the correct ID will be allowed to post changes to the database.
+argon2Hasher = argon2.PasswordHasher(
+    time_cost=2,
+    memory_cost=64,
+    parallelism=1,
+    hash_len=32,
+    salt_len=16,
+    type=argon2.low_level.Type(2)
+)
+
 # Application Default credentials are automatically created.
 app = firebase_admin.initialize_app()
 db = firestore.client()
@@ -88,9 +101,8 @@ def getBudgetCategories(email):
     budgetCategories = []
 
     for budgetID in budgetList:
-        print(db.collection(u'budgets').document(budgetID).get())
-        budgetName = db.collection(u'budgets').document(budgetID).select("name").get()
-        budgetCategories.append(budgetName)
+        budget = db.collection(u'budgets').document(budgetID).get().to_dict()
+        budgetCategories.append(budget["name"])
 
     return budgetCategories
 

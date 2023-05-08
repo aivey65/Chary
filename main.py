@@ -10,7 +10,7 @@ from pip._vendor import cachecontrol
 import google.auth.transport.requests
 from functools import wraps
 
-from database import getAll, getUser, getAllBudgets, getAllExpenses, getBudget, getExpense, getEarning
+from database import getAll, getUser, getBudgetCategories, getAllBudgets, getAllExpenses, getBudget, getExpense, getEarning
 
 app = Flask(__name__, template_folder="templates")
 # Load environment variables and set secret key
@@ -151,16 +151,46 @@ def renderACDExpense():
     expenseId = request.args.get("id")
     if (expenseId != "-1"):
         try:
-            expenseInfo = getExpense(expenseId, session["email"])
+            # This database method checks to make sure that the user owns the expense they are trying to update
+            databaseInfo = getExpense(expenseId, session["email"])
+            expenseInfo = databaseInfo["expense"]
+            categoryInfo = databaseInfo["budgetCategories"]
+            predictedAmount = expenseInfo["expectedAmount"] if expenseInfo["expectedAmount"] != -1 else ""
 
-            print(expenseInfo)
-            return render_template('acd-expense.html', id=expenseId)
+            session["updateId"] = expenseId
+
+            return render_template(
+                'acd-expense.html', 
+                id=expenseId,
+                name=expenseInfo["name"], 
+                description=expenseInfo["description"], 
+                amount=expenseInfo["actualAmount"],
+                predicted=predictedAmount,
+                startDate=expenseInfo["date"],
+                recurPeriod=expenseInfo["recurPeriod"], 
+                recurring=expenseInfo["recurring"],
+                category=expenseInfo["budgetCategory"],
+                allCategories=categoryInfo
+                )
         except Exception as e:
             print(e.args)
             abort(405)
 
     else:
-        return render_template('acd-expense.html', id=expenseId)
+        categoryInfo = getBudgetCategories(session["email"])
+        return render_template(
+            'acd-expense.html', 
+            id=expenseId,
+            name="", 
+            description="", 
+            amount="",
+            predicted="",
+            startDate="",
+            recurPeriod="One Time", 
+            recurring=False,
+            category="",
+            allCategories=categoryInfo
+            )
 
 
 ####################################################
