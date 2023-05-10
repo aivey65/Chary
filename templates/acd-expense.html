@@ -42,7 +42,7 @@
 
         <div class="content non-header" id="acd-expenses">
             <form action="data/acd-expense">
-                <input type="hidden" name="Id" value={{id}} />
+                <input type="hidden" id="Id" name="Id" value={{id}} />
 
                 <label class="acd-form" for="exname">Expense Name</label><br>
                 <input type="text" id="name" name="name" value={{name}} required><br>
@@ -115,7 +115,7 @@
                 </label><br>
 
                 <label class="acd-form" for="exstart">Expense Start Date</label><br>
-                <input type="date" id="start-date" name="start" value={{startDate}} required><br>
+                <input type="date" id="start-date" name="start-date" value={{startDate}} required><br>
 
                 <label class="acd-form" for="exrecurring"> Is this expense and amount recurring?</label><br>
                     {% if recurring == true %}

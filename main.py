@@ -157,8 +157,6 @@ def renderACDExpense():
             categoryInfo = databaseInfo["budgetCategories"]
             predictedAmount = expenseInfo["expectedAmount"] if expenseInfo["expectedAmount"] != -1 else ""
 
-            session["updateId"] = expenseId
-
             return render_template(
                 'acd-expense.html', 
                 id=expenseId,
@@ -238,7 +236,21 @@ def getOneEarning():
 @app.route("/data/set-user")
 @login_is_required
 def updateUser():
-    return updateUser(session["email"])
+    id = request.form.get("Id")
+    username = request.form.get("username")
+    image = request.form.get("profile-image")
+    color = request.form.get("profile-color")
+    currency = request.form.get("currency")
+    balance = request.form.get("balance")
+
+    return updateUser(
+        session["email"], 
+        username, 
+        image, 
+        color,
+        currency,
+        balance
+    )
 
 @app.route("/data/set-budget")
 @login_is_required
@@ -247,7 +259,6 @@ def updateBudget():
     name = request.form.get("name")
     description = request.form.get("description")
     amount = request.form.get("amount")
-    amountUsed = request.form.get("amountused")
     earningPeriod = request.form.get("radio")
     startDate = request.form.get("start")
     recurring = request.form.get("recurring")
@@ -259,7 +270,6 @@ def updateBudget():
         description, 
         amount,
         startDate,
-        amountUsed,
         earningPeriod, 
         recurring
     )
@@ -269,9 +279,10 @@ def updateBudget():
 def updateEarning():
     id = request.form.get("Id")
     name = request.form.get("name")
-    description = request.form.get("description")
     amount = request.form.get("amount")
-    earningPeriod = request.form.get("radio")
+    predicted = request.form.get("preamount")
+    description = request.form.get("description")
+    recurPeriod = request.form.get("radio")
     startDate = request.form.get("start")
     recurring = request.form.get("recurring")
 
@@ -279,10 +290,11 @@ def updateEarning():
         session["email"], 
         id, 
         name, 
-        description, 
-        amount,
         startDate,
-        earningPeriod, 
+        amount,
+        description, 
+        predicted,
+        recurPeriod, 
         recurring
     )
 
@@ -291,20 +303,24 @@ def updateEarning():
 def updateExpense():
     id = request.form.get("Id")
     name = request.form.get("name")
-    description = request.form.get("description")
     amount = request.form.get("amount")
-    earningPeriod = request.form.get("radio")
-    startDate = request.form.get("start")
+    category = request.form.get("category")
+    description = request.form.get("description")
+    predicted = request.form.get("preamount")
+    recurPeriod = request.form.get("radio")
+    startDate = request.form.get("start-date")
     recurring = request.form.get("recurring")
 
     return updateExpense(
         session["email"], 
         id, 
-        name, 
-        description, 
-        amount,
+        name,
+        category, 
         startDate,
-        earningPeriod, 
+        amount, 
+        description, 
+        predicted,
+        recurPeriod, 
         recurring
     )
 ##########################################################

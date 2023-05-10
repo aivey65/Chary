@@ -42,16 +42,19 @@
 
         <div class="content non-header" id="acd-earnings">
             <form action="data/acd-earning">
-                <input type="hidden" name="Id" value={{id}} />
+                <input type="hidden" id="Id" name="Id" value={{id}} />
 
                 <label class="acd-form" for="name">Earning Name</label><br>
                 <input type="text" id="name" name="name" required><br>
 
+                <label class="acd-form" for="amount">Earning Amount</label><br>
+                <input type="text" id="amount" name="amount" required><br>
+
+                <label class="acd-form" for="preamount">Predicted Earning Amount</label><br>
+                <input type="text" id="preamount" name="preamount" required><br>
+
                 <label class="acd-form" for="description">Earning Description</label><br>
                 <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
-
-                <label class="acd-form" for="eamount">Earning Amount</label><br>
-                <input type="text" id="amount" name="amount" required><br>
 
                 <!-- Radio buttons for the earning period -->
                 <label class="acd-form earning-period">
@@ -75,10 +78,10 @@
                     Yearly
                 </label><br>
 
-                <label class="acd-form" for="estart">Earning Start Date</label><br>
+                <label class="acd-form" for="start">Earning Start Date</label><br>
                 <input type="date" id="start-date" name="start" required><br>
 
-                <label class="acd-form" for="erecurring"> Is this earning type and amount recurring?</label><br>
+                <label class="acd-form" for="recurring"> Is this earning type and amount recurring?</label><br>
                 <input type="checkbox" id="recurring" name="recurring" value="true"><br>
 
                 <button class="cta-button" type="submit" value="Submit">Submit</button>
