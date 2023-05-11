@@ -10,7 +10,7 @@ db = firestore.client()
 ####################
 # Create functions #
 ####################
-def createUser(email, username, image, color, currency, balance):
+def createUser(email, username, image, color, currency, balance, password=None, google=True):
     newUser = {
         u'email': email,
         u'username': username,
@@ -21,8 +21,17 @@ def createUser(email, username, image, color, currency, balance):
         u'budgets': [], 
         u'earnings': [],
         u'expenses': [],
-        u'joinDate': date.today()
+        u'joinDate': date.today(),
+        u'password': password,
+        u'google': google
     }
+    
+    # First check if there is already a user with that email.
+    checkUser = db.collection(u'users').where(u'email', u'==', email).stream()
+    if (checkUser.length > 0):
+        raise RuntimeError("There is already an account associated with this email! Try logging in.")
+    else:
+        db.collection(u'users').add(newUser)
 
 def createBudget(email, name, startDate, amount=0, description="", predicted=0, recurPeriod="Monthly"):
     newBudget = {
@@ -32,8 +41,7 @@ def createBudget(email, name, startDate, amount=0, description="", predicted=0, 
         u'actualBudgetAmount': amount,
         u'description': description,
         u'expectedBudgetAmount': predicted,
-        u'budgetPeriod': recurPeriod,
-        u'usedAmount': 0
+        u'budgetPeriod': recurPeriod
     }
 
     create_datetime, budget_ref = db.collection(u'budgets').add(newBudget)
@@ -68,6 +76,17 @@ def createExpense(email, name, category, startDate, amount=0, description="", pr
         raise e
     
     # Expenses also must update the budget associated with them.
+    budget_ref = db.collection(u'budgets').where(u'email', u'==', email).where(u'name', u'==', category).stream()
+    if budget_ref.length == 0:
+        emergencyDeleteExpense(expense_ref.id)
+        raise RuntimeError("Can't find requested budget! Create failed.")
+    elif budget_ref.length > 1:
+        emergencyDeleteExpense(expense_ref.id)
+        raise RuntimeError("Duplicate budget found! Create failed.")
+    else:
+        updateBudgetBalance(email, budget_ref.id, amount)
+    
+    # TODO: Update the user's wallet balance as well.
 
 
 def createEarning(email, name, startDate, amount=0, description="", predicted=0, recurPeriod="One Time", recurring=False):
@@ -89,6 +108,8 @@ def createEarning(email, name, startDate, amount=0, description="", predicted=0,
     except Exception as e:
         emergencyDeleteEarning(earning_ref.id)
         raise e
+    
+    # TODO: Update the user's wallet balance.
 
 ####################
 # Getter functions #
@@ -179,6 +200,20 @@ def getBudgetCategories(email):
 
     return budgetCategories
 
+def getBudgetBalance(email, id):
+    userData = getUser(email)['data']
+    budgetList = userData['budgets']
+
+    # Make sure that the budget belongs to the user
+    if (id not in budgetList):
+        raise Exception("User does not have access to this information.")
+    else:
+        # Get the name of the budget and the dates active
+        # Run a query for expenses with the same email, budget category, and dates
+        usedAmount = 0
+        for expense in expensesList:
+            expenseDoc = db.collection(u'expenses').document(expense).get()
+            usedAmount += expenseDoc.to_dict()['actualAmount']
 
 def getExpense(expenseId, userEmail):
     if (expenseId == "" or userEmail == ""):
@@ -294,32 +329,8 @@ def updateBudget(email, id, name, startDate, amount=0, description="", predicted
     else:
         raise RuntimeError("Verification failed, update canceled.")
     
-def updateBudgetBalance(email, budgetId, amount):
-    """
-    Used to update the 'used amount' value in a budget. A user cannot update
-    the used amount by updating the budget itself; the user must update their expenses.
-    When a user adds or removes and expense, this method should be called to update
-    the budget balance. This prevents the balance from getting messed up by accident,
-    and keeps things synced.
-
-    See also "syncBudgetBalance()" for re-syncing the balance using all expense values, just in
-    case there is an unforseen mistake in updates.
-
-    Parameters
-    -------------
-
-    """
-    budgetList = getUser(email)['data']['budgets']
-
-    # Check to make sure that the id passed in corresponds to an item in the user's database
-    if budgetId in budgetList:
-        budget_ref = db.collection(u'budgets').document(budgetId)
-        currentAmount = budget_ref.select("usedAmount").get()
-        budget_ref.update({
-            u'usedAmount': currentAmount + amount,
-        })
-    else:
-        raise RuntimeError("Verification failed, update canceled.")
+    # TODO: If budget name is changed, first find expenses using the current budget name 
+    # and make sure to change it to the new name.
 
 def updateExpense(email, id, name, category, startDate, amount=0, description="", predicted=0, recurPeriod="One Time", recurring=False):
     expenseList = getUser(email)['data']['expenses']
@@ -377,32 +388,119 @@ def updateEarning(email, id, name, startDate, amount=0, description="", predicte
 ####################
 # Delete functions #
 ####################
-   
 def deleteUser(email):
-    pass
-    # This function must:
-    # - Delete all budgets, expenses, and earnings associated with the user
-    # - TODO: When goals are added, make sure to delete those as well
-    # - Delete user entry from database after all their budgets etc. are gone.
+    """
+    This function:
+    - Deletes all budgets, expenses, and earnings associated with the user
+    - TODO: When goals are added, make sure to delete those as well
+    - Deletes user entry from database after all their budgets etc. are gone.
+    """
+    userData = getUser(email)['data']
+    expenseList = userData['expenses']
+    budgetList = userData['budgets']
+    earningList = userData['earnings']
 
-def deleteBudget(email, id):
-    pass
+    for budget in budgetList:
+        db.collection(u'budgets').document(budget).delete()
+
+    for expense in expenseList:
+        db.collection(u'expenses').document(expense).delete()
+
+    for earning in earningList:
+        db.collection(u'earnings').document(earning).delete()
+
+    db.collection(u'users').document(id).delete()
+
+def deleteBudget(email, id, method=0, newBudget=None):
+    """
+    Parameters
+    -------------
+        email: string
+            The email of the user that owns this budget
+        id: string
+            The db-generated ID for the budget being deleted
+        method: int
+            The method of handling expenses:
+            0 - Make all expenses associated with the budget into 'budgetless' expenses
+            1 - Migrate all expenses to a specified budget
+            2 - Delete all expenses associated with this budget
+    """
+    # First check to make sure the user owns the budget they want to delete
+    userData = getUser(email)['data']
+    budgetList = userData['budgets']
+    if id not in budgetList:
+        raise RuntimeError("User does not have access to this data!")
+
+    try:
+        updateUserReferenceIds(email, 1, 'budgets', id)
+
+        # Let user chose what to do with expenses associated with the budget they want to delete
+        # - Delete all expenses
+        # - Migrate all expenses to a specified budget
+        # - Make all expenses budgetless
+        # - (Post-MVP) Allow users to manually selct/deselect expenses and migrate in bulk
+        expenseList = userData['expenses']
+
+        for expense in expenseList:
+            expense_ref = db.collection(u'expenses').document(expense)
+            expense_ref.update({"budgetCategory": ""})
+
+        db.collection(u'budgets').document(id).delete() 
+    except Exception as e:
+        print(e)
+        return
+
+def deleteExpense(email, id):
+    # First check to make sure the user owns the expense they want to delete
+    expenseList = getUser(email)['data']['expenses']
+    if id not in expenseList:
+        raise RuntimeError("User does not have access to this data!")
+
+    expense_ref = db.collection(u'expenses').document(id)
+    category = expense_ref.get().to_dict()['budgetCategory']
+
+    # Expenses must first update the budget associated with them.
+    budget_ref = db.collection(u'budgets').where(u'email', u'==', email).where(u'name', u'==', category).stream()
+
+    if budget_ref.length > 1:
+        raise RuntimeError("Duplicate budget found! Delete failed.")
+    elif budget_ref.length == 1:
+        expense_ref = db.collection(u'expenses').document(id).get()
+        expenseAmount = expense_ref.to_dict()['amount']
+
+        updateBudgetBalance(email, budget_ref.id, -1 * expenseAmount)
+
+    expense_ref.delete()
+
+def deleteEarning(email, id):
+    # First check to make sure the user owns the expense they want to delete
+    earningList = getUser(email)['data']['earnings']
+    if id not in earningList:
+        raise RuntimeError("User does not have access to this data!")
+
+    expense_ref = db.collection(u'expenses').document(id)
+    # TODO: Update user wallet balance when an earning is deleted
+    expense_ref.delete()
+
+
+#####################################
+# Emergency Delete Functions        #
+# --------------------------------- #
+# Only for back end use in the case #
+# that a user does not exist        #
+#####################################
+def emergencyDeleteUser(id):
+    db.collection(u'users').document(id).delete()
 
 def emergencyDeleteBudget(id):
     # Called when a budget is created, but does not successfully get attached to a user
     # This will prevent budgets without users from getting created.
     db.collection(u'budgets').document(id).delete()
 
-def deleteExpense(email, id):
-    pass
-
 def emergencyDeleteExpense(id):
     # Called when an expense is created, but does not successfully get attached to a user
     # This will prevent expenses without users from getting created.
     db.collection(u'expenses').document(id).delete()
-
-def deleteEarning(email, id):
-    pass
 
 def emergencyDeleteEarning(id):
     # Called when an expense is created, but does not successfully get attached to a user

@@ -10,7 +10,7 @@ from pip._vendor import cachecontrol
 import google.auth.transport.requests
 from functools import wraps
 
-from database import getAll, getUser, getBudgetCategories, getAllBudgets, getAllExpenses, getBudget, getExpense, getEarning
+import database
 
 app = Flask(__name__, template_folder="templates")
 # Load environment variables and set secret key
@@ -152,7 +152,7 @@ def renderACDExpense():
     if (expenseId != "-1"):
         try:
             # This database method checks to make sure that the user owns the expense they are trying to update
-            databaseInfo = getExpense(expenseId, session["email"])
+            databaseInfo = database.getExpense(expenseId, session["email"])
             expenseInfo = databaseInfo["expense"]
             categoryInfo = databaseInfo["budgetCategories"]
             predictedAmount = expenseInfo["expectedAmount"] if expenseInfo["expectedAmount"] != -1 else ""
@@ -175,7 +175,7 @@ def renderACDExpense():
             abort(405)
 
     else:
-        categoryInfo = getBudgetCategories(session["email"])
+        categoryInfo = database.getBudgetCategories(session["email"])
         return render_template(
             'acd-expense.html', 
             id=expenseId,
@@ -198,40 +198,40 @@ def renderACDExpense():
 @app.route("/data/all")
 @login_is_required
 def getAllData():
-    return getAll(session["email"])
+    return database.getAll(session["email"])
 
 @app.route("/data/user")
 @login_is_required
 def getAllUserData():
-    return getUser(session["email"])
+    return database.getUser(session["email"])
 
 @app.route("/data/budgets")
 @login_is_required
 def getAllBudgetData():
-    return getAllBudgets(session["email"])
+    return database.getAllBudgets(session["email"])
 
 @app.route("/data/expenses")
 @login_is_required
 def getAllExpenseData():
-    return getAllExpenses(session["email"])
+    return database.getAllExpenses(session["email"])
 
 @app.route("/data/get-budget")
 @login_is_required
 def getOneBudget():
     budgetId = request.args.get("id")
-    return getBudget(budgetId, session["email"])
+    return database.getBudget(budgetId, session["email"])
     
 @app.route("/data/get-expense/")
 @login_is_required
 def getOneExpense():
     expenseId = request.args.get("id")
-    return getExpense(expenseId, session["email"])
+    return database.getExpense(expenseId, session["email"])
 
 @app.route("/data/get-earning")
 @login_is_required
 def getOneEarning():
     earningId = request.args.get("id")
-    return getEarning(earningId, session["email"])
+    return database.getEarning(earningId, session["email"])
 
 @app.route("/data/set-user")
 @login_is_required
@@ -243,7 +243,7 @@ def updateUser():
     currency = request.form.get("currency")
     balance = request.form.get("balance")
 
-    return updateUser(
+    database.updateUser(
         session["email"], 
         username, 
         image, 
@@ -262,17 +262,38 @@ def updateBudget():
     earningPeriod = request.form.get("radio")
     startDate = request.form.get("start")
     recurring = request.form.get("recurring")
+    predicted = request.form.get("predicted")
 
-    return updateBudget(
-        session["email"], 
-        id, 
-        name, 
-        description, 
-        amount,
-        startDate,
-        earningPeriod, 
-        recurring
-    )
+    if (id == -1):
+        try:
+            database.createBudget(
+                session["email"], 
+                name, 
+                startDate
+                description, 
+                amount,
+                startDate,
+                earningPeriod, 
+                recurring
+            )
+        except Exception as e:
+            custom_error(e)
+    else:
+        try:
+            database.updateBudget(
+                session["email"], 
+                id, 
+                name,
+                startDate, 
+                amount,
+                description, 
+                predicted,
+                am
+                earningPeriod, 
+                recurring
+            )
+        except Exception as e:
+            custom_error(e)
 
 @app.route("/data/set-earning")
 @login_is_required
@@ -286,17 +307,20 @@ def updateEarning():
     startDate = request.form.get("start")
     recurring = request.form.get("recurring")
 
-    return updateEarning(
-        session["email"], 
-        id, 
-        name, 
-        startDate,
-        amount,
-        description, 
-        predicted,
-        recurPeriod, 
-        recurring
-    )
+    try:
+        database.updateEarning(
+            session["email"], 
+            id, 
+            name, 
+            startDate,
+            amount,
+            description, 
+            predicted,
+            recurPeriod, 
+            recurring
+        )
+    except Exception as e:
+        custom_error(e)
 
 @app.route("/data/set-expense")
 @login_is_required
@@ -311,18 +335,60 @@ def updateExpense():
     startDate = request.form.get("start-date")
     recurring = request.form.get("recurring")
 
-    return updateExpense(
-        session["email"], 
-        id, 
-        name,
-        category, 
-        startDate,
-        amount, 
-        description, 
-        predicted,
-        recurPeriod, 
-        recurring
-    )
+    try:
+        database.updateExpense(
+            session["email"], 
+            id, 
+            name,
+            category, 
+            startDate,
+            amount, 
+            description, 
+            predicted,
+            recurPeriod, 
+            recurring
+        )
+    except Exception as e:
+        custom_error(e)
+
+##########################################
+# Routes for delete database information #
+##########################################
+@app.route("/data/delete-user")
+@login_is_required
+def deleteUser():
+    try:
+        database.deleteUser(session["email"])
+    except Exception as e:
+        custom_error(e) 
+
+@app.route("/data/delete-budget")
+@login_is_required
+def deleteBudget():
+    budgetId = request.form.get("Id")
+    try:
+        database.deleteBudget(session["email"], budgetId)
+    except Exception as e:
+        custom_error(e)
+
+@app.route("/data/delete-expense")
+@login_is_required
+def deleteExpense():
+    expenseId = request.form.get("Id")
+    try:
+        database.deleteExpense(session["email"], expenseId)
+    except Exception as e:
+        custom_error(e)
+
+@app.route("/data/delete-earning")
+@login_is_required
+def deleteEarning():
+    earningId = request.form.get("Id")
+    try:
+        database.deleteEarning(session["email"], earningId)
+    except Exception as e:
+        custom_error(e)
+
 ##########################################################
 # Error handling to tell users more helpful information  #
 ##########################################################
@@ -356,5 +422,12 @@ def page_not_found(error):
     error=[
         "Whoops! That's my fault 😓",
         "The thing you clicked on is broken right now."
+    ]
+    return render_template('errorPage.html', error=error, showLogin=False, showDashboard=False), 404
+
+def custom_error(message):
+    error=[
+        "Something went wrong:",
+        message
     ]
     return render_template('errorPage.html', error=error, showLogin=False, showDashboard=False), 404

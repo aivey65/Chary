@@ -41,7 +41,7 @@
         </div>
 
         <div class="content non-header" id="acd-budgets">
-            <form action="/data/acd-budget">
+            <form action="/data/set-budget">
                 <input type="hidden" id="itemID" name="Id" value={{id}} />
 
                 <label class="acd-form" for="name">Budget Name</label><br>
@@ -80,6 +80,9 @@
 
                 <label class="acd-form" for="recurring"> Is this budget and amount recurring?</label><br>
                 <input type="checkbox" id="recurring" name="recurring" value="true"><br>
+
+                <label class="acd-form" for="predicted">Typical Budget Amount</label><br>
+                <input type="date" id="predicted" name="predicted" required><br>
 
                 <button class="cta-button" type="submit" value="Submit">Submit</button>
                 <button onclick="back()" value="Back">Cancel</button>
