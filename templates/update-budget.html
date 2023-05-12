@@ -40,52 +40,56 @@
             </header>
         </div>
 
-        <div class="content non-header" id="acd-earnings">
-            <form action="data/acd-earning">
-                <input type="hidden" id="Id" name="Id" value={{id}} />
+        <div class="content non-header" id="acd-budgets">
+            <form action="/data/update-budget">
+                <input type="hidden" id="id" name="id" value={{id}} />
 
-                <label class="acd-form" for="name">Earning Name</label><br>
+                <label class="acd-form" for="name">Budget Name</label><br>
                 <input type="text" id="name" name="name" required><br>
 
-                <label class="acd-form" for="amount">Earning Amount</label><br>
-                <input type="text" id="amount" name="amount" required><br>
-
-                <label class="acd-form" for="preamount">Predicted Earning Amount</label><br>
-                <input type="text" id="preamount" name="preamount" required><br>
-
-                <label class="acd-form" for="description">Earning Description</label><br>
+                <label class="acd-form" for="description">Budget Description</label><br>
                 <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
 
-                <!-- Radio buttons for the earning period -->
-                <label class="acd-form earning-period">
-                    <input type="checkbox" id="onetime" name="radio" value="One Time">
-                    One Time
+                <label class="acd-form" for="amount">Budget Amount</label><br>
+                <input type="text" id="amount" name="amount" required><br>
+
+                <!-- Radio buttons for the budget period -->
+                <label class="acd-form budget-period">
+                    <input type="checkbox" id="daily" name="radio" value="Daily">
+                    Daily
                 </label><br>
-                <label class="acd-form earning-period">
-                    <input type="checkbox" id="weekly" name="radio" value="Weekly">
+                <label class="acd-form budget-period">
+                    <input type="radio" id="weekly" name="radio" value="Weekly">
                     Weekly
                 </label><br>
-                <label class="acd-form earning-period">
-                    <input type="checkbox" id="biweekly" name="radio" value="Biweekly">
+                <label class="acd-form budget-period">
+                    <input type="radio" id="biweekly" name="radio" value="Biweekly">
                     Biweekly
                 </label><br>
-                <label class="acd-form earning-period">
-                    <input type="checkbox" id="monthly" name="radio" value="Monthly">
+                <label class="acd-form budget-period">
+                    <input type="radio" id="monthly" name="radio" value="Monthly">
                     Monthly
                 </label><br>
-                <label class="acd-form earning-period">
-                    <input type="checkbox" id="yearly" name="radio" value="Yearly">
+                <label class="acd-form budget-period">
+                    <input type="radio" id="yearly" name="radio" value="Yearly">
                     Yearly
                 </label><br>
 
-                <label class="acd-form" for="start">Earning Start Date</label><br>
-                <input type="date" id="start-date" name="start" required><br>
+                <label class="acd-form" for="start">Budget Start Date</label><br>
+                <input type="date" id="start" name="start" required><br>
 
-                <label class="acd-form" for="recurring"> Is this earning type and amount recurring?</label><br>
+                <label class="acd-form" for="recurring"> Is this budget and amount recurring?</label><br>
                 <input type="checkbox" id="recurring" name="recurring" value="true"><br>
+                
+                <label class="acd-form" for="end">Budget End Date</label><br>
+                <input type="date" id="end" name="end"><br>
+
+                <label class="acd-form" for="predicted">Typical Budget Amount</label><br>
+                <input type="date" id="predicted" name="predicted" required><br>
 
                 <button class="cta-button" type="submit" value="Submit">Submit</button>
                 <button onclick="back()" value="Back">Cancel</button>
+
             </form>
         </div>
 

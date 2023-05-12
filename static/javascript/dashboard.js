@@ -308,7 +308,7 @@ function loadBudgets(budgets, currency) {
         budget_update = document.createElement("button");
         budget_update.textContent = "Update";
         budget_update.addEventListener("click", function() {
-            window.location = '/acd-budget/' + key;
+            window.location = '/acd-budget?id=' + key;
         })
 
         budget_more = document.createElement("button");

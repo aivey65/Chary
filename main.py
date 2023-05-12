@@ -137,13 +137,13 @@ def renderExpense():
 @login_is_required
 def renderACDBudget():
     budgetId = request.args.get("id")
-    return render_template('acd-budget.html', id=budgetId)
+    return render_template('update-budget.html', id=budgetId)
 
 @app.route("/acd-earning")
 @login_is_required
 def renderACDEarning():
     earningId = request.args.get("id")
-    return render_template('acd-earning.html', id=earningId)
+    return render_template('update-earning.html', id=earningId)
 
 @app.route('/acd-expense')
 @login_is_required
@@ -158,26 +158,25 @@ def renderACDExpense():
             predictedAmount = expenseInfo["expectedAmount"] if expenseInfo["expectedAmount"] != -1 else ""
 
             return render_template(
-                'acd-expense.html', 
+                'update-expense.html', 
                 id=expenseId,
                 name=expenseInfo["name"], 
                 description=expenseInfo["description"], 
                 amount=expenseInfo["actualAmount"],
                 predicted=predictedAmount,
-                startDate=expenseInfo["date"],
+                startDate=expenseInfo["startDate"],
                 recurPeriod=expenseInfo["recurPeriod"], 
                 recurring=expenseInfo["recurring"],
                 category=expenseInfo["budgetCategory"],
                 allCategories=categoryInfo
-                )
+            )
         except Exception as e:
-            print(e.args)
+            print(e)
             abort(405)
-
     else:
         categoryInfo = database.getBudgetCategories(session["email"])
         return render_template(
-            'acd-expense.html', 
+            'create-expense.html', 
             id=expenseId,
             name="", 
             description="", 
@@ -188,7 +187,7 @@ def renderACDExpense():
             recurring=False,
             category="",
             allCategories=categoryInfo
-            )
+        )
 
 
 ####################################################
@@ -233,10 +232,40 @@ def getOneEarning():
     earningId = request.args.get("id")
     return database.getEarning(earningId, session["email"])
 
+@app.route("/data/create-expense")
+@login_is_required
+def createExpense():
+    name = request.form.get("name")
+    amount = request.form.get("amount")
+    category = request.form.get("category")
+    description = request.form.get("description")
+    predicted = request.form.get("preamount")
+    recurPeriod = request.form.get("radio")
+    startDate = request.form.get("start")
+    endDate = request.form.get("end")
+    recurring = request.form.get("recurring")
+    try:
+        database.createExpense(
+            session["email"], 
+            name,
+            category, 
+            startDate,
+            endDate,
+            amount, 
+            description, 
+            predicted,
+            recurPeriod, 
+            recurring
+        )
+        print("create success")
+        return redirect("/dashboard")
+    except Exception as e:
+        return custom_error(e)
+    
 @app.route("/data/set-user")
 @login_is_required
 def updateUser():
-    id = request.form.get("Id")
+    id = request.form.get("id")
     username = request.form.get("username")
     image = request.form.get("profile-image")
     color = request.form.get("profile-color")
@@ -255,12 +284,13 @@ def updateUser():
 @app.route("/data/set-budget")
 @login_is_required
 def updateBudget():
-    id = request.form.get("Id")
+    id = request.form.get("id")
     name = request.form.get("name")
     description = request.form.get("description")
     amount = request.form.get("amount")
-    earningPeriod = request.form.get("radio")
+    budgetPeriod = request.form.get("radio")
     startDate = request.form.get("start")
+    endDate = request.form.get("end")
     recurring = request.form.get("recurring")
     predicted = request.form.get("predicted")
 
@@ -269,12 +299,13 @@ def updateBudget():
             database.createBudget(
                 session["email"], 
                 name, 
-                startDate
-                description, 
-                amount,
                 startDate,
-                earningPeriod, 
-                recurring
+                endDate,
+                amount,
+                description, 
+                predicted,
+                recurring,
+                budgetPeriod, 
             )
         except Exception as e:
             custom_error(e)
@@ -284,57 +315,31 @@ def updateBudget():
                 session["email"], 
                 id, 
                 name,
-                startDate, 
+                startDate,
+                endDate, 
                 amount,
                 description, 
                 predicted,
-                am
-                earningPeriod, 
+                budgetPeriod, 
                 recurring
             )
         except Exception as e:
             custom_error(e)
 
-@app.route("/data/set-earning")
-@login_is_required
-def updateEarning():
-    id = request.form.get("Id")
-    name = request.form.get("name")
-    amount = request.form.get("amount")
-    predicted = request.form.get("preamount")
-    description = request.form.get("description")
-    recurPeriod = request.form.get("radio")
-    startDate = request.form.get("start")
-    recurring = request.form.get("recurring")
-
-    try:
-        database.updateEarning(
-            session["email"], 
-            id, 
-            name, 
-            startDate,
-            amount,
-            description, 
-            predicted,
-            recurPeriod, 
-            recurring
-        )
-    except Exception as e:
-        custom_error(e)
-
-@app.route("/data/set-expense")
+@app.route("/data/update-expense", methods=['POST'])
 @login_is_required
 def updateExpense():
-    id = request.form.get("Id")
+    id = request.form.get("id")
     name = request.form.get("name")
     amount = request.form.get("amount")
     category = request.form.get("category")
     description = request.form.get("description")
     predicted = request.form.get("preamount")
     recurPeriod = request.form.get("radio")
-    startDate = request.form.get("start-date")
+    startDate = request.form.get("start")
+    endDate = request.form.get("end")
     recurring = request.form.get("recurring")
-
+    
     try:
         database.updateExpense(
             session["email"], 
@@ -342,14 +347,63 @@ def updateExpense():
             name,
             category, 
             startDate,
+            endDate,
             amount, 
             description, 
             predicted,
             recurPeriod, 
             recurring
         )
+        return redirect("/dashboard")
     except Exception as e:
-        custom_error(e)
+        return custom_error(e)
+
+@app.route("/data/update-earning")
+@login_is_required
+def updateEarning():
+    id = request.form.get("id")
+    name = request.form.get("name")
+    amount = request.form.get("amount")
+    predicted = request.form.get("preamount")
+    description = request.form.get("description")
+    recurPeriod = request.form.get("radio")
+    startDate = request.form.get("start")
+    endDate = request.form.get("end")
+    recurring = request.form.get("recurring")
+    if (id == -1):
+        try:
+            status, message = database.createEarning(
+                session["email"],  
+                name, 
+                startDate,
+                endDate,
+                amount,
+                description, 
+                predicted,
+                recurPeriod, 
+                recurring
+            )
+
+            if status == False:
+                return message
+        except Exception as e:
+            custom_error(e)
+    else:
+        try:
+            database.updateEarning(
+                session["email"], 
+                id, 
+                name, 
+                startDate,
+                endDate,
+                amount,
+                description, 
+                predicted,
+                recurPeriod, 
+                recurring
+            )
+        except Exception as e:
+            custom_error(e)
 
 ##########################################
 # Routes for delete database information #
