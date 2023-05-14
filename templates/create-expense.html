@@ -41,104 +41,64 @@
         </div>
 
         <div class="content non-header" id="acd-expenses">
-            <form action="data/update-expense" method="post">
-                <input type="hidden" id="id" name="id" value={{id}} />
-
+            <form action="data/create-expense" method="post">
                 <label class="acd-form" for="name">Expense Name</label><br>
-                <input type="text" id="name" name="name" value={{name}} required><br>
+                <input type="text" id="name" name="name" required><br>
 
                 <label class="acd-form" for="amount">Expense Amount</label><br>
-                <input type="text" id="amount" name="amount" value={{amount}} required><br>
+                <input type="text" id="amount" name="amount" required><br>
 
                 <label class="acd-form" for="category">Budget Category</label><br>
                 <select id="category" name="category" required>
                     {% for option in allCategories %}
-                        {% if option == category %}
-                            <option value={{option}} selected="selected">{{option}}</option>
-                        {% else %}
-                            <option value={{option}}>{{option}}</option>
-                        {% endif %} 
+                        <option value={{option}}>{{option}}</option>
                     {% endfor %}
                 </select><br>
 
                 <label class="acd-form" for="description">Expense Description</label><br>
-                <textarea id="description" name="description" rows="4" cols="50" value={{description}}></textarea><br>
+                <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
 
                 <label class="acd-form" for="start">Expense Date</label><br>
-                <input type="date" id="start" name="start" value={{startDate}} required><br>
+                <input type="date" id="start" name="start" required><br>
 
                 <label class="acd-form" for="recurring">Is this a recurring expense?</label><br>
                 <label class="acd-form recurring-choice">
-                    {% if recurring %}
-                        <input type="radio" id="recurring-true" name="recurring" value="True" checked="checked"><br>
-                    {% else %}
-                        <input type="radio" id="recurring-true" name="recurring" value="True"><br>
-                    {% endif %} 
-
+                    <input type="radio" id="recurring-true" name="recurring" value="True"><br>
                     Yes
                 </label>
                 <label class="acd-form recurring-choice">
-                    {% if recurring %}
-                        <input type="radio" id="recurring-false" name="recurring" value="False"><br>
-                    {% else %}
-                        <input type="radio" id="recurring-false" name="recurring" value="False" checked="checked"><br>
-                    {% endif %} 
-                    
+                    <input type="radio" id="recurring-false" name="recurring" value="False" checked="checked"><br> 
                     No
                 </label>
 
                 <div id="recurring-items">
-                    <!-- Radio buttons for the expense period -->
+                     <!-- Radio buttons for the expense period -->
                     <label class="acd-form" for="radio">How often does this expense occur?</label>
                     <label class="acd-form" class="expense-period">
-                        {% if recurPeriod == 0 %}
-                            <input type="checkbox" id="onetime" name="radio" value="0" checked="checked" required>
-                        {% else %}
-                            <input type="checkbox" id="onetime" name="radio" value="0" required>
-                        {% endif %} 
-
+                        <input type="radio" id="daily" name="radio" value="0">
                         Daily
                     </label><br>
                     <label class="acd-form expense-period">
-                        {% if recurPeriod == 1 %}
-                            <input type="checkbox" id="weekly" name="radio" value="1" checked="checked" required>
-                        {% else %}
-                            <input type="checkbox" id="weekly" name="radio" value="1" required>
-                        {% endif %}                     
-                        
+                        <input type="radio" id="weekly" name="radio" value="1">
                         Weekly
                     </label><br>
                     <label class="acd-form expense-period">
-                        {% if recurPeriod == 2 %}
-                            <input type="checkbox" id="biweekly" name="radio" value="2" checked="checked" required>
-                        {% else %}
-                            <input type="checkbox" id="biweekly" name="radio" value="2" required>
-                        {% endif %}    
-                        
+                        <input type="radio" id="biweekly" name="radio" value="2">                    
                         Biweekly
                     </label><br>
                     <label class="acd-form expense-period">
-                        {% if recurPeriod == 3 %}
-                            <input type="checkbox" id="monthly" name="radio" value="3" checked="checked" required>
-                        {% else %}
-                            <input type="checkbox" id="monthly" name="radio" value="3" required>
-                        {% endif %} 
-
+                        <input type="radio" id="monthly" name="radio" value="3">
                         Monthly
                     </label><br>
                     <label class="acd-form expense-period">
-                        {% if recurPeriod == 4 %}
-                            <input type="checkbox" id="yearly" name="radio" value="4" checked="checked" required>
-                        {% else %}
-                            <input type="checkbox" id="yearly" name="radio" value="4" required>
-                        {% endif %} 
-                        
+                        <input type="radio" id="yearly" name="radio" value="4">
                         Yearly
                     </label><br>
 
                     <label class="acd-form" for="end">Expense End Date</label><br>
-                    <input type="date" id="end" name="end" value={{endDate}} required><br>
+                    <input type="date" id="end" name="end"><br>
                 </div>
+               
 
                 <button class="cta-button" type="submit" value="Submit">Submit</button>
                 <button onclick="back()" value="Back">Cancel</button>

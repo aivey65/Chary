@@ -15,7 +15,7 @@ __FAIL = False
 ####################
 # Create functions #
 ####################
-def createUser(email, username, image, color, currency, balance, password=None, google=True):
+def createUser(email, username, image, color, currency, balance, tutorialFinished, profileCreation, password=None, google=True):
     newUser = {
         u'email': email,
         u'username': username,
@@ -23,6 +23,8 @@ def createUser(email, username, image, color, currency, balance, password=None, 
         u'profileColor': color,
         u'currency': currency,
         u'balance': balance,
+        u'tutorialFinished': tutorialFinished,
+        u'profileCreation': profileCreation,
         u'budgets': [], 
         u'earnings': [],
         u'expenses': [],
@@ -33,7 +35,7 @@ def createUser(email, username, image, color, currency, balance, password=None, 
     
     # First check if there is already a user with that email.
     checkUser = db.collection(u'users').where(u'email', u'==', email).stream()
-    if (checkUser.length > 0):
+    if (checkUser.count > 0):
         raise RuntimeError("There is already an account associated with this email! Try logging in.")
     else:
         db.collection(u'users').add(newUser)
@@ -148,7 +150,7 @@ def getSinglePeriod(startDate, period, includeDate, endDate=None):
         This is a pyhton DateTime object for the start date of a given item
     period: string
         String representing the length of each time span
-        - 0 (daily/one time, end date is one day after)
+        - 0 (daily, end date is one day after)
         - 1 (Weekly, end date is 7 days after) 
         - 2 (biweekly, end date is 14 days after)
         - 3 (monthly, end date is 1 calendar month after relative to start date i.e. not necessarily 28, 30, etc. days)
@@ -195,7 +197,7 @@ def getOccurancesWithinPeriod(startDate, endDate, targetStartDate, targetEndDate
         The last possible date for target entity to have an occurance
     targetPeriod: string
         String representing the length of each time span
-        - 0 (daily/one time, end date is one day after)
+        - 0 (daily, end date is one day after)
         - 1 (Weekly, end date is 7 days after) 
         - 2 (biweekly, end date is 14 days after)
         - 3 (monthly, end date is 1 calendar month after relative to start date i.e. not necessarily 28, 30, etc. days)
@@ -519,9 +521,9 @@ def updateUser(email, username, image, color, currency, balance):
     user = db.collection(u'users').where(u'email', u'==', email).stream()
 
     # Should only run once, since there should only be one user per email
-    if user.length == 0:
+    if user.count == 0:
         raise RuntimeError("Can't find user! Update failed.")
-    elif user.length > 1:
+    elif user.count > 1:
         raise RuntimeError("Duplicate user found! Update failed.")
     else:
         user_ref = user[0]
@@ -554,9 +556,9 @@ def updateUserReferenceIds(email, operation, refType, id):
         user = db.collection(u'users').where(u'email', u'==', email).stream()
 
         # Should only run once, since there should only be one user per email
-        if user.length == 0:
+        if user.count == 0:
             raise RuntimeError("Can't find user! Update failed.")
-        elif user.length > 1:
+        elif user.count > 1:
             raise RuntimeError("Duplicate user found! Update failed.")
         else:
             user_ref = user[0]
@@ -597,14 +599,8 @@ def updateBudget(email, id, name, startDate, endDate="", amount=0, description="
 def updateExpense(email, id, name, category, startDate, endDate="", amount=0, description="", predicted=0, recurPeriod="One Time", recurring=False):
     expenseList = getUser(email)['data']['expenses']
 
-    print(id)
-    print(category)
-    print(amount)
-    print(expenseList)
-    print(startDate)
     # Check to make sure that the id passed in corresponds to an item in the user's database
     if id in expenseList:
-        print("id verified")
         expense_ref = db.collection(u'expenses').document(id)
         expense_ref.update({
             u'name': name,

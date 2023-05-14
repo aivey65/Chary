@@ -232,7 +232,61 @@ def getOneEarning():
     earningId = request.args.get("id")
     return database.getEarning(earningId, session["email"])
 
-@app.route("/data/create-expense")
+@app.route("/data/create-user", methods=['POST'])
+@login_is_required
+def createUser():
+    username = request.form.get("name")
+    image = request.form.get("profile-image")
+    color = request.form.get("profile-color")
+    currency = request.form.get("currency")
+    balance = 0
+    tutorialFinished = False
+    profileCreation = False
+
+    try:
+        database.createUser(
+            session["email"], 
+            username,
+            image,
+            color,
+            currency, 
+            balance,
+            tutorialFinished, 
+            profileCreation, 
+        )
+        return redirect("/dashboard")
+    except Exception as e:
+        return custom_error(e)
+
+@app.route("/data/create-budget", methods=['POST'])
+@login_is_required
+def createBudget():
+    name = request.form.get("name")
+    description = request.form.get("description")
+    amount = request.form.get("amount")
+    budgetPeriod = request.form.get("radio")
+    startDate = request.form.get("start")
+    endDate = request.form.get("end")
+    recurring = request.form.get("recurring")
+    predicted = request.form.get("predicted")
+
+    try:
+        database.createBudget(
+            session["email"], 
+            name, 
+            startDate,
+            endDate,
+            amount,
+            description, 
+            predicted,
+            recurring,
+            budgetPeriod, 
+        )
+        return redirect("/dashboard")
+    except Exception as e:
+        return custom_error(e)
+
+@app.route("/data/create-expense", methods=['POST'])
 @login_is_required
 def createExpense():
     name = request.form.get("name")
@@ -257,12 +311,11 @@ def createExpense():
             recurPeriod, 
             recurring
         )
-        print("create success")
         return redirect("/dashboard")
     except Exception as e:
         return custom_error(e)
-    
-@app.route("/data/set-user")
+
+@app.route("/data/update-user", methods=['POST'])
 @login_is_required
 def updateUser():
     id = request.form.get("id")
@@ -271,17 +324,20 @@ def updateUser():
     color = request.form.get("profile-color")
     currency = request.form.get("currency")
     balance = request.form.get("balance")
+    try:
+        database.updateUser(
+            session["email"], 
+            username, 
+            image, 
+            color,
+            currency,
+            balance
+        )
+        return redirect("/dashboard")
+    except Exception as e:
+        return custom_error(e)
 
-    database.updateUser(
-        session["email"], 
-        username, 
-        image, 
-        color,
-        currency,
-        balance
-    )
-
-@app.route("/data/set-budget")
+@app.route("/data/update-budget")
 @login_is_required
 def updateBudget():
     id = request.form.get("id")
@@ -294,37 +350,22 @@ def updateBudget():
     recurring = request.form.get("recurring")
     predicted = request.form.get("predicted")
 
-    if (id == -1):
-        try:
-            database.createBudget(
-                session["email"], 
-                name, 
-                startDate,
-                endDate,
-                amount,
-                description, 
-                predicted,
-                recurring,
-                budgetPeriod, 
-            )
-        except Exception as e:
-            custom_error(e)
-    else:
-        try:
-            database.updateBudget(
-                session["email"], 
-                id, 
-                name,
-                startDate,
-                endDate, 
-                amount,
-                description, 
-                predicted,
-                budgetPeriod, 
-                recurring
-            )
-        except Exception as e:
-            custom_error(e)
+    try:
+        database.updateBudget(
+            session["email"], 
+            id, 
+            name,
+            startDate,
+            endDate, 
+            amount,
+            description, 
+            predicted,
+            budgetPeriod, 
+            recurring
+        )
+        return redirect("/dashboard")
+    except Exception as e:
+        custom_error(e)
 
 @app.route("/data/update-expense", methods=['POST'])
 @login_is_required
@@ -370,40 +411,23 @@ def updateEarning():
     startDate = request.form.get("start")
     endDate = request.form.get("end")
     recurring = request.form.get("recurring")
-    if (id == -1):
-        try:
-            status, message = database.createEarning(
-                session["email"],  
-                name, 
-                startDate,
-                endDate,
-                amount,
-                description, 
-                predicted,
-                recurPeriod, 
-                recurring
-            )
-
-            if status == False:
-                return message
-        except Exception as e:
-            custom_error(e)
-    else:
-        try:
-            database.updateEarning(
-                session["email"], 
-                id, 
-                name, 
-                startDate,
-                endDate,
-                amount,
-                description, 
-                predicted,
-                recurPeriod, 
-                recurring
-            )
-        except Exception as e:
-            custom_error(e)
+    
+    try:
+        database.updateEarning(
+            session["email"], 
+            id, 
+            name, 
+            startDate,
+            endDate,
+            amount,
+            description, 
+            predicted,
+            recurPeriod, 
+            recurring
+        )
+        return redirect("/dashboard")
+    except Exception as e:
+        custom_error(e)
 
 ##########################################
 # Routes for delete database information #
