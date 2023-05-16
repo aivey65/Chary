@@ -41,6 +41,7 @@
         </div>
 
         <div class="content non-header" id="acd-expenses">
+            <div id="alert-section"></div>
             <form action="data/update-expense" method="post">
                 <input type="hidden" id="id" name="id" value={{id}} />
 
@@ -85,11 +86,11 @@
                     {% endif %} 
                     
                     No
-                </label>
+                </label><br>
 
                 <div id="recurring-items">
                     <!-- Radio buttons for the expense period -->
-                    <label class="acd-form" for="radio">How often does this expense occur?</label>
+                    <p class="acd-form" for="radio">How often does this expense occur?</p><br>
                     <label class="acd-form" class="expense-period">
                         {% if recurPeriod == 0 %}
                             <input type="checkbox" id="onetime" name="radio" value="0" checked="checked" required>

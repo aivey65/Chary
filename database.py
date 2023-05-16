@@ -35,12 +35,12 @@ def createUser(email, username, image, color, currency, balance, tutorialFinishe
     
     # First check if there is already a user with that email.
     checkUser = db.collection(u'users').where(u'email', u'==', email).stream()
-    if (checkUser.count > 0):
+    if len(list(checkUser)) > 0:
         raise RuntimeError("There is already an account associated with this email! Try logging in.")
     else:
         db.collection(u'users').add(newUser)
 
-def createBudget(email, name, startDate, endDate="", amount=0, description="", predicted=0, recurring=True, budgetPeriod=3):
+def createBudget(email, name, startDate, endDate="", amount=0, description="", recurring=True, budgetPeriod=3):
     # Budget names need to be unique
     currentBudgets = getAllActiveBudgets(email)['categories']
     if name in currentBudgets:
@@ -51,9 +51,8 @@ def createBudget(email, name, startDate, endDate="", amount=0, description="", p
         u'name': name,
         u'startDate': startDate,
         u'endDate': endDate,
-        u'actualBudgetAmount': amount,
+        u'amount': amount,
         u'description': description,
-        u'expectedBudgetAmount': predicted,
         u'recurring': recurring,
         u'budgetPeriod': budgetPeriod
     }
@@ -79,7 +78,7 @@ def createExpense(email, name, category, startDate, endDate="", amount=0, descri
         u'budgetCategory': category,
         u'startDate': startDate,
         u'endDate': endDate,
-        u'actualAmount': amount,
+        u'amount': amount,
         u'description': description,
         u'expectedAmount': predicted,
         u'recurPeriod': recurPeriod,
@@ -95,7 +94,6 @@ def createExpense(email, name, category, startDate, endDate="", amount=0, descri
         emergencyDeleteExpense(expense_ref.id)
         raise e
     
-    # Expenses also must update the budget associated with them.
     
     # TODO: Update the user's wallet balance as well.
 
@@ -106,7 +104,7 @@ def createEarning(email, name, startDate, endDate="", amount=0, description="", 
         u'name': name,
         u'startDate': startDate,
         u'endDate': endDate,
-        u'actualAmount': amount,
+        u'amount': amount,
         u'description': description,
         u'expectedAmount': predicted,
         u'recurPeriod': recurPeriod,
@@ -183,7 +181,7 @@ def getSinglePeriod(startDate, period, includeDate, endDate=None):
 
     return newStartDate, newEndDate
 
-def getOccurancesWithinPeriod(startDate, endDate, targetStartDate, targetEndDate, targetPeriod):
+def getOccurancesWithinPeriod(startDate, endDate, targetStartDate, targetEndDate, targetPeriod, recurring=True):
     """
     Parameters
     -----------
@@ -225,10 +223,13 @@ def getOccurancesWithinPeriod(startDate, endDate, targetStartDate, targetEndDate
         targetEndDate = endDate
     
     newStartDate = targetStartDate
-    while newStartDate < targetEndDate:
+    while newStartDate <= targetEndDate:
         if newStartDate < startDate: # We only want to count occurances within our search dates
-            newStartDate = newStartDate + timeDelta
-            continue
+            if not recurring: # If the item is not recurring and does not occur after the start date window.
+                return occurances, occurranceDates
+            else:
+                newStartDate = newStartDate + timeDelta
+                continue
         else:
             occurances += 1
             occurranceDates.append(newStartDate)
@@ -236,34 +237,30 @@ def getOccurancesWithinPeriod(startDate, endDate, targetStartDate, targetEndDate
 
     return occurances, occurranceDates
 
-# Get all data associated with a user (basic data, expenses, and budgets)
-def getAll(email):
-    user = getUser(email)['data']
-    budgetsDict = {}
-    expensesDict = {}
-    budgetCategories = []
+def getAllCurrent(email, period=3):
+    try:
+        timeDelta = getTimeDelta(period)
+        endDate = date.today()
+        startDate = endDate - timeDelta
 
-    for budgetID in user['budgets']:
-        if budgetID == "":
-            continue
-        budgetDoc = db.collection(u'budgets').document(budgetID).get().to_dict()
-        budgetDoc['usedAmount'] = getBudgetBalance(email, budgetID)
-        budgetsDict[budgetID] = budgetDoc
+        user = getUser(email)['data']
 
-        budgetCategories.append(budgetsDict[budgetID]['name'])
+        budgetData = getAllActiveBudgets(email)
+        budgetsDict = budgetData["data"]
+        budgetCategories = budgetData["categories"]
+
+        expensesDict = getExpensesInRange(email, startDate, endDate)
+        earningDict = getEarningsInRange(email, startDate, endDate)
+
+        user['budgets'] = budgetsDict
+        user['expenses'] = expensesDict
+        user['earnings'] = earningDict
+        user['budgetCategories'] = budgetCategories
+
+        return {"data":user}
+    except Exception as e:
+        return str(e)
     
-    for expenseID in user['expenses']:
-        if expenseID == "":
-            continue
-        expenseDoc = db.collection(u'expenses').document(expenseID).get()
-        expensesDict[expenseDoc.id] = expenseDoc.to_dict()
-
-    user['budgets'] = budgetsDict
-    user['expenses'] = expensesDict
-    user['budgetCategories'] = budgetCategories
-
-    return {"data":user}
-
 # Get a user's basic information, needed to get list of budgets, expenses, etc.
 def getUser(email):
     # Note: Use of CollectionRef stream() is prefered to get()
@@ -271,8 +268,6 @@ def getUser(email):
 
     for doc in docs: # Should only run once, since an email should only be present once in database
         return {"data":doc.to_dict()}
-
-    return 
 
 # Get a user's budgets
 def getAllBudgets(email):
@@ -307,6 +302,7 @@ def getAllActiveBudgets(email, date=date.today()):
             continue
 
         budgetDoc = db.collection(u'budgets').document(budgetID).get().to_dict()
+        budgetDoc['usedAmount'] = getBudgetBalance(email, budgetID)
         budgetEnd = None if budgetDoc["endDate"] == "" else date.fromisoformat(budgetDoc["endDate"])
         budgetStart = date.fromisoformat(budgetDoc['startDate'])
 
@@ -394,7 +390,7 @@ def getBudgetBalance(email, id, targetDate=date.today()):
                 expenseDoc['recurPeriod']
             )
 
-            usedAmount = usedAmount + (int(expenseDoc['actualAmount']) * occurances)
+            usedAmount = usedAmount + (float(expenseDoc['amount']) * occurances)
 
         return usedAmount
 
@@ -416,7 +412,7 @@ def getAllExpenses(email):
 
     return {"data":expensesDict, "categories":budgetCategories}
 
-def getRecentExpenses(email, startDate, endDate):
+def getExpensesInRange(email, startDate, endDate):
     expenseList = db.collection(u'expenses')\
             .where(u'email', u'==', email)\
             .get()
@@ -447,7 +443,47 @@ def getRecentExpenses(email, startDate, endDate):
 
     return {"expenses":expensesDict, "categories":budgetCategories}
 
-def getRecentEarnings(email, startDate, endDate):
+def getExpense(expenseId, userEmail):
+    if (expenseId == "" or userEmail == ""):
+        print("No expense ID or email provided.")
+        raise RuntimeError("No expense ID or email provided.")
+    
+    user = getUser(userEmail)['data']
+    if (expenseId not in user['expenses']):
+        print("User email does not match expense!")
+        raise RuntimeError("User email does not match expense!")
+    
+    expenseDoc = db.collection(u'expenses').document(expenseId).get()
+    budgetCategories = getBudgetCategories(userEmail)
+
+    return {"expense":expenseDoc.to_dict(), "budgetCategories":budgetCategories}
+
+def getBudget(budgetId, userEmail, date=date.today()):
+    if (budgetId == "" or userEmail == ""):
+        raise RuntimeError("No budget ID or email provided.")
+    
+    user = getUser(userEmail)['data']
+    if (budgetId not in user['budgets']):
+        raise RuntimeError("User email does not match budget!")
+    
+    budgetDoc = db.collection(u'budgets').document(budgetId).get().to_dict()
+    budgetDoc["usedAmount"] = getBudgetBalance(userEmail, budgetId, date)
+
+    return budgetDoc.to_dict()
+
+def getEarning(earningId, userEmail):
+    if (earningId == "" or userEmail == ""):
+        raise RuntimeError("No earning ID or email provided.")
+    
+    user = getUser(userEmail)['data']
+    if (earningId not in user['earnings']):
+        raise RuntimeError("User email does not match earning!")
+    
+    earningDoc = db.collection(u'earnings').document(earningId).get()
+
+    return earningDoc.to_dict()
+
+def getEarningsInRange(email, startDate, endDate):
     earningList = db.collection(u'earnings')\
             .where(u'email', u'==', email)\
             .get()
@@ -457,7 +493,7 @@ def getRecentEarnings(email, startDate, endDate):
         earningDoc = earning.to_dict()
 
         earningStart = date.fromisoformat(earningDoc["startDate"])
-        earningEnd = date.fromisoformat(earningDoc["endDate"])
+        earningEnd = None if earningDoc["endDate"] == "" else date.fromisoformat(earningDoc["endDate"])
 
         occurances, dates = getOccurancesWithinPeriod(
             startDate, 
@@ -475,45 +511,6 @@ def getRecentEarnings(email, startDate, endDate):
 
     return earningsDict
 
-def getExpense(expenseId, userEmail):
-    if (expenseId == "" or userEmail == ""):
-        print("No expense ID or email provided.")
-        raise RuntimeError("No expense ID or email provided.")
-    
-    user = getUser(userEmail)['data']
-    if (expenseId not in user['expenses']):
-        print("User email does not match expense!")
-        raise RuntimeError("User email does not match expense!")
-    
-    expenseDoc = db.collection(u'expenses').document(expenseId).get()
-    budgetCategories = getBudgetCategories(userEmail)
-
-    return {"expense":expenseDoc.to_dict(), "budgetCategories":budgetCategories}
-
-def getBudget(budgetId, userEmail):
-    if (budgetId == "" or userEmail == ""):
-        raise RuntimeError("No budget ID or email provided.")
-    
-    user = getUser(userEmail)['data']
-    if (budgetId not in user['budgets']):
-        raise RuntimeError("User email does not match budget!")
-    
-    budgetDoc = db.collection(u'budgets').document(budgetId).get()
-
-    return budgetDoc.to_dict()
-
-def getEarning(earningId, userEmail):
-    if (earningId == "" or userEmail == ""):
-        raise RuntimeError("No earning ID or email provided.")
-    
-    user = getUser(userEmail)['data']
-    if (earningId not in user['earnings']):
-        raise RuntimeError("User email does not match earning!")
-    
-    earningDoc = db.collection(u'earnings').document(earningId).get()
-
-    return earningDoc.to_dict()
-
 ####################
 # Setter functions #
 ####################
@@ -521,9 +518,9 @@ def updateUser(email, username, image, color, currency, balance):
     user = db.collection(u'users').where(u'email', u'==', email).stream()
 
     # Should only run once, since there should only be one user per email
-    if user.count == 0:
+    if len(list(user)) == 0:
         raise RuntimeError("Can't find user! Update failed.")
-    elif user.count > 1:
+    elif len(list(user)) > 1:
         raise RuntimeError("Duplicate user found! Update failed.")
     else:
         user_ref = user[0]
@@ -553,21 +550,22 @@ def updateUserReferenceIds(email, operation, refType, id):
             The ID generated by Firestore to be added or removed from the user.
     """
     if (email != None) and (operation == 1 or operation == 0) and (refType == 'budgets' or refType == 'expenses' or refType == 'earnings' or refType == 'goals'):
-        user = db.collection(u'users').where(u'email', u'==', email).stream()
+        user = list(db.collection(u'users').where(u'email', u'==', email).stream())
 
         # Should only run once, since there should only be one user per email
-        if user.count == 0:
+        if len(user) == 0:
             raise RuntimeError("Can't find user! Update failed.")
-        elif user.count > 1:
+        elif len(user) > 1:
             raise RuntimeError("Duplicate user found! Update failed.")
         else:
-            user_ref = user[0]
+            user_ref = db.collection(u'users').document(user[0].id)
 
             if operation == 1: # Remove operation
                 user_ref.update({
                     refType: firestore.ArrayRemove([id])
                 })
             else: # Add operation
+                
                 user_ref.update({
                     refType: firestore.ArrayUnion([id])
                 })
@@ -584,7 +582,7 @@ def updateBudget(email, id, name, startDate, endDate="", amount=0, description="
             u'name': name,
             u'startDate': startDate,
             u'endDate': endDate,
-            u'actualBudgetAmount': amount,
+            u'amount': amount,
             u'description': description,
             u'expectedBudgetAmount': predicted,
             u'budgetPeriod': recurPeriod,
@@ -607,7 +605,7 @@ def updateExpense(email, id, name, category, startDate, endDate="", amount=0, de
             u'budgetCategory': category,
             u'startDate': startDate,
             u'endDate': endDate,
-            u'actualAmount': amount,
+            u'amount': amount,
             u'description': description,
             u'expectedAmount': predicted,
             u'recurPeriod': recurPeriod,
@@ -628,7 +626,7 @@ def updateEarning(email, id, name, startDate, endDate="", amount=0, description=
             u'name': name,
             u'startDate': startDate,
             u'endDate': endDate,
-            u'actualAmount': amount,
+            u'amount': amount,
             u'description': description,
             u'expectedAmount': predicted,
             u'recurPeriod': recurPeriod,

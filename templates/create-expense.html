@@ -41,7 +41,8 @@
         </div>
 
         <div class="content non-header" id="acd-expenses">
-            <form action="data/create-expense" method="post">
+            <div id="alert-section"></div>
+            <form action="javascript:submitExpenseCreateForm()" method="post">
                 <label class="acd-form" for="name">Expense Name</label><br>
                 <input type="text" id="name" name="name" required><br>
 
@@ -55,27 +56,27 @@
                     {% endfor %}
                 </select><br>
 
-                <label class="acd-form" for="description">Expense Description</label><br>
+                <p class="acd-form" for="description">Expense Description</label><br>
                 <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
 
                 <label class="acd-form" for="start">Expense Date</label><br>
                 <input type="date" id="start" name="start" required><br>
 
-                <label class="acd-form" for="recurring">Is this a recurring expense?</label><br>
+                <p class="acd-form">Is this a recurring expense?</p><br>
                 <label class="acd-form recurring-choice">
-                    <input type="radio" id="recurring-true" name="recurring" value="True"><br>
+                    <input type="radio" id="recurring-true" name="recurring" value="True">
                     Yes
                 </label>
                 <label class="acd-form recurring-choice">
-                    <input type="radio" id="recurring-false" name="recurring" value="False" checked="checked"><br> 
+                    <input type="radio" id="recurring-false" name="recurring" value="False">
                     No
-                </label>
+                </label><br>
 
                 <div id="recurring-items">
                      <!-- Radio buttons for the expense period -->
-                    <label class="acd-form" for="radio">How often does this expense occur?</label>
+                    <p class="acd-form" for="radio">How often does this expense occur?</p><br>
                     <label class="acd-form" class="expense-period">
-                        <input type="radio" id="daily" name="radio" value="0">
+                        <input type="radio" id="daily" name="radio" value="0" checked="checked">
                         Daily
                     </label><br>
                     <label class="acd-form expense-period">
@@ -96,7 +97,7 @@
                     </label><br>
 
                     <label class="acd-form" for="end">Expense End Date</label><br>
-                    <input type="date" id="end" name="end"><br>
+                    <input type="date" id="end" name="end" value=""><br>
                 </div>
                
 

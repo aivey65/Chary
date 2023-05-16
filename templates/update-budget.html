@@ -41,6 +41,7 @@
         </div>
 
         <div class="content non-header" id="acd-budgets">
+            <div id="alert-section"></div>
             <form action="/data/update-budget">
                 <input type="hidden" id="id" name="id" value={{id}} />
 
@@ -103,7 +104,7 @@
                     One Year
                 </label><br>
 
-                <label class="acd-form" for="recurring"> Is this a recurring budget?</label><br>
+                <p class="acd-form" for="recurring"> Is this a recurring budget?</p><br>
                 <label class="acd-form recurring-choice">
                     {% if recurring %}
                         <input type="radio" id="recurring-true" name="recurring" value="True" checked="checked"><br>
@@ -121,7 +122,7 @@
                     {% endif %} 
                     
                     No
-                </label>
+                </label><br>
 
                 <div id="recurring-items">
                     <label class="acd-form" for="end">Budget End Date</label><br>

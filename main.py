@@ -121,7 +121,9 @@ def google_auth():
 @app.route("/dashboard")
 @login_is_required
 def renderDashboard():
-    return render_template('dashboard.html')
+    refresh = request.args.get("refresh")
+    tab = request.args.get("tab")
+    return render_template('dashboard.html', refresh="false", tab="overview")
 
 @app.route("/budget")
 @login_is_required
@@ -133,71 +135,131 @@ def renderBudget():
 def renderExpense():
     return render_template('expense.html')
 
-@app.route("/acd-budget")
-@login_is_required
-def renderACDBudget():
-    budgetId = request.args.get("id")
-    return render_template('update-budget.html', id=budgetId)
+##########################################
+# Add, Create, and Delete form rendering #
+##########################################
 
-@app.route("/acd-earning")
+@app.route("/form/create-user")
 @login_is_required
-def renderACDEarning():
-    earningId = request.args.get("id")
-    return render_template('update-earning.html', id=earningId)
+def renderCreateUser():
+    return render_template('create-user.html')
 
-@app.route('/acd-expense')
+@app.route("/form/create-budget")
 @login_is_required
-def renderACDExpense():
-    expenseId = request.args.get("id")
-    if (expenseId != "-1"):
-        try:
-            # This database method checks to make sure that the user owns the expense they are trying to update
-            databaseInfo = database.getExpense(expenseId, session["email"])
-            expenseInfo = databaseInfo["expense"]
-            categoryInfo = databaseInfo["budgetCategories"]
-            predictedAmount = expenseInfo["expectedAmount"] if expenseInfo["expectedAmount"] != -1 else ""
+def renderCreateBudget():
+    return render_template('create-budget.html')
 
-            return render_template(
-                'update-expense.html', 
-                id=expenseId,
-                name=expenseInfo["name"], 
-                description=expenseInfo["description"], 
-                amount=expenseInfo["actualAmount"],
-                predicted=predictedAmount,
-                startDate=expenseInfo["startDate"],
-                recurPeriod=expenseInfo["recurPeriod"], 
-                recurring=expenseInfo["recurring"],
-                category=expenseInfo["budgetCategory"],
-                allCategories=categoryInfo
-            )
-        except Exception as e:
-            print(e)
-            abort(405)
-    else:
-        categoryInfo = database.getBudgetCategories(session["email"])
+@app.route("/form/create-earning")
+@login_is_required
+def renderCreateEarning():
+    return render_template('create-earning.html')
+
+@app.route('/form/create-expense')
+@login_is_required
+def renderCreateExpense():
+    categoryInfo = database.getBudgetCategories(session["email"])
+    return render_template('create-expense.html', allCategories=categoryInfo)
+
+@app.route("/form/update-user")
+@login_is_required
+def renderUpdateUser():
+    try: 
+        # This database method checks to make sure that the user owns the expense they are trying to update
+        databaseInfo = database.getUser(session["email"])
+        # TODO: Autofill with current user data
+
+        return render_template('update-user.html')
+    except Exception as e:
+        return custom_error(e)
+
+@app.route("/form/update-budget")
+@login_is_required
+def renderUpdateBudget():
+    try: 
+        budgetId = request.args.get("id")
+
+        # This database method checks to make sure that the user owns the budget they are trying to update
+        budgetInfo = database.getBudget(budgetId, session["email"])
+
         return render_template(
-            'create-expense.html', 
-            id=expenseId,
-            name="", 
-            description="", 
-            amount="",
-            predicted="",
-            startDate="",
-            recurPeriod="One Time", 
-            recurring=False,
-            category="",
-            allCategories=categoryInfo
+            'update-budget.html', 
+            id=budgetId,
+            name=budgetInfo["name"],
+            description=budgetInfo["description"],
+            amount=budgetInfo["amount"],
+            startDate=budgetInfo["startDate"],
+            recurPeriod=budgetInfo["budgetPeriod"],
+            recurring=budgetInfo["recurring"],
+            endDate=budgetInfo["endDate"]
         )
+    except Exception as e:
+        return custom_error(e)
+    
+@app.route('/form/update-expense')
+@login_is_required
+def renderUpdateExpense():
+    try:
+        expenseId = request.args.get("id")
 
+        # This database method checks to make sure that the user owns the expense they are trying to update
+        databaseInfo = database.getExpense(expenseId, session["email"])
+        expenseInfo = databaseInfo["expense"]
+        categoryInfo = databaseInfo["budgetCategories"]
 
+        return render_template(
+            'update-expense.html', 
+            id=expenseId,
+            name=expenseInfo["name"], 
+            description=expenseInfo["description"], 
+            amount=expenseInfo["amount"],
+            startDate=expenseInfo["startDate"],
+            recurPeriod=expenseInfo["recurPeriod"], 
+            recurring=expenseInfo["recurring"],
+            category=expenseInfo["budgetCategory"],
+            allCategories=categoryInfo,
+            endDate=expenseInfo["endDate"]
+        )
+    except Exception as e:
+        return custom_error(e)
+        
+@app.route("/form/update-earning")
+@login_is_required
+def renderUpdateEarning():
+    try: 
+        earningId = request.args.get("id")
+
+        # This database method checks to make sure that the user owns the expense they are trying to update
+        earningInfo = database.getEarning(earningId, session["email"])
+
+        return render_template(
+            'update-earning.html', 
+            id=earningId,
+            name=earningInfo["name"],
+            description=earningInfo["description"],
+            amount=earningInfo["amount"],
+            startDate=earningInfo["startDate"],
+            recurPeriod=earningInfo["recurPeriod"],
+            recurring=earningInfo["recurring"],
+            endDate=earningInfo["endDate"]
+        )
+    except Exception as e:
+        return custom_error(e)
+    
 ####################################################
 # Routes for getting/updating database information #
 ####################################################
 
-@app.route("/data/all")
+@app.route("/data/all-current")
 @login_is_required
-def getAllData():
-    return database.getAll(session["email"])
+def getAllCurrent():
+    try:
+        period = request.args.get("period")
+        if period:
+            return database.getAllCurrent(session["email"], period)
+        else:
+            return database.getAllCurrent(session["email"])
+    except Exception as e:
+        return custom_error(e)
 
 @app.route("/data/user")
 @login_is_required
@@ -268,7 +330,6 @@ def createBudget():
     startDate = request.form.get("start")
     endDate = request.form.get("end")
     recurring = request.form.get("recurring")
-    predicted = request.form.get("predicted")
 
     try:
         database.createBudget(
@@ -278,13 +339,18 @@ def createBudget():
             endDate,
             amount,
             description, 
-            predicted,
             recurring,
             budgetPeriod, 
         )
-        return redirect("/dashboard")
+        return {
+            "status": 200,
+            "message": "Creation successful!"
+        }
     except Exception as e:
-        return custom_error(e)
+        return {
+            "status": 400,
+            "message": str(e)
+        }
 
 @app.route("/data/create-expense", methods=['POST'])
 @login_is_required
@@ -311,9 +377,15 @@ def createExpense():
             recurPeriod, 
             recurring
         )
-        return redirect("/dashboard")
+        return {
+            "status": 200,
+            "message": "Creation successful!"
+        }
     except Exception as e:
-        return custom_error(e)
+        return {
+            "status": 400,
+            "message": str(e)
+        }
 
 @app.route("/data/update-user", methods=['POST'])
 @login_is_required
@@ -333,9 +405,15 @@ def updateUser():
             currency,
             balance
         )
-        return redirect("/dashboard")
+        return {
+            "status": 200,
+            "message": "Update successful!"
+        }
     except Exception as e:
-        return custom_error(e)
+        return {
+            "status": 400,
+            "message": str(e)
+        }
 
 @app.route("/data/update-budget")
 @login_is_required
@@ -363,9 +441,15 @@ def updateBudget():
             budgetPeriod, 
             recurring
         )
-        return redirect("/dashboard")
+        return {
+            "status": 200,
+            "message": "Update successful!"
+        }
     except Exception as e:
-        custom_error(e)
+        return {
+            "status": 400,
+            "message": str(e)
+        }
 
 @app.route("/data/update-expense", methods=['POST'])
 @login_is_required
@@ -395,9 +479,15 @@ def updateExpense():
             recurPeriod, 
             recurring
         )
-        return redirect("/dashboard")
+        return {
+            "status": 200,
+            "message": "Update successful!"
+        }
     except Exception as e:
-        return custom_error(e)
+        return {
+            "status": 400,
+            "message": str(e)
+        }
 
 @app.route("/data/update-earning")
 @login_is_required
@@ -425,9 +515,15 @@ def updateEarning():
             recurPeriod, 
             recurring
         )
-        return redirect("/dashboard")
+        return {
+            "status": 200,
+            "message": "Upodate successful!"
+        }
     except Exception as e:
-        custom_error(e)
+        return {
+            "status": 400,
+            "message": str(e)
+        }
 
 ##########################################
 # Routes for delete database information #

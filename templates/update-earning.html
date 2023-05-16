@@ -41,6 +41,7 @@
         </div>
 
         <div class="content non-header" id="acd-earnings">
+            <div id="alert-section"></div>
             <form action="data/update-earning">
                 <input type="hidden" id="id" name="id" value={{id}} />
 
@@ -54,9 +55,9 @@
                 <textarea id="description" name="description" rows="4" cols="50" value={{description}}></textarea><br>
 
                 <label class="acd-form" for="start">Date Received</label><br>
-                <input type="date" id="start" name="start" required><br>
+                <input type="date" id="start" name="start" value={{startDate}} required><br>
 
-                <label class="acd-form" for="recurring"> Is this a recurring source of income?</label><br>
+                <p class="acd-form" for="recurring"> Is this a recurring source of income?</p><br>
                 <label class="acd-form recurring-choice">
                     {% if recurring %}
                         <input type="radio" id="recurring-true" name="recurring" value="True" checked="checked"><br>
@@ -74,7 +75,7 @@
                     {% endif %} 
                     
                     No
-                </label>
+                </label><br>
 
                 <div id="recurring-items">
                     <label class="acd-form" for="radio">Choose how often you receive this income:</label>
@@ -126,7 +127,7 @@
                     </label><br>
 
                     <label class="acd-form" for="end">Recurrance End Date</label><br>
-                    <input type="date" id="end" name="end"><br>
+                    <input type="date" id="end" name="end" value={{endDate}}><br>
                 </div>
 
                 <button class="cta-button" type="submit" value="Submit">Submit</button>

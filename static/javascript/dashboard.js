@@ -5,199 +5,185 @@ function setLocalData(newData) {
 }
 
 // Function gets called everytime the dashboard is visited or refreshed
-function loadDashboard() {
-    var needRefresh = true;
-    var loadOverview = true;
-    updateUserData(needRefresh, loadOverview);
+async function loadDashboard(refresh, tab) {
+    if (refresh || userData == null) {
+        const response = updateUserData();
+        response.then(() => {
+            loadProfileData();
+
+            if (tab == "overview") {
+                loadOverviewTab();
+            } else if (tab == "budgets") {
+                loadBudgetTab();
+            } else if (tab == "expenses") {
+                loadExpenseTab();
+            } else if (tab == "earnings") {
+                loadEarningTab();
+            }
+        });
+    } else {
+        if (tab == "overview") {
+            loadOverviewTab();
+        } else if (tab == "budgets") {
+            loadBudgetTab();
+        } else if (tab == "expenses") {
+            loadExpenseTab();
+        } else if (tab == "earnings") {
+            loadEarningTab();
+        }
+    }
+
+    
 }
 
 // Refresh boolean should be set to true when there is already user data saved, but it
 // needs to be updated.
-function updateUserData(refresh, overview) {
-    if (userData == null || refresh) {
-        fetch('/data/all').then(response => response.json()).then((responseData) => {
-            userData = responseData.data;
-        }).then(() => {
-            if (refresh) {
-                getOverviewData();
-                getBudgetData();
-                getEarningData();
-                getExpenseData();
-            }
-            
-            // Because fetching data is async, other functions for setting up the dashboard
-            // also need to be done in an async environment. I don't like this solution so 
-            // much, but it works for now. 
-            if (overview) {
-                overviewTab();
+async function updateUserData() {
+    const response = await fetch('/data/all-current').then(response => response.json()).then((responseData) => {
+        userData = responseData.data;
+    });
 
-                // Populating the info panel, which is always visible
-                infoPanel = loadUserInfo(userData.balance, userData.username, userData.profileColor, userData.profileImage, userData.currency);
-                userContent = document.getElementById('profile-section');
-                userContent.append(infoPanel);
-            }
-        });
-    }
+    return response;
 }
 
-function getOverviewData() {
-    overviewContent = document.getElementById('overview-container');
-
-    budgetPanel = loadOverviewBudgets(userData.budgets, userData.currency);
-    earningPanel = loadOverviewEarnings(userData.earnings, userData.currency);
-    expensePanel = loadOverviewExpenses(userData.expenses, userData.currency);
-
-    overviewContent.append(budgetPanel);
+function loadProfileData() {
+    // Populating the info panel, which is always visible
+    infoPanel = generateProfileUI(userData.balance, userData.username, userData.profileColor, userData.profileImage, userData.currency);
+    const userContent = document.getElementById('profile-section');
+    userContent.append(infoPanel);
 }
 
-function getBudgetData() {
-    budgetPanel = loadBudgets(userData.budgets, userData.currency);
-    budgetContent = document.getElementById('budget-container');
-    budgetContent.append(budgetPanel);
+function loadOverviewTab() {
+    budgetPanel = generateOverviewBudgets(userData.budgets, userData.currency);
+    earningPanel = generateOverviewEarnings(userData.earnings, userData.currency);
+    expensePanel = generateOverviewExpenses(userData.expenses, userData.currency);
+
+    const tabBody = document.getElementById('tab-container');
+    tabBody.innerHTML = "";
+    tabBody.append(budgetPanel, earningPanel, expensePanel);
+
+    changeActiveTab(document.getElementById('overview-tab'))
 }
 
-function getEarningData() {
-    earningPanel = loadEarnings(userData.earnings, userData.currency);
-    earningContent = document.getElementById('earning-container');
-    // earningContent.append(...earningPanel.children);
+function loadBudgetTab() {
+    const header = document.createElement('h1');
+    header.id = 'tab-header';    
+    header.textContent = "Budgets";
+
+    const addButton = document.createElement('button');
+    addButton.onclick = goToBudgetForm;
+    addButton.id = "add-budget-button";
+    addButton.textContent = "+ Add Budget";
+
+    budgetPanel = generateBudgetsUI(userData.budgets, userData.currency);
+
+    const budgetContainer = document.createElement('div');
+    budgetContainer.id = "budget-container";
+    budgetContainer.append(budgetPanel);
+
+    const tabBody = document.getElementById('tab-container');
+    tabBody.innerHTML = "";
+    tabBody.append(header, addButton, budgetContainer);
+
+    changeActiveTab(document.getElementById('budget-tab'));
 }
 
-function getExpenseData() {
-    expensePanel = loadExpenses(userData.expenses, userData.currency);
-    expenseContent = document.getElementById('expense-container');
-    expenseContent.append(...expensePanel.children);
+function loadEarningTab() {
+    const header = document.createElement('h1');
+    header.id = 'tab-header';
+    header.textContent = "Earnings";
+
+    const addButton = document.createElement('button');
+    addButton.onclick = goToEarningForm;
+    addButton.id = "add-earning-button";
+    addButton.textContent = "+ Add Earning";
+
+    const tableHead = document.createElement('thead');
+    row = document.createElement('tr');
+    columns = ['Name', 'Earning Amount', 'Description', 'Date', 'Recurring?', 'Edit'];
+    columns.forEach(title => {
+        col = document.createElement('th');
+        col.textContent = title;
+        row.append(col);
+    })
+    tableHead.append(row);
+
+    const tableBody = document.createElement('tbody');
+    tableData = generateEarningsUI(userData.earnings, userData.currency);
+    tableBody.append(...tableData.children);
+
+    table = document.createElement('table');
+    table.append(tableHead, tableBody);
+
+    const earningContainer = document.createElement('div');
+    earningContainer.id = 'earning-container';
+    earningContainer.append(table);
+
+    const tabBody = document.getElementById('tab-container');
+    tabBody.innerHTML = "";
+    tabBody.append(header, addButton, earningContainer);
+
+    changeActiveTab(document.getElementById('earning-tab'));
+}
+
+function loadExpenseTab() {
+    const header = document.createElement('h1');
+    header.id = 'tab-header';
+    header.textContent = "Expenses";
+
+    const addButton = document.createElement('button');
+    addButton.onclick = goToExpenseForm;
+    addButton.id = 'add-expense-button';
+    addButton.textContent = "+ Add Expense";
+
+    const tableHead = document.createElement('thead');
+    row = document.createElement('tr');
+    columns = ['Name', 'Expense Amount', 'Budget Category', 'Description', 'Date', 'Recurring?', 'Edit']
+    columns.forEach(title => {
+        col = document.createElement('th');
+        col.textContent = title;
+        row.append(col);
+    })
+    tableHead.append(row);
+
+    const tableBody = document.createElement('tbody');
+    tableData = generateExpensesUI(userData.expenses, userData.currency);
+    tableBody.append(...tableData.children);
+
+    table = document.createElement('table');
+    table.append(tableHead, tableBody);
+
+    const expenseContainer = document.createElement('div');
+    expenseContainer.id = 'expense-container';
+    expenseContainer.append(table);
+
+    const tabBody = document.getElementById('tab-container');
+    tabBody.innerHTML = "";
+    tabBody.append(header, addButton, expenseContainer);
+
+    changeActiveTab(document.getElementById('expense-tab'));
 }
 
 function goToBudgetForm() {
-    window.location.href = "/acd-budget?id=-1";
+    window.location.href = "/form/create-budget";
 }
 
 function goToEarningForm() {
-    window.location.href = "/acd-earning?id=-1";
+    window.location.href = "/form/create-earning";
 }
 
 function goToExpenseForm() {
-    window.location.href = "/acd-expense?id=-1";
+    window.location.href = "/form/create-expense";
 }
 
-// Functions for different Dashboard tabs. Clunky, but I can't think of a better and more readable way to do this at the moment.
-function overviewTab() {
-    // If the container is empty, load the appropriate data
-    // If the container is not empty, don't change anything. This will happen everytime
-    // the local userdata is refreshed.
-    overviewContainer = document.getElementById("overview-container");
-    if (!overviewContainer.hasChildNodes()) {
-        getOverviewData();
-    }
-
+function changeActiveTab(newActiveTab) {
     // Update which tab is active
-    var tabs = document.getElementsByClassName("dashTab");
+    const tabs = document.getElementsByClassName('dashTab');
     for (var i = 0; i < tabs.length; i++) {
-        tabs[i].classList.remove("active");
+        tabs[i].classList.remove('active');
     }
 
-    var newActiveTab = document.getElementById("overview-tab");
-    newActiveTab.classList.add("active");
-
-    // Show/hide the correct sections
-    overviewSection = document.getElementById("overview-section");
-    overviewSection.style.display = "block";
-
-    budgetSection = document.getElementById("budget-section");
-    budgetSection.style.display = "none";
-
-    expenseSection = document.getElementById("expense-section");
-    expenseSection.style.display = "none";
-
-    earningSection = document.getElementById("earning-section");
-    earningSection.style.display = "none";
-}
-
-function budgetTab() {
-    budgetContainer = document.getElementById("budget-container");
-    if (!budgetContainer.hasChildNodes()) {
-        getBudgetData();
-    }
-
-    // Update which tab is active
-    var tabs = document.getElementsByClassName("dashTab");
-    for (var i = 0; i < tabs.length; i++) {
-        tabs[i].classList.remove("active");
-    }
-
-    var newActiveTab = document.getElementById("budget-tab");
-    newActiveTab.classList.add("active");
-
-    // Show/hide the correct sections
-    overviewSection = document.getElementById("overview-section");
-    overviewSection.style.display = "none";
-
-    budgetSection = document.getElementById("budget-section");
-    budgetSection.style.display = "block";
-
-    expenseSection = document.getElementById("expense-section");
-    expenseSection.style.display = "none";
-
-    earningSection = document.getElementById("earning-section");
-    earningSection.style.display = "none";
-}
-
-function earningTab() {
-    earningContainer = document.getElementById("earning-container");
-    if (!earningContainer.hasChildNodes()) {
-        getEarningData();
-    }
-
-    // Update which tab is active
-    var tabs = document.getElementsByClassName("dashTab");
-    for (var i = 0; i < tabs.length; i++) {
-        tabs[i].classList.remove("active");
-    }
-
-    var newActiveTab = document.getElementById("earning-tab");
-    newActiveTab.classList.add("active");
-
-    // Show/hide the correct sections
-    overviewSection = document.getElementById("overview-section");
-    overviewSection.style.display = "none";
-
-    budgetSection = document.getElementById("budget-section");
-    budgetSection.style.display = "none";
-
-    expenseSection = document.getElementById("expense-section");
-    expenseSection.style.display = "none";
-
-    earningSection = document.getElementById("earning-section");
-    earningSection.style.display = "block";
-}
-
-function expenseTab() {
-    expenseContainer = document.getElementById("expense-container");
-    if (!expenseContainer.hasChildNodes()) {
-        getExpenseData();
-    }
-
-    // Update which tab is active
-    var tabs = document.getElementsByClassName("dashTab");
-    for (var i = 0; i < tabs.length; i++) {
-        tabs[i].classList.remove("active");
-    }
-
-    var newActiveTab = document.getElementById("expense-tab");
-    newActiveTab.classList.add("active");
-
-    // Show/hide the correct sections
-    overviewSection = document.getElementById("overview-section");
-    overviewSection.style.display = "none";
-
-    budgetSection = document.getElementById("budget-section");
-    budgetSection.style.display = "none";
-
-    expenseSection = document.getElementById("expense-section");
-    expenseSection.style.display = "block";
-
-    earningSection = document.getElementById("earning-section");
-    earningSection.style.display = "none";
+    newActiveTab.classList.add('active');
 }
 
 ////////////////////////////
@@ -210,33 +196,33 @@ function expenseTab() {
  * @param username (string): User's username
  * @param img (string): link to user's profile image
  */
-function loadUserInfo(balance, username, color, img, currency) {
-    infoPanel = document.createElement('div');
+function generateProfileUI(balance, username, color, img, currency) {
+    const infoPanel = document.createElement('div');
     infoPanel.classList.add('user-info');
     
-    user_name = document.createElement('h2');
+    const user_name = document.createElement('h2');
     user_name.textContent = username;
 
-    user_balance = document.createElement('h3');
+    const user_balance = document.createElement('h3');
     user_balance.textContent = balance;
 
-    user_img = document.createElement('img');
+    const user_img = document.createElement('img');
     user_img.src = "static/images/profileImages/" + img + ".svg";
-    user_img.classList.add("thumbnail");
+    user_img.classList.add('thumbnail');
 
     infoPanel.append(user_img, user_name); //TODO: Add user_balance when you know what to do with it
     return infoPanel;
 }
 
-function loadOverviewBudgets() {
+function generateOverviewBudgets() {
 
 }
 
-function loadOverviewExpenses() {
+function generateOverviewExpenses() {
 
 }
 
-function loadOverviewEarnings() {
+function generateOverviewEarnings() {
 
 }
 
@@ -246,40 +232,42 @@ function loadOverviewEarnings() {
  *      stored in the database.
  * @param currency (string): A single character representing the user's currency symbol
  */
-function loadBudgets(budgets, currency) {
+function generateBudgetsUI(budgets, currency) {
     budgetContainer = document.createElement('div');
-    budgetContainer.id = "budget-container";
+    budgetContainer.id = 'budget-container';
     
     for (const key in budgets) {
-        budgetPanel = document.createElement('div');
+        const budgetPanel = document.createElement('div');
         budgetPanel.classList.add('budget-info');
         
-        budget_name = document.createElement('h2');
-        budget_name.classList.add("budget-name");
+        const budget_name = document.createElement('h2');
+        budget_name.classList.add('budget-name');
         budget_name.textContent = budgets[key].name;
 
-        budget_des = document.createElement('p');
+        const budget_des = document.createElement('p');
         budget_des.textContent = budgets[key].description;
+        budget_des.classList.add('long-text');
 
-        budget_used = document.createElement('h3');
-        budget_used.classList.add("fraction-top");
+        const budget_used = document.createElement('h3');
+        budget_used.classList.add('fraction-top');
         budget_used.textContent = currency + budgets[key].usedAmount;
+        console.log(budgets)
 
-        budget_slash = document.createElement('h2');
+        const budget_slash = document.createElement('h2');
         budget_slash.classList.add('fraction-slash');
         budget_slash.textContent = "／"
 
-        budget_amount = document.createElement('h3');
-        budget_amount.classList.add("fraction-bottom");
-        budget_amount.textContent = currency + budgets[key].actualBudgetAmount;
+        const budget_amount = document.createElement('h3');
+        budget_amount.classList.add('fraction-bottom');
+        budget_amount.textContent = currency + budgets[key].amount;
 
         // Progess SVG
-        var svgDiv = document.createElement('div');
-        svgDiv.classList.add("svg-div");
+        const svgDiv = document.createElement('div');
+        svgDiv.classList.add('svg-div');
 
-        var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        var path1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-        var path2 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+        const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+        const path2 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
 
         svg.setAttribute('width', '200');
         svg.setAttribute('height', '120');
@@ -290,7 +278,7 @@ function loadBudgets(budgets, currency) {
         path1.classList.add('outer-progress');
         path2.setAttribute('d', 'M15,100 a60,60 0 0,1 170,0');
         path2Length = path2.getTotalLength();
-        path2.setAttribute('stroke-dasharray', (budgets[key].usedAmount/budgets[key].actualBudgetAmount) * path2Length + ' ' + path2Length);
+        path2.setAttribute('stroke-dasharray', (budgets[key].usedAmount/budgets[key].amount) * path2Length + ' ' + path2Length);
         path2.classList.add('inner-progress');
 
         svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
@@ -302,19 +290,19 @@ function loadBudgets(budgets, currency) {
 
         // End progress svg
 
-        budget_end_date = document.createElement('h4');
+        const budget_end_date = document.createElement('h4');
         budget_end_date.textContent = budgets[key].endDate;
 
-        budget_update = document.createElement("button");
+        const budget_update = document.createElement('button');
         budget_update.textContent = "Update";
-        budget_update.addEventListener("click", function() {
-            window.location = '/acd-budget?id=' + key;
+        budget_update.addEventListener('click', function() {
+            window.location = "/form/update-budget?id=" + key;
         })
 
-        budget_more = document.createElement("button");
+        budget_more = document.createElement('button');
         budget_more.textContent = "See More";
-        budget_more.addEventListener("click", function() {
-            window.location = '/expand-budget?id=' + key;
+        budget_more.addEventListener('click', function() {
+            window.location = "/expand-budget?id=" + key;
         })
 
         budgetPanel.append(budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_more, budget_update);
@@ -327,10 +315,56 @@ function loadBudgets(budgets, currency) {
 
 /* Creates and displays UI for all earning information
  * 
- * @param earning (List): List of a user's earnings
+ * @param earnings (List): List of a user's earnings
  * @param currency (string): A single character representing the user's currency symbol
  */
-function loadEarnings(earnings, currency) {
+function generateEarningsUI(earnings, currency) {
+    earningContainer = document.createElement('div');
+    
+    for (const key in earnings) {
+        current = earnings[key].data;
+
+        const earning_name = document.createElement('td');
+        earning_name.textContent = current.name;
+
+        const earning_amount = document.createElement('td');
+        earning_amount.textContent = currency + current.amount;
+
+        const earning_des = document.createElement('td');
+        earning_des.textContent = current.description;
+        earning_des.classList.add('long-text');
+
+        earning_recur = document.createElement('td');
+        if (current.recurring) {
+            const recur_img = document.createElement('img');
+            recur_img.classList.add('recur-img');
+            recur_img.src = "static/images/recurIcon.svg";
+            recur_img.title = "This earning is recurring over a specified period of time";
+            earning_recur.append(recur_img);
+        }
+
+        const earning_update = document.createElement('td');
+        const earning_update_img = document.createElement('img');
+        earning_update_img.src = "static/images/EditButtonSM.svg"
+        earning_update_img.addEventListener('click', function() {
+            window.location = "/form/update-earning?id=" + key;
+        })
+        earning_update.append(earning_update_img);
+
+        dates = earnings[key].dates;
+        dates.forEach(date => {
+            const earning_date = document.createElement('td');
+            const formatDate =  new Date(date);
+            earning_date.textContent = formatDate.toLocaleDateString();
+
+            const earningRow = document.createElement('tr');
+            earningRow.classList.add('earning-row');
+            earningRow.append(earning_name.cloneNode(true), earning_amount.cloneNode(true), earning_des.cloneNode(true), earning_date, earning_recur.cloneNode(true), earning_update.cloneNode(true));
+            earningContainer.append(earningRow)
+        }) 
+    }
+
+    return earningContainer;
 }
 
 /* Creates and displays UI for all expense information
@@ -339,53 +373,56 @@ function loadEarnings(earnings, currency) {
  * @param expenses (List): List of a user's expenses
  * @param currency (string): A single character representing the user's currency symbol
  */
-function loadExpenses(expenses, currency) {
-    expenseContainer = document.createElement('div');
+function generateExpensesUI(expenseDict, currency) {
+    const expenseContainer = document.createElement('div');
+
+    budgetCategories = expenseDict.categories;
+    expenses = expenseDict.expenses;
     
     for (const key in expenses) {
-        expenseRow = document.createElement('tr');
-        expenseRow.classList.add('expense-row');
+        const current = expenses[key].data;
 
-        expense_name = document.createElement('td');
-        expense_name.textContent = expenses[key].name;
+        const expense_name = document.createElement('td');
+        expense_name.textContent = current.name;
 
-        expense_amount = document.createElement('td');
-        expense_amount.textContent = currency + expenses[key].actualAmount;
+        const expense_amount = document.createElement('td');
+        expense_amount.textContent = currency + current.amount;
 
-        expense_category = document.createElement('td');
-        expense_category.textContent = expenses[key].budgetCategory;
+        const expense_category = document.createElement('td');
+        expense_category.textContent = current.budgetCategory;
 
-        expense_des = document.createElement('td');
-        expense_des.textContent = expenses[key].description;
-
-        expense_predict = document.createElement('td');
-        predict_amount = expenses[key].expectedAmount;
-        if (predict_amount >= 0) {
-            expense_predict.textContent = currency + expenses[key].expectedAmount;
-        }
-
-        expense_date = document.createElement('td');
-        expense_date.textContent = expenses[key].date;
+        const expense_des = document.createElement('td');
+        expense_des.textContent = current.description;
+        expense_des.classList.add('long-text');
 
         expense_recur = document.createElement('td');
-        if (expenses[key].recurring) {
-            recur_img = document.createElement('img');
+        if (current.recurring) {
+            const recur_img = document.createElement('img');
             recur_img.classList.add('recur-img');
             recur_img.src = "static/images/recurIcon.svg";
             recur_img.title = "This expense is recurring over a specified period of time";
             expense_recur.append(recur_img);
         }
 
-        expense_update = document.createElement("td");
-        expense_update_img = document.createElement("img");
+        const expense_update = document.createElement('td');
+        const expense_update_img = document.createElement('img');
         expense_update_img.src = "static/images/EditButtonSM.svg"
-        expense_update_img.addEventListener("click", function() {
-            window.location = '/acd-expense?id=' + key;
+        expense_update_img.addEventListener('click', function() {
+            window.location = "/form/update-expense?id=" + key;
         })
         expense_update.append(expense_update_img);
 
-        expenseRow.append(expense_name, expense_amount, expense_category, expense_des, expense_predict, expense_date, expense_recur, expense_update);
-        expenseContainer.append(expenseRow)
+        dates = expenses[key].dates;
+        dates.forEach(date => {
+            const expense_date = document.createElement('td');
+            const formatDate =  new Date(date);
+            expense_date.textContent = formatDate.toLocaleDateString();
+
+            const expenseRow = document.createElement('tr');
+            expenseRow.classList.add('expense-row');
+            expenseRow.append(expense_name.cloneNode(true), expense_amount.cloneNode(true), expense_category.cloneNode(true), expense_des.cloneNode(true), expense_date, expense_recur.cloneNode(true), expense_update.cloneNode(true));
+            expenseContainer.append(expenseRow)
+        }) 
     }
 
     return expenseContainer;

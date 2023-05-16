@@ -22,7 +22,7 @@
         <Title>Chary</Title>
     </head>
 
-    <body onload="loadDashboard()">
+    <body onload="loadDashboard('{{ refresh }}', '{{ tab }}')">
         <div id="header-container">
             <header>
                 <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()">
@@ -45,53 +45,16 @@
                 <div id="profile-section"></div>
                 <div id="dashboard-tabs">
                     <ul>
-                        <li onclick="overviewTab()" id="overview-tab" class="dashTab">Overview</li>
-                        <li onclick="budgetTab()" id="budget-tab" class="dashTab">Budgets</li>
-                        <li onclick="earningTab()" id="earning-tab" class="dashTab">Earnings</li>
-                        <li onclick="expenseTab()" id="expense-tab" class="dashTab">Expenses</li>
+                        <li onclick="loadOverviewTab()" id="overview-tab" class="dashTab">Overview</li>
+                        <li onclick="loadBudgetTab()" id="budget-tab" class="dashTab">Budgets</li>
+                        <li onclick="loadEarningTab()" id="earning-tab" class="dashTab">Earnings</li>
+                        <li onclick="loadExpenseTab()" id="expense-tab" class="dashTab">Expenses</li>
                     </ul>
                 </div>
             </div>
             <div class="content" id="dashboard-scrollable">
-                <div id="overview-section">
-                    <div id="trend-section">
-                        <p>insert graphs here</p>
-                    </div>
-                    <div id="overview-container">
-
-                    </div>
-                </div>
-                <div id="budget-section">
-                    <h1>Budgets</h1>
-                    <button id="add-budget-button" onclick="goToBudgetForm()">+ Add Budget</button>
-                    <div id="budget-container"></div>
-                </div>
-                <div id="earning-section">
-                    <h1>Earnings</h1>
-                    <button id="add-earning-button" onclick="goToEarningForm()">+ Add Earning</button>
-                    <div id="earning-container"></div>
-                </div>
-                <div id="expense-section">
-                    <h1>Expenses</h1>
-                    <button id="add-expense-button" onclick="goToExpenseForm()">+ Add Expense</button>
-                    <table id="expense-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Expense Amount</th>
-                                <th>Budget Category</th>
-                                <th>Description</th>
-                                <th>Predicted Expense Amount</th>
-                                <th>Date</th>
-                                <th>Recurring?</th>
-                                <th>Edit</th>
-                            </tr>
-                        </thead>
-                        <tbody id="expense-container"></tbody>
-                    </table>
-                </div>
-            </div>
-            
+                <div id="tab-container"></div>
+            </div> 
         </div>
     </body>
 </html>
