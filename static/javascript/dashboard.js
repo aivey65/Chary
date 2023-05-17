@@ -295,6 +295,7 @@ function generateBudgetsUI(budgets, currency) {
         const budget_update_img = document.createElement('img');
         budget_update_img.src = "static/images/EditButtonSM.svg";
         budget_update_img.classList.add("budget-edit");
+        budget_update_img.title = "Update";
         budget_update_img.addEventListener('click', function() {
             window.location = "/form/update-budget?id=" + key;
         })
@@ -302,6 +303,7 @@ function generateBudgetsUI(budgets, currency) {
         const budget_more_img = document.createElement('img');
         budget_more_img.src = "static/images/MoreButtonsmall.svg";        
         budget_more_img.classList.add("budget-more");
+        budget_more_img.title = "See More";
         budget_more_img.addEventListener('click', function() {
             window.location = "/expand-budget?id=" + key;
         })
@@ -348,6 +350,7 @@ function generateEarningsUI(earnings, currency) {
         const earning_update_img = document.createElement('img');
         earning_update_img.src = "static/images/EditButtonSM.svg"
         earning_update_img.classList.add("update-img");
+        earning_update_img.title = "Update";
         earning_update_img.addEventListener('click', function() {
             window.location = "/form/update-earning?id=" + key;
         })
@@ -410,6 +413,7 @@ function generateExpensesUI(expenseDict, currency) {
         const expense_update_img = document.createElement('img');
         expense_update_img.src = "static/images/EditButtonSM.svg"
         expense_update_img.classList.add("update-img");
+        expense_update_img.title = "Update";
         expense_update_img.addEventListener('click', function() {
             window.location = "/form/update-expense?id=" + key;
         })
