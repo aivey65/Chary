@@ -373,7 +373,7 @@ def getBudgetBalance(email, id, targetDate=date.today()):
         expenseList = db.collection(u'expenses')\
             .where(u'email', u'==', email)\
             .where(u'budgetCategory', u'==', budgetCategory)\
-            .get()
+            .stream()
         
         usedAmount = 0
         # Filter for expenses in the same budget period
@@ -399,7 +399,7 @@ def getBudgetBalance(email, id, targetDate=date.today()):
 def getAllExpenses(email):
     expenseList = db.collection(u'expenses')\
             .where(u'email', u'==', email)\
-            .get()
+            .stream()
     expensesDict = {}
     
     # Loop through the expenselist, making requests to the database
@@ -415,7 +415,7 @@ def getAllExpenses(email):
 def getExpensesInRange(email, startDate, endDate):
     expenseList = db.collection(u'expenses')\
             .where(u'email', u'==', email)\
-            .get()
+            .stream()
     expensesDict = {}
     
     for expense in expenseList: 
@@ -469,7 +469,7 @@ def getBudget(budgetId, userEmail, date=date.today()):
     budgetDoc = db.collection(u'budgets').document(budgetId).get().to_dict()
     budgetDoc["usedAmount"] = getBudgetBalance(userEmail, budgetId, date)
 
-    return budgetDoc.to_dict()
+    return budgetDoc
 
 def getEarning(earningId, userEmail):
     if (earningId == "" or userEmail == ""):
@@ -486,7 +486,7 @@ def getEarning(earningId, userEmail):
 def getEarningsInRange(email, startDate, endDate):
     earningList = db.collection(u'earnings')\
             .where(u'email', u'==', email)\
-            .get()
+            .stream()
     earningsDict = {}
     
     for earning in earningList: 
@@ -699,8 +699,7 @@ def deleteBudget(email, id, method=0, newBudget=None):
 
         db.collection(u'budgets').document(id).delete() 
     except Exception as e:
-        print("error1" + e)
-        return
+        return e
 
 def deleteExpense(email, id):
     # First check to make sure the user owns the expense they want to delete
@@ -709,10 +708,6 @@ def deleteExpense(email, id):
         raise RuntimeError("User does not have access to this data!")
 
     expense_ref = db.collection(u'expenses').document(id)
-    category = expense_ref.get().to_dict()['budgetCategory']
-
-    # Expenses must update the budget associated with them.
-
     expense_ref.delete()
 
 def deleteEarning(email, id):
@@ -722,7 +717,6 @@ def deleteEarning(email, id):
         raise RuntimeError("User does not have access to this data!")
 
     expense_ref = db.collection(u'expenses').document(id)
-    # TODO: Update user wallet balance when an earning is deleted
     expense_ref.delete()
 
 

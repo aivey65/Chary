@@ -5,7 +5,7 @@ function setLocalData(newData) {
 }
 
 // Function gets called everytime the dashboard is visited or refreshed
-async function loadDashboard(refresh, tab) {
+async function loadDashboard(refresh=false, tab="overview") {
     if (refresh || userData == null) {
         const response = updateUserData();
         response.then(() => {
@@ -251,7 +251,6 @@ function generateBudgetsUI(budgets, currency) {
         const budget_used = document.createElement('h3');
         budget_used.classList.add('fraction-top');
         budget_used.textContent = currency + budgets[key].usedAmount;
-        console.log(budgets)
 
         const budget_slash = document.createElement('h2');
         budget_slash.classList.add('fraction-slash');
@@ -293,19 +292,21 @@ function generateBudgetsUI(budgets, currency) {
         const budget_end_date = document.createElement('h4');
         budget_end_date.textContent = budgets[key].endDate;
 
-        const budget_update = document.createElement('button');
-        budget_update.textContent = "Update";
-        budget_update.addEventListener('click', function() {
+        const budget_update_img = document.createElement('img');
+        budget_update_img.src = "static/images/EditButtonSM.svg";
+        budget_update_img.classList.add("budget-edit");
+        budget_update_img.addEventListener('click', function() {
             window.location = "/form/update-budget?id=" + key;
         })
 
-        budget_more = document.createElement('button');
-        budget_more.textContent = "See More";
-        budget_more.addEventListener('click', function() {
+        const budget_more_img = document.createElement('img');
+        budget_more_img.src = "static/images/MoreButtonsmall.svg";        
+        budget_more_img.classList.add("budget-more");
+        budget_more_img.addEventListener('click', function() {
             window.location = "/expand-budget?id=" + key;
         })
 
-        budgetPanel.append(budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_more, budget_update);
+        budgetPanel.append(budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_more_img, budget_update_img);
         
         budgetContainer.append(budgetPanel)
     }
@@ -346,6 +347,7 @@ function generateEarningsUI(earnings, currency) {
         const earning_update = document.createElement('td');
         const earning_update_img = document.createElement('img');
         earning_update_img.src = "static/images/EditButtonSM.svg"
+        earning_update_img.classList.add("update-img");
         earning_update_img.addEventListener('click', function() {
             window.location = "/form/update-earning?id=" + key;
         })
@@ -407,6 +409,7 @@ function generateExpensesUI(expenseDict, currency) {
         const expense_update = document.createElement('td');
         const expense_update_img = document.createElement('img');
         expense_update_img.src = "static/images/EditButtonSM.svg"
+        expense_update_img.classList.add("update-img");
         expense_update_img.addEventListener('click', function() {
             window.location = "/form/update-expense?id=" + key;
         })

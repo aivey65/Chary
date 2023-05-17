@@ -51,80 +51,67 @@
                 <label class="acd-form" for="amount">Earning Amount</label><br>
                 <input type="text" id="amount" name="amount" value={{amount}} required><br>
 
-                <label class="acd-form" for="description">Earning Description</label><br>
+                <label for="description">Earning Description</label><br>
                 <textarea id="description" name="description" rows="4" cols="50" value={{description}}></textarea><br>
 
                 <label class="acd-form" for="start">Date Received</label><br>
                 <input type="date" id="start" name="start" value={{startDate}} required><br>
-
+                
+                <!-- Recurring Inputs -->
                 <p class="acd-form" for="recurring"> Is this a recurring source of income?</p><br>
-                <label class="acd-form recurring-choice">
-                    {% if recurring %}
-                        <input type="radio" id="recurring-true" name="recurring" value="True" checked="checked"><br>
-                    {% else %}
-                        <input type="radio" id="recurring-true" name="recurring" value="True"><br>
-                    {% endif %} 
+                
+                {% if recurring %}
+                    <input type="radio" id="recurring-true" name="recurring" value="True" checked="checked">
+                {% else %}
+                    <input type="radio" id="recurring-true" name="recurring" value="True">
+                {% endif %}
+                <label for='recurring-true' class="recurring-choice label-recurring-true">Yes</label>
 
-                    Yes
-                </label>
-                <label class="acd-form recurring-choice">
-                    {% if recurring %}
-                        <input type="radio" id="recurring-false" name="recurring" value="False"><br>
-                    {% else %}
-                        <input type="radio" id="recurring-false" name="recurring" value="False" checked="checked"><br>
-                    {% endif %} 
-                    
-                    No
-                </label><br>
+                {% if recurring %}
+                    <input type="radio" id="recurring-false" name="recurring" value="False">
+                {% else %}
+                    <input type="radio" id="recurring-false" name="recurring" value="False" checked="checked">
+                {% endif %}
+                <label for='recurring-false' class="recurring-choice label-recurring-false">No</label><br>
 
                 <div id="recurring-items">
-                    <label class="acd-form" for="radio">Choose how often you receive this income:</label>
-                    <!-- Radio buttons for the earning period -->
-                    <label class="acd-form earning-period">
-                        {% if recurPeriod == 0 %}
-                            <input type="radio" id="onetime" name="radio" value="0" checked="checked">
-                        {% else %}
-                            <input type="radio" id="onetime" name="radio" value="0">
-                        {% endif %} 
+                    <!-- Earning Period Inputs -->
+                    <p class="acd-form" for="radio">Choose how often you receive this income:</p>
 
-                        Daily
-                    </label><br>
-                    <label class="acd-form earning-period">
-                        {% if recurPeriod == 1 %}
-                            <input type="radio" id="weekly" name="radio" value="1" checked="checkbox">
-                        {% else %}
-                            <input type="radio" id="weekly" name="radio" value="1">
-                        {% endif %}                     
+                    {% if recurPeriod == 0 %}
+                        <input type="radio" id="daily" name="radio" value="0" checked="checked">
+                    {% else %}
+                        <input type="radio" id="daily" name="radio" value="0">
+                    {% endif %}
+                    <label for='daily' class="earning-period label-daily">Daily</label>
 
-                        Weekly
-                    </label><br>
-                    <label class="acd-form earning-period">
-                        {% if recurPeriod == 2 %}
-                            <input type="radio" id="biweekly" name="radio" value="2" checked="checkbox">
-                        {% else %}
-                            <input type="radio" id="biweekly" name="radio" value="2">
-                        {% endif %} 
+                    {% if recurPeriod == 1 %}
+                        <input type="radio" id="weekly" name="radio" value="1" checked="checked">
+                    {% else %}
+                        <input type="radio" id="weekly" name="radio" value="1">
+                    {% endif %}
+                    <label for='weekly' class="earning-period label-weekly">Weekly</label>
 
-                        Biweekly
-                    </label><br>
-                    <label class="acd-form earning-period">
-                        {% if recurPeriod == 3 %}
-                            <input type="radio" id="monthly" name="radio" value="3" checked="checkbox">
-                        {% else %}
-                            <input type="radio" id="monthly" name="radio" value="3">
-                        {% endif %} 
+                    {% if recurPeriod == 2 %}
+                        <input type="radio" id="biweekly" name="radio" value="2" checked="checked">
+                    {% else %}
+                        <input type="radio" id="biweekly" name="radio" value="2">
+                    {% endif %}
+                    <label for='biweekly' class="earning-period label-biweekly">Biweekly</label>
 
-                        Monthly
-                    </label><br>
-                    <label class="acd-form earning-period">
-                        {% if recurPeriod == 4 %}
-                            <input type="radio" id="yearly" name="radio" value="4" checked="checkbox">
-                        {% else %}
-                            <input type="radio" id="yearly" name="radio" value="4">
-                        {% endif %} 
+                    {% if recurPeriod == 3 %}
+                        <input type="radio" id="monthly" name="radio" value="3" checked="checked">
+                    {% else %}
+                        <input type="radio" id="monthly" name="radio" value="3">
+                    {% endif %}
+                    <label for='monthly' class="earning-period label-monthly">Monthly</label>
 
-                        Yearly
-                    </label><br>
+                    {% if recurPeriod == 4 %}
+                        <input type="radio" id="yearly" name="radio" value="4" checked="checked">
+                    {% else %}
+                        <input type="radio" id="yearly" name="radio" value="4">
+                    {% endif %} 
+                    <label for='yearly' class="earning-period label-yearly">Yearly</label>
 
                     <label class="acd-form" for="end">Recurrance End Date</label><br>
                     <input type="date" id="end" name="end" value={{endDate}}><br>

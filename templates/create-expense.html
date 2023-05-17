@@ -56,45 +56,39 @@
                     {% endfor %}
                 </select><br>
 
-                <p class="acd-form" for="description">Expense Description</label><br>
+                <label for="description" for="description">Expense Description</label><br>
                 <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
 
                 <label class="acd-form" for="start">Expense Date</label><br>
                 <input type="date" id="start" name="start" required><br>
 
+                <!-- Recurring Inputs -->
                 <p class="acd-form">Is this a recurring expense?</p><br>
-                <label class="acd-form recurring-choice">
-                    <input type="radio" id="recurring-true" name="recurring" value="True">
-                    Yes
-                </label>
-                <label class="acd-form recurring-choice">
-                    <input type="radio" id="recurring-false" name="recurring" value="False">
-                    No
-                </label><br>
+                
+                <input type="radio" id="recurring-true" name="recurring" value="True">
+                <label for='recurring-true' class="recurring-choice label-recurring-true">Yes</label>
+
+                <input type="radio" id="recurring-false" name="recurring" value="False">
+                <label for='recurring-false' class="recurring-choice label-recurring-false">No</label><br>
 
                 <div id="recurring-items">
-                     <!-- Radio buttons for the expense period -->
-                    <p class="acd-form" for="radio">How often does this expense occur?</p><br>
-                    <label class="acd-form" class="expense-period">
-                        <input type="radio" id="daily" name="radio" value="0" checked="checked">
-                        Daily
-                    </label><br>
-                    <label class="acd-form expense-period">
-                        <input type="radio" id="weekly" name="radio" value="1">
-                        Weekly
-                    </label><br>
-                    <label class="acd-form expense-period">
-                        <input type="radio" id="biweekly" name="radio" value="2">                    
-                        Biweekly
-                    </label><br>
-                    <label class="acd-form expense-period">
-                        <input type="radio" id="monthly" name="radio" value="3">
-                        Monthly
-                    </label><br>
-                    <label class="acd-form expense-period">
-                        <input type="radio" id="yearly" name="radio" value="4">
-                        Yearly
-                    </label><br>
+                    <!-- Expense Period Inputs -->
+                    <p class="acd-form" for="radio">How often does this expense occur?</p>
+
+                    <input type="radio" id="daily" name="radio" value="0" checked="checked">
+                    <label for='daily' class="acd-form" class="expense-period label-daily">Daily</label>
+                    
+                    <input type="radio" id="weekly" name="radio" value="1">
+                    <label for='weekly' class="expense-period label-weekly">Weekly</label>
+                    
+                    <input type="radio" id="biweekly" name="radio" value="2">
+                    <label for='biweekly' class="expense-period label-biweekly">Biweekly</label>
+                    
+                    <input type="radio" id="monthly" name="radio" value="3">
+                    <label for='monthly' class="expense-period label-monthly">Monthly</label>
+
+                    <input type="radio" id="yearly" name="radio" value="4">
+                    <label for='yearly' class="expense-period label-yearly">Yearly</label>
 
                     <label class="acd-form" for="end">Expense End Date</label><br>
                     <input type="date" id="end" name="end" value=""><br>

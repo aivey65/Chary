@@ -1,3 +1,34 @@
-.acd-form {
+.content {
     color: var(--Light);
+}
+
+input[type='radio'] {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+input:required ~ .acd-form::after {
+    content: " *";
+    color: var(--MainD);
+}
+
+#recurring-true:checked ~ .label-recurring-true,
+#recurring-false:checked ~ .label-recurring-false,
+#daily:checked ~ .label-daily,
+#weekly:checked ~ .label-weekly,
+#biweekly:checked ~ .label-biweekly,
+#monthly:checked ~ .label-monthly,
+#yearly:checked ~ .label-yearly {
+    background-color: var(--MainD);
+    border-color: var(--MainD);
+}
+
+.recurring-choice, .budget-period {
+    cursor: pointer;
+    background-color: var(--Background);
+    color: var(--Light);
+    padding: 1em;
+    border: 1px solid var(--Light);
+    border-radius: .2em;
 }

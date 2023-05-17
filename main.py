@@ -123,7 +123,10 @@ def google_auth():
 def renderDashboard():
     refresh = request.args.get("refresh")
     tab = request.args.get("tab")
-    return render_template('dashboard.html', refresh="false", tab="overview")
+    if refresh == None or tab == None:
+        return render_template('dashboard.html', refresh=False, tab="overview")
+    else:
+        return render_template('dashboard.html', refresh=refresh, tab=tab)
 
 @app.route("/budget")
 @login_is_required

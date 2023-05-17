@@ -3,8 +3,8 @@ ScRe = /[\$\xA2-\xA5\u058F\u060B\u09F2\u09F3\u09FB\u0AF1\u0BF9\u0E3F\u17DB\u20A0
 numbers = /^\d*\.?\d+$/;
 
 function formLoad() {
-    recurDiv = document.getElementById('recurring-items');
-    recurDiv.style.display = "none";
+    configureRecurOptions()
+
     const recurRadio = document.querySelectorAll('input[name="recurring"]');
     recurRadio.forEach(option => {
         option.addEventListener("change", configureRecurOptions)
@@ -32,26 +32,29 @@ function checkAmount(amount) {
 }
 
 function configureRecurOptions() {
-    if (this.checked && this.value == 'True') {
+    recurTrue = document.getElementById('recurring-true');
+    recurFalse = document.getElementById('recurring-false');
+
+    if (recurTrue.checked) {
         // Show options for recurring
         recurDiv = document.getElementById('recurring-items');
         recurDiv.style.display = "block";
 
         // Make period radio buttons required
         options = document.getElementsByName('radio');
-        for (option in options) {
+        options.forEach(option => {
             option.required = true;
-        }
-    } else if (this.checked && this.value == 'False') {
+        });
+    } else if (recurFalse.checked) {
         // Show options for recurring
         recurDiv = document.getElementById('recurring-items');
         recurDiv.style.display = "none";
 
         // Make period radio buttons not required
         options = document.getElementsByName('radio');
-        for (option in options) {
+        options.forEach(option => {
             option.required = false;
-        }
+        });
     }
 }
 
