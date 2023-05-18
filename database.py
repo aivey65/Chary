@@ -407,7 +407,7 @@ def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
         The target date to include in the current budget period
         (default) is today's date
     """
-    email = budgetDoc.email
+    email = budgetDoc['email']
     userData = getUser(email)['data']
     budgetList = userData['budgets']
 
