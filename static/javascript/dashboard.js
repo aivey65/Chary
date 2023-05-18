@@ -1,4 +1,5 @@
 var userData = null;
+const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"]
 
 function setLocalData(newData) {
     userData = newData;
@@ -239,6 +240,20 @@ function generateBudgetsUI(budgets, currency) {
     for (const key in budgets) {
         const budgetPanel = document.createElement('div');
         budgetPanel.classList.add('budget-info');
+        budgetPanel.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('budget-edit')) {
+                window.location = "/expand-budget?id=" + key;
+            }
+        })
+
+        var recur_img;
+        if (budgets[key].recurring) {
+            recur_img = document.createElement('img');
+            recur_img.src = 'static/images/recurIcon.svg';
+            recur_img.classList.add('recur-img');
+            const period = PERIODS[budgets[key].budgetPeriod].toLocaleLowerCase();
+            recur_img.title = "This budget recurs " + period + ".";
+        }
         
         const budget_name = document.createElement('h2');
         budget_name.classList.add('budget-name');
@@ -308,7 +323,7 @@ function generateBudgetsUI(budgets, currency) {
             window.location = "/expand-budget?id=" + key;
         })
 
-        budgetPanel.append(budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_more_img, budget_update_img);
+        budgetPanel.append(recur_img, budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_more_img, budget_update_img);
         
         budgetContainer.append(budgetPanel)
     }
