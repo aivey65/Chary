@@ -128,15 +128,10 @@ def renderDashboard():
     else:
         return render_template('dashboard.html', refresh=refresh, tab=tab)
 
-@app.route("/budget")
+@app.route("/expand-budget")
 @login_is_required
 def renderBudget():
-    return render_template('budget.html')
-
-@app.route("/expense")
-@login_is_required
-def renderExpense():
-    return render_template('expense.html')
+    return render_template('budget.html', id=request.args.get('id'))
 
 ##########################################
 # Add, Create, and Delete form rendering #
@@ -283,7 +278,21 @@ def getAllExpenseData():
 @login_is_required
 def getOneBudget():
     budgetId = request.args.get("id")
-    return database.getBudget(budgetId, session["email"])
+    date = request.args.get("date")
+    if date == None:
+        return database.getBudget(budgetId, session["email"])
+    else:
+        return database.getBudget(budgetId, session["email"], date)
+    
+@app.route("/data/budget-expenses")
+@login_is_required
+def getBudgetExpenses():
+    budgetId = request.args.get("id")
+    date = request.args.get("date")
+    if date == None:
+        return database.getBudgetAndExpenses(session["email"], budgetId)
+    else:
+        return database.getBudgetAndExpenses(session["email"], budgetId, date)
     
 @app.route("/data/get-expense/")
 @login_is_required

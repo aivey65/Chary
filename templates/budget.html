@@ -11,21 +11,21 @@
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
-        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/landing.css'>
-        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/landing-mobile.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/budget/budget.css'>
+        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/budget/budget-mobile.css'>
 
         <!-- JavaScript links -->
-        <script src='../static/javascript/landing.js'></script>
+        <script src='../static/javascript/budget.js'></script>
         <script src='../static/javascript/script.js'></script>
 
-        <Title>Chary</Title>
+        <Title>Chary | Budget Detailed View</Title>
     </head>
 
-    <body>
+    <body onload="loadBudget('{{id}}')">
         <div id="header-container">
             <header>
-                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="logoAction()">
-                <img id='toggle-icon' class="hamburg" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
+                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()" alt='Chary logo'>
+                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()" alt="toggle menu button">
 
                 <nav>
                     <ul>
@@ -39,8 +39,45 @@
                 </nav>
             </header>
         </div>
-        <div class="content" id="landing-content">
-            <h1>protected</h1>
+
+        <div class="content non-header">
+            
+        </div>
+
+        <div class="footer">
+            <div class='contact-methods'> 
+                <div class='contact-icon'>
+                    <a  target="_blank" rel="noopener noreferrer" href='https://github.com/aivey65'>
+                        <img src="../static/images/GitHub-Mark-Light-64px.png">
+                    </a>
+                </div> 
+                <div class='contact-icon'>
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.linkedin.com/in/ashaiv/'>
+                        <img src="../static/images/LI-In-Bug.png">
+                    </a>
+                </div>
+                <div class='contact-icon'>
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.ashaiv.com'>
+                        <img src="../static/images/AshaIV-logo-light.svg">
+                    </a>
+                </div>
+            </div> 
+            <div id="legal">
+                <div class="legal-button">
+                    <a href="/privacy">Privacy Policy</a>
+                </div>
+                <span>|</span>
+                <div class="legal-button">
+                    <a href="/terms_of_service">Terms of Service</a>
+                </div>
+                <span>|</span>
+                <div class="legal-button">
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+            <div class="btt-icon" onclick="bttAction()">
+                <img class="icon" src="../static/images/CharyLogoSmall.svg">            
+            </div>
         </div>
     </body>
 </html>
