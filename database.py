@@ -390,8 +390,8 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
                 expenseDoc['recurPeriod']
             )
 
-            if occurances <= 0:
-                returnList.append({"expense": expense, "dates": dates})
+            if occurances > 0:
+                returnList.append({"expense": expenseDoc, "dates": dates})
 
         return {"budget": budgetDoc, "expenses": returnList}
 
