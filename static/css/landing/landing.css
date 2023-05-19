@@ -1,13 +1,8 @@
 /* Landing hero styles */
-#landing-hero {
-    padding-top: 70px;
-    height: 100vh;
-}
-
 #hero-text {
     display: grid;
     grid-template-columns: 530px 1fr;
-    grid-template-rows: 1fr .5fr 0fr .4fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr .4fr 1fr;
     align-items: center;
     height: 100%;
 }
@@ -46,6 +41,7 @@
     width: 60%;
     min-width: 530px;
     max-width: 700px;
+    max-height: 57vh;
     display: block;
     grid-column: 1/3;
     grid-row: 2/5;
@@ -61,6 +57,7 @@
 
 #hero-img-svg {
     transform: scale(-1, 1);
+    height: 100%;
 }
 
 #hero-login {

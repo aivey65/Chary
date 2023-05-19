@@ -77,7 +77,3 @@ window.addEventListener('scroll', () => {
         prevScrollpos = currentScrollPos;
     }
 });
-
-function acd(type, id) {
-    window.location = '/acd-' + type + '/' + id;
-}
