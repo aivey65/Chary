@@ -215,8 +215,105 @@ function generateProfileUI(balance, username, color, img, currency) {
     return infoPanel;
 }
 
-function generateOverviewBudgets() {
+function generateOverviewBudgets(budgets, currency) {
+    budgetContainer = document.createElement('div');
+    budgetContainer.id = 'budget-container';
+    
+    for (const key in budgets) {
+        const budgetPanel = document.createElement('div');
+        budgetPanel.classList.add('budget-info');
+        budgetPanel.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('budget-edit')) {
+                window.location = "/expand-budget?id=" + key;
+            }
+        })
 
+        var recur_img;
+        if (budgets[key].recurring) {
+            recur_img = document.createElement('img');
+            recur_img.src = 'static/images/recurIcon.svg';
+            recur_img.classList.add('recur-img');
+            const period = PERIODS[budgets[key].budgetPeriod].toLocaleLowerCase();
+            recur_img.title = "This budget recurs " + period + ".";
+        }
+        
+        const budget_name = document.createElement('h2');
+        budget_name.classList.add('budget-name');
+        budget_name.textContent = budgets[key].name;
+
+        const budget_used = document.createElement('h3');
+        budget_used.classList.add('fraction-top');
+        budget_used.textContent = currency + budgets[key].usedAmount;
+
+        const budget_slash = document.createElement('h2');
+        budget_slash.classList.add('fraction-slash');
+        budget_slash.textContent = "／"
+
+        const budget_amount = document.createElement('h3');
+        budget_amount.classList.add('fraction-bottom');
+        budget_amount.textContent = currency + budgets[key].amount;
+
+        // Progess SVG
+        const svgDiv = document.createElement('div');
+        svgDiv.classList.add('svg-div');
+
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+        const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+        const path2 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+
+        svg.setAttribute('width', '200');
+        svg.setAttribute('height', '60');
+        svg.setAttribute('viewbox', '0 0 200 60');
+        svg.classList.add('progress-svg');
+
+        path1.setAttribute('x1', '10');
+        path1.setAttribute('x2', '190');
+        path1.setAttribute('y1', '10');
+        path1.setAttribute('y2', '10');
+        path1.classList.add('outer-progress');
+
+        path2.setAttribute('x1', '10');
+        path2.setAttribute('x2', '190');
+        path2.setAttribute('y1', '10');
+        path2.setAttribute('y2', '10');
+        path2Length = path2.getTotalLength();
+        path2.setAttribute('stroke-dasharray', (budgets[key].usedAmount/budgets[key].amount) * path2Length + ' ' + path2Length);
+        path2.classList.add('inner-progress');
+
+        svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+        path1.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+        path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+        
+        svg.append(path1, path2);
+        svgDiv.append(svg);
+
+        // End progress svg
+
+        const budget_end_date = document.createElement('h4');
+        budget_end_date.textContent = budgets[key].endDate;
+
+        const budget_update_img = document.createElement('img');
+        budget_update_img.src = "static/images/EditButtonSM.svg";
+        budget_update_img.classList.add("budget-edit");
+        budget_update_img.title = "Update";
+        budget_update_img.addEventListener('click', function() {
+            window.location = "/form/update-budget?id=" + key;
+        })
+
+        const budget_more_img = document.createElement('img');
+        budget_more_img.src = "static/images/MoreButtonsmall.svg";        
+        budget_more_img.classList.add("budget-more");
+        budget_more_img.title = "See More";
+        budget_more_img.addEventListener('click', function() {
+            window.location = "/expand-budget?id=" + key;
+        })
+
+        budgetPanel.append(recur_img, budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_more_img, budget_update_img);
+        
+        budgetContainer.append(budgetPanel)
+    }
+
+    return budgetContainer;
 }
 
 function generateOverviewExpenses() {
