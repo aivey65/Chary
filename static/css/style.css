@@ -88,7 +88,6 @@ img:hover {
 
 a {
     color: var(--Dark);
-    font-size: 1.2rem;
     text-decoration: none;
     width: fit-content;
 }
@@ -167,15 +166,6 @@ button {
     height: 7rem;
     background-color: var(--Grey);
     border-radius: 50%;
-}
-
-/* Navigation styles */
-.nav-show {
-    display: block;
-}
-
-.nav-noshow {
-    display: none;
 }
 
 /* Footer styles */
@@ -301,7 +291,7 @@ Creating the navigation bar depending on the size of the user's screen
     }
 
     #large-logo {
-        height: 50px;
+        height: 2.5rem;
         width: auto;
     }
 
@@ -401,8 +391,9 @@ Creating the navigation bar depending on the size of the user's screen
     nav a {
         color: var(--Dark);
         text-decoration: none;
-        font-size: 1rem;
+        font-size: 1.1rem;
         transition: .3s;
+        font-weight: 300;
     }
     
     nav li {
@@ -419,12 +410,12 @@ Creating the navigation bar depending on the size of the user's screen
     }
     
     #large-logo {
-        height: 40px;
+        height: 3rem;
         width: auto;
         grid-column: 2/3;
-        margin-left: 20px;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin-left: 40px;
+        margin-top: 12px;
+        margin-bottom: 8px;
     }
     
     #large-logo:hover {

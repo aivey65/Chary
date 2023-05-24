@@ -29,16 +29,7 @@
                 <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="logoAction()">
                 <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
 
-                <nav>
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/about">About</a></li>
-                        <li class="nav-show"><a href="/login">Sign In</a></li>
-                        <li class='cta-link nav-show'><a href="/login">Sign Up</a></li>
-                        <li class='nav-noshow'><a href="/login">Dashboard</a></li>
-                        <li class='nav-noshow'><a href="/login">Log Out</a></li>
-                    </ul>
-                </nav>
+                <nav id="website-nav">{{nav | safe}}</nav>
             </header>
         </div>
 
@@ -46,12 +37,14 @@
             <h1 id="error-h1">{{ error[0] }}</h1>
             <h2 id="error-h2">{{ error[1] }}</h2>
             <div id="error-buttons">
-                <button onclick="homeAction()">Back to Home</button>
+                {% if loggedIn %}
+                    <button class='cta-button' onclick="dashboardAction()">Dashboard</button>
+                {% else %}
+                    <button onclick="homeAction()">Back to Home</button>
+                {% endif %}
+
                 {% if showLogin %}
                     <button class='cta-button' onclick="loginAction()">Log In</button>
-                {% endif %}
-                {% if showDashboard %}
-                    <button class='cta-button' onclick="dashboardAction()">Dashboard</button>
                 {% endif %}
             </div>
         </div>

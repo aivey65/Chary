@@ -17,7 +17,8 @@ h4 {
     grid-row: 1;
     height: 100vh;
     min-width: fit-content;
-    max-width: max-content;
+    max-width: 150px;
+    width: 100%;
     overflow: hidden;
     display: grid;
     grid-template-rows: 1fr 1fr;
@@ -38,6 +39,10 @@ h4 {
 
 #dashboard-tabs {
     grid-row: 2;
+    position: fixed;
+    top: 50vh;
+    max-width: inherit;
+    width: inherit;
 }
 
 #dashboard-tabs ul {
@@ -176,6 +181,24 @@ h4 {
     justify-self: end;
 }
 
+.options-img {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
+    justify-self: start;
+    z-index: 2;
+}
+
+.options-panel {
+    cursor: pointer;
+    z-index: 2;
+}
+
+.budget-more, .budget-edit {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
 .budget-name {
     margin: 0px;
     max-width: 80%;
@@ -209,25 +232,6 @@ h4 {
 .budget-info img {
     width: 1.8em;
     height: auto;
-}
-
-.budget-more, .budget-edit {
-    align-self: end;
-    cursor: pointer;
-    margin-top: 1.2em;
-}
-
-.budget-edit {
-    justify-self: end;
-    grid-column: 2;
-    grid-row: 5;
-    z-index: 2;
-}
-
-.budget-more {
-    justify-self: start;
-    grid-column: 1;
-    grid-row: 5;
 }
 
 .outer-progress {

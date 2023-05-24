@@ -28,16 +28,7 @@
                 <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()">
                 <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
 
-                <nav>
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/about">About</a></li>
-                        <li class="nav-show"><a href="/login">Sign In</a></li>
-                        <li class='cta-link nav-show'><a href="/login">Sign Up</a></li>
-                        <li class='nav-noshow'><a href="/dashboard">Dashboard</a></li>
-                        <li class='nav-noshow'><a href="/logout">Log Out</a></li>
-                    </ul>
-                </nav>
+                <nav id="website-nav">{{nav | safe}}</nav>
             </header>
         </div>
         <div class="non-header" id="dashboard-content">

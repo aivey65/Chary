@@ -59,6 +59,13 @@ function back() {
     window.history.back();
 }
 
+function renderNav(loggedIn) {
+    document.getElementById()
+    if(loggedIn) {
+
+    }
+}
+
 //////////////////////
 // Scroll Functions //
 //////////////////////

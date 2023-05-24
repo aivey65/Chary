@@ -39,19 +39,19 @@ flow = Flow.from_client_secrets_file(
 
 @app.route("/")
 def renderHome():
-    return render_template('landing.html')
+    return render_template('landing.html', loggedIn=isLoggedIn(), nav=renderedNav())
 
 @app.route("/about")
 def renderAbout():
-    return render_template('about.html')
+    return render_template('about.html', loggedIn=isLoggedIn(), nav=renderedNav())
 
 @app.route("/login")
 def renderLogin():
-    return render_template('login.html')
+    return render_template('login.html', loggedIn=isLoggedIn(), nav=renderedNav())
 
 @app.route("/privacy")
 def renderPrivacyPolicy():
-    return render_template('privacy-policy.html')
+    return render_template('privacy-policy.html', loggedIn=isLoggedIn(), nav=renderedNav())
 
 ####################################
 # Functions for logging in and out #
@@ -66,6 +66,31 @@ def login_is_required(function):
             return function()
 
     return wrapper
+
+def isLoggedIn():
+    if "google_id" not in session:
+        return False
+    else:
+        return True
+    
+def renderedNav():
+    if isLoggedIn():
+        return """
+            <ul>
+                <li><a href='/dashboard'>Dashboard</a></li>
+                <li><a href='/about'>About</a></li>
+                <li><a href='/logout'>Log Out</a></li>
+            </ul>
+        """
+    else:
+        return """
+            <ul>
+                <li><a href='/'>Home</a></li>
+                <li><a href='/about'>About</a></li>
+                <li><a href='/login'>Sign In</a></li>
+                <li><a href="/login">Sign Up</a></li>
+            </ul>
+        """
 
 @login_is_required
 @app.route("/google")
@@ -124,14 +149,14 @@ def renderDashboard():
     refresh = request.args.get("refresh")
     tab = request.args.get("tab")
     if refresh == None or tab == None:
-        return render_template('dashboard.html', refresh=False, tab="overview")
+        return render_template('dashboard.html', refresh=False, tab="overview", nav=renderedNav())
     else:
-        return render_template('dashboard.html', refresh=refresh, tab=tab)
+        return render_template('dashboard.html', refresh=refresh, tab=tab, nav=renderedNav())
 
 @app.route("/expand-budget")
 @login_is_required
 def renderBudget():
-    return render_template('budget.html', id=request.args.get('id'))
+    return render_template('budget.html', id=request.args.get('id'), nav=renderedNav())
 
 ##########################################
 # Add, Create, and Delete form rendering #
@@ -140,23 +165,23 @@ def renderBudget():
 @app.route("/form/create-user")
 @login_is_required
 def renderCreateUser():
-    return render_template('create-user.html')
+    return render_template('create-user.html', nav=renderedNav())
 
 @app.route("/form/create-budget")
 @login_is_required
 def renderCreateBudget():
-    return render_template('create-budget.html')
+    return render_template('create-budget.html', nav=renderedNav())
 
 @app.route("/form/create-earning")
 @login_is_required
 def renderCreateEarning():
-    return render_template('create-earning.html')
+    return render_template('create-earning.html', nav=renderedNav())
 
 @app.route('/form/create-expense')
 @login_is_required
 def renderCreateExpense():
     categoryInfo = database.getBudgetCategories(session["email"])
-    return render_template('create-expense.html', allCategories=categoryInfo)
+    return render_template('create-expense.html', allCategories=categoryInfo, nav=renderedNav())
 
 @app.route("/form/update-user")
 @login_is_required
@@ -166,7 +191,7 @@ def renderUpdateUser():
         databaseInfo = database.getUser(session["email"])
         # TODO: Autofill with current user data
 
-        return render_template('update-user.html')
+        return render_template('update-user.html', nav=renderedNav())
     except Exception as e:
         return custom_error(e)
 
@@ -188,7 +213,8 @@ def renderUpdateBudget():
             startDate=budgetInfo["startDate"],
             recurPeriod=budgetInfo["budgetPeriod"],
             recurring=budgetInfo["recurring"],
-            endDate=budgetInfo["endDate"]
+            endDate=budgetInfo["endDate"], 
+            nav=renderedNav()
         )
     except Exception as e:
         return custom_error(e)
@@ -215,7 +241,8 @@ def renderUpdateExpense():
             recurring=expenseInfo["recurring"],
             category=expenseInfo["budgetCategory"],
             allCategories=categoryInfo,
-            endDate=expenseInfo["endDate"]
+            endDate=expenseInfo["endDate"], 
+            nav=renderedNav()
         )
     except Exception as e:
         return custom_error(e)
@@ -238,7 +265,8 @@ def renderUpdateEarning():
             startDate=earningInfo["startDate"],
             recurPeriod=earningInfo["recurPeriod"],
             recurring=earningInfo["recurring"],
-            endDate=earningInfo["endDate"]
+            endDate=earningInfo["endDate"], 
+            nav=renderedNav()
         )
     except Exception as e:
         return custom_error(e)
@@ -267,7 +295,7 @@ def getAllUserData():
 @app.route("/data/budgets")
 @login_is_required
 def getAllBudgetData():
-    return database.getAllBudgets(session["email"])
+    return database.getAllActiveBudgets(session["email"])
 
 @app.route("/data/expenses")
 @login_is_required
@@ -585,7 +613,7 @@ def notLoggedInError(error):
         "Wait! You're not logged in yet!",
         "To view this page, you have to first log in. "
     ]
-    return render_template('errorPage.html', error=error, showLogin=True, showDashboard=False), 404
+    return render_template('errorPage.html', error=error, loggedIn=isLoggedIn(), nav=renderedNav(), showLogin=True), 404
 
 @app.errorhandler(405)
 def unauthorizedAccessAttempt(error):
@@ -593,7 +621,7 @@ def unauthorizedAccessAttempt(error):
         "You don't have the authority to view this page!",
         "Make sure you are properly logged in to the correct account. "
     ]
-    return render_template('errorPage.html', error=error, showLogin=True, showDashboard=False), 404
+    return render_template('errorPage.html', error=error, loggedIn=isLoggedIn(), nav=renderedNav(), showLogin=True), 404
 
 @app.errorhandler(403)
 def loginFailed(error):
@@ -601,7 +629,7 @@ def loginFailed(error):
         "Login failed :(",
         "Something went wrong while logging in. Please try again."
     ]
-    return render_template('errorPage.html', error=error, showLogin=True, showDashboard=False), 404
+    return render_template('errorPage.html', error=error, loggedIn=isLoggedIn(), nav=renderedNav(), showLogin=True), 404
 
 @app.errorhandler(500)
 def page_not_found(error):
@@ -609,11 +637,11 @@ def page_not_found(error):
         "Whoops! That's my fault 😓",
         "The thing you clicked on is broken right now."
     ]
-    return render_template('errorPage.html', error=error, showLogin=False, showDashboard=False), 404
+    return render_template('errorPage.html', error=error, loggedIn=isLoggedIn(), nav=renderedNav()), 404
 
 def custom_error(message):
     error=[
         "Something went wrong:",
         message
     ]
-    return render_template('errorPage.html', error=error, showLogin=False, showDashboard=False), 404
+    return render_template('errorPage.html', error=error, loggedIn=isLoggedIn(), nav=renderedNav()), 404

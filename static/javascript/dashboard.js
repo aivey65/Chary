@@ -1,12 +1,9 @@
 var userData = null;
 const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"]
 
-function setLocalData(newData) {
-    userData = newData;
-}
-
 // Function gets called everytime the dashboard is visited or refreshed
 async function loadDashboard(refresh=false, tab="overview") {
+    // Determine if local storage needs to be changed or not
     if (refresh || userData == null) {
         const response = updateUserData();
         response.then(() => {
@@ -33,8 +30,6 @@ async function loadDashboard(refresh=false, tab="overview") {
             loadEarningTab();
         }
     }
-
-    
 }
 
 // Refresh boolean should be set to true when there is already user data saved, but it
@@ -216,17 +211,12 @@ function generateProfileUI(balance, username, color, img, currency) {
 }
 
 function generateOverviewBudgets(budgets, currency) {
-    budgetContainer = document.createElement('div');
-    budgetContainer.id = 'budget-container';
+    overviewBudgetContainer = document.createElement('div');
+    overviewBudgetContainer.id = 'budget-container';
     
     for (const key in budgets) {
-        const budgetPanel = document.createElement('div');
-        budgetPanel.classList.add('budget-info');
-        budgetPanel.addEventListener('click', function(e) {
-            if (!e.target.classList.contains('budget-edit')) {
-                window.location = "/expand-budget?id=" + key;
-            }
-        })
+        const budgetSnippet = document.createElement('div');
+        budgetSnippet.classList.add('budget-snippet');
 
         var recur_img;
         if (budgets[key].recurring) {
@@ -238,24 +228,24 @@ function generateOverviewBudgets(budgets, currency) {
         }
         
         const budget_name = document.createElement('h2');
-        budget_name.classList.add('budget-name');
+        budget_name.classList.add('snip-budget-name');
         budget_name.textContent = budgets[key].name;
 
         const budget_used = document.createElement('h3');
-        budget_used.classList.add('fraction-top');
+        budget_used.classList.add('snip-budget-top');
         budget_used.textContent = currency + budgets[key].usedAmount;
 
         const budget_slash = document.createElement('h2');
-        budget_slash.classList.add('fraction-slash');
+        budget_slash.classList.add('snip-budget-slash');
         budget_slash.textContent = "／"
 
         const budget_amount = document.createElement('h3');
-        budget_amount.classList.add('fraction-bottom');
+        budget_amount.classList.add('snip-budget-bottom');
         budget_amount.textContent = currency + budgets[key].amount;
 
         // Progess SVG
         const svgDiv = document.createElement('div');
-        svgDiv.classList.add('svg-div');
+        svgDiv.classList.add('snip-svg-div');
 
         const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
         const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
@@ -264,21 +254,21 @@ function generateOverviewBudgets(budgets, currency) {
         svg.setAttribute('width', '200');
         svg.setAttribute('height', '60');
         svg.setAttribute('viewbox', '0 0 200 60');
-        svg.classList.add('progress-svg');
+        svg.classList.add('snip-progress-svg');
 
         path1.setAttribute('x1', '10');
         path1.setAttribute('x2', '190');
         path1.setAttribute('y1', '10');
         path1.setAttribute('y2', '10');
-        path1.classList.add('outer-progress');
+        path1.classList.add('snip-outer-progress');
 
         path2.setAttribute('x1', '10');
         path2.setAttribute('x2', '190');
         path2.setAttribute('y1', '10');
         path2.setAttribute('y2', '10');
-        path2Length = path2.getTotalLength();
+        path2Length = 180;
         path2.setAttribute('stroke-dasharray', (budgets[key].usedAmount/budgets[key].amount) * path2Length + ' ' + path2Length);
-        path2.classList.add('inner-progress');
+        path2.classList.add('snip-inner-progress');
 
         svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
         path1.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
@@ -289,31 +279,12 @@ function generateOverviewBudgets(budgets, currency) {
 
         // End progress svg
 
-        const budget_end_date = document.createElement('h4');
-        budget_end_date.textContent = budgets[key].endDate;
-
-        const budget_update_img = document.createElement('img');
-        budget_update_img.src = "static/images/EditButtonSM.svg";
-        budget_update_img.classList.add("budget-edit");
-        budget_update_img.title = "Update";
-        budget_update_img.addEventListener('click', function() {
-            window.location = "/form/update-budget?id=" + key;
-        })
-
-        const budget_more_img = document.createElement('img');
-        budget_more_img.src = "static/images/MoreButtonsmall.svg";        
-        budget_more_img.classList.add("budget-more");
-        budget_more_img.title = "See More";
-        budget_more_img.addEventListener('click', function() {
-            window.location = "/expand-budget?id=" + key;
-        })
-
-        budgetPanel.append(recur_img, budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_more_img, budget_update_img);
+        budgetSnippet.append(recur_img, budget_name, svgDiv, budget_used, budget_slash, budget_amount);
         
-        budgetContainer.append(budgetPanel)
+        overviewBudgetContainer.append(budgetSnippet)
     }
 
-    return budgetContainer;
+    return overviewBudgetContainer;
 }
 
 function generateOverviewExpenses() {
@@ -338,10 +309,15 @@ function generateBudgetsUI(budgets, currency) {
         const budgetPanel = document.createElement('div');
         budgetPanel.classList.add('budget-info');
         budgetPanel.addEventListener('click', function(e) {
-            if (!e.target.classList.contains('budget-edit')) {
+            if (!e.target.classList.contains('options')) {
                 window.location = "/expand-budget?id=" + key;
             }
         })
+
+        const budget_options_img = document.createElement('img');
+        budget_options_img.src = "static/images/Options-icon.svg";
+        budget_options_img.classList.add('options-img', 'options');
+        budget_options_img.title = "Options";
 
         var recur_img;
         if (budgets[key].recurring) {
@@ -400,28 +376,63 @@ function generateBudgetsUI(budgets, currency) {
         svgDiv.append(svg);
 
         // End progress svg
-
-        const budget_end_date = document.createElement('h4');
-        budget_end_date.textContent = budgets[key].endDate;
-
+        // Create Popup options for budget info
         const budget_update_img = document.createElement('img');
         budget_update_img.src = "static/images/EditButtonSM.svg";
-        budget_update_img.classList.add("budget-edit");
-        budget_update_img.title = "Update";
-        budget_update_img.addEventListener('click', function() {
+        
+        const budget_update_text = document.createElement('h4');
+        budget_update_text.textContent = "Edit";
+        const budget_update = document.createElement('div');
+        budget_update.classList.add('budget-edit', 'options');
+        budget_update.addEventListener('click', function() {
             window.location = "/form/update-budget?id=" + key;
         })
+        budget_update.append(budget_update_img, budget_update_text);
 
         const budget_more_img = document.createElement('img');
         budget_more_img.src = "static/images/MoreButtonsmall.svg";        
-        budget_more_img.classList.add("budget-more");
-        budget_more_img.title = "See More";
-        budget_more_img.addEventListener('click', function() {
+        budget_more_img.classList.add('budget-more');
+        
+        const budget_more_text = document.createElement('h4');
+        budget_more_text.textContent = "See More";
+        const budget_more = document.createElement('div');
+        budget_more.classList.add('budget-more', 'options');
+        budget_more.addEventListener('click', function() {
             window.location = "/expand-budget?id=" + key;
         })
+        budget_more.append(budget_more_img, budget_more_text)
 
-        budgetPanel.append(recur_img, budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_more_img, budget_update_img);
-        
+        const optionsPanel = document.createElement('div');
+        optionsPanel.classList.add('options-panel', 'options');
+        optionsPanel.style.display = "none";
+        optionsPanel.append(budget_update, budget_more);
+        budget_options_img.addEventListener('click', function(event) {
+            window.addEventListener('click', function wrapper(e) {
+                event.stopPropagation()
+                console.log(optionsPanel.style.display)
+                const panelHidden = optionsPanel.style.display == "none"
+                const propogation = event.target == e.target && panelHidden; // Propogated click is the only way for options to be shown.
+                console.log("prop: " + propogation)
+                const panelClick = e.target == optionsPanel; // Make sure the panel itself wasn't selected.
+                console.log("panel click: "+ panelClick)
+                if (propogation) {
+                    console.log("prop, show panel")
+                    optionsPanel.style.display = "block";
+                } else {
+                    if (!panelClick && !panelHidden) { 
+                        console.log("Was a non panel hit, no prop. hide panel.")
+                        optionsPanel.style.display = "none";
+                        console.log("removing?")
+                        window.removeEventListener('click', wrapper);
+                    } else {
+                        console.log("was a panel click. do nothing")
+                    }
+                }
+                event.stopPropagation()
+            }); 
+        }, true);
+
+        budgetPanel.append(budget_options_img, optionsPanel, recur_img, budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount);
         budgetContainer.append(budgetPanel)
     }
 
