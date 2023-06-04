@@ -406,37 +406,49 @@ function generateBudgetsUI(budgets, currency) {
         optionsPanel.classList.add('options-panel', 'options');
         optionsPanel.style.display = "none";
         optionsPanel.append(budget_update, budget_more);
-        budget_options_img.addEventListener('click', function(event) {
-            window.addEventListener('click', function wrapper(e) {
-                event.stopPropagation()
-                console.log(optionsPanel.style.display)
-                const panelHidden = optionsPanel.style.display == "none"
-                const propogation = event.target == e.target && panelHidden; // Propogated click is the only way for options to be shown.
-                console.log("prop: " + propogation)
-                const panelClick = e.target == optionsPanel; // Make sure the panel itself wasn't selected.
-                console.log("panel click: "+ panelClick)
-                if (propogation) {
-                    console.log("prop, show panel")
-                    optionsPanel.style.display = "block";
-                } else {
-                    if (!panelClick && !panelHidden) { 
-                        console.log("Was a non panel hit, no prop. hide panel.")
-                        optionsPanel.style.display = "none";
-                        console.log("removing?")
-                        window.removeEventListener('click', wrapper);
-                    } else {
-                        console.log("was a panel click. do nothing")
-                    }
-                }
-                event.stopPropagation()
-            }); 
-        }, true);
+        budget_options_img.addEventListener('click', (event) => {
+            optionsToggle(event.target, optionsPanel);
+        }, false);
 
         budgetPanel.append(budget_options_img, optionsPanel, recur_img, budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount);
-        budgetContainer.append(budgetPanel)
+        budgetContainer.append(budgetPanel);
     }
 
     return budgetContainer;
+}
+
+function optionsToggle(button, optionsPanel) {
+    const panelHidden = optionsPanel.style.display == "none";
+    boundFunction = windowClick.bind(window, optionsPanel, button);
+
+    if (panelHidden) {
+        optionsPanel.style.display = "block";
+        windowClickEnable(boundFunction);
+    } else {
+        optionsPanel.style.display = "none";
+        windowClickDisable(boundFunction);
+    }
+}
+
+function windowClickEnable(boundFunction) {
+    window.addEventListener('click', boundFunction, true); 
+}
+
+function windowClickDisable(boundFunction) {
+    window.removeEventListener('click', boundFunction, true);
+}
+
+function windowClick(optionsPanel, button) {
+    const panelClick = this.event.target == optionsPanel; // Make sure the panel itself wasn't selected.
+    const propagation = this.event.target == button; // Check to see if the window click event is the options button. 
+    
+    if (!panelClick) {
+        if (!propagation) { // To avoid propagation issues, do not set to 'none' if it was the options' button click
+            optionsPanel.style.display = "none";
+        }
+
+        windowClickDisable(boundFunction);
+    }
 }
 
 /* Creates and displays UI for all earning information
