@@ -170,10 +170,6 @@ h4 {
     grid-column: 1/3;
 }
 
-.budget-info p, h4{
-    display: none;
-}
-
 .recur-img {
     grid-column: 2;
     grid-row: 1;
@@ -181,7 +177,7 @@ h4 {
     justify-self: end;
 }
 
-.options-img {
+.options-div {
     grid-column: 1;
     grid-row: 1;
     align-self: start;
@@ -189,7 +185,16 @@ h4 {
     z-index: 2;
 }
 
+.options-img {
+    margin: 5px;
+}
+
 .options-panel {
+    position: absolute;
+    width: fit-content;
+    background-color: var(--Navy);
+    border-radius: 10px;
+    box-shadow: black 5px 5px 10px;
     cursor: pointer;
     z-index: 2;
 }
@@ -197,6 +202,24 @@ h4 {
 .budget-more, .budget-edit {
     display: grid;
     grid-template-columns: auto 1fr;
+    padding: var(--smallPad);
+}
+
+.budget-more h4, .budget-edit h4 {
+    color: var(--Light);
+    font-size: 1rem;
+    font-weight: 200;
+    margin: 0px 0px 0px var(--smallPad);
+}
+
+.budget-more:hover {
+    background-color: var(--faded);
+    border-radius: 0px 0px 10px 10px;
+}
+
+.budget-edit:hover {
+    background-color: var(--faded);
+    border-radius: 10px 10px 0px 0px;
 }
 
 .budget-name {

@@ -314,10 +314,10 @@ function generateBudgetsUI(budgets, currency) {
             }
         })
 
-        const budget_options_img = document.createElement('img');
-        budget_options_img.src = "static/images/Options-icon.svg";
-        budget_options_img.classList.add('options-img', 'options');
-        budget_options_img.title = "Options";
+        const optionsImg = document.createElement('img');
+        optionsImg.src = "static/images/Options-icon.svg";
+        optionsImg.classList.add('options-img', 'options');
+        optionsImg.title = "Options";
 
         var recur_img;
         if (budgets[key].recurring) {
@@ -331,10 +331,6 @@ function generateBudgetsUI(budgets, currency) {
         const budget_name = document.createElement('h2');
         budget_name.classList.add('budget-name');
         budget_name.textContent = budgets[key].name;
-
-        const budget_des = document.createElement('p');
-        budget_des.textContent = budgets[key].description;
-        budget_des.classList.add('long-text');
 
         const budget_used = document.createElement('h3');
         budget_used.classList.add('fraction-top');
@@ -391,7 +387,6 @@ function generateBudgetsUI(budgets, currency) {
 
         const budget_more_img = document.createElement('img');
         budget_more_img.src = "static/images/MoreButtonsmall.svg";        
-        budget_more_img.classList.add('budget-more');
         
         const budget_more_text = document.createElement('h4');
         budget_more_text.textContent = "See More";
@@ -406,11 +401,14 @@ function generateBudgetsUI(budgets, currency) {
         optionsPanel.classList.add('options-panel', 'options');
         optionsPanel.style.display = "none";
         optionsPanel.append(budget_update, budget_more);
-        budget_options_img.addEventListener('click', (event) => {
+        optionsImg.addEventListener('click', (event) => {
             optionsToggle(event.target, optionsPanel);
         }, false);
+        const budget_options = document.createElement('div');
+        budget_options.classList.add('options-div', 'options');
+        budget_options.append(optionsImg, optionsPanel);
 
-        budgetPanel.append(budget_options_img, optionsPanel, recur_img, budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount);
+        budgetPanel.append(budget_options, recur_img, budget_name, svgDiv, budget_used, budget_slash, budget_amount);
         budgetContainer.append(budgetPanel);
     }
 

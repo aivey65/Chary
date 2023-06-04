@@ -26,6 +26,13 @@ Defining color values to make it easier to change later on
     --ContrastL: #6ACD5F; /*#A1CD5F, #5FCDC2*/
     --ContrastDD: #065e10;
     --faded: rgb(0, 0, 0, .6);
+
+    /* Number Variables */
+    --mobilePad: 15px;
+    --smallPad: 20px;
+    --medPad: 30px;
+    --lgPad: 40px;
+    --DesktopPadBody: 40px;
 }
 
 *, *::before, *::after {
@@ -80,10 +87,6 @@ p, button, a, li {
 img {
     height: auto;
     width: 100%;
-}
-
-img:hover {
-    background-color: none;
 }
 
 a {
@@ -254,8 +257,8 @@ button {
 /* Mobile-specific styles (not nav)*/
 @media screen and (max-width:767px) {
     .non-header {
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: var(--mobilePad);
+        padding-right: var(--mobilePad);
     }
 
     .legal-button a, span {
@@ -266,8 +269,8 @@ button {
 /* Desktop specific styles (not nav) */
 @media screen and (min-width:767px) {
     .non-header {
-        padding-left: 40px;
-        padding-right: 40px;
+        padding-left: var(--DesktopPadBody);
+        padding-right: var(--DesktopPadBody);
     }
 }
 
@@ -283,7 +286,7 @@ Creating the navigation bar depending on the size of the user's screen
         text-align: center;
         position: fixed;
         width: 100%;
-        padding-top: 10px;
+        padding-top: var(--mobilePad);
         transition: .4s ease-in-out;
         background-color: var(--Light);
         z-index: 10;
