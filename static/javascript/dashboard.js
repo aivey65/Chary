@@ -1,14 +1,16 @@
 var userData = null;
 const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"]
 
+function setLocalData(newData) {
+    userData = newData;
+}
+
 // Function gets called everytime the dashboard is visited or refreshed
 async function loadDashboard(refresh=false, tab="overview") {
-    // Determine if local storage needs to be changed or not
     if (refresh || userData == null) {
         const response = updateUserData();
         response.then(() => {
             loadProfileData();
-            document.getElementById("dashboard-tabs").style.display = "block";
 
             if (tab == "overview") {
                 loadOverviewTab();
@@ -44,10 +46,8 @@ async function updateUserData() {
 }
 
 function loadProfileData() {
-    // Populating the info panel, which is always visible
-    infoPanel = generateProfileUI(userData.balance, userData.username, userData.profileColor, userData.profileImage, userData.currency);
-    const userContent = document.getElementById('profile-section');
-    userContent.append(infoPanel);
+    generateProfileUI(userData.balance, userData.username, userData.profileColor, userData.profileImage, userData.currency);
+    console.log("Loading profile.")
 }
 
 function loadOverviewTab() {
@@ -193,31 +193,38 @@ function changeActiveTab(newActiveTab) {
  * @param username (string): User's username
  * @param img (string): link to user's profile image
  */
-function generateProfileUI(balance, username, color, img, currency) {
-    const infoPanel = document.createElement('div');
-    infoPanel.classList.add('user-info');
-    
-    const user_name = document.createElement('h2');
-    user_name.textContent = username;
+function generateProfileUI(balance, username, color, img, currency) {    
+    const user_name = document.getElementById("user-name");
+    user_name.textContent = "Welcome, " + username;
 
-    const user_balance = document.createElement('h3');
-    user_balance.textContent = balance;
+    const user_balance = document.getElementById("user-balance");
+    user_balance.textContent = String(currency) + String(balance);
+
+    const user_currency = document.getElementById("user-currency");
+    user_currency.textContent = "Currency: " + String(currency);
 
     const user_img = document.createElement('img');
     user_img.src = "static/images/profileImages/" + img + ".svg";
-    user_img.classList.add('thumbnail');
+    document.getElementById("profile-img-container").append(user_img);
 
-    infoPanel.append(user_img, user_name); //TODO: Add user_balance when you know what to do with it
-    return infoPanel;
+    const edit_user = document.getElementById("user-edit");
+    edit_user.addEventListener('click', function() {
+        window.location = "/form/update-user";
+    });
 }
 
 function generateOverviewBudgets(budgets, currency) {
-    overviewBudgetContainer = document.createElement('div');
-    overviewBudgetContainer.id = 'budget-container';
+    budgetContainer = document.createElement('div');
+    budgetContainer.id = 'budget-container';
     
     for (const key in budgets) {
-        const budgetSnippet = document.createElement('div');
-        budgetSnippet.classList.add('budget-snippet');
+        const budgetPanel = document.createElement('div');
+        budgetPanel.classList.add('budget-info');
+        budgetPanel.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('budget-edit')) {
+                window.location = "/expand-budget?id=" + key;
+            }
+        })
 
         var recur_img;
         if (budgets[key].recurring) {
@@ -229,24 +236,24 @@ function generateOverviewBudgets(budgets, currency) {
         }
         
         const budget_name = document.createElement('h2');
-        budget_name.classList.add('snip-budget-name');
+        budget_name.classList.add('budget-name');
         budget_name.textContent = budgets[key].name;
 
         const budget_used = document.createElement('h3');
-        budget_used.classList.add('snip-budget-top');
+        budget_used.classList.add('fraction-top');
         budget_used.textContent = currency + budgets[key].usedAmount;
 
         const budget_slash = document.createElement('h2');
-        budget_slash.classList.add('snip-budget-slash');
+        budget_slash.classList.add('fraction-slash');
         budget_slash.textContent = "／"
 
         const budget_amount = document.createElement('h3');
-        budget_amount.classList.add('snip-budget-bottom');
+        budget_amount.classList.add('fraction-bottom');
         budget_amount.textContent = currency + budgets[key].amount;
 
         // Progess SVG
         const svgDiv = document.createElement('div');
-        svgDiv.classList.add('snip-svg-div');
+        svgDiv.classList.add('svg-div');
 
         const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
         const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
@@ -255,21 +262,21 @@ function generateOverviewBudgets(budgets, currency) {
         svg.setAttribute('width', '200');
         svg.setAttribute('height', '60');
         svg.setAttribute('viewbox', '0 0 200 60');
-        svg.classList.add('snip-progress-svg');
+        svg.classList.add('progress-svg');
 
         path1.setAttribute('x1', '10');
         path1.setAttribute('x2', '190');
         path1.setAttribute('y1', '10');
         path1.setAttribute('y2', '10');
-        path1.classList.add('snip-outer-progress');
+        path1.classList.add('outer-progress');
 
         path2.setAttribute('x1', '10');
         path2.setAttribute('x2', '190');
         path2.setAttribute('y1', '10');
         path2.setAttribute('y2', '10');
-        path2Length = 180;
+        path2Length = path2.getTotalLength();
         path2.setAttribute('stroke-dasharray', (budgets[key].usedAmount/budgets[key].amount) * path2Length + ' ' + path2Length);
-        path2.classList.add('snip-inner-progress');
+        path2.classList.add('inner-progress');
 
         svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
         path1.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
@@ -280,12 +287,31 @@ function generateOverviewBudgets(budgets, currency) {
 
         // End progress svg
 
-        budgetSnippet.append(recur_img, budget_name, svgDiv, budget_used, budget_slash, budget_amount);
+        const budget_end_date = document.createElement('h4');
+        budget_end_date.textContent = budgets[key].endDate;
+
+        const budget_update_img = document.createElement('img');
+        budget_update_img.src = "static/images/EditButtonSM.svg";
+        budget_update_img.classList.add("budget-edit");
+        budget_update_img.title = "Update";
+        budget_update_img.addEventListener('click', function() {
+            window.location = "/form/update-budget?id=" + key;
+        })
+
+        const budget_more_img = document.createElement('img');
+        budget_more_img.src = "static/images/MoreButtonsmall.svg";        
+        budget_more_img.classList.add("budget-more");
+        budget_more_img.title = "See More";
+        budget_more_img.addEventListener('click', function() {
+            window.location = "/expand-budget?id=" + key;
+        })
+
+        budgetPanel.append(recur_img, budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_more_img, budget_update_img);
         
-        overviewBudgetContainer.append(budgetSnippet)
+        budgetContainer.append(budgetPanel)
     }
 
-    return overviewBudgetContainer;
+    return budgetContainer;
 }
 
 function generateOverviewExpenses() {
@@ -310,15 +336,10 @@ function generateBudgetsUI(budgets, currency) {
         const budgetPanel = document.createElement('div');
         budgetPanel.classList.add('budget-info');
         budgetPanel.addEventListener('click', function(e) {
-            if (!e.target.classList.contains('options')) {
+            if (!e.target.classList.contains('budget-edit')) {
                 window.location = "/expand-budget?id=" + key;
             }
         })
-
-        const optionsImg = document.createElement('img');
-        optionsImg.src = "static/images/Options-icon.svg";
-        optionsImg.classList.add('options-img', 'options');
-        optionsImg.title = "Options";
 
         var recur_img;
         if (budgets[key].recurring) {
@@ -332,6 +353,10 @@ function generateBudgetsUI(budgets, currency) {
         const budget_name = document.createElement('h2');
         budget_name.classList.add('budget-name');
         budget_name.textContent = budgets[key].name;
+
+        const budget_des = document.createElement('p');
+        budget_des.textContent = budgets[key].description;
+        budget_des.classList.add('long-text');
 
         const budget_used = document.createElement('h3');
         budget_used.classList.add('fraction-top');
@@ -373,81 +398,32 @@ function generateBudgetsUI(budgets, currency) {
         svgDiv.append(svg);
 
         // End progress svg
-        // Create Popup options for budget info
+
+        const budget_end_date = document.createElement('h4');
+        budget_end_date.textContent = budgets[key].endDate;
+
         const budget_update_img = document.createElement('img');
         budget_update_img.src = "static/images/EditButtonSM.svg";
-        
-        const budget_update_text = document.createElement('h4');
-        budget_update_text.textContent = "Edit";
-        const budget_update = document.createElement('div');
-        budget_update.classList.add('budget-edit', 'options');
-        budget_update.addEventListener('click', function() {
+        budget_update_img.classList.add("budget-edit");
+        budget_update_img.title = "Update";
+        budget_update_img.addEventListener('click', function() {
             window.location = "/form/update-budget?id=" + key;
         })
-        budget_update.append(budget_update_img, budget_update_text);
 
         const budget_more_img = document.createElement('img');
         budget_more_img.src = "static/images/MoreButtonsmall.svg";        
-        
-        const budget_more_text = document.createElement('h4');
-        budget_more_text.textContent = "See More";
-        const budget_more = document.createElement('div');
-        budget_more.classList.add('budget-more', 'options');
-        budget_more.addEventListener('click', function() {
+        budget_more_img.classList.add("budget-more");
+        budget_more_img.title = "See More";
+        budget_more_img.addEventListener('click', function() {
             window.location = "/expand-budget?id=" + key;
         })
-        budget_more.append(budget_more_img, budget_more_text)
 
-        const optionsPanel = document.createElement('div');
-        optionsPanel.classList.add('options-panel', 'options');
-        optionsPanel.style.display = "none";
-        optionsPanel.append(budget_update, budget_more);
-        optionsImg.addEventListener('click', (event) => {
-            optionsToggle(event.target, optionsPanel);
-        }, false);
-        const budget_options = document.createElement('div');
-        budget_options.classList.add('options-div', 'options');
-        budget_options.append(optionsImg, optionsPanel);
-
-        budgetPanel.append(budget_options, recur_img, budget_name, svgDiv, budget_used, budget_slash, budget_amount);
-        budgetContainer.append(budgetPanel);
+        budgetPanel.append(recur_img, budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_more_img, budget_update_img);
+        
+        budgetContainer.append(budgetPanel)
     }
 
     return budgetContainer;
-}
-
-function optionsToggle(button, optionsPanel) {
-    const panelHidden = optionsPanel.style.display == "none";
-    boundFunction = windowClick.bind(window, optionsPanel, button);
-
-    if (panelHidden) {
-        optionsPanel.style.display = "block";
-        windowClickEnable(boundFunction);
-    } else {
-        optionsPanel.style.display = "none";
-        windowClickDisable(boundFunction);
-    }
-}
-
-function windowClickEnable(boundFunction) {
-    window.addEventListener('click', boundFunction, true); 
-}
-
-function windowClickDisable(boundFunction) {
-    window.removeEventListener('click', boundFunction, true);
-}
-
-function windowClick(optionsPanel, button) {
-    const panelClick = this.event.target == optionsPanel; // Make sure the panel itself wasn't selected.
-    const propagation = this.event.target == button; // Check to see if the window click event is the options button. 
-    
-    if (!panelClick) {
-        if (!propagation) { // To avoid propagation issues, do not set to 'none' if it was the options' button click
-            optionsPanel.style.display = "none";
-        }
-
-        windowClickDisable(boundFunction);
-    }
 }
 
 /* Creates and displays UI for all earning information

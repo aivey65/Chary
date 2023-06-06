@@ -31,9 +31,14 @@ h4 {
     grid-row: 1;
     width: 100%;
     padding-left: 2.5em;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
 }
 
 .user-info img {
+    width:50%;
+    height: auto;
     text-align: center;
 }
 
