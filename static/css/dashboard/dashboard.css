@@ -171,17 +171,17 @@ h4 {
 }
 
 .recur-img {
-    grid-column: 2;
-    grid-row: 1;
-    align-self: start;
-    justify-self: end;
-}
-
-.options-div {
     grid-column: 1;
     grid-row: 1;
     align-self: start;
     justify-self: start;
+}
+
+.options-div {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    justify-self: end;
     z-index: 2;
 }
 

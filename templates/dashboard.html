@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content="All of your budgeting information in one place. Create, edit, and delete your budgets, expenses, and more in order to manage your finances.">
         <link rel='shortcut icon' sizes='256x256' href='../static/images/CharyLogoSmall.svg'>
 
         <!-- Google Font imports -->
@@ -22,17 +23,21 @@
         <Title>Chary | Dashboard</Title>
     </head>
 
-    <body onload="loadDashboard('{{ refresh }}', '{{ tab }}')">
+    <!-- <body onload="loadDashboard('{{ refresh }}', '{{ tab }}')"> -->
+        <body>
         <div id="header-container">
             <header>
-                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()">
-                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
+                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()" alt='Chary logo'>
+                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()" alt="toggle menu button">
 
                 <nav id="website-nav">{{nav | safe}}</nav>
             </header>
         </div>
         <div class="non-header" id="dashboard-content">
             <div id="dashboard-non-scrollable">
+                <script>
+                    loadDashboard('{{ refresh }}', '{{ tab }}')
+                </script>
                 <div id="profile-section"></div>
                 <div id="dashboard-tabs">
                     <ul>

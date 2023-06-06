@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel='shortcut icon' sizes='256x256' href='../static/images/CharyLogoSmall.svg'>
@@ -24,8 +24,8 @@
     <body onload="formLoad()">
         <div id="header-container">
             <header>
-                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()">
-                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()">
+                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()" alt='Chary logo'>
+                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()" alt="toggle menu button">
 
                 <nav id="website-nav">{{nav | safe}}</nav>
             </header>
