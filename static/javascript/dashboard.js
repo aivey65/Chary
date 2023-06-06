@@ -8,6 +8,7 @@ async function loadDashboard(refresh=false, tab="overview") {
         const response = updateUserData();
         response.then(() => {
             loadProfileData();
+            document.getElementById("dashboard-tabs").style.display = "block";
 
             if (tab == "overview") {
                 loadOverviewTab();

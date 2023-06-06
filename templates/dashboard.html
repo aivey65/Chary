@@ -23,8 +23,7 @@
         <Title>Chary | Dashboard</Title>
     </head>
 
-    <!-- <body onload="loadDashboard('{{ refresh }}', '{{ tab }}')"> -->
-        <body>
+    <body onload="loadDashboard('{{ refresh }}', '{{ tab }}')">
         <div id="header-container">
             <header>
                 <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()" alt='Chary logo'>
@@ -35,9 +34,6 @@
         </div>
         <div class="non-header" id="dashboard-content">
             <div id="dashboard-non-scrollable">
-                <script>
-                    loadDashboard('{{ refresh }}', '{{ tab }}')
-                </script>
                 <div id="profile-section"></div>
                 <div id="dashboard-tabs">
                     <ul>
