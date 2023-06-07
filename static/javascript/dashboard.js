@@ -10,7 +10,8 @@ async function loadDashboard(refresh=false, tab="overview") {
     if (refresh || userData == null) {
         const response = updateUserData();
         response.then(() => {
-            loadProfileData();
+            generateProfileUI(userData.balance, userData.username, userData.profileColor, userData.profileImage, userData.currency);
+            document.getElementById("dashboard-tabs").style.display = "block";
 
             if (tab == "overview") {
                 loadOverviewTab();
@@ -47,13 +48,12 @@ async function updateUserData() {
 
 function loadProfileData() {
     generateProfileUI(userData.balance, userData.username, userData.profileColor, userData.profileImage, userData.currency);
-    console.log("Loading profile.")
 }
 
 function loadOverviewTab() {
-    budgetPanel = generateOverviewBudgets(userData.budgets, userData.currency);
-    earningPanel = generateOverviewEarnings(userData.earnings, userData.currency);
-    expensePanel = generateOverviewExpenses(userData.expenses, userData.currency);
+    const budgetPanel = generateOverviewBudgets(userData.budgets, userData.currency);
+    const earningPanel = generateOverviewEarnings(userData.earnings, userData.currency);
+    const expensePanel = generateOverviewExpenses(userData.expenses, userData.currency);
 
     const tabBody = document.getElementById('tab-container');
     tabBody.innerHTML = "";
@@ -274,7 +274,7 @@ function generateOverviewBudgets(budgets, currency) {
         path2.setAttribute('x2', '190');
         path2.setAttribute('y1', '10');
         path2.setAttribute('y2', '10');
-        path2Length = path2.getTotalLength();
+        path2Length = path2.getAttribute('x2') - path2.getAttribute('x1');
         path2.setAttribute('stroke-dasharray', (budgets[key].usedAmount/budgets[key].amount) * path2Length + ' ' + path2Length);
         path2.classList.add('inner-progress');
 
@@ -298,15 +298,7 @@ function generateOverviewBudgets(budgets, currency) {
             window.location = "/form/update-budget?id=" + key;
         })
 
-        const budget_more_img = document.createElement('img');
-        budget_more_img.src = "static/images/MoreButtonsmall.svg";        
-        budget_more_img.classList.add("budget-more");
-        budget_more_img.title = "See More";
-        budget_more_img.addEventListener('click', function() {
-            window.location = "/expand-budget?id=" + key;
-        })
-
-        budgetPanel.append(recur_img, budget_name, budget_des, svgDiv, budget_used, budget_slash, budget_amount, budget_end_date, budget_more_img, budget_update_img);
+        budgetPanel.append(recur_img, budget_name, svgDiv, budget_used, budget_slash, budget_amount, budget_update_img);
         
         budgetContainer.append(budgetPanel)
     }
