@@ -7,8 +7,9 @@ async function loadDashboard(refresh=false, tab="overview") {
     if (refresh || userData == null) {
         const response = updateUserData();
         response.then(() => {
-            loadProfileData();
-
+            generateProfileUI(userData.balance, userData.username, userData.profileColor, userData.profileImage, userData.currency);
+            document.getElementById("dashboard-tabs").style.display = "block";
+            
             if (tab == "overview") {
                 loadOverviewTab();
             } else if (tab == "budgets") {
@@ -42,17 +43,10 @@ async function updateUserData() {
     return response;
 }
 
-function loadProfileData() {
-    // Populating the info panel, which is always visible
-    infoPanel = generateProfileUI(userData.balance, userData.username, userData.profileColor, userData.profileImage, userData.currency);
-    const userContent = document.getElementById('profile-section');
-    userContent.append(infoPanel);
-}
-
 function loadOverviewTab() {
-    budgetPanel = generateOverviewBudgets(userData.budgets, userData.currency);
-    earningPanel = generateOverviewEarnings(userData.earnings, userData.currency);
-    expensePanel = generateOverviewExpenses(userData.expenses, userData.currency);
+    const budgetPanel = generateOverviewBudgets(userData.budgets, userData.currency);
+    const earningPanel = generateOverviewEarnings(userData.earnings, userData.currency);
+    const expensePanel = generateOverviewExpenses(userData.expenses, userData.currency);
 
     const tabBody = document.getElementById('tab-container');
     tabBody.innerHTML = "";
@@ -193,21 +187,19 @@ function changeActiveTab(newActiveTab) {
  * @param img (string): link to user's profile image
  */
 function generateProfileUI(balance, username, color, img, currency) {
-    const infoPanel = document.createElement('div');
-    infoPanel.classList.add('user-info');
-    
-    const user_name = document.createElement('h2');
-    user_name.textContent = username;
+    const user_name = document.getElementById("user-name");
+    user_name.textContent = "Welcome, " + username;
 
-    const user_balance = document.createElement('h3');
-    user_balance.textContent = balance;
+    const user_balance = document.getElementById("user-balance");
+    user_balance.textContent = String(currency) + String(balance);
+
+    const user_currency = document.getElementById("user-currency");
+    user_currency.textContent = "Currency: " + String(currency);
 
     const user_img = document.createElement('img');
     user_img.src = "static/images/profileImages/" + img + ".svg";
     user_img.classList.add('thumbnail');
-
-    infoPanel.append(user_img, user_name); //TODO: Add user_balance when you know what to do with it
-    return infoPanel;
+    document.getElementById("profile-img-container").append(user_img);
 }
 
 function generateOverviewBudgets(budgets, currency) {

@@ -38,6 +38,7 @@ h4 {
 }
 
 #dashboard-tabs {
+    display: none;
     grid-row: 2;
     position: fixed;
     top: 50vh;
