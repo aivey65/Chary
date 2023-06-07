@@ -23,7 +23,8 @@
         <Title>Chary | Dashboard</Title>
     </head>
 
-    <body onload="loadDashboard('{{ refresh }}', '{{ tab }}')">
+    <!-- <body onload="loadDashboard('{{ refresh }}', '{{ tab }}')"> -->
+        <body>
         <div id="header-container">
             <header>
                 <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()" alt='Chary logo'>
@@ -34,13 +35,10 @@
         </div>
         <div class="non-header" id="dashboard-content">
             <div id="dashboard-non-scrollable">
-                <div id="profile-section">
-                    <div id="profile-img-container"></div>
-                    <h2 id="user-name"></h2>
-                    <h3 id="user-balance"></h3>
-                    <h3 id="user-currency"></h3>
-                    <img src="../static/images/EditButtonSM.svg" id="user-edit" title="Update" alt="Edit profile icon">
-                </div>
+                <script>
+                    loadDashboard('{{ refresh }}', '{{ tab }}')
+                </script>
+                <div id="profile-section"></div>
                 <div id="dashboard-tabs">
                     <ul>
                         <li onclick="loadOverviewTab()" id="overview-tab" class="dashTab">Overview</li>
