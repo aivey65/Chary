@@ -217,6 +217,11 @@ function generateOverviewBudgets(budgets, currency) {
     for (const key in budgets) {
         const budgetSnippet = document.createElement('div');
         budgetSnippet.classList.add('budget-snippet');
+        budgetSnippet.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('snip-edit')) {
+                window.location = "/expand-budget?id=" + key;
+            }
+        })
 
         var recur_img;
         if (budgets[key].recurring) {
@@ -243,6 +248,14 @@ function generateOverviewBudgets(budgets, currency) {
         budget_amount.classList.add('snip-budget-bottom');
         budget_amount.textContent = currency + budgets[key].amount;
 
+        const budget_edit = document.createElement('img');
+        budget_edit.src = "static/images/EditButtonSM.svg";
+        budget_edit.title = "Edit";
+        budget_edit.classList.add('snip-edit');
+        budget_edit.addEventListener('click', function() {
+            window.location = "/form/update-budget?id=" + key;
+        })
+
         // Progess SVG
         const svgDiv = document.createElement('div');
         svgDiv.classList.add('snip-svg-div');
@@ -266,7 +279,7 @@ function generateOverviewBudgets(budgets, currency) {
         path2.setAttribute('x2', '190');
         path2.setAttribute('y1', '10');
         path2.setAttribute('y2', '10');
-        path2Length = 180;
+        path2Length = path2.getAttribute('x2') - path2.getAttribute('x1');
         path2.setAttribute('stroke-dasharray', (budgets[key].usedAmount/budgets[key].amount) * path2Length + ' ' + path2Length);
         path2.classList.add('snip-inner-progress');
 
@@ -279,7 +292,7 @@ function generateOverviewBudgets(budgets, currency) {
 
         // End progress svg
 
-        budgetSnippet.append(recur_img, budget_name, svgDiv, budget_used, budget_slash, budget_amount);
+        budgetSnippet.append(recur_img, budget_name, svgDiv, budget_used, budget_slash, budget_amount, budget_edit);
         
         overviewBudgetContainer.append(budgetSnippet)
     }

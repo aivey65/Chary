@@ -136,6 +136,27 @@ h4 {
     background-color: var(--Navy);
 }
 
+/* Styles for the overview section */
+.snip-progress-svg {
+    height: 0px;
+    grid-row: 1;
+    grid-column: 2;
+}
+
+.snip-outer-progress {
+    fill: none;
+    stroke-width: 20;
+    stroke-linecap: round;
+    stroke: var(--Navy);
+}
+
+.snip-inner-progress {
+    fill: none;
+    stroke-width: 15;
+    stroke-linecap: round;
+    stroke: var(--ContrastL);
+}
+
 /* Styles for the budget section */
 
 #dashboard-scrollable h1 {
