@@ -81,13 +81,13 @@ def renderedNav():
                 <li><a href='/about'>About</a></li>
                 <li class='nav-nolink'>|</li>
                 <li><a href='/dashboard'>Dashboard</a></li>
-                <li>
-                    <img id='profile-icon' src='../static/images/profileImages/undraw_blank.svg/>
+                <div>
+                    <img id='profile-icon' src='../static/images/profileImages/undraw_blank.svg'/>
                     <div id='profile-options'>
                         <a href='/profile'>Profile</a>
                         <a href='/logout'>Log Out</a>
                     </div>
-                </li>
+                </div>
             </ul>
         """
     else:

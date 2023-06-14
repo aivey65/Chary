@@ -423,12 +423,43 @@ Creating the navigation bar depending on the size of the user's screen
         font-weight: 100;
     }
 
+    #profile-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin: 10px 25px 10px 25px;
+        white-space: nowrap;
+    }
+
     #profile-options {
         display: block;
         position: absolute;
+        right: 15px;
+        display: grid;
+        grid-template-rows: 1fr 1fr;
         background-color: var(--Navy);
         border-radius: 10px;
         box-shadow: black 5px 5px 10px;
+    }
+
+    #profile-options a {
+        color: var(--Light);
+        font-size: 1rem;
+        font-weight: 200;
+        width: 100%;
+        padding: 15px 25px 15px 25px;
+        text-align: center;
+    }
+
+    #profile-options a:hover {
+        background-color: var(--faded);
+    }
+
+    #profile-options a:hover:nth-child(even) {
+        border-radius: 0px 0px 10px 10px; 
+    }
+
+    #profile-options a:hover:nth-child(odd) {
+        border-radius: 10px 10px 0px 0px;
     }
     
     #large-logo {
