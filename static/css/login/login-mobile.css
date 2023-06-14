@@ -5,8 +5,7 @@
     justify-items: center;
     align-items: center;
     padding-top: 56px;
-    background-color: var(--Light);
-    border-top: solid 1px var(--Dark);
+    background-color: var(--MainL);
 }
 
 #login h1 {
@@ -88,7 +87,7 @@
 }
 
 #login-card h1 {
-    color: var(--Background);
+    color: var(--Light);
     text-align: center;
     grid-row: 2;
     font-weight: 400;

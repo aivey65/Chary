@@ -55,6 +55,10 @@ function toggleMenu() {
     }
 }
 
+function toggleProfile() {
+    
+}
+
 function back() {
     window.history.back();
 }

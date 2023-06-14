@@ -154,6 +154,10 @@ function loadExpenseTab() {
     changeActiveTab(document.getElementById('expense-tab'));
 }
 
+function goToProfile() {
+    window.location.href = "/profile"
+}
+
 function goToBudgetForm() {
     window.location.href = "/form/create-budget";
 }

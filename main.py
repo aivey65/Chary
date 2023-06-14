@@ -77,9 +77,17 @@ def renderedNav():
     if isLoggedIn():
         return """
             <ul>
-                <li><a href='/dashboard'>Dashboard</a></li>
+                <li><a href='/'>Home</a></li>
                 <li><a href='/about'>About</a></li>
-                <li><a href='/logout'>Log Out</a></li>
+                <li class='nav-nolink'>|</li>
+                <li><a href='/dashboard'>Dashboard</a></li>
+                <li>
+                    <img id='profile-icon' src='../static/images/profileImages/undraw_blank.svg/>
+                    <div id='profile-options'>
+                        <a href='/profile'>Profile</a>
+                        <a href='/logout'>Log Out</a>
+                    </div>
+                </li>
             </ul>
         """
     else:

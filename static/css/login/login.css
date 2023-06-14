@@ -59,8 +59,6 @@ body {
     display: grid;
     grid-template-rows: .3fr .5fr 1fr .1fr .5fr .3fr;
     justify-content: center;
-    background-color: var(--Light);
-    border-radius: 2em;
 }
 
 #login-card hr {
@@ -72,7 +70,7 @@ body {
 }
 
 #login-card h1 {
-    color: var(--Background);
+    color: var(--Light);
     text-align: center;
     grid-row: 2;
     font-weight: 400;

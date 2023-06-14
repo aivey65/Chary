@@ -165,10 +165,16 @@ button {
 }
 
 .thumbnail {
-    width: 7rem;
-    height: 7rem;
+    width: 3rem;
+    height: 3rem;
     background-color: var(--Grey);
     border-radius: 50%;
+}
+
+.subhead {
+    font-weight: bold;
+    color: var(--MainL);
+    margin: 0px;
 }
 
 /* Footer styles */
@@ -290,7 +296,6 @@ Creating the navigation bar depending on the size of the user's screen
         transition: .4s ease-in-out;
         background-color: var(--Light);
         z-index: 10;
-        border-bottom: solid 1px var(--Dark);
     }
 
     #large-logo {
@@ -313,7 +318,6 @@ Creating the navigation bar depending on the size of the user's screen
         background-color: var(--Light);
         transition: .6s ease-in-out;
         padding-top: 2.8rem;
-        border-left: solid 1px var(--Dark);
     }
 
     nav ul {
@@ -356,7 +360,6 @@ Creating the navigation bar depending on the size of the user's screen
         position: absolute;
         right: 0rem;
         margin-right: 0.8rem;
-        margin-top: .3rem;
     }
 }
 
@@ -389,6 +392,7 @@ Creating the navigation bar depending on the size of the user's screen
         list-style: none;
         display: flex;
         justify-content: end;
+        align-items: center;
     }
     
     nav a {
@@ -410,6 +414,21 @@ Creating the navigation bar depending on the size of the user's screen
     
     nav li:active a {
         color: var(--ContrastD);
+    }
+
+    .nav-nolink {
+        color: var(--Dark);
+        text-decoration: none;
+        font-size: 1.8rem;
+        font-weight: 100;
+    }
+
+    #profile-options {
+        display: block;
+        position: absolute;
+        background-color: var(--Navy);
+        border-radius: 10px;
+        box-shadow: black 5px 5px 10px;
     }
     
     #large-logo {
