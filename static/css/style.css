@@ -160,6 +160,11 @@ button {
     cursor: pointer;
 }
 
+.recur-img, .options-img, .update-img, .snip-edit {
+    width: 1.7rem;
+    height: auto;
+}
+
 .centered {
     text-align: center;
 }
@@ -430,6 +435,7 @@ Creating the navigation bar depending on the size of the user's screen
         white-space: nowrap;
         background-color: var(--Light);
         border-radius: 50%;
+        border: solid 2px var(--Dark)
     }
 
     #profile-options {

@@ -16,11 +16,6 @@ h4 {
     padding-left: 0px;
 }
 
-.recur-img, .options-img, .update-img, .snip-edit {
-    width: 1.7rem;
-    height: auto;
-}
-
 /*
  *** Styles for Left-Hand Side of Dashboard ***
  */
@@ -354,10 +349,12 @@ h4 {
 .fraction-top {
     text-align: right;
     transform: translate(-70%, 0%);
+    font-weight: 300;
 }
 
 .fraction-bottom {
     transform: translate(70%, 40%);
+    font-weight: 300;
 }
 
 .outer-progress {
