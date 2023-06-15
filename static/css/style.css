@@ -423,11 +423,13 @@ Creating the navigation bar depending on the size of the user's screen
         font-weight: 100;
     }
 
-    #profile-icon {
+    .profile-icon {
         width: 2.5rem;
         height: 2.5rem;
         margin: 10px 25px 10px 25px;
         white-space: nowrap;
+        background-color: var(--Light);
+        border-radius: 50%;
     }
 
     #profile-options {

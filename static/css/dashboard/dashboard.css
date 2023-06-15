@@ -1,3 +1,7 @@
+/*
+ *** General Styles for All Tabs in Dashboard ***
+ */
+
 h2 {
     font-size:1.5em;
 }
@@ -12,36 +16,41 @@ h4 {
     padding-left: 0px;
 }
 
-#dashboard-non-scrollable {
+.recur-img, .options-img, .update-img, .snip-edit {
+    width: 1.7rem;
+    height: auto;
+}
+
+/*
+ *** Styles for Left-Hand Side of Dashboard ***
+ */
+
+#dashboard-left {
     grid-column: 1;
     grid-row: 1;
     height: 100vh;
-    min-width: fit-content;
+    width: 20vw;
     max-width: 150px;
-    width: 100%;
     overflow: hidden;
-    display: grid;
-    grid-template-rows: 1fr 1fr;
     margin-right: 2.5em;
-    padding-top: 2.5em;
-    text-align: left;
-}
-
-#profile-section {
-    grid-row: 1;
-    width: 100%;
-    padding-left: 2.5em;
-}
-
-.user-info img {
     text-align: center;
+
+    display: grid;
+    grid-template-rows: 0.5fr 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+}
+
+#dashboard-profile {
+    width: 5rem;
+    height: 5rem;
+    align-self: center;
+    grid-row: 1;
 }
 
 #dashboard-tabs {
     display: none;
     grid-row: 2;
-    position: fixed;
-    top: 50vh;
     max-width: inherit;
     width: inherit;
 }
@@ -55,7 +64,7 @@ h4 {
 #dashboard-tabs li {
     margin-bottom: 2rem;
     border-radius: 0rem 50rem 50rem 0rem;
-    padding: .5em .5em .5em 2.5em;
+    padding: 0.5em;
 }
 
 .dashTab {
@@ -70,7 +79,11 @@ h4 {
     background-color: var(--Navy);
 }
 
-#dashboard-scrollable {
+/*
+ *** General Styles for Main Section of Dashboard ***
+ */
+
+#dashboard-main {
     grid-column: 2;
     grid-row: 1;
     overflow: hidden;
@@ -80,6 +93,12 @@ h4 {
     padding-top: 2.5em;
 }
 
+#tab-head {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
 #add-budget-button, #add-earning-button, #add-expense-button {
     margin-left: 1em;
     background-color: var(--ContrastL);
@@ -87,8 +106,8 @@ h4 {
     border: solid 2px var(--ContrastL);
     transition: background-color .5s ease-in-out,
     color .5s ease-in-out;
-    font-weight: 300;
-    font-size: .8em;
+    font-weight: 400;
+    font-size: 1em;
 }
 
 .long-text {
@@ -98,14 +117,14 @@ h4 {
     overflow: hidden;
 }
 
-#tab-container table {
+.tab-container table {
     border-collapse: collapse;
     width: 100%;
     text-align: center;
     vertical-align: middle;
 }
 
-#tab-container th {
+.tab-container th {
     background-color: var(--MainL);
     color: var(--Dark);
     font-size: 1em;
@@ -113,35 +132,104 @@ h4 {
     padding: 10px;
 }
 
-#tab-container td {
+.tab-container td {
     color:var(--Light);
     font-size: 1em;
     font-weight: 200;
     padding: 10px;
 }
 
-#tab-container td img {
-    width: 1.5em;
-    height: auto;
+.tab-container tr:nth-child(even) td {
+    background-color: var(--Dark);
+}
+
+.tab-container tr:nth-child(odd) td {
+    background-color: var(--Navy);
 }
 
 .update-img {
     cursor: pointer;
 }
 
-#tab-container tr:nth-child(even) td {
+#dashboard-main h1 {
+    display: inline;
+}
+
+#dashboard-main h3 {
+    margin: 0px;
+    font-weight: 300;
+}
+
+#earning-container, #expense-container {
+    margin-top: 20px;
+}
+
+/*
+ *** Styles for Overview Section of Dashboard ***
+ */
+
+#overview-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.snip-containers {
     background-color: var(--Dark);
+    padding: var(--smallPad);
+    border-radius: 20px;
+    margin: 1rem;
 }
 
-#tab-container tr:nth-child(odd) td {
-    background-color: var(--Navy);
+#chart-snip-container {
+    width: 65%;
 }
 
-/* Styles for the overview section */
-.snip-progress-svg {
-    height: 0px;
+#budget-snip-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 25%;
+}
+
+.budget-snippet {
+    display: grid;
+    grid-template-columns: 2fr .1fr .3fr .1fr .3fr;
+    grid-template-rows: auto 1fr;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.budget-snippet .recur-img {
     grid-row: 1;
-    grid-column: 2;
+    grid-column: 5;
+    align-self: center;
+}
+
+.snip-budget-name {
+    grid-row: 1;
+    grid-column: 1;
+    font-size: 1.2rem;
+}
+
+.snip-svg-div {
+    grid-row: 2;
+    grid-column: 1;
+    display: flex;
+    align-items: center;
+}
+
+.snip-budget-used {
+    grid-row: 2;
+    grid-column: 3;
+}
+
+.snip-edit {
+    grid-row: 2;
+    grid-column: 5;
+}
+
+.snip-budget-name, .snip-budget-used {
+    margin: 0px;
 }
 
 .snip-outer-progress {
@@ -158,11 +246,9 @@ h4 {
     stroke: var(--ContrastL);
 }
 
-/* Styles for the budget section */
-
-#dashboard-scrollable h1 {
-    display: inline;
-}
+/*
+ *** Styles for Budget Section of Dashboard ***
+ */
 
 #budget-container {
     display: flex;
@@ -179,7 +265,7 @@ h4 {
     height: fit-content;
     max-height: 350px;
     display: grid;
-    grid-template-rows: 0.5fr 1fr 1.3fr 1fr auto;
+    grid-template-rows: 0.8fr 1fr 1.3fr 1fr auto;
     grid-template-columns: 1fr 1fr;
     justify-items: center;
     border-radius: 10%;
@@ -274,11 +360,6 @@ h4 {
     transform: translate(70%, 40%);
 }
 
-.budget-info img {
-    width: 1.8em;
-    height: auto;
-}
-
 .outer-progress {
     fill: none;
     stroke-width: 30;
@@ -291,12 +372,4 @@ h4 {
     stroke-width: 20;
     stroke-linecap: round;
     stroke: var(--ContrastL);
-}
-
-
-
-/* Styles for the earning section */
-
-#earning-container, #expense-container {
-    margin-top: 20px;
 }

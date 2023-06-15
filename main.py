@@ -82,7 +82,7 @@ def renderedNav():
                 <li class='nav-nolink'>|</li>
                 <li><a href='/dashboard'>Dashboard</a></li>
                 <div>
-                    <img id='profile-icon' src='../static/images/profileImages/undraw_blank.svg'/>
+                    <img class='profile-icon' src='../static/images/profileImages/undraw_blank.svg'/>
                     <div id='profile-options'>
                         <a href='/profile'>Profile</a>
                         <a href='/logout'>Log Out</a>

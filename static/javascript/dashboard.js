@@ -7,7 +7,7 @@ async function loadDashboard(refresh=false, tab="overview") {
     if (refresh || userData == null) {
         const response = updateUserData();
         response.then(() => {
-            generateProfileUI(userData.balance, userData.username, userData.profileColor, userData.profileImage, userData.currency);
+            fillProfilePics(userData.profileImage);
             document.getElementById("dashboard-tabs").style.display = "block";
             
             if (tab == "overview") {
@@ -44,13 +44,18 @@ async function updateUserData() {
 }
 
 function loadOverviewTab() {
+    const chartPanel = generateOverviewCharts();
     const budgetPanel = generateOverviewBudgets(userData.budgets, userData.currency);
     const earningPanel = generateOverviewEarnings(userData.earnings, userData.currency);
     const expensePanel = generateOverviewExpenses(userData.expenses, userData.currency);
 
-    const tabBody = document.getElementById('tab-container');
+    const overviewTab = document.createElement('div');
+    overviewTab.id = 'overview-section';
+    overviewTab.append(chartPanel, budgetPanel, earningPanel, expensePanel)
+
+    const tabBody = document.getElementById('dashboard-main');
     tabBody.innerHTML = "";
-    tabBody.append(budgetPanel, earningPanel, expensePanel);
+    tabBody.append(overviewTab);
 
     changeActiveTab(document.getElementById('overview-tab'))
 }
@@ -63,7 +68,11 @@ function loadBudgetTab() {
     const addButton = document.createElement('button');
     addButton.onclick = goToBudgetForm;
     addButton.id = "add-budget-button";
-    addButton.textContent = "+ Add Budget";
+    addButton.textContent = "+ New";
+
+    const tabHead = document.createElement('div');
+    tabHead.append(header, addButton);
+    tabHead.id = 'tab-head';
 
     budgetPanel = generateBudgetsUI(userData.budgets, userData.currency);
 
@@ -71,9 +80,13 @@ function loadBudgetTab() {
     budgetContainer.id = "budget-container";
     budgetContainer.append(budgetPanel);
 
-    const tabBody = document.getElementById('tab-container');
+    const budgetTab = document.createElement('div');
+    budgetTab.id = 'budget-section';
+    budgetTab.append(tabHead, budgetContainer)
+
+    const tabBody = document.getElementById('dashboard-main');
     tabBody.innerHTML = "";
-    tabBody.append(header, addButton, budgetContainer);
+    tabBody.append(budgetTab);
 
     changeActiveTab(document.getElementById('budget-tab'));
 }
@@ -86,7 +99,11 @@ function loadEarningTab() {
     const addButton = document.createElement('button');
     addButton.onclick = goToEarningForm;
     addButton.id = "add-earning-button";
-    addButton.textContent = "+ Add Earning";
+    addButton.textContent = "+ New";
+
+    const tabHead = document.createElement('div');
+    tabHead.append(header, addButton);
+    tabHead.id = 'tab-head';
 
     const tableHead = document.createElement('thead');
     row = document.createElement('tr');
@@ -107,11 +124,16 @@ function loadEarningTab() {
 
     const earningContainer = document.createElement('div');
     earningContainer.id = 'earning-container';
+    earningContainer.classList.add('tab-container');
     earningContainer.append(table);
 
-    const tabBody = document.getElementById('tab-container');
+    const earningTab = document.createElement('div');
+    earningTab.id = 'earning-section';
+    earningTab.append(tabHead, earningContainer)
+
+    const tabBody = document.getElementById('dashboard-main');
     tabBody.innerHTML = "";
-    tabBody.append(header, addButton, earningContainer);
+    tabBody.append(earningTab);
 
     changeActiveTab(document.getElementById('earning-tab'));
 }
@@ -124,7 +146,11 @@ function loadExpenseTab() {
     const addButton = document.createElement('button');
     addButton.onclick = goToExpenseForm;
     addButton.id = 'add-expense-button';
-    addButton.textContent = "+ Add Expense";
+    addButton.textContent = "+ New";
+
+    const tabHead = document.createElement('div');
+    tabHead.append(header, addButton);
+    tabHead.id = 'tab-head';
 
     const tableHead = document.createElement('thead');
     row = document.createElement('tr');
@@ -145,11 +171,16 @@ function loadExpenseTab() {
 
     const expenseContainer = document.createElement('div');
     expenseContainer.id = 'expense-container';
+    expenseContainer.classList.add('tab-container');
     expenseContainer.append(table);
 
-    const tabBody = document.getElementById('tab-container');
+    const expenseTab = document.createElement('div');
+    expenseTab.id = 'expense-section';
+    expenseTab.append(tabHead, expenseContainer)
+
+    const tabBody = document.getElementById('dashboard-main');
     tabBody.innerHTML = "";
-    tabBody.append(header, addButton, expenseContainer);
+    tabBody.append(expenseTab);
 
     changeActiveTab(document.getElementById('expense-tab'));
 }
@@ -206,9 +237,26 @@ function generateProfileUI(balance, username, color, img, currency) {
     document.getElementById("profile-img-container").append(user_img);
 }
 
+function generateOverviewCharts() {
+    const overviewChartContainer = document.createElement('div');
+    overviewChartContainer.id = 'chart-snip-container';
+    overviewChartContainer.classList.add('snip-containers');
+
+    const overviewHeader = document.createElement('h3');
+    overviewHeader.textContent = "Analytics";
+    overviewChartContainer.append(overviewHeader);
+
+    return overviewChartContainer;
+}
+
 function generateOverviewBudgets(budgets, currency) {
-    overviewBudgetContainer = document.createElement('div');
-    overviewBudgetContainer.id = 'budget-container';
+    const overviewBudgetContainer = document.createElement('div');
+    overviewBudgetContainer.id = 'budget-snip-container';
+    overviewBudgetContainer.classList.add('snip-containers');
+
+    const overviewHeader = document.createElement('h3');
+    overviewHeader.textContent = "Budget Information";
+    overviewBudgetContainer.append(overviewHeader);
     
     for (const key in budgets) {
         const budgetSnippet = document.createElement('div');
@@ -228,21 +276,13 @@ function generateOverviewBudgets(budgets, currency) {
             recur_img.title = "This budget recurs " + period + ".";
         }
         
-        const budget_name = document.createElement('h2');
+        const budget_name = document.createElement('p');
         budget_name.classList.add('snip-budget-name');
         budget_name.textContent = budgets[key].name;
 
-        const budget_used = document.createElement('h3');
-        budget_used.classList.add('snip-budget-top');
-        budget_used.textContent = currency + budgets[key].usedAmount;
-
-        const budget_slash = document.createElement('h2');
-        budget_slash.classList.add('snip-budget-slash');
-        budget_slash.textContent = "／"
-
-        const budget_amount = document.createElement('h3');
-        budget_amount.classList.add('snip-budget-bottom');
-        budget_amount.textContent = currency + budgets[key].amount;
+        const budget_used = document.createElement('p');
+        budget_used.classList.add('snip-budget-used');
+        budget_used.textContent = (budgets[key].usedAmount / budgets[key].amount * 100).toFixed(1) + "% used";
 
         const budget_edit = document.createElement('img');
         budget_edit.src = "static/images/EditButtonSM.svg";
@@ -261,34 +301,39 @@ function generateOverviewBudgets(budgets, currency) {
         const path2 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
 
         svg.setAttribute('width', '200');
-        svg.setAttribute('height', '60');
+        svg.setAttribute('height', '20');
         svg.setAttribute('viewbox', '0 0 200 60');
         svg.classList.add('snip-progress-svg');
+        svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
 
         path1.setAttribute('x1', '10');
         path1.setAttribute('x2', '190');
         path1.setAttribute('y1', '10');
         path1.setAttribute('y2', '10');
         path1.classList.add('snip-outer-progress');
-
-        path2.setAttribute('x1', '10');
-        path2.setAttribute('x2', '190');
-        path2.setAttribute('y1', '10');
-        path2.setAttribute('y2', '10');
-        path2Length = path2.getAttribute('x2') - path2.getAttribute('x1');
-        path2.setAttribute('stroke-dasharray', (budgets[key].usedAmount/budgets[key].amount) * path2Length + ' ' + path2Length);
-        path2.classList.add('snip-inner-progress');
-
-        svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
         path1.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-        path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+        svg.append(path1);
         
-        svg.append(path1, path2);
+        const fillAmount = budgets[key].usedAmount;
+        if (fillAmount != 0) {
+            path2.setAttribute('x1', '10');
+            path2.setAttribute('x2', '190');
+            path2.setAttribute('y1', '10');
+            path2.setAttribute('y2', '10');
+            path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+    
+            path2Length = path2.getAttribute('x2') - path2.getAttribute('x1');
+            path2.setAttribute('stroke-dasharray', (fillAmount/budgets[key].amount) * path2Length + ' ' + path2Length);
+            path2.classList.add('snip-inner-progress');
+
+            svg.append(path1, path2);  
+        }
+
         svgDiv.append(svg);
 
         // End progress svg
 
-        budgetSnippet.append(recur_img, budget_name, svgDiv, budget_used, budget_slash, budget_amount, budget_edit);
+        budgetSnippet.append(recur_img, budget_name, svgDiv, budget_used, budget_edit);
         
         overviewBudgetContainer.append(budgetSnippet)
     }
@@ -297,11 +342,27 @@ function generateOverviewBudgets(budgets, currency) {
 }
 
 function generateOverviewExpenses() {
+    const overviewExpenseContainer = document.createElement('div');
+    overviewExpenseContainer.id = 'expense-snip-container';
+    overviewExpenseContainer.classList.add('snip-containers');
 
+    const overviewHeader = document.createElement('h3');
+    overviewHeader.textContent = "Recent Expenses";
+    overviewExpenseContainer.append(overviewHeader);
+
+    return overviewExpenseContainer;
 }
 
 function generateOverviewEarnings() {
+    const overviewEarningContainer = document.createElement('div');
+    overviewEarningContainer.id = 'earning-snip-container';
+    overviewEarningContainer.classList.add('snip-containers');
 
+    const overviewHeader = document.createElement('h3');
+    overviewHeader.textContent = "Recent Earnings";
+    overviewEarningContainer.append(overviewHeader);
+
+    return overviewEarningContainer;
 }
 
 /* Creates and displays UI for all budget information
@@ -341,7 +402,7 @@ function generateBudgetsUI(budgets, currency) {
         budget_name.classList.add('budget-name');
         budget_name.textContent = budgets[key].name;
 
-        const budget_used = document.createElement('h3');
+        const budget_used = document.createElement('p');
         budget_used.classList.add('fraction-top');
         budget_used.textContent = currency + budgets[key].usedAmount;
 
@@ -349,7 +410,7 @@ function generateBudgetsUI(budgets, currency) {
         budget_slash.classList.add('fraction-slash');
         budget_slash.textContent = "／"
 
-        const budget_amount = document.createElement('h3');
+        const budget_amount = document.createElement('p');
         budget_amount.classList.add('fraction-bottom');
         budget_amount.textContent = currency + budgets[key].amount;
 
@@ -358,26 +419,30 @@ function generateBudgetsUI(budgets, currency) {
         svgDiv.classList.add('svg-div');
 
         const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
-        const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-        const path2 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-
         svg.setAttribute('width', '200');
         svg.setAttribute('height', '120');
         svg.setAttribute('viewbox', '0 0 200 120');
         svg.classList.add('progress-svg');
+        svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
 
+        const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
         path1.setAttribute('d', 'M15,100 a60,60 0 0,1 170,0');
         path1.classList.add('outer-progress');
-        path2.setAttribute('d', 'M15,100 a60,60 0 0,1 170,0');
-        path2Length = path2.getTotalLength();
-        path2.setAttribute('stroke-dasharray', (budgets[key].usedAmount/budgets[key].amount) * path2Length + ' ' + path2Length);
-        path2.classList.add('inner-progress');
-
-        svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
         path1.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-        path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-        
-        svg.append(path1, path2);
+        svg.append(path1);
+
+        const fillAmount = budgets[key].usedAmount;
+        if (fillAmount != 0) {
+            const path2 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+            path2.setAttribute('d', 'M15,100 a60,60 0 0,1 170,0');
+            path2Length = path2.getTotalLength();
+            path2.setAttribute('stroke-dasharray', (fillAmount/budgets[key].amount) * path2Length + ' ' + path2Length);
+            path2.classList.add('inner-progress');
+            path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+            
+            svg.append(path2);
+        }
+
         svgDiv.append(svg);
 
         // End progress svg

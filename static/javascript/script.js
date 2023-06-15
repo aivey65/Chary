@@ -59,6 +59,13 @@ function toggleProfile() {
     
 }
 
+function fillProfilePics(imageToUse) {
+    const pictures = document.getElementsByClassName('profile-icon');
+    for (const pic of pictures) {
+        pic.src = "static/images/profileImages/" + imageToUse + ".svg"
+    }
+}
+
 function back() {
     window.history.back();
 }
