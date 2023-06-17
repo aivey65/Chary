@@ -46,8 +46,8 @@ async function updateUserData() {
 function loadOverviewTab() {
     const chartPanel = generateOverviewCharts();
     const budgetPanel = generateOverviewBudgets(userData.budgets, userData.currency);
-    const earningPanel = generateOverviewEarnings(userData.earnings, userData.currency);
-    const expensePanel = generateOverviewExpenses(userData.expenses, userData.currency);
+    const earningPanel = generateOverviewEarnings();
+    const expensePanel = generateOverviewExpenses();
 
     const overviewTab = document.createElement('div');
     overviewTab.id = 'overview-section';
@@ -116,7 +116,7 @@ function loadEarningTab() {
     tableHead.append(row);
 
     const tableBody = document.createElement('tbody');
-    tableData = generateEarningsUI(userData.earnings, userData.currency);
+    tableData = generateTableUI(1, userData.earnings, userData.currency);
     tableBody.append(...tableData.children);
 
     table = document.createElement('table');
@@ -163,7 +163,7 @@ function loadExpenseTab() {
     tableHead.append(row);
 
     const tableBody = document.createElement('tbody');
-    tableData = generateExpensesUI(userData.expenses, userData.currency);
+    tableData = generateTableUI(0, userData.expenses, userData.currency);
     tableBody.append(...tableData.children);
 
     table = document.createElement('table');
@@ -348,8 +348,10 @@ function generateOverviewExpenses() {
 
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Recent Expenses";
-    overviewExpenseContainer.append(overviewHeader);
 
+    const expenseTable = generateTableUI(1, userData.earnings, userData.currency);
+
+    overviewExpenseContainer.append(overviewHeader, expenseTable);
     return overviewExpenseContainer;
 }
 
@@ -360,133 +362,11 @@ function generateOverviewEarnings() {
 
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Recent Earnings";
-    overviewEarningContainer.append(overviewHeader);
 
+    const earningTable = generateTableUI(0, userData.expenses, userData.currency);
+
+    overviewEarningContainer.append(overviewHeader, earningTable);
     return overviewEarningContainer;
-}
-
-/* Creates and displays UI for all budget information
- * 
- * @param budgets (list): A list of IDs that each correspond to a budget
- *      stored in the database.
- * @param currency (string): A single character representing the user's currency symbol
- */
-function generateBudgetsUI(budgets, currency) {
-    budgetContainer = document.createElement('div');
-    budgetContainer.id = 'budget-container';
-    
-    for (const key in budgets) {
-        const budgetPanel = document.createElement('div');
-        budgetPanel.classList.add('budget-info');
-        budgetPanel.addEventListener('click', function(e) {
-            if (!e.target.classList.contains('options')) {
-                window.location = "/expand-budget?id=" + key;
-            }
-        })
-
-        const optionsImg = document.createElement('img');
-        optionsImg.src = "static/images/Options-icon.svg";
-        optionsImg.classList.add('options-img', 'options');
-        optionsImg.title = "Options";
-
-        var recur_img;
-        if (budgets[key].recurring) {
-            recur_img = document.createElement('img');
-            recur_img.src = 'static/images/recurIcon.svg';
-            recur_img.classList.add('recur-img');
-            const period = PERIODS[budgets[key].budgetPeriod].toLocaleLowerCase();
-            recur_img.title = "This budget recurs " + period + ".";
-        }
-        
-        const budget_name = document.createElement('h2');
-        budget_name.classList.add('budget-name');
-        budget_name.textContent = budgets[key].name;
-
-        const budget_used = document.createElement('p');
-        budget_used.classList.add('fraction-top');
-        budget_used.textContent = currency + budgets[key].usedAmount;
-
-        const budget_slash = document.createElement('h2');
-        budget_slash.classList.add('fraction-slash');
-        budget_slash.textContent = "／"
-
-        const budget_amount = document.createElement('p');
-        budget_amount.classList.add('fraction-bottom');
-        budget_amount.textContent = currency + budgets[key].amount;
-
-        // Progess SVG
-        const svgDiv = document.createElement('div');
-        svgDiv.classList.add('svg-div');
-
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
-        svg.setAttribute('width', '200');
-        svg.setAttribute('height', '120');
-        svg.setAttribute('viewbox', '0 0 200 120');
-        svg.classList.add('progress-svg');
-        svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-
-        const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-        path1.setAttribute('d', 'M15,100 a60,60 0 0,1 170,0');
-        path1.classList.add('outer-progress');
-        path1.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-        svg.append(path1);
-
-        const fillAmount = budgets[key].usedAmount;
-        if (fillAmount != 0) {
-            const path2 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-            path2.setAttribute('d', 'M15,100 a60,60 0 0,1 170,0');
-            path2Length = path2.getTotalLength();
-            path2.setAttribute('stroke-dasharray', (fillAmount/budgets[key].amount) * path2Length + ' ' + path2Length);
-            path2.classList.add('inner-progress');
-            path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-            
-            svg.append(path2);
-        }
-
-        svgDiv.append(svg);
-
-        // End progress svg
-        // Create Popup options for budget info
-        const budget_update_img = document.createElement('img');
-        budget_update_img.src = "static/images/EditButtonSM.svg";
-        
-        const budget_update_text = document.createElement('h4');
-        budget_update_text.textContent = "Edit";
-        const budget_update = document.createElement('div');
-        budget_update.classList.add('budget-edit', 'options');
-        budget_update.addEventListener('click', function() {
-            window.location = "/form/update-budget?id=" + key;
-        })
-        budget_update.append(budget_update_img, budget_update_text);
-
-        const budget_more_img = document.createElement('img');
-        budget_more_img.src = "static/images/MoreButtonsmall.svg";        
-        
-        const budget_more_text = document.createElement('h4');
-        budget_more_text.textContent = "See More";
-        const budget_more = document.createElement('div');
-        budget_more.classList.add('budget-more', 'options');
-        budget_more.addEventListener('click', function() {
-            window.location = "/expand-budget?id=" + key;
-        })
-        budget_more.append(budget_more_img, budget_more_text)
-
-        const optionsPanel = document.createElement('div');
-        optionsPanel.classList.add('options-panel', 'options');
-        optionsPanel.style.display = "none";
-        optionsPanel.append(budget_update, budget_more);
-        optionsImg.addEventListener('click', (event) => {
-            optionsToggle(event.target, optionsPanel);
-        }, false);
-        const budget_options = document.createElement('div');
-        budget_options.classList.add('options-div', 'options');
-        budget_options.append(optionsImg, optionsPanel);
-
-        budgetPanel.append(budget_options, recur_img, budget_name, svgDiv, budget_used, budget_slash, budget_amount);
-        budgetContainer.append(budgetPanel);
-    }
-
-    return budgetContainer;
 }
 
 function optionsToggle(button, optionsPanel) {
@@ -521,123 +401,4 @@ function windowClick(optionsPanel, button) {
 
         windowClickDisable(boundFunction);
     }
-}
-
-/* Creates and displays UI for all earning information
- * 
- * @param earnings (List): List of a user's earnings
- * @param currency (string): A single character representing the user's currency symbol
- */
-function generateEarningsUI(earnings, currency) {
-    earningContainer = document.createElement('div');
-    
-    for (const key in earnings) {
-        current = earnings[key].data;
-
-        const earning_name = document.createElement('td');
-        earning_name.textContent = current.name;
-
-        const earning_amount = document.createElement('td');
-        earning_amount.textContent = currency + current.amount;
-
-        const earning_des = document.createElement('td');
-        earning_des.textContent = current.description;
-        earning_des.classList.add('long-text');
-
-        earning_recur = document.createElement('td');
-        if (current.recurring) {
-            const recur_img = document.createElement('img');
-            recur_img.classList.add('recur-img');
-            recur_img.src = "static/images/recurIcon.svg";
-            recur_img.title = "This earning is recurring over a specified period of time";
-            earning_recur.append(recur_img);
-        }
-
-        const earning_update = document.createElement('td');
-        const earning_update_img = document.createElement('img');
-        earning_update_img.src = "static/images/EditButtonSM.svg"
-        earning_update_img.classList.add("update-img");
-        earning_update_img.title = "Update";
-        earning_update_img.addEventListener('click', function() {
-            window.location = "/form/update-earning?id=" + key;
-        })
-        earning_update.append(earning_update_img);
-
-        dates = earnings[key].dates;
-        dates.forEach(date => {
-            const earning_date = document.createElement('td');
-            const formatDate =  new Date(date);
-            earning_date.textContent = formatDate.toLocaleDateString();
-
-            const earningRow = document.createElement('tr');
-            earningRow.classList.add('earning-row');
-            earningRow.append(earning_name.cloneNode(true), earning_amount.cloneNode(true), earning_des.cloneNode(true), earning_date, earning_recur.cloneNode(true), earning_update.cloneNode(true));
-            earningContainer.append(earningRow)
-        }) 
-    }
-
-    return earningContainer;
-}
-
-/* Creates and displays UI for all expense information
- * Going with a table layout for the expense data.
- * 
- * @param expenses (List): List of a user's expenses
- * @param currency (string): A single character representing the user's currency symbol
- */
-function generateExpensesUI(expenseDict, currency) {
-    const expenseContainer = document.createElement('div');
-
-    budgetCategories = expenseDict.categories;
-    expenses = expenseDict.expenses;
-    
-    for (const key in expenses) {
-        const current = expenses[key].data;
-
-        const expense_name = document.createElement('td');
-        expense_name.textContent = current.name;
-
-        const expense_amount = document.createElement('td');
-        expense_amount.textContent = currency + current.amount;
-
-        const expense_category = document.createElement('td');
-        expense_category.textContent = current.budgetCategory;
-
-        const expense_des = document.createElement('td');
-        expense_des.textContent = current.description;
-        expense_des.classList.add('long-text');
-
-        expense_recur = document.createElement('td');
-        if (current.recurring) {
-            const recur_img = document.createElement('img');
-            recur_img.classList.add('recur-img');
-            recur_img.src = "static/images/recurIcon.svg";
-            recur_img.title = "This expense is recurring over a specified period of time";
-            expense_recur.append(recur_img);
-        }
-
-        const expense_update = document.createElement('td');
-        const expense_update_img = document.createElement('img');
-        expense_update_img.src = "static/images/EditButtonSM.svg"
-        expense_update_img.classList.add("update-img");
-        expense_update_img.title = "Update";
-        expense_update_img.addEventListener('click', function() {
-            window.location = "/form/update-expense?id=" + key;
-        })
-        expense_update.append(expense_update_img);
-
-        dates = expenses[key].dates;
-        dates.forEach(date => {
-            const expense_date = document.createElement('td');
-            const formatDate =  new Date(date);
-            expense_date.textContent = formatDate.toLocaleDateString();
-
-            const expenseRow = document.createElement('tr');
-            expenseRow.classList.add('expense-row');
-            expenseRow.append(expense_name.cloneNode(true), expense_amount.cloneNode(true), expense_category.cloneNode(true), expense_des.cloneNode(true), expense_date, expense_recur.cloneNode(true), expense_update.cloneNode(true));
-            expenseContainer.append(expenseRow)
-        }) 
-    }
-
-    return expenseContainer;
 }
