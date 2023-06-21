@@ -1,9 +1,9 @@
 const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"]
 
 function loadBudget(id) {
-    fetch('/data/budget-expenses?id=' + id).then(response => response.json()).then((responseData) => {
-        console.log(responseData);
+    fillProfilePics(); // Get the profile images on the page filled.
 
+    fetch('/data/budget-expenses?id=' + id).then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
         const expenses = responseData.expenses;
 
@@ -22,7 +22,7 @@ function loadBudget(id) {
             document.getElementById('recur-description').textContent = "This budget recurs " + period + ".";
         }
 
-
+        document.getElementById('budget-expenses').append(generateTableUI(0, expenses, responseData.currency));
         
     });
 }

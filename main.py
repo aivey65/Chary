@@ -13,6 +13,7 @@ from functools import wraps
 import database
 
 app = Flask(__name__, template_folder="templates")
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 # Load environment variables and set secret key
 load_dotenv()
 
@@ -82,8 +83,8 @@ def renderedNav():
                 <li class='nav-nolink'>|</li>
                 <li><a href='/dashboard'>Dashboard</a></li>
                 <div>
-                    <img class='profile-icon' src='../static/images/profileImages/undraw_blank.svg'/>
-                    <div id='profile-options'>
+                    <img id='nav-profile-icon' class='profile-icon' src='../static/images/profileImages/undraw_blank.svg'/>
+                    <div id='profile-options' style='display: none;'>
                         <a href='/profile'>Profile</a>
                         <a href='/logout'>Log Out</a>
                     </div>
@@ -323,12 +324,15 @@ def getOneBudget():
 @app.route("/data/budget-expenses")
 @login_is_required
 def getBudgetExpenses():
-    budgetId = request.args.get("id")
-    date = request.args.get("date")
-    if date == None:
-        return database.getBudgetAndExpenses(session["email"], budgetId)
-    else:
-        return database.getBudgetAndExpenses(session["email"], budgetId, date)
+    try:
+        budgetId = request.args.get("id")
+        date = request.args.get("date")
+        if date == None:
+            return database.getBudgetAndExpenses(session["email"], budgetId)
+        else:
+            return database.getBudgetAndExpenses(session["email"], budgetId, date)
+    except Exception as e:
+        return custom_error(e)
     
 @app.route("/data/get-expense/")
 @login_is_required

@@ -1,3 +1,8 @@
+function configureLanding() {
+    fillProfilePics();
+    configureHeight();
+}
+
 function downAction() {
     document.getElementById('landing-info').scrollIntoView();
 }

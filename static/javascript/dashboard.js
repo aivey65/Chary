@@ -105,22 +105,7 @@ function loadEarningTab() {
     tabHead.append(header, addButton);
     tabHead.id = 'tab-head';
 
-    const tableHead = document.createElement('thead');
-    row = document.createElement('tr');
-    columns = ['Name', 'Earning Amount', 'Description', 'Date', 'Recurring?', 'Edit'];
-    columns.forEach(title => {
-        col = document.createElement('th');
-        col.textContent = title;
-        row.append(col);
-    })
-    tableHead.append(row);
-
-    const tableBody = document.createElement('tbody');
-    tableData = generateTableUI(1, userData.earnings, userData.currency);
-    tableBody.append(...tableData.children);
-
-    table = document.createElement('table');
-    table.append(tableHead, tableBody);
+    table = generateTableUI(1, userData.earnings, userData.currency);
 
     const earningContainer = document.createElement('div');
     earningContainer.id = 'earning-container';
@@ -152,22 +137,7 @@ function loadExpenseTab() {
     tabHead.append(header, addButton);
     tabHead.id = 'tab-head';
 
-    const tableHead = document.createElement('thead');
-    row = document.createElement('tr');
-    columns = ['Name', 'Expense Amount', 'Budget Category', 'Description', 'Date', 'Recurring?', 'Edit']
-    columns.forEach(title => {
-        col = document.createElement('th');
-        col.textContent = title;
-        row.append(col);
-    })
-    tableHead.append(row);
-
-    const tableBody = document.createElement('tbody');
-    tableData = generateTableUI(0, userData.expenses, userData.currency);
-    tableBody.append(...tableData.children);
-
-    table = document.createElement('table');
-    table.append(tableHead, tableBody);
+    const table = generateTableUI(0, userData.expenses.expenses, userData.currency);
 
     const expenseContainer = document.createElement('div');
     expenseContainer.id = 'expense-container';
@@ -349,7 +319,7 @@ function generateOverviewExpenses() {
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Recent Expenses";
 
-    const expenseTable = generateTableUI(1, userData.earnings, userData.currency);
+    const expenseTable = generateTableUI(1, userData.expenses.expenses, userData.currency);
 
     overviewExpenseContainer.append(overviewHeader, expenseTable);
     return overviewExpenseContainer;
@@ -363,42 +333,8 @@ function generateOverviewEarnings() {
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Recent Earnings";
 
-    const earningTable = generateTableUI(0, userData.expenses, userData.currency);
+    const earningTable = generateTableUI(0, userData.earnings, userData.currency);
 
     overviewEarningContainer.append(overviewHeader, earningTable);
     return overviewEarningContainer;
-}
-
-function optionsToggle(button, optionsPanel) {
-    const panelHidden = optionsPanel.style.display == "none";
-    boundFunction = windowClick.bind(window, optionsPanel, button);
-
-    if (panelHidden) {
-        optionsPanel.style.display = "block";
-        windowClickEnable(boundFunction);
-    } else {
-        optionsPanel.style.display = "none";
-        windowClickDisable(boundFunction);
-    }
-}
-
-function windowClickEnable(boundFunction) {
-    window.addEventListener('click', boundFunction, true); 
-}
-
-function windowClickDisable(boundFunction) {
-    window.removeEventListener('click', boundFunction, true);
-}
-
-function windowClick(optionsPanel, button) {
-    const panelClick = this.event.target == optionsPanel; // Make sure the panel itself wasn't selected.
-    const propagation = this.event.target == button; // Check to see if the window click event is the options button. 
-    
-    if (!panelClick) {
-        if (!propagation) { // To avoid propagation issues, do not set to 'none' if it was the options' button click
-            optionsPanel.style.display = "none";
-        }
-
-        windowClickDisable(boundFunction);
-    }
 }

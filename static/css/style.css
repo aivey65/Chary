@@ -435,14 +435,12 @@ Creating the navigation bar depending on the size of the user's screen
         white-space: nowrap;
         background-color: var(--Light);
         border-radius: 50%;
-        border: solid 2px var(--Dark)
+        border: solid 1px var(--Navy)
     }
 
     #profile-options {
-        display: block;
         position: absolute;
         right: 15px;
-        display: grid;
         grid-template-rows: 1fr 1fr;
         background-color: var(--Navy);
         border-radius: 10px;

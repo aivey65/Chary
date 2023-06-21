@@ -3,7 +3,8 @@ ScRe = /[\$\xA2-\xA5\u058F\u060B\u09F2\u09F3\u09FB\u0AF1\u0BF9\u0E3F\u17DB\u20A0
 numbers = /^\d*\.?\d+$/;
 
 function formLoad() {
-    configureRecurOptions()
+    configureRecurOptions();
+    fillProfilePics();
 
     const recurRadio = document.querySelectorAll('input[name="recurring"]');
     recurRadio.forEach(option => {

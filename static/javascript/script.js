@@ -19,6 +19,8 @@ function dashboardAction() {
     closeMenu()
 }
 
+const numberFormatter = Intl.NumberFormat("en", { notation: "compact" });
+
 function closeMenu() {
     const navbar = document.getElementsByTagName('nav')[0]
     const logo = document.getElementById('toggle-icon')
@@ -55,14 +57,64 @@ function toggleMenu() {
     }
 }
 
-function toggleProfile() {
-    
+/* Creates and enables a toggling eventlistener for the entire window when opening the an options panel.
+ * 
+ * @param button (document object): The object being used as a toggling button.
+ * @param optionsPanel (document object): The element (usually a div) to show or hide.
+ * @param displayOption (String): The display method for the optionsPanel ('block', 'flex', or 'grid', etc.)
+*/
+function optionsToggle(button, optionsPanel, displayOption='block') {
+    const panelHidden = optionsPanel.style.display == "none";
+    boundFunction = windowClick.bind(window, optionsPanel, button);
+
+    if (panelHidden) {
+        optionsPanel.style.display = displayOption;
+        windowClickEnable(boundFunction);
+    } else {
+        optionsPanel.style.display = "none";
+        windowClickDisable(boundFunction);
+    }
 }
 
-function fillProfilePics(imageToUse) {
-    const pictures = document.getElementsByClassName('profile-icon');
-    for (const pic of pictures) {
-        pic.src = "static/images/profileImages/" + imageToUse + ".svg"
+function windowClickEnable(boundFunction) {
+    window.addEventListener('click', boundFunction, true); 
+}
+
+function windowClickDisable(boundFunction) {
+    window.removeEventListener('click', boundFunction, true);
+}
+
+function windowClick(optionsPanel, button) {
+    const panelClick = this.event.target == optionsPanel; // Make sure the panel itself wasn't selected.
+    const propagation = this.event.target == button; // Check to see if the window click event is the options button. 
+    
+    if (!panelClick) {
+        if (!propagation) { // To avoid propagation issues, do not set to 'none' if it was the options' button click
+            optionsPanel.style.display = "none";
+        }
+
+        windowClickDisable(boundFunction);
+    }
+}
+
+function fillProfilePics(imageToUse=null) {
+    const picture = document.getElementById('nav-profile-icon');
+    const profileOptionsPanel = document.getElementById('profile-options');
+
+    if (picture) {
+        picture.addEventListener('click', (event) => {
+            optionsToggle(event.target, profileOptionsPanel, "grid");
+        }, false);
+
+        if (imageToUse == null) {
+            fetch('/data/user').then(response => response.json()).then((responseData) => {
+                imageToUse = responseData.data.profileImage;
+                picture.src = "static/images/profileImages/" + imageToUse + ".svg"
+                
+            });
+        } else {
+            picture.src = "static/images/profileImages/" + imageToUse + ".svg"
+        }
     }
 }
 
@@ -132,7 +184,7 @@ function generateBudgetsUI(budgets, currency) {
 
         const budget_used = document.createElement('p');
         budget_used.classList.add('fraction-top');
-        budget_used.textContent = currency + budgets[key].usedAmount;
+        budget_used.textContent = currency + numberFormatter.format(budgets[key].usedAmount);
 
         const budget_slash = document.createElement('h2');
         budget_slash.classList.add('fraction-slash');
@@ -140,7 +192,7 @@ function generateBudgetsUI(budgets, currency) {
 
         const budget_amount = document.createElement('p');
         budget_amount.classList.add('fraction-bottom');
-        budget_amount.textContent = currency + budgets[key].amount;
+        budget_amount.textContent = currency + numberFormatter.format(budgets[key].amount);
 
         // Progess SVG
         const svgDiv = document.createElement('div');
@@ -225,20 +277,31 @@ function generateBudgetsUI(budgets, currency) {
  * @param type (int): Type of entity to be formated as a list
  *      - 0 : Expense
  *      - 1 : Earning
- * @param entityDict (List): List of a user's expenses or earnings
+ * @param entityList (List): List of a user's expenses or earnings
  * @param currency (string): A single character representing the user's currency symbol
  */
-function generateTableUI(type, entityDict, currency) {
+function generateTableUI(type, entityList, currency) {
     const TYPES = ['expense', 'earning'];
-    const entityContainer = document.createElement('div');
-
-    var entityList;
+        
+    // Configure some values based on table type
+    var columns;
     if (type == 0) {
-        entityList = entityDict.expenses;
+        columns = ['Name', 'Expense Amount', 'Budget Category', 'Description', 'Date', 'Recurring?', 'Edit']
     } else {
-        entityList = entityDict;
+        columns = ['Name', 'Earning Amount', 'Description', 'Date', 'Recurring?', 'Edit'];
     }
-    
+
+    // Create table head row with column titles
+    headRow = document.createElement('tr');
+    columns.forEach(title => {
+        col = document.createElement('th');
+        col.textContent = title;
+        headRow.append(col);
+    })
+    const tableHead = document.createElement('thead');
+    tableHead.append(headRow);
+
+    const tableBody = document.createElement('tbody');
     for (const key in entityList) {
         const current = entityList[key].data;
 
@@ -246,7 +309,7 @@ function generateTableUI(type, entityDict, currency) {
         name.textContent = current.name;
 
         const amount = document.createElement('td');
-        amount.textContent = currency + current.amount;
+        amount.textContent = currency + numberFormatter.format(current.amount);
 
         var expense_category;
         if (type == 0) {
@@ -290,9 +353,11 @@ function generateTableUI(type, entityDict, currency) {
             } else {
                 entityRow.append(name.cloneNode(true), amount.cloneNode(true), description.cloneNode(true), date, recur.cloneNode(true), update.cloneNode(true));
             }
-            entityContainer.append(entityRow)
+            tableBody.append(entityRow)
         }) 
     }
 
-    return entityContainer;
+    table = document.createElement('table');
+    table.append(tableHead, tableBody);
+    return table;
 }

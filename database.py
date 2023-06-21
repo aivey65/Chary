@@ -4,6 +4,7 @@ from flask import jsonify
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
+
 # Application Default credentials are automatically created.
 app = firebase_admin.initialize_app()
 db = firestore.client()
@@ -269,25 +270,6 @@ def getUser(email):
     for doc in docs: # Should only run once, since an email should only be present once in database
         return {"data":doc.to_dict()}
 
-# Get a user's budgets
-# def getAllBudgets(email):
-#     budgetList = getUser(email)['data']['budgets']
-#     budgetsDict = {}
-#     budgetCategories = []
-    
-#     # Loop through the budgetlist, making requests to the database
-#     for budgetID in budgetList:
-#         if budgetID == "":
-#             continue
-
-#         budgetDoc = db.collection(u'budgets').document(budgetID).get().to_dict()
-#         budgetDoc['usedAmount'] = getBudgetBalance(budgetID, budgetDoc)
-#         budgetsDict[budgetID] = budgetDoc
-
-#         budgetCategories.append(budgetsDict[budgetID]['name'])
-
-#     return {"data":budgetsDict, "categories":budgetCategories}
-
 def getAllActiveBudgets(email, date=date.today()):
     """
     Gets all budgets active during a particular date
@@ -391,9 +373,9 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
             )
 
             if occurances > 0:
-                returnList.append({"expense": expenseDoc, "dates": dates})
+                returnList.append({"data": expenseDoc, "dates": dates})
 
-        return {"budget": budgetDoc, "expenses": returnList}
+        return {"budget": budgetDoc, "expenses": returnList, "currency": userData["currency"]}
 
 def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
     """
@@ -519,7 +501,7 @@ def getExpense(expenseId, userEmail):
     expenseDoc = db.collection(u'expenses').document(expenseId).get()
     budgetCategories = getBudgetCategories(userEmail)
 
-    return {"expense":expenseDoc.to_dict(), "budgetCategories":budgetCategories}
+    return {"data":expenseDoc.to_dict(), "budgetCategories":budgetCategories}
 
 def getBudget(budgetId, userEmail, date=date.today()):
     if (budgetId == "" or userEmail == ""):
