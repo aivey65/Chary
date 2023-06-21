@@ -98,23 +98,26 @@ function windowClick(optionsPanel, button) {
 }
 
 function fillProfilePics(imageToUse=null) {
-    const picture = document.getElementById('nav-profile-icon');
+    const userIcon = document.getElementById('nav-profile-icon');
     const profileOptionsPanel = document.getElementById('profile-options');
 
-    if (picture) {
-        picture.addEventListener('click', (event) => {
+    if (userIcon) {
+        userIcon.addEventListener('click', (event) => {
             optionsToggle(event.target, profileOptionsPanel, "grid");
         }, false);
+    }
 
+    const pictures = document.getElementsByClassName('profile-icon');
+    for (pic of pictures) {
         if (imageToUse == null) {
             fetch('/data/user').then(response => response.json()).then((responseData) => {
-                imageToUse = responseData.data.profileImage;
-                picture.src = "static/images/profileImages/" + imageToUse + ".svg"
-                
-            });
-        } else {
-            picture.src = "static/images/profileImages/" + imageToUse + ".svg"
-        }
+                    imageToUse = responseData.data.profileImage;
+                    pic.src = "static/images/profileImages/" + imageToUse + ".svg"
+                    
+                });
+            } else {
+                pic.src = "static/images/profileImages/" + imageToUse + ".svg"
+            }
     }
 }
 
