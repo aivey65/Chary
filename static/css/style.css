@@ -380,7 +380,7 @@ Creating the navigation bar depending on the size of the user's screen
         background-size: 100%;
         margin-left: auto;
         margin-right: auto;
-        grid-template-columns: auto minmax(200px, 1fr) minmax(200px, 1fr);
+        grid-template-columns: .5fr 2fr;
     }
     
     nav {
@@ -426,6 +426,7 @@ Creating the navigation bar depending on the size of the user's screen
         text-decoration: none;
         font-size: 1.8rem;
         font-weight: 100;
+        padding: 0px;
     }
 
     .profile-icon {
@@ -471,7 +472,7 @@ Creating the navigation bar depending on the size of the user's screen
     #large-logo {
         height: 3rem;
         width: auto;
-        grid-column: 2/3;
+        grid-column: 1;
         margin-left: 40px;
         margin-top: 12px;
         margin-bottom: 8px;

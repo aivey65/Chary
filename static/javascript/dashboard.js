@@ -46,12 +46,13 @@ async function updateUserData() {
 function loadOverviewTab() {
     const chartPanel = generateOverviewCharts();
     const budgetPanel = generateOverviewBudgets(userData.budgets, userData.currency);
+    const profilePanel = generateOverviewProfile();
     const earningPanel = generateOverviewEarnings();
     const expensePanel = generateOverviewExpenses();
 
     const overviewTab = document.createElement('div');
     overviewTab.id = 'overview-section';
-    overviewTab.append(chartPanel, budgetPanel, earningPanel, expensePanel)
+    overviewTab.append(chartPanel, budgetPanel, profilePanel, earningPanel, expensePanel)
 
     const tabBody = document.getElementById('dashboard-main');
     tabBody.innerHTML = "";
@@ -217,6 +218,18 @@ function generateOverviewCharts() {
     overviewChartContainer.append(overviewHeader);
 
     return overviewChartContainer;
+}
+
+function generateOverviewProfile() {
+    const overviewProfileContainer = document.createElement('div');
+    overviewProfileContainer.id = 'profile-snip-container';
+    overviewProfileContainer.classList.add('snip-containers');
+
+    const overviewHeader = document.createElement('h3');
+    overviewHeader.textContent = "Profile";
+    overviewProfileContainer.append(overviewHeader);
+
+    return overviewProfileContainer;
 }
 
 function generateOverviewBudgets(budgets, currency) {

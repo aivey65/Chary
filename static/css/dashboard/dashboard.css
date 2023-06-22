@@ -112,14 +112,14 @@ h4 {
     overflow: hidden;
 }
 
-.tab-container table {
+table {
     border-collapse: collapse;
     width: 100%;
     text-align: center;
     vertical-align: middle;
 }
 
-.tab-container th {
+th {
     background-color: var(--MainL);
     color: var(--Dark);
     font-size: 1em;
@@ -127,19 +127,19 @@ h4 {
     padding: 10px;
 }
 
-.tab-container td {
+td {
     color:var(--Light);
     font-size: 1em;
     font-weight: 200;
     padding: 10px;
 }
 
-.tab-container tr:nth-child(even) td {
+tr:nth-child(even) td {
     background-color: var(--Dark);
 }
 
-.tab-container tr:nth-child(odd) td {
-    background-color: var(--Navy);
+tr:nth-child(odd) td {
+    background-color: var(--Background);
 }
 
 .update-img {
@@ -167,13 +167,14 @@ h4 {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    gap: 2rem;
 }
 
 .snip-containers {
     background-color: var(--Dark);
     padding: var(--smallPad);
     border-radius: 20px;
-    margin: 1rem;
+    flex: auto;
 }
 
 #chart-snip-container {
@@ -239,6 +240,14 @@ h4 {
     stroke-width: 15;
     stroke-linecap: round;
     stroke: var(--ContrastL);
+}
+
+#earning-snip-container, #expense-snip-container {
+    width: 65%;
+}
+
+#earning-snip-container h3, #expense-snip-container h3 {
+    margin-bottom: var(--medPad);
 }
 
 /*
