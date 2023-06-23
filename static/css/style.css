@@ -160,7 +160,7 @@ button {
     cursor: pointer;
 }
 
-.recur-img, .options-img, .more-img, .update-img, .snip-edit {
+.recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img {
     width: 1.7rem;
     height: auto;
 }

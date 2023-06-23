@@ -186,28 +186,6 @@ function changeActiveTab(newActiveTab) {
 // Data Loading Functions //
 ////////////////////////////
 
-/* Creates and displays UI for the user information panal
- * 
- * @param balance (int): Number value for user's balance
- * @param username (string): User's username
- * @param img (string): link to user's profile image
- */
-function generateProfileUI(balance, username, color, img, currency) {
-    const user_name = document.getElementById("user-name");
-    user_name.textContent = "Welcome, " + username;
-
-    const user_balance = document.getElementById("user-balance");
-    user_balance.textContent = String(currency) + String(balance);
-
-    const user_currency = document.getElementById("user-currency");
-    user_currency.textContent = "Currency: " + String(currency);
-
-    const user_img = document.createElement('img');
-    user_img.src = "static/images/profileImages/" + img + ".svg";
-    user_img.classList.add('thumbnail');
-    document.getElementById("profile-img-container").append(user_img);
-}
-
 function generateOverviewCharts() {
     const overviewChartContainer = document.createElement('div');
     overviewChartContainer.id = 'chart-snip-container';
@@ -228,6 +206,9 @@ function generateOverviewProfile() {
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Profile";
     overviewProfileContainer.append(overviewHeader);
+    
+    const profileComponents = generateProfileUI(userData.balance, userData.username, userData.profileColor, userData.profileImage, userData.currency);
+    overviewProfileContainer.append(profileComponents);
 
     return overviewProfileContainer;
 }
