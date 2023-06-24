@@ -158,7 +158,7 @@ def renderDashboard():
     refresh = request.args.get("refresh")
     tab = request.args.get("tab")
     if refresh == None or tab == None:
-        return render_template('dashboard.html', refresh=False, tab="overview", nav=renderedNav())
+        return render_template('dashboard.html', refresh="true", tab="overview", nav=renderedNav())
     else:
         return render_template('dashboard.html', refresh=refresh, tab=tab, nav=renderedNav())
 

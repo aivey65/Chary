@@ -2,9 +2,9 @@ var userData = null;
 const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"]
 
 // Function gets called everytime the dashboard is visited or refreshed
-async function loadDashboard(refresh=false, tab="overview") {
+async function loadDashboard(refresh="false", tab="overview") {
     // Determine if local storage needs to be changed or not
-    if (refresh || userData == null) {
+    if (refresh == "true" || userData == null) {
         const response = updateUserData();
         response.then(() => {
             fillProfilePics(userData.profileImage);
@@ -45,10 +45,19 @@ async function updateUserData() {
 
 function loadOverviewTab() {
     const chartPanel = generateOverviewCharts();
+    chartPanel.classList.add('module');
+
     const budgetPanel = generateOverviewBudgets(userData.budgets, userData.currency);
+    budgetPanel.classList.add('module');
+
     const profilePanel = generateOverviewProfile();
+    profilePanel.classList.add('module');
+
     const earningPanel = generateOverviewEarnings();
+    earningPanel.classList.add('module');
+
     const expensePanel = generateOverviewExpenses();
+    expensePanel.classList.add('module');
 
     const overviewTab = document.createElement('div');
     overviewTab.id = 'overview-section';
@@ -193,6 +202,7 @@ function generateOverviewCharts() {
 
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Analytics";
+    overviewHeader.classList.add('module-header');
     overviewChartContainer.append(overviewHeader);
 
     return overviewChartContainer;
@@ -205,9 +215,10 @@ function generateOverviewProfile() {
 
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Profile";
+    overviewHeader.classList.add('module-header');
     overviewProfileContainer.append(overviewHeader);
     
-    const profileComponents = generateProfileUI(userData.balance, userData.username, userData.profileColor, userData.profileImage, userData.currency);
+    const profileComponents = generateProfileUI(userData.balance, userData.username, userData.email, userData.profileColor, userData.profileImage, userData.currency);
     overviewProfileContainer.append(profileComponents);
 
     return overviewProfileContainer;
@@ -220,6 +231,7 @@ function generateOverviewBudgets(budgets, currency) {
 
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Budget Information";
+    overviewHeader.classList.add('module-header');
     overviewBudgetContainer.append(overviewHeader);
     
     for (const key in budgets) {
@@ -312,6 +324,7 @@ function generateOverviewExpenses() {
 
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Recent Expenses";
+    overviewHeader.classList.add('module-header');
 
     const expenseTable = generateTableUI(1, userData.expenses.expenses, userData.currency);
 
@@ -326,6 +339,7 @@ function generateOverviewEarnings() {
 
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Recent Earnings";
+    overviewHeader.classList.add('module-header');
 
     const earningTable = generateTableUI(0, userData.earnings, userData.currency);
 

@@ -19,7 +19,12 @@ function dashboardAction() {
     closeMenu()
 }
 
-const numberFormatter = Intl.NumberFormat("en", { notation: "compact" });
+function formatNumber(number) {
+    const numberFormatter = Intl.NumberFormat("en", { notation: "compact" });
+    return numberFormatter.format(number);
+}
+
+
 
 function closeMenu() {
     const navbar = document.getElementsByTagName('nav')[0]
@@ -154,7 +159,7 @@ window.addEventListener('scroll', () => {
  * @param username (string): User's username
  * @param img (string): link to user's profile image
  */
-function generateProfileUI(balance, username, color, img, currency) {
+function generateProfileUI(balance, username, email, color, img, currency) {
     const user_img = document.createElement('img');
     user_img.src = "../static/images/profileImages/" + img + ".svg";
     user_img.id = "user-thumbnail";
@@ -163,7 +168,11 @@ function generateProfileUI(balance, username, color, img, currency) {
 
     const user_name = document.createElement('p');
     user_name.id = "user-name";
-    user_name.textContent = "Username: " + username;
+    user_name.textContent = username;
+
+    const user_email = document.createElement('p');
+    user_email.id = "user-email";
+    user_email.textContent = "Email: " + String(email);
 
     const wallet_icon = document.createElement('img');
     wallet_icon.src = "../static/images/WalletIcon.svg";
@@ -183,7 +192,7 @@ function generateProfileUI(balance, username, color, img, currency) {
 
     const profileContainer = document.createElement('div');
     profileContainer.id = "user-info-container";
-    profileContainer.append(user_img, wallet_icon, user_balance, user_name, user_currency);
+    profileContainer.append(user_img, wallet_icon, user_balance, user_name, user_email, user_currency);
 
     return profileContainer;
 }
@@ -227,7 +236,7 @@ function generateBudgetsUI(budgets, currency) {
 
         const budget_used = document.createElement('p');
         budget_used.classList.add('fraction-top');
-        budget_used.textContent = currency + numberFormatter.format(budgets[key].usedAmount);
+        budget_used.textContent = currency + formatNumber(budgets[key].usedAmount);
 
         const budget_slash = document.createElement('h2');
         budget_slash.classList.add('fraction-slash');
@@ -235,7 +244,7 @@ function generateBudgetsUI(budgets, currency) {
 
         const budget_amount = document.createElement('p');
         budget_amount.classList.add('fraction-bottom');
-        budget_amount.textContent = currency + numberFormatter.format(budgets[key].amount);
+        budget_amount.textContent = currency + formatNumber(budgets[key].amount);
 
         // Progess SVG
         const svgDiv = document.createElement('div');
@@ -352,7 +361,7 @@ function generateTableUI(type, entityList, currency) {
         name.textContent = current.name;
 
         const amount = document.createElement('td');
-        amount.textContent = currency + numberFormatter.format(current.amount);
+        amount.textContent = currency + formatNumber(current.amount);
 
         var expense_category;
         if (type == 0) {

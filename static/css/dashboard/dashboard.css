@@ -94,65 +94,8 @@ h4 {
     justify-content: start;
 }
 
-#add-budget-button, #add-earning-button, #add-expense-button {
-    margin-left: 1em;
-    background-color: var(--ContrastL);
-    color: var(--Dark);
-    border: solid 2px var(--ContrastL);
-    transition: background-color .5s ease-in-out,
-    color .5s ease-in-out;
-    font-weight: 400;
-    font-size: 1em;
-}
-
-.long-text {
-    text-overflow: ellipsis;
-    max-width: 15em;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-    text-align: center;
-    vertical-align: middle;
-}
-
-th {
-    background-color: var(--MainL);
-    color: var(--Dark);
-    font-size: 1em;
-    font-weight: 300;
-    padding: 10px;
-}
-
-td {
-    color:var(--Light);
-    font-size: 1em;
-    font-weight: 200;
-    padding: 10px;
-}
-
-tr:nth-child(even) td {
-    background-color: var(--Dark);
-}
-
-tr:nth-child(odd) td {
-    background-color: var(--Background);
-}
-
-.update-img {
-    cursor: pointer;
-}
-
 #dashboard-main h1 {
     display: inline;
-}
-
-#dashboard-main h3 {
-    margin: 0px;
-    font-weight: 300;
 }
 
 #earning-container, #expense-container {
@@ -172,7 +115,6 @@ tr:nth-child(odd) td {
 
 .snip-containers {
     background-color: var(--Dark);
-    padding: var(--smallPad);
     border-radius: 20px;
     flex: auto;
 }
@@ -184,7 +126,7 @@ tr:nth-child(odd) td {
 #user-info-container {
     display: grid;
     gap: 1rem;
-    grid-template-rows: auto auto auto auto;
+    grid-template-rows: auto auto auto auto auto;
 }
 
 #user-info-container p {
@@ -212,9 +154,16 @@ tr:nth-child(odd) td {
 #user-name {
     grid-row: 3;
     grid-column: 1/3;
+    font-size: 1.3rem;
 }
-#user-currency {
+
+#user-email {
     grid-row: 4;
+    grid-column: 1/3;
+}
+
+#user-currency {
+    grid-row: 5;
     grid-column: 1/3;
 }
 
@@ -288,8 +237,8 @@ tr:nth-child(odd) td {
 }
 
 /*
- *** Styles for Budget Section of Dashboard ***
- */
+*** Styles for Budget Section of Dashboard ***
+*/
 
 #budget-container {
     display: flex;

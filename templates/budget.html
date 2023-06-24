@@ -32,23 +32,47 @@
         </div>
 
         <div class="content non-header">
-            <div id="budget-basic">
-                <div id="details-svg-container"></div>
-                <div id="details-amount">
-                    <p id="fraction-top"></p>
-                    <p id="fraction-slash">／</p>
-                    <p id="fraction-bottom"></p>
+            <button id="back-button" onclick="dashboardBudgetAction()">⟨ Back</button>
+            <div id="budget-main">
+                <div id="budget-charts" class="main-container module"></div>
+
+                <div id="budget-basic" class="main-container module">
+                    <div id="details-svg-container"></div>
+                    <div id="details-amount">
+                        <p id="fraction-top"></p>
+                        <p id="fraction-slash">／</p>
+                        <p id="fraction-bottom"></p>
+                    </div>
+                    <div id="details-head">
+                        <h3 id="details-name" class="module-header"></h3>
+                        <div id="details-recurring">
+                            <img id='recur-img' class="recur-img"/>
+                            <span id="recur-description"></span>
+                        </div>
+                    </div>
+                    
+                    <div id="description">
+                        <p class="label">Description</p>
+                        <p id="details-description"></p>
+                    </div>
+                    <div id="date-start">
+                        <p class="label">Start Date</p>
+                        <p id="details-date"></p>
+                    </div>
+                    <div id="date-end">
+                        <p class="label">End Date</p>
+                        <p id="details-date-end"></p>
+                    </div>
+                    <img id="details-edit" class="update-img icon" src="../static/images/EditButtonSM.svg" alt="Edit icon"/>
                 </div>
-                <h2 id="details-name"></h2>
-                <p id="details-description"></p>
-                <div id="details-recurring">
-                    <img id='recur-img' class="recur-img"/>
-                    <p id="recur-description"></p>
+
+                <div id="budget-facts" class="main-container module"></div>
+
+                <div id="budget-expenses" class="main-container module">
+                    <h3 class="module-header">Expenses in this Budget</h3>
+                    <div id="expense-container"></div>
                 </div>
-                <p id="details-date"></p>
-                <p id="details-date-end"></p>
             </div>
-            <div id="budget-expenses"></div>
         </div>
 
         <div class="footer">
