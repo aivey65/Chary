@@ -251,10 +251,6 @@ function generateOverviewBudgets(budgets, currency) {
             const period = PERIODS[budgets[key].budgetPeriod].toLocaleLowerCase();
             recur_img.title = "This budget recurs " + period + ".";
         }
-        
-        const budget_name = document.createElement('p');
-        budget_name.classList.add('snip-budget-name');
-        budget_name.textContent = budgets[key].name;
 
         const budget_used = document.createElement('p');
         budget_used.classList.add('snip-budget-used');
@@ -307,9 +303,17 @@ function generateOverviewBudgets(budgets, currency) {
 
         svgDiv.append(svg);
 
+        const budget_name = document.createElement('p');
+        budget_name.classList.add('snip-budget-name');
+        budget_name.textContent = budgets[key].name;
+
+        const budget_main = document.createElement('div');
+        budget_main.classList.add("snip-budget-main");
+        budget_main.append(budget_name, svgDiv);
+
         // End progress svg
 
-        budgetSnippet.append(recur_img, budget_name, svgDiv, budget_used, budget_edit);
+        budgetSnippet.append(recur_img, budget_main, budget_used, budget_edit);
         
         overviewBudgetContainer.append(budgetSnippet)
     }

@@ -225,6 +225,7 @@ tr:nth-child(odd) td {
 
 .update-img {
     cursor: pointer;
+    vertical-align: middle;
 }
 
 .long-text {
