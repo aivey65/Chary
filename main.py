@@ -167,6 +167,11 @@ def renderDashboard():
 def renderBudget():
     return render_template('budget.html', id=request.args.get('id'), nav=renderedNav())
 
+@app.route("/profile")
+@login_is_required
+def renderProfile():
+    return render_template('profile.html', nav=renderedNav())
+
 ##########################################
 # Add, Create, and Delete form rendering #
 ##########################################

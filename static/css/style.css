@@ -118,7 +118,49 @@ a.normal-link:active {
     color: var(--ContrastDD);
 }
 
-/* More specific styles that still need to be reused */
+/*
+*** Styles for loading placeholders ***
+*/
+
+.placeholder {
+    border-radius: 25px;
+    background-color: var(--Light);
+    animation-name: placeholder-fade;
+    animation-duration: 7s;
+    animation-iteration-count: infinite;
+}
+
+.placeholder-h3 {
+    height: 2rem;
+    margin-bottom: var(--smallPad);
+    min-width: 10rem;
+}
+
+.placeholder-p {
+    height: 1rem;
+    width: 100%;
+}
+
+.placeholder-long {
+    height: 1rem;
+    width: 100%;
+    margin-bottom: .5rem;
+}
+
+.placeholder-small {
+    height: 1rem;
+    width: 20%;
+}
+
+@keyframes placeholder-fade {
+    0%   {background-color: var(--Navy);}
+    50%  {background-color: var(--Light);}
+    100%  {background-color: var(--Navy);}
+}
+
+/*
+*** More specific styles that still need to be reused ***
+*/ 
 
 button {
     background-color: var(--Background);
@@ -136,6 +178,11 @@ button {
     background-color: var(--ContrastL) !important;
     color: var(--Dark);
     border: none;
+}
+
+.label {
+    font-weight: 300;
+    font-size: 1.1rem;
 }
 
 #add-budget-button, #add-earning-button, #add-expense-button {
@@ -245,7 +292,28 @@ tr:nth-child(odd) td {
     margin: 0px;
 }
 
-/* Footer styles */
+.fraction-top, .fraction-bottom, .fraction-slash {
+    display: inline-block;
+    margin: 0px;
+}
+
+.outer-progress {
+    fill: none;
+    stroke-linecap: round;
+    stroke: var(--Navy);
+    stroke-width: 30;
+}
+
+.inner-progress {
+    fill: none;
+    stroke-linecap: round;
+    stroke: var(--ContrastL);
+    stroke-width: 20;
+}
+
+/*
+*** Footer styles ***
+*/ 
 
 .contact-icon {
     max-width: 30px;
@@ -314,7 +382,9 @@ tr:nth-child(odd) td {
     grid-row: 3;
 }
 
-/* Up-down animation */
+/*
+*** Up-down animation ***
+*/ 
 .floating {
     animation: MoveUpDown 2s ease-in-out infinite;
 }
@@ -328,7 +398,9 @@ tr:nth-child(odd) td {
     }
 }
 
-/* Mobile-specific styles (not nav)*/
+/*
+*** Mobile-specific styles (not nav) ***
+*/ 
 @media screen and (max-width:767px) {
     .non-header {
         padding-left: var(--mobilePad);
@@ -340,7 +412,9 @@ tr:nth-child(odd) td {
     }
 }
 
-/* Desktop specific styles (not nav) */
+/*
+*** Desktop specific styles (not nav) ***
+*/ 
 @media screen and (min-width:767px) {
     .non-header {
         padding-left: var(--DesktopPadBody);
@@ -431,7 +505,9 @@ Creating the navigation bar depending on the size of the user's screen
     }
 }
 
-/* Larger Device (tablet, desktop, etc.) */
+/*
+*** Larger Device (tablet, desktop, etc.) ***
+*/ 
 @media screen and (min-width:767px) {
     #header-container {
         border-bottom: solid 2px var(--MainL);
@@ -499,7 +575,7 @@ Creating the navigation bar depending on the size of the user's screen
         white-space: nowrap;
         background-color: var(--Light);
         border-radius: 50%;
-        border: solid 1px var(--Navy)
+        border: solid 2px var(--faded);
     }
 
     #profile-options {

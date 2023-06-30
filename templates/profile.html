@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel='shortcut icon' sizes='256x256' href='../static/images/CharyLogoSmall.svg'>
+
+        <!-- Google Font imports -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,600&family=Pacifico&display=swap" rel="stylesheet">
+
+        <!-- CSS Stylesheets -->
+        <link rel='stylesheet' href='../static/css/style.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/profile/profile.css'>
+        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/profile/profile-mobile.css'>
+
+        <!-- JavaScript links -->
+        <script src='../static/javascript/profile.js'></script>
+        <script src='../static/javascript/script.js'></script>
+
+        <Title>Chary | Profile</Title>
+    </head>
+
+    <body onload="loadProfile()">
+        <div id="header-container">
+            <header>
+                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()" alt='Chary logo'>
+                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()" alt="toggle menu button">
+
+                <nav id="website-nav">{{nav | safe}}</nav>
+            </header>
+        </div>
+
+        <div id="page-content" class="content non-header">
+            <div id="profile-main">
+                <img id='profile-image' class='profile-icon' src="../static/images/profileImages/undraw_blank.svg" alt="Profile image"/>
+                <h2 id="user-name"><div class="placeholder placeholder-small"></div></h2>
+                <div id="date-container">
+                    <p class="label">Date Joined:</p>
+                    <div class="placeholder placeholder-small"></div>
+                    <p id="user-join-date"></p>
+                </div>
+                <div id="email-container">
+                    <p class="label">Email:</p>
+                    <div class="placeholder placeholder-small"></div>
+                    <p id="user-email"></p>
+                </div>
+                <div id="currency-container">
+                    <p class="label">Currency:</p>
+                    <div class="placeholder placeholder-small"></div>
+                    <p id="user-currency"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class='contact-methods'> 
+                <div class='contact-icon' title="Asha's Github">
+                    <a  target="_blank" rel="noopener noreferrer" href='https://github.com/aivey65' alt="Github logo">
+                        <img src="../static/images/GitHub-Mark-Light-64px.png" alt="Github logo">
+                    </a>
+                </div> 
+                <div class='contact-icon' title="Asha's LinkedIn">
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.linkedin.com/in/ashaiv/' alt="LinkedIn logo">
+                        <img src="../static/images/LI-In-Bug.png" alt="LinkedIn logo">
+                    </a>
+                </div>
+                <div class='contact-icon' title="Asha's personal portfolio website">
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.ashaiv.com' alt="Logo for Asha's personal portfolio website">
+                        <img src="../static/images/AshaIV-logo-light.svg" alt="Logo for Asha's personal portfolio website">
+                    </a>
+                </div>
+            </div> 
+            <div id="legal">
+                <div class="legal-button">
+                    <a href="/privacy">Privacy Policy</a>
+                </div>
+                <span>|</span>
+                <div class="legal-button">
+                    <a href="/terms_of_service">Terms of Service</a>
+                </div>
+                <span>|</span>
+                <div class="legal-button">
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+            <div class="btt-icon" onclick="bttAction()">
+                <img class="icon" src="../static/images/CharyLogoSmall.svg" alt="Simplified version of the Chary logo. Scrolls to top of page when clicked.">            
+            </div>
+        </div>
+    </body>
+</html>

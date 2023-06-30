@@ -1,0 +1,37 @@
+#profile-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 0.5fr 0.5fr;
+}
+
+#profile-image {
+    width: 10rem;
+    height: 10rem;
+}
+
+#user-name {
+    grid-row: 2;
+    grid-column: 1;
+}
+
+#date-container {
+    grid-row: 3;
+    grid-column: 1;
+}
+
+#email-container {
+    grid-row: 2;
+    grid-column: 2;
+}
+
+#currency-container {
+    grid-row: 3;
+    grid-column: 2;
+}
+
+#currency-container, #date-container, #email-container {
+    display: flex;
+    flex-direction: row;
+    gap: var(--smallPad);
+    align-items: center;
+}

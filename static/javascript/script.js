@@ -62,6 +62,13 @@ function toggleMenu() {
     }
 }
 
+function hidePlaceholders() {
+    const placeholders = document.getElementsByClassName("placeholder");
+    for (var i = 0; i < placeholders.length; i++) {
+        placeholders[i].style.display = "None";
+    }
+}
+
 /* Creates and enables a toggling eventlistener for the entire window when opening the an options panel.
  * 
  * @param button (document object): The object being used as a toggling button.
@@ -197,6 +204,34 @@ function generateProfileUI(balance, username, email, color, img, currency) {
     return profileContainer;
 }
 
+function generateCurveProgress(fillAmount, totalAmount, width='200', height='120') {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+    svg.setAttribute('viewbox', '0 0 ' + String(width) + ' ' + String(height));
+    svg.classList.add('progress-svg');
+    svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+
+    const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    path1.setAttribute('d', 'M15,100 a60,60 0 0,1 170,0');
+    path1.classList.add('outer-progress');
+    path1.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+    svg.append(path1);
+
+    if (fillAmount != 0) {
+        const path2 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+        path2.setAttribute('d', 'M15,100 a60,60 0 0,1 170,0');
+        path2Length = path2.getTotalLength();
+        path2.setAttribute('stroke-dasharray', (fillAmount/totalAmount) * path2Length + ' ' + path2Length);
+        path2.classList.add('inner-progress');
+        path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+        
+        svg.append(path2);
+    }
+
+    return svg;
+}
+
 /* Creates and displays UI for all budget information
  * 
  * @param budgets (list): A list of IDs that each correspond to a budget
@@ -250,30 +285,7 @@ function generateBudgetsUI(budgets, currency) {
         const svgDiv = document.createElement('div');
         svgDiv.classList.add('svg-div');
 
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
-        svg.setAttribute('width', '200');
-        svg.setAttribute('height', '120');
-        svg.setAttribute('viewbox', '0 0 200 120');
-        svg.classList.add('progress-svg');
-        svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-
-        const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-        path1.setAttribute('d', 'M15,100 a60,60 0 0,1 170,0');
-        path1.classList.add('outer-progress');
-        path1.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-        svg.append(path1);
-
-        const fillAmount = budgets[key].usedAmount;
-        if (fillAmount != 0) {
-            const path2 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-            path2.setAttribute('d', 'M15,100 a60,60 0 0,1 170,0');
-            path2Length = path2.getTotalLength();
-            path2.setAttribute('stroke-dasharray', (fillAmount/budgets[key].amount) * path2Length + ' ' + path2Length);
-            path2.classList.add('inner-progress');
-            path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-            
-            svg.append(path2);
-        }
+        const svg = generateCurveProgress(budgets[key].usedAmount, budgets[key].amount);
 
         svgDiv.append(svg);
 

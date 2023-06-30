@@ -31,21 +31,25 @@
             </header>
         </div>
 
-        <div class="content non-header">
+        <div id="page-content" class="content non-header">
             <button id="back-button" onclick="dashboardBudgetAction()">⟨ Back</button>
             <div id="budget-main">
-                <div id="budget-charts" class="main-container module"></div>
-
                 <div id="budget-basic" class="main-container module">
-                    <div id="details-svg-container"></div>
+                    <div id="details-svg-container">
+                        <svg width="200" height="120" viewbox="0 0 200 120" class="progress-svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M15,100 a60,60 0 0,1 170,0" class="outer-progress" xmlns:xlink="http://www.w3.org/1999/xlink"></path></svg>
+                    </div>
                     <div id="details-amount">
-                        <p id="fraction-top"></p>
-                        <p id="fraction-slash">／</p>
-                        <p id="fraction-bottom"></p>
+                        <div class="placeholder placeholder-p"></div>
+                        <p id="fraction-top" class="fraction-top"></p>
+                        <p id="fraction-slash" class="fraction-slash">／</p>
+                        <p id="fraction-bottom" class="fraction-bottom"></p>
+                        <div class="placeholder placeholder-p"></div>
                     </div>
                     <div id="details-head">
                         <h3 id="details-name" class="module-header"></h3>
+                        <div class="placeholder placeholder-h3"></div>
                         <div id="details-recurring">
+                            <div class="placeholder placeholder-p"></div>
                             <img id='recur-img' class="recur-img"/>
                             <span id="recur-description"></span>
                         </div>
@@ -54,19 +58,29 @@
                     <div id="description">
                         <p class="label">Description</p>
                         <p id="details-description"></p>
+                        <div class="placeholder placeholder-long"></div>
+                        <div class="placeholder placeholder-long"></div>
+                        <div class="placeholder placeholder-long"></div>
                     </div>
                     <div id="date-start">
                         <p class="label">Start Date</p>
                         <p id="details-date"></p>
+                        <div class="placeholder placeholder-p"></div>
                     </div>
                     <div id="date-end">
                         <p class="label">End Date</p>
                         <p id="details-date-end"></p>
+                        <div class="placeholder placeholder-p"></div>
                     </div>
                     <img id="details-edit" class="update-img icon" src="../static/images/EditButtonSM.svg" alt="Edit icon"/>
                 </div>
 
-                <div id="budget-facts" class="main-container module"></div>
+                <div id="budget-charts" class="main-container module">
+                    <h3 class="module-header">Analytics</h3>
+                </div>
+
+                <div id="budget-facts" class="main-container module">
+                </div>
 
                 <div id="budget-expenses" class="main-container module">
                     <h3 class="module-header">Expenses in this Budget</h3>

@@ -7,6 +7,11 @@ function loadBudget(id) {
         const budget = responseData.budget;
         const expenses = responseData.expenses;
 
+        // Replace placeholder SVG
+        const svg = document.getElementById('details-svg-container');
+        svg.innerHTML = "";
+        svg.append(generateCurveProgress(budget.usedAmount, budget.amount));
+        
         document.getElementById('details-name').textContent = budget.name;
         document.getElementById('fraction-top').textContent = responseData.currency + formatNumber(budget.usedAmount);
         document.getElementById('fraction-bottom').textContent = responseData.currency + formatNumber(budget.amount);
@@ -18,8 +23,7 @@ function loadBudget(id) {
             document.getElementById('details-description').textContent = budget.description;
         }
         
-        // Date formatting
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const options = { year: 'numeric', month: 'long', day: 'numeric' }; // Date formatting
 
         const startDate = new Date(budget.startDate);
         document.getElementById('details-date').textContent = startDate.toLocaleDateString('en-us', options);
@@ -42,7 +46,12 @@ function loadBudget(id) {
             document.getElementById('recur-description').textContent = "This budget recurs " + period;
         }
 
+        // Create 'expenses' section
+
         document.getElementById('expense-container').append(generateTableUI(0, expenses, responseData.currency));
+
+        // Hide placeholders
+        hidePlaceholders();
     });
 }
 
