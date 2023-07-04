@@ -35,7 +35,7 @@ function loadBudget(id) {
             document.getElementById('details-date-end').textContent = endDate.toLocaleDateString('en-us', options);
         }
 
-        document.getElementById('details-edit').onlick = () => {
+        document.getElementById('details-edit').onclick = () => {
             window.location.href = "/form/update-budget?id=" + id;
         };
 

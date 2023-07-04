@@ -33,21 +33,21 @@
 
         <div class="content non-header" id="acd-budgets">
             <div id="alert-section"></div>
-            <form action="/data/create-budget">
-                <label class="acd-form" for="name">Budget Name</label><br>
+            <form action="javascript:submitBudgetForm('create')">
+                <label class="required-input" for="name">Budget Name</label><br>
                 <input type="text" id="name" name="name" required><br>
 
                 <label for="description">Budget Description</label><br>
                 <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
 
-                <label class="acd-form" for="amount">Budget Amount</label><br>
+                <label class="required-input" for="amount">Budget Amount</label><br>
                 <input type="text" id="amount" name="amount" required><br>
 
-                <label class="acd-form" for="start">Budget Start Date</label><br>
+                <label class="required-input" for="start">Start Date</label><br>
                 <input type="date" id="start" name="start" required><br>
 
                 <!-- Budget Period Inputs -->
-                <p class="acd-form">Choose how long your budget period will be:</p><br>
+                <p class="required-input">Choose how long your budget period will be:</p><br>
                 
                 <input type="radio" id="daily" name="radio" value="0" checked="checked" required>
                 <label for='daily' class="budget-period label-daily">One Day</label>
@@ -65,7 +65,7 @@
                 <label for='yearly' class="budget-period label-yearly">One Year</label>  
 
                 <!-- Recurring Inputs -->
-                <p class="acd-form"> Is this a recurring budget?</p><br>
+                <p class="required-input"> Is this a recurring budget?</p><br>
 
                 <input type="radio" id="recurring-true" name="recurring" value="True">
                 <label for='recurring-true' class="label-recurring-true">Yes</label>
@@ -74,7 +74,7 @@
                 <label for='recurring-false' class="label-recurring-false">No</label><br>
 
                 <div id="recurring-items">
-                    <label class="acd-form" for="end">Budget End Date</label><br>
+                    <label for="end">End Date</label><br>
                     <input type="date" id="end" name="end" value=""><br>
                 </div>
 

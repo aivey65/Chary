@@ -33,21 +33,21 @@
 
         <div class="content non-header" id="acd-earnings">
             <div id="alert-section"></div>
-            <form action="data/create-earning">
-                <label class="acd-form" for="name">Earning Name</label><br>
+            <form action="javascript:submitEarningForm('create')">
+                <label class="required-input" for="name">Earning Name</label><br>
                 <input type="text" id="name" name="name" required><br>
 
-                <label class="acd-form" for="amount">Earning Amount</label><br>
+                <label class="required-input" for="amount">Earning Amount</label><br>
                 <input type="text" id="amount" name="amount" required><br>
 
                 <label for="description">Earning Description</label><br>
                 <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
                 
-                <label class="acd-form" for="start">Date Received</label><br>
+                <label class="required-input" for="start">Date Received</label><br>
                 <input type="date" id="start" name="start" required><br>
 
                 <!-- Recurring Inputs -->
-                <p class="acd-form"> Is this a recurring source of income?</p><br>
+                <p class="required-input"> Is this a recurring source of income?</p><br>
 
                 <input type="radio" id="recurring-true" name="recurring" value="True">
                 <label for='recurring-true' class="recurring-choice label-recurring-true">Yes</label>
@@ -57,7 +57,7 @@
                 
                 <div id="recurring-items">
                     <!-- Earning Period Inputs -->
-                    <p class="acd-form" for="radio">Choose how often you receive this income:</p>
+                    <p class="required-input" for="radio">Choose how often you receive this income:</p>
                     
                     <input type="radio" id="daily" name="radio" value="0" checked="checked">
                     <label for='daily' class="earning-period label-daily">Daily</label>
@@ -74,7 +74,7 @@
                     <input type="radio" id="yearly" name="radio" value="4">
                     <label for='yearly' class="earning-period label-yearly">Yearly</label>
 
-                    <label class="acd-form" for="end">Recurrance End Date</label><br>
+                    <label for="end">End Date</label><br>
                     <input type="date" id="end" name="end" value=""><br>
                 </div>
                 

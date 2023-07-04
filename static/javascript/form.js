@@ -47,7 +47,17 @@ function configureRecurOptions() {
             option.required = true;
         });
     } else if (recurFalse.checked) {
-        // Show options for recurring
+        // Hide options for recurring
+        recurDiv = document.getElementById('recurring-items');
+        recurDiv.style.display = "none";
+
+        // Make period radio buttons not required
+        options = document.getElementsByName('radio');
+        options.forEach(option => {
+            option.required = false;
+        });
+    } else {
+        // Hide options for recurring when nothing is checked yet
         recurDiv = document.getElementById('recurring-items');
         recurDiv.style.display = "none";
 
@@ -60,57 +70,196 @@ function configureRecurOptions() {
 }
 
 //////////////////////////////////
-// Create form submit functions //
+// Create/Update form submit functions //
 //////////////////////////////////
 
-function submitUserCreateForm(e) {
+function submitUserForm(e) {
 
 }
 
-function submitBudgetCreateForm(e) {
-    e.preventDefault();
-
-    budgetAmount = document.getElementById('amount');
-    alertSection = document.getElementById('alert-section');
+function submitBudgetForm() {
+    const budgetAmount = document.getElementById('amount');
+    const alertSection = document.getElementById('alert-section');
     alertSection.innerHTML = "";
 
     if(!checkAmount(budgetAmount.value)) {
-        message = "- The budget amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Ex: 123.45)."
+        message = "- The budget amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45)."
         updateAlertSection(message);
-        window.scrollY(0);
+        window.scrollTo(0, 0);
+        return
     }
 
-    fetch('/data/create-budget', {
-        method: "POST",
-        body: JSON.stringify({
-            name: document.getElementById("name").value,
-            description: document.getElementById("description").value,
-            amount: document.getElementById("amount").value,
-            radio: document.querySelector("input[name='radio']:checked").value,
-            start: document.getElementById("start").value,
-            end: document.getElementById("end").value,
-            recurring: document.querySelector("input[name='recurring']:checked").value,
+    const budgetId = document.getElementById('id');
 
+    if (budgetId) {
+        fetch('/data/update-budget', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: budgetId.value,
+                name: document.getElementById("name").value,
+                description: document.getElementById("description").value,
+                amount: document.getElementById("amount").value,
+                radio: document.querySelector("input[name='radio']:checked").value,
+                start: document.getElementById("start").value,
+                end: document.getElementById("end").value,
+                recurring: document.querySelector("input[name='recurring']:checked").value,
+            })
+        }).then((response) => {
+            if (response.status != 200) {
+                message = "- Error: " + String(response.text) + ". Please revise your budget and try again."
+                updateAlertSection(message);
+                window.scrollTo(0, 0);
+                return
+            } else {
+                window.location = "/dashboard?refresh=true&tab=budgets"
+            }
         })
-    }).then(response => response.json()).then((responseData) => {
-        console.log(responseData);
-    })
+    } else {
+        fetch('/data/create-budget', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: document.getElementById("name").value,
+                description: document.getElementById("description").value,
+                amount: document.getElementById("amount").value,
+                radio: document.querySelector("input[name='radio']:checked").value,
+                start: document.getElementById("start").value,
+                end: document.getElementById("end").value,
+                recurring: document.querySelector("input[name='recurring']:checked").value,
+            })
+        }).then((response) => {
+            if (response.status != 200) {
+                message = "- Error: " + String(response.text) + ". Please revise your budget and try again."
+                updateAlertSection(message);
+                window.scrollTo(0, 0);
+                return
+            } else {
+                window.location = "/dashboard?refresh=true&tab=budgets"
+            }
+        })
+    }
 }
 
-function submitExpenseCreateForm() {
-    expenseAmount = document.getElementById('amount');
-    alertSection = document.getElementById('alert-section');
+function submitExpenseForm() {
+    const expenseAmount = document.getElementById('amount');
+    const alertSection = document.getElementById('alert-section');
     alertSection.innerHTML = "";
 
     if(!checkAmount(expenseAmount.value)) {
-        message = "- The budget amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Ex: 123.45)."
+        message = "- The expense amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45)."
         updateAlertSection(message);
         window.scrollY(0);
     }
 
-    try {
+    const expenseId = document.getElementById('id');
+
+    if (expenseId) {
+        fetch('/data/update-expense', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: expenseId.value,
+                name: document.getElementById("name").value,
+                description: document.getElementById("description").value,
+                amount: document.getElementById("amount").value,
+                radio: document.querySelector("input[name='radio']:checked").value,
+                start: document.getElementById("start").value,
+                end: document.getElementById("end").value,
+                recurring: document.querySelector("input[name='recurring']:checked").value,
+                category: document.getElementById("category").value
+            })
+        }).then((response) => {
+            if (response.status != 200) {
+                message = "- Error: " + String(response.text) + ". Please revise your expense and try again."
+                updateAlertSection(message);
+                window.scrollTo(0, 0);
+                return
+            } else {
+                window.location = "/dashboard?refresh=true&tab=expenses"
+            }
+        });
+    } else {
         fetch('/data/create-expense', {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: document.getElementById("name").value,
+                description: document.getElementById("description").value,
+                amount: document.getElementById("amount").value,
+                radio: document.querySelector("input[name='radio']:checked").value,
+                start: document.getElementById("start").value,
+                end: document.getElementById("end").value,
+                recurring: document.querySelector("input[name='recurring']:checked").value,
+                category: document.getElementById("category").value
+            })
+        }).then((response) => {
+            if (response.status != 200) {
+                message = "- Error: " + String(response.text) + ". Please revise your expense and try again."
+                updateAlertSection(message);
+                window.scrollTo(0, 0);
+                return
+            } else {
+                window.location = "/dashboard?refresh=true&tab=expenses"
+            }
+        });
+    }
+}
+
+function submitEarningForm() {
+    const earningAmount = document.getElementById('amount');
+    const alertSection = document.getElementById('alert-section');
+    alertSection.innerHTML = "";
+
+    if(!checkAmount(earningAmount.value)) {
+        message = "- The earning amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45)."
+        updateAlertSection(message);
+        window.scrollY(0);
+    }
+
+    const earningId = document.getElementById('id');
+
+    if (earningId) {
+        fetch('/data/update-earning', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: earningId.value,
+                name: document.getElementById("name").value,
+                description: document.getElementById("description").value,
+                amount: document.getElementById("amount").value,
+                radio: document.querySelector("input[name='radio']:checked").value,
+                start: document.getElementById("start").value,
+                end: document.getElementById("end").value,
+                recurring: document.querySelector("input[name='recurring']:checked").value,
+
+            })
+        }).then((response) => {
+            if (response.status != 200) {
+                message = "- Error: " + String(response.text) + ". Please revise your earning and try again."
+                updateAlertSection(message);
+                window.scrollTo(0, 0);
+                return
+            } else {
+                window.location = "/dashboard?refresh=true&tab=earnings"
+            }
+        });
+    } else {
+        fetch('/data/create-earning', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({
                 name: document.getElementById("name").value,
                 description: document.getElementById("description").value,
@@ -121,68 +270,15 @@ function submitExpenseCreateForm() {
                 recurring: document.querySelector("input[name='recurring']:checked").value,
 
             })
-        }).then(response => response.json()).then((responseData) => {
-            if (responseData.status == 200) {
-                window.location = "/dashboard?refresh=true&tab=expenses";
+        }).then((response) => {
+            if (response.status != 200) {
+                message = "- Error: " + String(response.text) + ". Please revise your earning and try again."
+                updateAlertSection(message);
+                window.scrollTo(0, 0);
+                return
+            } else {
+                window.location = "/dashboard?refresh=true&tab=earnings"
             }
-        })
-    } catch (e) {
-        console.log(e)
+        });
     }
-    
-    return false;
-}
-
-function submitEarningCreateForm(e) {
-    e.preventDefault();
-
-    budgetAmount = document.getElementById('amount');
-    alertSection = document.getElementById('alert-section');
-    alertSection.innerHTML = "";
-
-    if(!checkAmount(budgetAmount.value)) {
-        message = "- The budget amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Ex: 123.45)."
-        updateAlertSection(message);
-        window.scrollY(0);
-    }
-
-    fetch('/data/create-earning', {
-        method: "POST",
-        body: JSON.stringify({
-            name: document.getElementById("name").value,
-            description: document.getElementById("description").value,
-            amount: document.getElementById("amount").value,
-            radio: document.querySelector("input[name='radio']:checked").value,
-            start: document.getElementById("start").value,
-            end: document.getElementById("end").value,
-            recurring: document.querySelector("input[name='recurring']:checked").value,
-
-        })
-    }).then(response => response.json()).then((responseData) => {
-        console.log(responseData);
-    })
-}
-
-//////////////////////////////////
-// Update form submit functions //
-//////////////////////////////////
-
-function submitUserUpdateForm(e) {
-    
-}
-
-function submitBudgetUpdateForm(e) {
-    fetch('/data/budgets').then(response => response.json()).then((responseData) => {
-        categories = responseData.categories
-
-        console.log(categories);
-    })
-}
-
-function submitExpenseUpdateForm(e) {
-
-}
-
-function submitEarningUpdateForm(e) {
-
 }

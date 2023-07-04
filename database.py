@@ -10,86 +10,79 @@ app = firebase_admin.initialize_app()
 db = firestore.client()
 
 PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"]
-__SUCCESS = True
-__FAIL = False
 
 ####################
 # Create functions #
 ####################
 def createUser(email, username, image, color, currency, balance, tutorialFinished, profileCreation, password=None, google=True):
     newUser = {
-        u'email': email,
-        u'username': username,
-        u'profileImage': image,
-        u'profileColor': color,
-        u'currency': currency,
-        u'balance': balance,
-        u'tutorialFinished': tutorialFinished,
-        u'profileCreation': profileCreation,
-        u'budgets': [], 
-        u'earnings': [],
-        u'expenses': [],
-        u'joinDate': date.today(),
-        u'password': password,
-        u'google': google
+        'email': str(email),
+        'username': str(username),
+        'profileImage': str(image),
+        'profileColor': str(color),
+        'currency': str(currency),
+        'balance': str(balance),
+        'tutorialFinished': bool(tutorialFinished),
+        'profileCreation': bool(profileCreation),
+        'budgets': [], 
+        'earnings': [],
+        'expenses': [],
+        'joinDate': date.today(),
+        'password': str(password),
+        'google': str(google)
     }
     
     # First check if there is already a user with that email.
-    checkUser = db.collection(u'users').where(u'email', u'==', email).stream()
+    checkUser = db.collection('users').where('email', '==', email).stream()
     if len(list(checkUser)) > 0:
         raise RuntimeError("There is already an account associated with this email! Try logging in.")
     else:
-        db.collection(u'users').add(newUser)
+        db.collection('users').add(newUser)
 
 def createBudget(email, name, startDate, endDate="", amount=0, description="", recurring=True, budgetPeriod=3):
-    # Budget names need to be unique
-    currentBudgets = getAllActiveBudgets(email)['categories']
-    if name in currentBudgets:
-        return __FAIL, ("You already have a budget with the name '" + name + "' currently in use!", "Try using a different name, or edit your existing budget.")
-    
-    newBudget = {
-        u'email': email,
-        u'name': name,
-        u'startDate': startDate,
-        u'endDate': endDate,
-        u'amount': amount,
-        u'description': description,
-        u'recurring': recurring,
-        u'budgetPeriod': budgetPeriod
-    }
-
-
-
-    create_datetime, budget_ref = db.collection(u'budgets').add(newBudget)
-
-    # Add the newly created budgetId to the list of budgets in the user document
     try :
+        # Make sure budget names are unique
+        currentBudgets = getAllActiveBudgets(email)['categories']
+        if name in currentBudgets:
+            raise Exception("You already have a budget with the name '" + name + "' currently in use!", "Try using a different name, or edit your existing budget.")
+        
+        newBudget = {
+            'email': str(email),
+            'name': str(name),
+            'startDate': str(startDate),
+            'endDate': str(endDate),
+            'amount': str(amount),
+            'description': str(description),
+            'recurring': bool(recurring),
+            'budgetPeriod': int(budgetPeriod)
+        }
+
+        # Add the new budget to the database
+        create_datetime, budget_ref = db.collection('budgets').add(newBudget)
+
+        # Add the newly created budgetId to the list of budgets in the user document
         updateUserReferenceIds(email, 0, 'budgets', budget_ref.id)
     except Exception as e:
         emergencyDeleteBudget(budget_ref.id)
         raise e
-    
-    return __SUCCESS, ('You have successfully added new budget: ' + name)
 
-
-def createExpense(email, name, category, startDate, endDate="", amount=0, description="", predicted=0, recurPeriod=0, recurring=False):
-    newExpense = {
-        u'email': email,
-        u'name': name,
-        u'budgetCategory': category,
-        u'startDate': startDate,
-        u'endDate': endDate,
-        u'amount': amount,
-        u'description': description,
-        u'expectedAmount': predicted,
-        u'recurPeriod': recurPeriod,
-        u'recurring': recurring
-    }
-
-    create_datetime, expense_ref = db.collection(u'expenses').add(newExpense)
-
-    # Add the newly created expenseID to the list of expenses in the user document
+def createExpense(email, name, category, startDate, endDate="", amount=0, description="", recurPeriod=0, recurring=False):
     try :
+        newExpense = {
+            'email': str(email),
+            'name': str(name),
+            'budgetCategory': str(category),
+            'startDate': str(startDate),
+            'endDate': str(endDate),
+            'amount': str(amount),
+            'description': str(description),
+            'recurPeriod': int(recurPeriod),
+            'recurring': bool(recurring)
+        }
+
+        create_datetime, expense_ref = db.collection('expenses').add(newExpense)
+
+        # Add the newly created expenseID to the list of expenses in the user document
         updateUserReferenceIds(email, 0, 'expenses', expense_ref.id)
     except Exception as e:
         emergencyDeleteExpense(expense_ref.id)
@@ -99,23 +92,22 @@ def createExpense(email, name, category, startDate, endDate="", amount=0, descri
     # TODO: Update the user's wallet balance as well.
 
 
-def createEarning(email, name, startDate, endDate="", amount=0, description="", predicted=0, recurPeriod=0, recurring=False):
-    newEarning = {
-        u'email': email,
-        u'name': name,
-        u'startDate': startDate,
-        u'endDate': endDate,
-        u'amount': amount,
-        u'description': description,
-        u'expectedAmount': predicted,
-        u'recurPeriod': recurPeriod,
-        u'recurring': recurring
-    }
-
-    create_datetime, earning_ref = db.collection(u'earnings').add(newEarning)
-
-    # Add the newly created earningID to the list of earnings in the user document
+def createEarning(email, name, startDate, endDate="", amount=0, description="", recurPeriod=0, recurring=False):
     try :
+        newEarning = {
+            'email': str(email),
+            'name': str(name),
+            'startDate': str(startDate),
+            'endDate': str(endDate),
+            'amount': str(amount),
+            'description': str(description),
+            'recurPeriod': int(recurPeriod),
+            'recurring': bool(recurring)
+        }
+
+        create_datetime, earning_ref = db.collection('earnings').add(newEarning)
+
+        # Add the newly created earningID to the list of earnings in the user document
         updateUserReferenceIds(email, 0, 'earnings', earning_ref.id)
     except Exception as e:
         emergencyDeleteEarning(earning_ref.id)
@@ -257,15 +249,14 @@ def getAllCurrent(email, period=3):
         user['expenses'] = expensesDict
         user['earnings'] = earningDict
         user['budgetCategories'] = budgetCategories
-
         return {"data":user}
     except Exception as e:
-        return str(e)
+        raise RuntimeError(str(e))
     
 # Get a user's basic information, needed to get list of budgets, expenses, etc.
 def getUser(email):
     # Note: Use of CollectionRef stream() is prefered to get()
-    docs = db.collection(u'users').where(u'email', u'==', email).stream()
+    docs = db.collection('users').where('email', '==', email).stream()
 
     for doc in docs: # Should only run once, since an email should only be present once in database
         return {"data":doc.to_dict()}
@@ -283,7 +274,7 @@ def getAllActiveBudgets(email, date=date.today()):
         if budgetID == "":
             continue
 
-        budgetDoc = db.collection(u'budgets').document(budgetID).get().to_dict()
+        budgetDoc = db.collection('budgets').document(budgetID).get().to_dict()
         budgetDoc['usedAmount'] = getBudgetBalance(budgetID, budgetDoc, date)
         budgetEnd = None if budgetDoc["endDate"] == "" else date.fromisoformat(budgetDoc["endDate"])
         budgetStart = date.fromisoformat(budgetDoc['startDate'])
@@ -308,7 +299,7 @@ def getBudgetCategories(email):
     budgetCategories = []
 
     for budgetID in budgetList:
-        budget = db.collection(u'budgets').document(budgetID).get().to_dict()
+        budget = db.collection('budgets').document(budgetID).get().to_dict()
         budgetCategories.append(budget["name"])
 
     return budgetCategories
@@ -352,9 +343,9 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
             raise Exception("This budget was not active during this date.")
 
         # Run a query for expenses with the same email, budget category
-        expenseList = db.collection(u'expenses')\
-            .where(u'email', u'==', email)\
-            .where(u'budgetCategory', u'==', budgetCategory)\
+        expenseList = db.collection('expenses')\
+            .where('email', '==', email)\
+            .where('budgetCategory', '==', budgetCategory)\
             .stream()
         
         returnList = []
@@ -415,9 +406,9 @@ def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
             raise Exception("This budget was not active during this date.")
 
         # Run a query for expenses with the same email, budget category
-        expenseList = db.collection(u'expenses')\
-            .where(u'email', u'==', email)\
-            .where(u'budgetCategory', u'==', budgetCategory)\
+        expenseList = db.collection('expenses')\
+            .where('email', '==', email)\
+            .where('budgetCategory', '==', budgetCategory)\
             .stream()
         
         usedAmount = 0
@@ -442,8 +433,8 @@ def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
 # Get a user's expenses
 # NOTE: This every raw expense from the database. It does not create duplicates for recurring expenses
 def getAllExpenses(email):
-    expenseList = db.collection(u'expenses')\
-            .where(u'email', u'==', email)\
+    expenseList = db.collection('expenses')\
+            .where('email', '==', email)\
             .stream()
     expensesDict = {}
     
@@ -458,8 +449,8 @@ def getAllExpenses(email):
     return {"data":expensesDict, "categories":budgetCategories}
 
 def getExpensesInRange(email, startDate, endDate):
-    expenseList = db.collection(u'expenses')\
-            .where(u'email', u'==', email)\
+    expenseList = db.collection('expenses')\
+            .where('email', '==', email)\
             .stream()
     expensesDict = {}
     
@@ -490,15 +481,13 @@ def getExpensesInRange(email, startDate, endDate):
 
 def getExpense(expenseId, userEmail):
     if (expenseId == "" or userEmail == ""):
-        print("No expense ID or email provided.")
         raise RuntimeError("No expense ID or email provided.")
     
     user = getUser(userEmail)['data']
     if (expenseId not in user['expenses']):
-        print("User email does not match expense!")
         raise RuntimeError("User email does not match expense!")
     
-    expenseDoc = db.collection(u'expenses').document(expenseId).get()
+    expenseDoc = db.collection('expenses').document(expenseId).get()
     budgetCategories = getBudgetCategories(userEmail)
 
     return {"data":expenseDoc.to_dict(), "budgetCategories":budgetCategories}
@@ -511,7 +500,7 @@ def getBudget(budgetId, userEmail, date=date.today()):
     if (budgetId not in user['budgets']):
         raise RuntimeError("User email does not match budget!")
     
-    budgetDoc = db.collection(u'budgets').document(budgetId).get().to_dict()
+    budgetDoc = db.collection('budgets').document(budgetId).get().to_dict()
     budgetDoc["usedAmount"] = getBudgetBalance(budgetId, budgetDoc, date)
 
     return budgetDoc
@@ -524,13 +513,13 @@ def getEarning(earningId, userEmail):
     if (earningId not in user['earnings']):
         raise RuntimeError("User email does not match earning!")
     
-    earningDoc = db.collection(u'earnings').document(earningId).get()
+    earningDoc = db.collection('earnings').document(earningId).get()
 
     return earningDoc.to_dict()
 
 def getEarningsInRange(email, startDate, endDate):
-    earningList = db.collection(u'earnings')\
-            .where(u'email', u'==', email)\
+    earningList = db.collection('earnings')\
+            .where('email', '==', email)\
             .stream()
     earningsDict = {}
     
@@ -560,7 +549,7 @@ def getEarningsInRange(email, startDate, endDate):
 # Setter functions #
 ####################
 def updateUser(email, username, image, color, currency, balance):
-    user = db.collection(u'users').where(u'email', u'==', email).stream()
+    user = db.collection('users').where('email', '==', email).stream()
 
     # Should only run once, since there should only be one user per email
     if len(list(user)) == 0:
@@ -570,11 +559,11 @@ def updateUser(email, username, image, color, currency, balance):
     else:
         user_ref = user[0]
         user_ref.update({
-            u'username': username,
-            u'profileImage': image,
-            u'profileColor': color,
-            u'currency': currency,
-            u'balance': balance
+            'username': username,
+            'profileImage': image,
+            'profileColor': color,
+            'currency': currency,
+            'balance': balance
         })
 
 def updateUserReferenceIds(email, operation, refType, id):
@@ -595,7 +584,7 @@ def updateUserReferenceIds(email, operation, refType, id):
             The ID generated by Firestore to be added or removed from the user.
     """
     if (email != None) and (operation == 1 or operation == 0) and (refType == 'budgets' or refType == 'expenses' or refType == 'earnings' or refType == 'goals'):
-        user = list(db.collection(u'users').where(u'email', u'==', email).stream())
+        user = list(db.collection('users').where('email', '==', email).stream())
 
         # Should only run once, since there should only be one user per email
         if len(user) == 0:
@@ -603,7 +592,7 @@ def updateUserReferenceIds(email, operation, refType, id):
         elif len(user) > 1:
             raise RuntimeError("Duplicate user found! Update failed.")
         else:
-            user_ref = db.collection(u'users').document(user[0].id)
+            user_ref = db.collection('users').document(user[0].id)
 
             if operation == 1: # Remove operation
                 user_ref.update({
@@ -617,68 +606,61 @@ def updateUserReferenceIds(email, operation, refType, id):
     else:
         raise RuntimeError("Update reference failed, invalid parameters!")
 
-def updateBudget(email, id, name, startDate, endDate="", amount=0, description="", predicted=0, recurPeriod="Monthly", recurring=True):
+def updateBudget(email, id, name, startDate, endDate="", amount=0, description="", recurPeriod="Monthly", recurring=True):
     budgetList = getUser(email)['data']['budgets']
 
     # Check to make sure that the id passed in corresponds to an item in the user's database
     if id in budgetList:
-        budget_ref = db.collection(u'budgets').document(id)
+        budget_ref = db.collection('budgets').document(id)
         budget_ref.update({
-            u'name': name,
-            u'startDate': startDate,
-            u'endDate': endDate,
-            u'amount': amount,
-            u'description': description,
-            u'expectedBudgetAmount': predicted,
-            u'budgetPeriod': recurPeriod,
+            'name': name,
+            'startDate': startDate,
+            'endDate': endDate,
+            'amount': amount,
+            'description': description,
+            'budgetPeriod': recurPeriod,
+            'recurring': recurring
         })
-        return __SUCCESS, ("Successfully updated budget!")
     else:
         raise RuntimeError("Verification failed, update canceled.")
     
     # TODO: If budget name is changed, first find expenses using the current budget name 
     # and make sure to change it to the new name.
 
-def updateExpense(email, id, name, category, startDate, endDate="", amount=0, description="", predicted=0, recurPeriod="One Time", recurring=False):
+def updateExpense(email, id, name, category, startDate, endDate="", amount=0, description="", recurPeriod="One Time", recurring=False):
     expenseList = getUser(email)['data']['expenses']
 
     # Check to make sure that the id passed in corresponds to an item in the user's database
     if id in expenseList:
-        expense_ref = db.collection(u'expenses').document(id)
+        expense_ref = db.collection('expenses').document(id)
         expense_ref.update({
-            u'name': name,
-            u'budgetCategory': category,
-            u'startDate': startDate,
-            u'endDate': endDate,
-            u'amount': amount,
-            u'description': description,
-            u'expectedAmount': predicted,
-            u'recurPeriod': recurPeriod,
-            u'recurring': recurring
+            'name': name,
+            'budgetCategory': category,
+            'startDate': startDate,
+            'endDate': endDate,
+            'amount': amount,
+            'description': description,
+            'recurPeriod': recurPeriod,
+            'recurring': recurring
         })
-
-        return __SUCCESS, ("Successfully updated expense!")
     else:
         raise RuntimeError("Verification failed, update canceled.")
 
-def updateEarning(email, id, name, startDate, endDate="", amount=0, description="", predicted=0, recurPeriod="One Time", recurring=False):
+def updateEarning(email, id, name, startDate, endDate="", amount=0, description="", recurPeriod="One Time", recurring=False):
     earningList = getUser(email)['data']['expenses']
 
     # Check to make sure that the id passed in corresponds to an item in the user's database
     if id in earningList:
-        expense_ref = db.collection(u'expenses').document(id)
+        expense_ref = db.collection('expenses').document(id)
         expense_ref.update({
-            u'name': name,
-            u'startDate': startDate,
-            u'endDate': endDate,
-            u'amount': amount,
-            u'description': description,
-            u'expectedAmount': predicted,
-            u'recurPeriod': recurPeriod,
-            u'recurring': recurring
+            'name': name,
+            'startDate': startDate,
+            'endDate': endDate,
+            'amount': amount,
+            'description': description,
+            'recurPeriod': recurPeriod,
+            'recurring': recurring
         })
-
-        return __SUCCESS, ("Successfully updated earning!")
     else:
         raise RuntimeError("Verification failed, update canceled.")
 
@@ -698,15 +680,15 @@ def deleteUser(email):
     earningList = userData['earnings']
 
     for budget in budgetList:
-        db.collection(u'budgets').document(budget).delete()
+        db.collection('budgets').document(budget).delete()
 
     for expense in expenseList:
-        db.collection(u'expenses').document(expense).delete()
+        db.collection('expenses').document(expense).delete()
 
     for earning in earningList:
-        db.collection(u'earnings').document(earning).delete()
+        db.collection('earnings').document(earning).delete()
 
-    db.collection(u'users').document(id).delete()
+    db.collection('users').document(id).delete()
 
 def deleteBudget(email, id, method=0, newBudget=None):
     """
@@ -739,10 +721,10 @@ def deleteBudget(email, id, method=0, newBudget=None):
         expenseList = userData['expenses']
 
         for expense in expenseList:
-            expense_ref = db.collection(u'expenses').document(expense)
+            expense_ref = db.collection('expenses').document(expense)
             expense_ref.update({"budgetCategory": ""})
 
-        db.collection(u'budgets').document(id).delete() 
+        db.collection('budgets').document(id).delete() 
     except Exception as e:
         return e
 
@@ -752,7 +734,7 @@ def deleteExpense(email, id):
     if id not in expenseList:
         raise RuntimeError("User does not have access to this data!")
 
-    expense_ref = db.collection(u'expenses').document(id)
+    expense_ref = db.collection('expenses').document(id)
     expense_ref.delete()
 
 def deleteEarning(email, id):
@@ -761,7 +743,7 @@ def deleteEarning(email, id):
     if id not in earningList:
         raise RuntimeError("User does not have access to this data!")
 
-    expense_ref = db.collection(u'expenses').document(id)
+    expense_ref = db.collection('expenses').document(id)
     expense_ref.delete()
 
 
@@ -772,19 +754,19 @@ def deleteEarning(email, id):
 # that a user does not exist        #
 #####################################
 def emergencyDeleteUser(id):
-    db.collection(u'users').document(id).delete()
+    db.collection('users').document(id).delete()
 
 def emergencyDeleteBudget(id):
     # Called when a budget is created, but does not successfully get attached to a user
     # This will prevent budgets without users from getting created.
-    db.collection(u'budgets').document(id).delete()
+    db.collection('budgets').document(id).delete()
 
 def emergencyDeleteExpense(id):
     # Called when an expense is created, but does not successfully get attached to a user
     # This will prevent expenses without users from getting created.
-    db.collection(u'expenses').document(id).delete()
+    db.collection('expenses').document(id).delete()
 
 def emergencyDeleteEarning(id):
     # Called when an expense is created, but does not successfully get attached to a user
     # This will prevent expenses without users from getting created.
-    db.collection(u'earnings').document(id).delete()
+    db.collection('earnings').document(id).delete()

@@ -33,23 +33,23 @@
 
         <div class="content non-header" id="acd-earnings">
             <div id="alert-section"></div>
-            <form action="data/update-earning">
+            <form action="javascript:submitEarningForm('update')">
                 <input type="hidden" id="id" name="id" value={{id}} />
 
-                <label class="acd-form" for="name">Earning Name</label><br>
+                <label class="required-input" for="name">Earning Name</label><br>
                 <input type="text" id="name" name="name" value={{name}} required><br>
 
-                <label class="acd-form" for="amount">Earning Amount</label><br>
+                <label class="required-input" for="amount">Earning Amount</label><br>
                 <input type="text" id="amount" name="amount" value={{amount}} required><br>
 
                 <label for="description">Earning Description</label><br>
                 <textarea id="description" name="description" rows="4" cols="50" value={{description}}></textarea><br>
 
-                <label class="acd-form" for="start">Date Received</label><br>
+                <label class="required-input" for="start">Date Received</label><br>
                 <input type="date" id="start" name="start" value={{startDate}} required><br>
                 
                 <!-- Recurring Inputs -->
-                <p class="acd-form" for="recurring"> Is this a recurring source of income?</p><br>
+                <p class="required-input" for="recurring"> Is this a recurring source of income?</p><br>
                 
                 {% if recurring %}
                     <input type="radio" id="recurring-true" name="recurring" value="True" checked="checked">
@@ -67,7 +67,7 @@
 
                 <div id="recurring-items">
                     <!-- Earning Period Inputs -->
-                    <p class="acd-form" for="radio">Choose how often you receive this income:</p>
+                    <p class="required-input" for="radio">Choose how often you receive this income:</p>
 
                     {% if recurPeriod == 0 %}
                         <input type="radio" id="daily" name="radio" value="0" checked="checked">
@@ -104,7 +104,7 @@
                     {% endif %} 
                     <label for='yearly' class="earning-period label-yearly">Yearly</label>
 
-                    <label class="acd-form" for="end">Recurrance End Date</label><br>
+                    <label for="end">End Date</label><br>
                     <input type="date" id="end" name="end" value={{endDate}}><br>
                 </div>
 

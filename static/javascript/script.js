@@ -399,8 +399,8 @@ function generateTableUI(type, entityList, currency) {
         update_img.src = "static/images/EditButtonSM.svg"
         update_img.classList.add("update-img");
         update_img.title = "Update";
-        update_img.addEventListener('click', function() {
-            window.location = "/form/update-" + type + "?id=" + key;
+        update_img.addEventListener('click', () => {
+            window.location = "/form/update-" + TYPES[type] + "?id=" + key;
         })
         update.append(update_img);
 

@@ -33,16 +33,16 @@
 
         <div class="content non-header" id="acd-expenses">
             <div id="alert-section"></div>
-            <form action="data/update-expense" method="post">
+            <form action="javascript:submitExpenseForm('update')" method="post">
                 <input type="hidden" id="id" name="id" value={{id}} />
 
-                <label class="acd-form" for="name">Expense Name</label><br>
+                <label class="required-input" for="name">Expense Name</label><br>
                 <input type="text" id="name" name="name" value={{name}} required><br>
 
-                <label class="acd-form" for="amount">Expense Amount</label><br>
+                <label class="required-input" for="amount">Expense Amount</label><br>
                 <input type="text" id="amount" name="amount" value={{amount}} required><br>
 
-                <label class="acd-form" for="category">Budget Category</label><br>
+                <label class="required-input" for="category">Budget Category</label><br>
                 <select id="category" name="category" required>
                     {% for option in allCategories %}
                         {% if option == category %}
@@ -56,11 +56,11 @@
                 <label for="description">Expense Description</label><br>
                 <textarea id="description" name="description" rows="4" cols="50" value={{description}}></textarea><br>
 
-                <label class="acd-form" for="start">Expense Date</label><br>
+                <label class="required-input" for="start">Expense Date</label><br>
                 <input type="date" id="start" name="start" value={{startDate}} required><br>
 
                 <!-- Recurring Inputs -->
-                <p class="acd-form">Is this a recurring expense?</p>
+                <p class="required-input">Is this a recurring expense?</p>
 
                 {% if recurring %}
                     <input type="radio" id="recurring-true" name="recurring" value="True" checked="checked">   
@@ -78,7 +78,7 @@
                 
                 <div id="recurring-items">
                     <!-- Expense Period Inputs -->
-                    <p class="acd-form" for="radio">How often does this expense occur?</p><br>
+                    <p class="required-input" for="radio">How often does this expense occur?</p><br>
 
                     {% if recurPeriod == 0 %}
                         <input type="radio" id="daily" name="radio" value="0" checked="checked" required>
@@ -115,7 +115,7 @@
                     {% endif %}
                     <label for='yearly' class="expense-period label-yearly">Yearly</label>
 
-                    <label class="acd-form" for="end">Expense End Date</label><br>
+                    <label for="end">End Date</label><br>
                     <input type="date" id="end" name="end" value={{endDate}} required><br>
                 </div>
 

@@ -39,7 +39,6 @@ async function updateUserData() {
     const response = await fetch('/data/all-current').then(response => response.json()).then((responseData) => {
         userData = responseData.data;
     });
-
     return response;
 }
 

@@ -157,8 +157,11 @@ def google_auth():
 def renderDashboard():
     refresh = request.args.get("refresh")
     tab = request.args.get("tab")
-    if refresh == None or tab == None:
-        return render_template('dashboard.html', refresh="true", tab="overview", nav=renderedNav())
+    if refresh == None:
+        if tab == None:
+            return render_template('dashboard.html', refresh="true", tab="overview", nav=renderedNav())
+        else:
+            return render_template('dashboard.html', refresh="true", tab=tab, nav=renderedNav())
     else:
         return render_template('dashboard.html', refresh=refresh, tab=tab, nav=renderedNav())
 
@@ -354,9 +357,9 @@ def getOneEarning():
 @app.route("/data/create-user", methods=['POST'])
 @login_is_required
 def createUser():
-    username = request.form.get("name")
-    image = request.form.get("profile-image")
-    color = request.form.get("profile-color")
+    username = request.json["name"] if request.json["name"] else ""
+    image = request.json["profile-image"] if request.json["profile-image"] else ""
+    color = request.json["profile-color"] if request.json["profile-color"] else ""
     currency = request.form.get("currency")
     balance = 0
     tutorialFinished = False
@@ -380,13 +383,13 @@ def createUser():
 @app.route("/data/create-budget", methods=['POST'])
 @login_is_required
 def createBudget():
-    name = request.form.get("name")
-    description = request.form.get("description")
-    amount = request.form.get("amount")
-    budgetPeriod = request.form.get("radio")
-    startDate = request.form.get("start")
-    endDate = request.form.get("end")
-    recurring = request.form.get("recurring")
+    name = request.json["name"] if request.json["name"] else ""
+    description = request.json["description"] if request.json["description"] else ""
+    amount = request.json["amount"] if request.json["amount"] else ""
+    budgetPeriod = request.json["radio"] if request.json["radio"] else 0
+    startDate = request.json["start"] if request.json["start"] else ""
+    endDate = request.json["end"] if request.json["end"] else ""
+    recurring = request.json["recurring"] if request.json["recurring"] else False
 
     try:
         database.createBudget(
@@ -397,10 +400,10 @@ def createBudget():
             amount,
             description, 
             recurring,
-            budgetPeriod, 
+            budgetPeriod
         )
         return {
-            "status": 200,
+            "status": 201,
             "message": "Creation successful!"
         }
     except Exception as e:
@@ -412,15 +415,14 @@ def createBudget():
 @app.route("/data/create-expense", methods=['POST'])
 @login_is_required
 def createExpense():
-    name = request.form.get("name")
-    amount = request.form.get("amount")
-    category = request.form.get("category")
-    description = request.form.get("description")
-    predicted = request.form.get("preamount")
-    recurPeriod = request.form.get("radio")
-    startDate = request.form.get("start")
-    endDate = request.form.get("end")
-    recurring = request.form.get("recurring")
+    name = request.json["name"] if request.json["name"] else ""
+    amount = request.json["amount"] if request.json["amount"] else ""
+    category = request.json["category"] if request.json["category"] else ""
+    description = request.json["description"] if request.json["description"] else ""
+    recurPeriod = request.json["radio"] if request.json["radio"] else ""
+    startDate = request.json["start"] if request.json["start"] else ""
+    endDate = request.json["end"] if request.json["end"] else ""
+    recurring = request.json["recurring"] if request.json["recurring"] else ""
     try:
         database.createExpense(
             session["email"], 
@@ -430,12 +432,42 @@ def createExpense():
             endDate,
             amount, 
             description, 
-            predicted,
             recurPeriod, 
             recurring
         )
         return {
-            "status": 200,
+            "status": 201,
+            "message": "Creation successful!"
+        }
+    except Exception as e:
+        return {
+            "status": 400,
+            "message": str(e)
+        }
+    
+@app.route("/data/create-earning", methods=['POST'])
+@login_is_required
+def createEarning():
+    name = request.json["name"] if request.json["name"] else ""
+    amount = request.json["amount"] if request.json["amount"] else ""
+    description = request.json["description"] if request.json["description"] else ""
+    recurPeriod = request.json["radio"] if request.json["radio"] else ""
+    startDate = request.json["start"] if request.json["start"] else ""
+    endDate = request.json["end"] if request.json["end"] else ""
+    recurring = request.json["recurring"] if request.json["recurring"] else ""
+    try:
+        database.createEarning(
+            session["email"], 
+            name,
+            startDate,
+            endDate,
+            amount, 
+            description, 
+            recurPeriod, 
+            recurring
+        )
+        return {
+            "status": 201,
             "message": "Creation successful!"
         }
     except Exception as e:
@@ -447,7 +479,6 @@ def createExpense():
 @app.route("/data/update-user", methods=['POST'])
 @login_is_required
 def updateUser():
-    id = request.form.get("id")
     username = request.form.get("username")
     image = request.form.get("profile-image")
     color = request.form.get("profile-color")
@@ -463,7 +494,7 @@ def updateUser():
             balance
         )
         return {
-            "status": 200,
+            "status": 201,
             "message": "Update successful!"
         }
     except Exception as e:
@@ -472,18 +503,17 @@ def updateUser():
             "message": str(e)
         }
 
-@app.route("/data/update-budget")
+@app.route("/data/update-budget", methods=['POST'])
 @login_is_required
 def updateBudget():
-    id = request.form.get("id")
-    name = request.form.get("name")
-    description = request.form.get("description")
-    amount = request.form.get("amount")
-    budgetPeriod = request.form.get("radio")
-    startDate = request.form.get("start")
-    endDate = request.form.get("end")
-    recurring = request.form.get("recurring")
-    predicted = request.form.get("predicted")
+    id = request.json["id"]
+    name = request.json["name"] if request.json["name"] else ""
+    description = request.json["description"] if request.json["description"] else ""
+    amount = request.json["amount"] if request.json["amount"] else ""
+    budgetPeriod = request.json["radio"] if request.json["radio"] else 0
+    startDate = request.json["start"] if request.json["start"] else ""
+    endDate = request.json["end"] if request.json["end"] else ""
+    recurring = request.json["recurring"] if request.json["recurring"] else False
 
     try:
         database.updateBudget(
@@ -494,12 +524,11 @@ def updateBudget():
             endDate, 
             amount,
             description, 
-            predicted,
             budgetPeriod, 
             recurring
         )
         return {
-            "status": 200,
+            "status": 201,
             "message": "Update successful!"
         }
     except Exception as e:
@@ -511,16 +540,15 @@ def updateBudget():
 @app.route("/data/update-expense", methods=['POST'])
 @login_is_required
 def updateExpense():
-    id = request.form.get("id")
-    name = request.form.get("name")
-    amount = request.form.get("amount")
-    category = request.form.get("category")
-    description = request.form.get("description")
-    predicted = request.form.get("preamount")
-    recurPeriod = request.form.get("radio")
-    startDate = request.form.get("start")
-    endDate = request.form.get("end")
-    recurring = request.form.get("recurring")
+    id = request.json["id"]
+    name = request.json["name"] if request.json["name"] else ""
+    amount = request.json["amount"] if request.json["amount"] else ""
+    category = request.json["category"] if request.json["category"] else ""
+    description = request.json["description"] if request.json["description"] else ""
+    recurPeriod = request.json["radio"] if request.json["radio"] else ""
+    startDate = request.json["start"] if request.json["start"] else ""
+    endDate = request.json["end"] if request.json["end"] else ""
+    recurring = request.json["recurring"] if request.json["recurring"] else ""
     
     try:
         database.updateExpense(
@@ -532,12 +560,11 @@ def updateExpense():
             endDate,
             amount, 
             description, 
-            predicted,
             recurPeriod, 
             recurring
         )
         return {
-            "status": 200,
+            "status": 201,
             "message": "Update successful!"
         }
     except Exception as e:
@@ -546,18 +573,17 @@ def updateExpense():
             "message": str(e)
         }
 
-@app.route("/data/update-earning")
+@app.route("/data/update-earning", methods=['POST'])
 @login_is_required
 def updateEarning():
     id = request.form.get("id")
-    name = request.form.get("name")
-    amount = request.form.get("amount")
-    predicted = request.form.get("preamount")
-    description = request.form.get("description")
-    recurPeriod = request.form.get("radio")
-    startDate = request.form.get("start")
-    endDate = request.form.get("end")
-    recurring = request.form.get("recurring")
+    name = request.json["name"] if request.json["name"] else ""
+    amount = request.json["amount"] if request.json["amount"] else ""
+    description = request.json["description"] if request.json["description"] else ""
+    recurPeriod = request.json["radio"] if request.json["radio"] else ""
+    startDate = request.json["start"] if request.json["start"] else ""
+    endDate = request.json["end"] if request.json["end"] else ""
+    recurring = request.json["recurring"] if request.json["recurring"] else ""
     
     try:
         database.updateEarning(
@@ -568,13 +594,12 @@ def updateEarning():
             endDate,
             amount,
             description, 
-            predicted,
             recurPeriod, 
             recurring
         )
         return {
-            "status": 200,
-            "message": "Upodate successful!"
+            "status": 201,
+            "message": "Update successful!"
         }
     except Exception as e:
         return {
