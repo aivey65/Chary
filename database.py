@@ -21,7 +21,7 @@ def createUser(email, username, image, color, currency, balance, tutorialFinishe
         'profileImage': str(image),
         'profileColor': str(color),
         'currency': str(currency),
-        'balance': str(balance),
+        'balance': float(balance),
         'tutorialFinished': bool(tutorialFinished),
         'profileCreation': bool(profileCreation),
         'budgets': [], 
@@ -51,7 +51,7 @@ def createBudget(email, name, startDate, endDate="", amount=0, description="", r
             'name': str(name),
             'startDate': str(startDate),
             'endDate': str(endDate),
-            'amount': str(amount),
+            'amount': float(amount),
             'description': str(description),
             'recurring': bool(recurring),
             'budgetPeriod': int(budgetPeriod)
@@ -74,7 +74,7 @@ def createExpense(email, name, category, startDate, endDate="", amount=0, descri
             'budgetCategory': str(category),
             'startDate': str(startDate),
             'endDate': str(endDate),
-            'amount': str(amount),
+            'amount': float(amount),
             'description': str(description),
             'recurPeriod': int(recurPeriod),
             'recurring': bool(recurring)
@@ -99,7 +99,7 @@ def createEarning(email, name, startDate, endDate="", amount=0, description="", 
             'name': str(name),
             'startDate': str(startDate),
             'endDate': str(endDate),
-            'amount': str(amount),
+            'amount': float(amount),
             'description': str(description),
             'recurPeriod': int(recurPeriod),
             'recurring': bool(recurring)
@@ -161,12 +161,12 @@ def getSinglePeriod(startDate, period, includeDate, endDate=None):
     if (includeDate < startDate) or (endDate != None and includeDate > endDate):
         return None, None
 
+    timeDelta = getTimeDelta(period) - 1
     newStartDate = startDate
-    newEndDate = startDate
-    timeDelta = getTimeDelta(period)
+    newEndDate = startDate + timeDelta
 
     while includeDate > newEndDate:
-        newStartDate = newEndDate
+        newStartDate = newEndDate + 1 # The day after the current end date.
         newEndDate = newEndDate + timeDelta
     
     if (endDate != None and endDate < newEndDate):
@@ -261,7 +261,7 @@ def getUser(email):
     for doc in docs: # Should only run once, since an email should only be present once in database
         return {"data":doc.to_dict()}
 
-def getAllActiveBudgets(email, date=date.today()):
+def getAllActiveBudgets(email, targetDate=date.today()):
     """
     Gets all budgets active during a particular date
     
@@ -275,21 +275,24 @@ def getAllActiveBudgets(email, date=date.today()):
             continue
 
         budgetDoc = db.collection('budgets').document(budgetID).get().to_dict()
-        budgetDoc['usedAmount'] = getBudgetBalance(budgetID, budgetDoc, date)
+        try:
+            budgetDoc['usedAmount'] = getBudgetBalance(budgetID, budgetDoc, targetDate)
+        except Exception as e:
+            raise RuntimeError(e)
+        
         budgetEnd = None if budgetDoc["endDate"] == "" else date.fromisoformat(budgetDoc["endDate"])
         budgetStart = date.fromisoformat(budgetDoc['startDate'])
 
         start, end = getSinglePeriod(
             budgetStart, 
             budgetDoc["budgetPeriod"],
-            date,
+            targetDate,
             budgetEnd
         )
 
         if start != None and end != None:
             budgetsDict[budgetID] = budgetDoc
             budgetCategories.append(budgetDoc['name'])
-
     return {"data":budgetsDict, "categories":budgetCategories}
 
 # Get a list of budget categories associated with a given user
@@ -559,11 +562,11 @@ def updateUser(email, username, image, color, currency, balance):
     else:
         user_ref = user[0]
         user_ref.update({
-            'username': username,
-            'profileImage': image,
-            'profileColor': color,
-            'currency': currency,
-            'balance': balance
+            'username': str(username),
+            'profileImage': str(image),
+            'profileColor': str(color),
+            'currency': str(currency),
+            'balance': float(balance)
         })
 
 def updateUserReferenceIds(email, operation, refType, id):
@@ -613,13 +616,13 @@ def updateBudget(email, id, name, startDate, endDate="", amount=0, description="
     if id in budgetList:
         budget_ref = db.collection('budgets').document(id)
         budget_ref.update({
-            'name': name,
-            'startDate': startDate,
-            'endDate': endDate,
-            'amount': amount,
-            'description': description,
-            'budgetPeriod': recurPeriod,
-            'recurring': recurring
+            'name': str(name),
+            'startDate': str(startDate),
+            'endDate': str(endDate),
+            'amount': float(amount),
+            'description': str(description),
+            'budgetPeriod': int(recurPeriod),
+            'recurring': bool(recurring)
         })
     else:
         raise RuntimeError("Verification failed, update canceled.")
@@ -634,14 +637,14 @@ def updateExpense(email, id, name, category, startDate, endDate="", amount=0, de
     if id in expenseList:
         expense_ref = db.collection('expenses').document(id)
         expense_ref.update({
-            'name': name,
-            'budgetCategory': category,
-            'startDate': startDate,
-            'endDate': endDate,
-            'amount': amount,
-            'description': description,
-            'recurPeriod': recurPeriod,
-            'recurring': recurring
+            'name': str(name),
+            'budgetCategory': str(category),
+            'startDate': str(startDate),
+            'endDate': str(endDate),
+            'amount': float(amount),
+            'description': str(description),
+            'recurPeriod': int(recurPeriod),
+            'recurring': bool(recurring)
         })
     else:
         raise RuntimeError("Verification failed, update canceled.")
@@ -653,13 +656,13 @@ def updateEarning(email, id, name, startDate, endDate="", amount=0, description=
     if id in earningList:
         expense_ref = db.collection('expenses').document(id)
         expense_ref.update({
-            'name': name,
-            'startDate': startDate,
-            'endDate': endDate,
-            'amount': amount,
-            'description': description,
-            'recurPeriod': recurPeriod,
-            'recurring': recurring
+            'name': str(name),
+            'startDate': str(startDate),
+            'endDate': str(endDate),
+            'amount': float(amount),
+            'description': str(description),
+            'recurPeriod': int(recurPeriod),
+            'recurring': bool(recurring)
         })
     else:
         raise RuntimeError("Verification failed, update canceled.")

@@ -348,7 +348,7 @@ def getOneExpense():
     expenseId = request.args.get("id")
     return database.getExpense(expenseId, session["email"])
 
-@app.route("/data/get-earning")
+@app.route("/data/get-earning", methods=['POST'])
 @login_is_required
 def getOneEarning():
     earningId = request.args.get("id")
@@ -386,7 +386,7 @@ def createBudget():
     name = request.json["name"] if request.json["name"] else ""
     description = request.json["description"] if request.json["description"] else ""
     amount = request.json["amount"] if request.json["amount"] else ""
-    budgetPeriod = request.json["radio"] if request.json["radio"] else 0
+    recurPeriod = request.json["radio"] if request.json["radio"] else 0
     startDate = request.json["start"] if request.json["start"] else ""
     endDate = request.json["end"] if request.json["end"] else ""
     recurring = request.json["recurring"] if request.json["recurring"] else False
@@ -400,7 +400,7 @@ def createBudget():
             amount,
             description, 
             recurring,
-            budgetPeriod
+            recurPeriod
         )
         return {
             "status": 201,
@@ -518,7 +518,7 @@ def updateBudget():
     try:
         database.updateBudget(
             session["email"], 
-            id, 
+            id,
             name,
             startDate,
             endDate, 
@@ -616,7 +616,7 @@ def deleteUser():
     try:
         database.deleteUser(session["email"])
     except Exception as e:
-        custom_error(e) 
+        return custom_error(e) 
 
 @app.route("/data/delete-budget")
 @login_is_required
@@ -625,7 +625,7 @@ def deleteBudget():
     try:
         database.deleteBudget(session["email"], budgetId)
     except Exception as e:
-        custom_error(e)
+        return custom_error(e)
 
 @app.route("/data/delete-expense")
 @login_is_required
@@ -634,7 +634,7 @@ def deleteExpense():
     try:
         database.deleteExpense(session["email"], expenseId)
     except Exception as e:
-        custom_error(e)
+        return custom_error(e)
 
 @app.route("/data/delete-earning")
 @login_is_required
@@ -643,7 +643,7 @@ def deleteEarning():
     try:
         database.deleteEarning(session["email"], earningId)
     except Exception as e:
-        custom_error(e)
+        return custom_error(e)
 
 ##########################################################
 # Error handling to tell users more helpful information  #

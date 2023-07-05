@@ -4,6 +4,7 @@ function loadBudget(id) {
     fillProfilePics(); // Get the profile images on the page filled.
 
     fetch('/data/budget-expenses?id=' + id).then(response => response.json()).then((responseData) => {
+        console.log(responseData)
         const budget = responseData.budget;
         const expenses = responseData.expenses;
 
