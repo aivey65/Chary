@@ -11,6 +11,12 @@ db = firestore.client()
 
 PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"]
 
+def notNull(variable):
+    if (variable == None or variable == "" or variable == ''):
+        return False
+    else:
+        return True
+
 ####################
 # Create functions #
 ####################
@@ -27,7 +33,7 @@ def createUser(email, username, image, color, currency, balance, tutorialFinishe
         'budgets': [], 
         'earnings': [],
         'expenses': [],
-        'joinDate': date.today(),
+        'joinDate': date.isoformat(date.today()),
         'password': str(password),
         'google': str(google)
     }
@@ -49,8 +55,8 @@ def createBudget(email, name, startDate, endDate="", amount=0, description="", r
         newBudget = {
             'email': str(email),
             'name': str(name),
-            'startDate': str(startDate),
-            'endDate': str(endDate),
+            'startDate': date.isoformat(startDate),
+            'endDate': date.isoformat(endDate),
             'amount': float(amount),
             'description': str(description),
             'recurring': bool(recurring),
@@ -72,8 +78,8 @@ def createExpense(email, name, category, startDate, endDate="", amount=0, descri
             'email': str(email),
             'name': str(name),
             'budgetCategory': str(category),
-            'startDate': str(startDate),
-            'endDate': str(endDate),
+            'startDate': date.isoformat(startDate),
+            'endDate': date.isoformat(endDate),
             'amount': float(amount),
             'description': str(description),
             'recurPeriod': int(recurPeriod),
@@ -97,8 +103,8 @@ def createEarning(email, name, startDate, endDate="", amount=0, description="", 
         newEarning = {
             'email': str(email),
             'name': str(name),
-            'startDate': str(startDate),
-            'endDate': str(endDate),
+            'startDate': date.isoformat(startDate),
+            'endDate': date.isoformat(endDate),
             'amount': float(amount),
             'description': str(description),
             'recurPeriod': int(recurPeriod),
@@ -161,17 +167,16 @@ def getSinglePeriod(startDate, period, includeDate, endDate=None):
     if (includeDate < startDate) or (endDate != None and includeDate > endDate):
         return None, None
 
-    timeDelta = getTimeDelta(period) - 1
+    timeDelta = getTimeDelta(period)
     newStartDate = startDate
-    newEndDate = startDate + timeDelta
-
+    newEndDate = (startDate + timeDelta) - timedelta(days=1)
+    
     while includeDate > newEndDate:
-        newStartDate = newEndDate + 1 # The day after the current end date.
+        newStartDate = newEndDate + timedelta(days=1) # The day after the current end date.
         newEndDate = newEndDate + timeDelta
     
     if (endDate != None and endDate < newEndDate):
         newEndDate = endDate
-
     return newStartDate, newEndDate
 
 def getOccurancesWithinPeriod(startDate, endDate, targetStartDate, targetEndDate, targetPeriod, recurring=True):
@@ -227,7 +232,6 @@ def getOccurancesWithinPeriod(startDate, endDate, targetStartDate, targetEndDate
             occurances += 1
             occurranceDates.append(newStartDate)
             newStartDate = newStartDate + timeDelta
-
     return occurances, occurranceDates
 
 def getAllCurrent(email, period=3):
@@ -259,7 +263,10 @@ def getUser(email):
     docs = db.collection('users').where('email', '==', email).stream()
 
     for doc in docs: # Should only run once, since an email should only be present once in database
-        return {"data":doc.to_dict()}
+        userDict = doc.to_dict()
+        # Update ISO format dates into date objects 
+        userDict["joinDate"] = date.fromisoformat(userDict["joinDate"]) if notNull(userDict["joinDate"]) else None
+        return {"data":userDict}
 
 def getAllActiveBudgets(email, targetDate=date.today()):
     """
@@ -279,15 +286,14 @@ def getAllActiveBudgets(email, targetDate=date.today()):
             budgetDoc['usedAmount'] = getBudgetBalance(budgetID, budgetDoc, targetDate)
         except Exception as e:
             raise RuntimeError(e)
-        
-        budgetEnd = None if budgetDoc["endDate"] == "" else date.fromisoformat(budgetDoc["endDate"])
-        budgetStart = date.fromisoformat(budgetDoc['startDate'])
+        budgetDoc["endDate"] = date.fromisoformat(budgetDoc["endDate"]) if notNull(budgetDoc["endDate"]) else None
+        budgetDoc["startDate"] = date.fromisoformat(budgetDoc['startDate']) if notNull(budgetDoc['startDate']) else None
 
         start, end = getSinglePeriod(
-            budgetStart, 
+            budgetDoc["startDate"], 
             budgetDoc["budgetPeriod"],
             targetDate,
-            budgetEnd
+            budgetDoc["endDate"]
         )
 
         if start != None and end != None:
@@ -328,17 +334,14 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
     else:
         budgetDoc = getBudget(id, email, targetDate)
         
-        # Get the active dates and period for the budget
-        dbStart = date.fromisoformat(budgetDoc["startDate"])
-        dbEnd = None if budgetDoc["endDate"] == "" else date.fromisoformat(budgetDoc["endDate"])
-
+        # "getBudget" already converts the budget's date from ISO format to Date object, so we do not need to change it here
         # Getting the budget category and the start and end dates for just this current period.
         budgetCategory = budgetDoc["name"]
         startDate, endDate = getSinglePeriod(
-            dbStart,
+            budgetDoc["startDate"],
             budgetDoc["budgetPeriod"],
             targetDate, 
-            dbEnd
+            budgetDoc["endDate"]
         )
 
         # Check for valid start and end dates
@@ -355,20 +358,20 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
         # Filter for expenses in the same budget period
         for expense in expenseList:
             expenseDoc = expense.to_dict()
-            expenseEnd = None if expenseDoc["endDate"] == "" else date.fromisoformat(expenseDoc["endDate"])
-            expenseStart = date.fromisoformat(expenseDoc['startDate'])
+
+            expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
+            expenseDoc["startDate"] = date.fromisoformat(expenseDoc['startDate']) if notNull(expenseDoc['startDate']) else None
 
             occurances, dates = getOccurancesWithinPeriod(
                 startDate, 
                 endDate, 
-                expenseStart, 
-                expenseEnd, 
+                expenseDoc['startDate'], 
+                expenseDoc["endDate"], 
                 expenseDoc['recurPeriod']
             )
 
             if occurances > 0:
                 returnList.append({"data": expenseDoc, "dates": dates})
-
         return {"budget": budgetDoc, "expenses": returnList, "currency": userData["currency"]}
 
 def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
@@ -392,8 +395,8 @@ def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
         raise Exception("User does not have access to this information.")
     else:
         # Get the active dates and period for the budget
-        dbStart = date.fromisoformat(budgetDoc["startDate"])
-        dbEnd = None if budgetDoc["endDate"] == "" else date.fromisoformat(budgetDoc["endDate"])
+        dbStart = date.fromisoformat(budgetDoc["startDate"]) if notNull(budgetDoc["startDate"]) else None
+        dbEnd = date.fromisoformat(budgetDoc["endDate"]) if notNull(budgetDoc["endDate"]) else None
 
         # Getting the budget category and the start and end dates for just this current period.
         budgetCategory = budgetDoc["name"]
@@ -413,19 +416,18 @@ def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
             .where('email', '==', email)\
             .where('budgetCategory', '==', budgetCategory)\
             .stream()
-        
         usedAmount = 0
         # Filter for expenses in the same budget period
         for expense in expenseList:
             expenseDoc = expense.to_dict()
-            expenseEnd = None if expenseDoc["endDate"] == "" else date.fromisoformat(expenseDoc["endDate"])
-            expenseStart = date.fromisoformat(expenseDoc['startDate'])
+            expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
+            expenseDoc['startDate'] = date.fromisoformat(expenseDoc['startDate']) if notNull(expenseDoc['startDate']) else None
 
             occurances, dates = getOccurancesWithinPeriod(
                 startDate, 
                 endDate, 
-                expenseStart, 
-                expenseEnd, 
+                expenseDoc['startDate'], 
+                expenseDoc["endDate"], 
                 expenseDoc['recurPeriod']
             )
 
@@ -444,6 +446,11 @@ def getAllExpenses(email):
     # Loop through the expenselist, making requests to the database
     for expense in expenseList:
         expenseDoc = expense.to_dict()
+
+        # Update ISO format dates into date objects 
+        expenseDoc["startDate"] = date.fromisoformat(expenseDoc["startDate"]) if notNull(expenseDoc["startDate"]) else None
+        expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
+
         expensesDict[expense.id] = expenseDoc
 
     # Get a list of budget categories
@@ -460,14 +467,14 @@ def getExpensesInRange(email, startDate, endDate):
     for expense in expenseList: 
         expenseDoc = expense.to_dict()
 
-        expenseStart = date.fromisoformat(expenseDoc["startDate"])
-        expenseEnd = None if expenseDoc["endDate"] == "" else date.fromisoformat(expenseDoc["endDate"])
+        expenseDoc["startDate"] = date.fromisoformat(expenseDoc["startDate"]) if notNull(expenseDoc["startDate"]) else None
+        expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
 
         occurances, dates = getOccurancesWithinPeriod(
             startDate, 
             endDate, 
-            expenseStart,
-            expenseEnd,
+            expenseDoc["startDate"],
+            expenseDoc["endDate"],
             expenseDoc['recurPeriod']
         )
 
@@ -490,12 +497,16 @@ def getExpense(expenseId, userEmail):
     if (expenseId not in user['expenses']):
         raise RuntimeError("User email does not match expense!")
     
-    expenseDoc = db.collection('expenses').document(expenseId).get()
+    expenseDoc = db.collection('expenses').document(expenseId).get().to_dict()
     budgetCategories = getBudgetCategories(userEmail)
 
-    return {"data":expenseDoc.to_dict(), "budgetCategories":budgetCategories}
+    # Update ISO format dates into date objects 
+    expenseDoc["startDate"] = date.fromisoformat(expenseDoc["startDate"]) if notNull(expenseDoc["startDate"]) else None
+    expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
 
-def getBudget(budgetId, userEmail, date=date.today()):
+    return {"data":expenseDoc, "budgetCategories":budgetCategories}
+
+def getBudget(budgetId, userEmail, targetDate=date.today()):
     if (budgetId == "" or userEmail == ""):
         raise RuntimeError("No budget ID or email provided.")
     
@@ -504,7 +515,11 @@ def getBudget(budgetId, userEmail, date=date.today()):
         raise RuntimeError("User email does not match budget!")
     
     budgetDoc = db.collection('budgets').document(budgetId).get().to_dict()
-    budgetDoc["usedAmount"] = getBudgetBalance(budgetId, budgetDoc, date)
+    budgetDoc["usedAmount"] = getBudgetBalance(budgetId, budgetDoc, targetDate)
+
+    # Update ISO format dates into date objects 
+    budgetDoc["startDate"] = date.fromisoformat(budgetDoc["startDate"]) if notNull(budgetDoc["startDate"]) else None
+    budgetDoc["endDate"] = date.fromisoformat(budgetDoc["endDate"]) if notNull(budgetDoc["endDate"]) else None
 
     return budgetDoc
 
@@ -516,9 +531,13 @@ def getEarning(earningId, userEmail):
     if (earningId not in user['earnings']):
         raise RuntimeError("User email does not match earning!")
     
-    earningDoc = db.collection('earnings').document(earningId).get()
+    earningDoc = db.collection('earnings').document(earningId).get().to_dict()
 
-    return earningDoc.to_dict()
+    # Update ISO format dates into date objects 
+    earningDoc["startDate"] = date.fromisoformat(earningDoc["startDate"]) if notNull(earningDoc["startDate"]) else None
+    earningDoc["endDate"] = date.fromisoformat(earningDoc["endDate"]) if notNull(earningDoc["endDate"]) else None
+
+    return earningDoc
 
 def getEarningsInRange(email, startDate, endDate):
     earningList = db.collection('earnings')\
@@ -529,14 +548,14 @@ def getEarningsInRange(email, startDate, endDate):
     for earning in earningList: 
         earningDoc = earning.to_dict()
 
-        earningStart = date.fromisoformat(earningDoc["startDate"])
-        earningEnd = None if earningDoc["endDate"] == "" else date.fromisoformat(earningDoc["endDate"])
+        earningDoc["startDate"] = date.fromisoformat(earningDoc["startDate"]) if notNull(earningDoc["startDate"]) else None
+        earningDoc["endDate"] = date.fromisoformat(earningDoc["endDate"]) if notNull(earningDoc["endDate"]) else None
 
         occurances, dates = getOccurancesWithinPeriod(
             startDate, 
             endDate, 
-            earningStart,
-            earningEnd,
+            earningDoc["startDate"],
+            earningDoc["endDate"],
             earningDoc['recurPeriod']
         )
 
@@ -614,16 +633,19 @@ def updateBudget(email, id, name, startDate, endDate="", amount=0, description="
 
     # Check to make sure that the id passed in corresponds to an item in the user's database
     if id in budgetList:
-        budget_ref = db.collection('budgets').document(id)
-        budget_ref.update({
-            'name': str(name),
-            'startDate': str(startDate),
-            'endDate': str(endDate),
-            'amount': float(amount),
-            'description': str(description),
-            'budgetPeriod': int(recurPeriod),
-            'recurring': bool(recurring)
-        })
+        try:
+            budget_ref = db.collection('budgets').document(id)
+            budget_ref.update({
+                'name': str(name),
+                'startDate': date.isoformat(startDate),
+                'endDate': date.isoformat(endDate),
+                'amount': float(amount),
+                'description': str(description),
+                'budgetPeriod': int(recurPeriod),
+                'recurring': bool(recurring)
+            })
+        except Exception as e:
+            raise RuntimeError(e)
     else:
         raise RuntimeError("Verification failed, update canceled.")
     
@@ -639,8 +661,8 @@ def updateExpense(email, id, name, category, startDate, endDate="", amount=0, de
         expense_ref.update({
             'name': str(name),
             'budgetCategory': str(category),
-            'startDate': str(startDate),
-            'endDate': str(endDate),
+            'startDate': date.isoformat(startDate),
+            'endDate': date.isoformat(endDate),
             'amount': float(amount),
             'description': str(description),
             'recurPeriod': int(recurPeriod),
@@ -657,8 +679,8 @@ def updateEarning(email, id, name, startDate, endDate="", amount=0, description=
         expense_ref = db.collection('expenses').document(id)
         expense_ref.update({
             'name': str(name),
-            'startDate': str(startDate),
-            'endDate': str(endDate),
+            'startDate': date.isoformat(startDate),
+            'endDate': date.isoformat(endDate),
             'amount': float(amount),
             'description': str(description),
             'recurPeriod': int(recurPeriod),

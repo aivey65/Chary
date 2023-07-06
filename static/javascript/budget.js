@@ -1,10 +1,10 @@
-const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"]
+const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"];
+const options = getDateFormattingOptions();
 
 function loadBudget(id) {
     fillProfilePics(); // Get the profile images on the page filled.
 
     fetch('/data/budget-expenses?id=' + id).then(response => response.json()).then((responseData) => {
-        console.log(responseData)
         const budget = responseData.budget;
         const expenses = responseData.expenses;
 
@@ -24,12 +24,14 @@ function loadBudget(id) {
             document.getElementById('details-description').textContent = budget.description;
         }
         
-        const options = { year: 'numeric', month: 'long', day: 'numeric' }; // Date formatting
-
-        const startDate = new Date(budget.startDate);
-        document.getElementById('details-date').textContent = startDate.toLocaleDateString('en-us', options);
+        if(budget.startDate == null) {
+            document.getElementById('details-date').textContent = "None";
+        } else {
+            const startDate = new Date(budget.startDate);
+            document.getElementById('details-date').textContent = startDate.toLocaleDateString('en-us', options);
+        }
         
-        if (budget.endDate == "") {
+        if (budget.endDate == null) {
             document.getElementById('details-date-end').textContent = "None";
         } else {
             const endDate = new Date(budget.endDate);

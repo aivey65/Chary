@@ -1,3 +1,8 @@
+// Date formatting
+function getDateFormattingOptions(long=true) {
+    return { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
+}
+
 // Navigation functions
 function homeAction() {
     window.location = '/';
@@ -408,7 +413,7 @@ function generateTableUI(type, entityList, currency) {
         dates.forEach(rawDate => {
             const date = document.createElement('td');
             const formatDate =  new Date(rawDate);
-            date.textContent = formatDate.toLocaleDateString();
+            date.textContent = formatDate.toLocaleDateString('en-us', getDateFormattingOptions());
 
             const entityRow = document.createElement('tr');
             entityRow.classList.add('table-row');
