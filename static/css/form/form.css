@@ -2,6 +2,21 @@
     color: var(--Light);
 }
 
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+input[type='text'], textarea {
+    background-color: var(--Light);
+    border-radius: .2em;
+    border: none;
+    padding: 1rem;
+
+}
+
 input[type='radio'] {
     display: none;
     width: 100%;
