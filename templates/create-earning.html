@@ -34,31 +34,39 @@
         <div class="content non-header" id="acd-earnings">
             <div id="alert-section"></div>
             <form action="javascript:submitEarningForm('create')">
-                <label class="required-input" for="name">Earning Name</label><br>
-                <input type="text" id="name" name="name" required><br>
+                <div id="name-div">
+                    <label class="required-input" for="name">Earning Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
 
-                <label class="required-input" for="amount">Earning Amount</label><br>
-                <input type="text" id="amount" name="amount" required><br>
+                <div id="amount-div">
+                    <label class="required-input" for="amount">Earning Amount</label>
+                    <input type="text" id="amount" name="amount" required>
+                </div>
 
-                <label for="description">Earning Description</label><br>
-                <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
+                <div id="description-div">
+                    <label for="description">Earning Description</label>
+                    <textarea id="description" name="description" rows="4" cols="50"></textarea>
+                </div>
                 
-                <label class="required-input" for="start">Date Received</label><br>
-                <input type="date" id="start" name="start" required><br>
+                <div id="start-div">
+                    <label class="required-input" for="start">Date Received</label>
+                    <input type="date" id="start" name="start" required>
+                </div>
 
                 <!-- Recurring Inputs -->
-                <p class="required-input"> Is this a recurring source of income?</p><br>
-
-                <input type="radio" id="recurring-true" name="recurring" value="True">
-                <label for='recurring-true' class="recurring-choice label-recurring-true">Yes</label>
-
-                <input type="radio" id="recurring-false" name="recurring" value="False">
-                <label for='recurring-false' class="recurring-choice label-recurring-false">No</label><br>
+                <p id="recurring-label" class="required-input"> Is this a recurring source of income?</p><br>
+                <div id="recurring-div">  
+                    <input type="radio" id="recurring-true" name="recurring" value="True">
+                    <label for='recurring-true' class="label-recurring label-recurring-true">Yes</label>
+    
+                    <input type="radio" id="recurring-false" name="recurring" value="False">
+                    <label for='recurring-false' class="label-recurring label-recurring-false">No</label>
+                </div>
                 
-                <div id="recurring-items">
-                    <!-- Earning Period Inputs -->
-                    <p class="required-input" for="radio">Choose how often you receive this income:</p>
-                    
+                <!-- Earning Period Inputs -->
+                <p id="period-label" class="required-input recurring-items" for="radio">Choose how often you receive this income:</p><br>
+                <div id="period-div" class="recurring-items">                        
                     <input type="radio" id="daily" name="radio" value="0" checked="checked">
                     <label for='daily' class="earning-period label-daily">Daily</label>
                     
@@ -73,14 +81,15 @@
                     
                     <input type="radio" id="yearly" name="radio" value="4">
                     <label for='yearly' class="earning-period label-yearly">Yearly</label>
-
-                    <label for="end">End Date</label><br>
-                    <input type="date" id="end" name="end" value=""><br>
                 </div>
-                
 
-                <button class="cta-button" type="submit" value="Submit">Submit</button>
-                <button onclick="back()" value="Back">Cancel</button>
+                <div id="end-div" class="recurring-items">
+                    <label for="end">End Date</label>
+                    <input type="date" id="end" name="end" value="">
+                </div>
+
+                <button id="submit-button" class="cta-button" type="submit" value="Submit">Submit</button>
+                <button id="back-button" onclick="back()" value="Back">Cancel</button>
             </form>
         </div>
 

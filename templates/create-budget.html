@@ -34,52 +34,62 @@
         <div class="content non-header" id="acd-budgets">
             <div id="alert-section"></div>
             <form action="javascript:submitBudgetForm('create')">
-                <label class="required-input" for="name">Budget Name</label><br>
-                <input type="text" id="name" name="name" required><br>
-
-                <label for="description">Budget Description</label><br>
-                <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
-
-                <label class="required-input" for="amount">Budget Amount</label><br>
-                <input type="text" id="amount" name="amount" required><br>
-
-                <label class="required-input" for="start">Start Date</label><br>
-                <input type="date" id="start" name="start" required><br>
-
-                <!-- Budget Period Inputs -->
-                <p class="required-input">Choose how long your budget period will be:</p><br>
-                
-                <input type="radio" id="daily" name="radio" value="0" checked="checked" required>
-                <label for='daily' class="budget-period label-daily">One Day</label>
-
-                <input type="radio" id="weekly" name="radio" value="1" required>
-                <label for='weekly' class="budget-period label-weekly">One Week</label>
-
-                <input type="radio" id="biweekly" name="radio" value="2" required>
-                <label for='biweekly' class="budget-period label-biweekly">Two Weeks</label>
-
-                <input type="radio" id="monthly" name="radio" value="3" required>
-                <label for='monthly' class="budget-period label-monthly">One Month</label>
-                
-                <input type="radio" id="yearly" name="radio" value="4" required>
-                <label for='yearly' class="budget-period label-yearly">One Year</label>  
-
-                <!-- Recurring Inputs -->
-                <p class="required-input"> Is this a recurring budget?</p><br>
-
-                <input type="radio" id="recurring-true" name="recurring" value="True">
-                <label for='recurring-true' class="label-recurring-true">Yes</label>
-
-                <input type="radio" id="recurring-false" name="recurring" value="False">
-                <label for='recurring-false' class="label-recurring-false">No</label><br>
-
-                <div id="recurring-items">
-                    <label for="end">End Date</label><br>
-                    <input type="date" id="end" name="end" value=""><br>
+                <div id="name-div">
+                    <label class="required-input" for="name">Budget Name</label>
+                    <input type="text" id="name" name="name" required>
                 </div>
 
-                <button class="cta-button" type="submit" value="Submit">Submit</button>
-                <button onclick="back()" value="Back">Cancel</button>
+                <div id="description-div">
+                    <label for="description">Budget Description</label>
+                    <textarea id="description" name="description" rows="4" cols="50"></textarea>
+                </div>
+
+                <div id="amount-div">
+                    <label class="required-input" for="amount">Budget Amount</label>
+                    <input type="text" id="amount" name="amount" required>
+                </div>
+
+                <div id="start-div">
+                    <label class="required-input" for="start">Start Date</label>
+                    <input type="date" id="start" name="start" required>
+                </div>
+
+                <!-- Budget Period Inputs -->
+                <p id="period-label" class="required-input">Choose how long your budget period will be:</p><br>
+                <div id="period-div">                    
+                    <input type="radio" id="daily" name="radio" value="0" checked="checked" required>
+                    <label for='daily' class="budget-period label-daily">One Day</label>
+    
+                    <input type="radio" id="weekly" name="radio" value="1" required>
+                    <label for='weekly' class="budget-period label-weekly">One Week</label>
+    
+                    <input type="radio" id="biweekly" name="radio" value="2" required>
+                    <label for='biweekly' class="budget-period label-biweekly">Two Weeks</label>
+    
+                    <input type="radio" id="monthly" name="radio" value="3" required>
+                    <label for='monthly' class="budget-period label-monthly">One Month</label>
+                    
+                    <input type="radio" id="yearly" name="radio" value="4" required>
+                    <label for='yearly' class="budget-period label-yearly">One Year</label>  
+                </div>
+
+                <!-- Recurring Inputs -->
+                <p id="recurring-label" class="required-input"> Is this a recurring budget?</p><br>
+                <div id="recurring-div">    
+                    <input type="radio" id="recurring-true" name="recurring" value="True">
+                    <label for='recurring-true' class="label-recurring-true label-recurring">Yes</label>
+    
+                    <input type="radio" id="recurring-false" name="recurring" value="False">
+                    <label for='recurring-false' class="label-recurring-false label-recurring">No</label>
+                </div>
+
+                <div id="end-div" class="recurring-items">
+                    <label for="end">End Date</label>
+                    <input type="date" id="end" name="end" value="">
+                </div>
+
+                <button id="submit-button" class="cta-button" type="submit" value="Submit">Submit</button>
+                <button id="back-button" onclick="back()" value="Back">Cancel</button>
 
             </form>
         </div>

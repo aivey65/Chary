@@ -34,38 +34,48 @@
         <div class="content non-header" id="acd-expenses">
             <div id="alert-section"></div>
             <form action="javascript:submitExpenseForm('create')" method="post">
-                <label class="required-input" for="name">Expense Name</label><br>
-                <input type="text" id="name" name="name" required><br>
+                <div id="name-div">
+                    <label class="required-input" for="name">Expense Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
 
-                <label class="required-input" for="amount">Expense Amount</label><br>
-                <input type="text" id="amount" name="amount" required><br>
+                <div id="amount-div">
+                    <label class="required-input" for="amount">Expense Amount</label>
+                    <input type="text" id="amount" name="amount" required>
+                </div>
 
-                <label class="required-input" for="category">Budget Category</label><br>
-                <select id="category" name="category" required>
-                    {% for option in allCategories %}
-                        <option value={{option}}>{{option}}</option>
-                    {% endfor %}
-                </select><br>
+                <div id="category-div">
+                    <label class="required-input" for="category">Budget Category</label>
+                    <select id="category" name="category" required>
+                        {% for option in allCategories %}
+                            <option value={{option}}>{{option}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-                <label for="description" for="description">Expense Description</label><br>
-                <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
+                <div id="description-div">
+                    <label for="description" for="description">Expense Description</label>
+                    <textarea id="description" name="description" rows="4" cols="50"></textarea>
+                </div>
 
-                <label class="required-input" for="start">Expense Date</label><br>
-                <input type="date" id="start" name="start" required><br>
+                <div id="start-div">
+                    <label class="required-input" for="start">Expense Date</label>
+                    <input type="date" id="start" name="start" required>
+                </div>
 
                 <!-- Recurring Inputs -->
-                <p class="required-input">Is this a recurring expense?</p><br>
-                
-                <input type="radio" id="recurring-true" name="recurring" value="True">
-                <label for='recurring-true' class="recurring-choice label-recurring-true">Yes</label>
+                <p id="recurring-label" class="required-input">Is this a recurring expense?</p><br>
+                <div id="recurring-div">                    
+                    <input type="radio" id="recurring-true" name="recurring" value="True">
+                    <label for='recurring-true' class="label-recurring label-recurring-true">Yes</label>
+    
+                    <input type="radio" id="recurring-false" name="recurring" value="False">
+                    <label for='recurring-false' class="label-recurring label-recurring-false">No</label>
+                </div>
 
-                <input type="radio" id="recurring-false" name="recurring" value="False">
-                <label for='recurring-false' class="recurring-choice label-recurring-false">No</label><br>
-
-                <div id="recurring-items">
-                    <!-- Expense Period Inputs -->
-                    <p class="required-input" for="radio">How often does this expense occur?</p>
-
+                <!-- Expense Period Inputs -->
+                <p id="period-label" class="required-input recurring-items" for="radio">How often does this expense occur?</p>
+                <div id="period-div" class="recurring-items">    
                     <input type="radio" id="daily" name="radio" value="0" checked="checked">
                     <label for='daily' class="required-input" class="expense-period label-daily">Daily</label>
                     
@@ -80,14 +90,15 @@
 
                     <input type="radio" id="yearly" name="radio" value="4">
                     <label for='yearly' class="expense-period label-yearly">Yearly</label>
-
-                    <label for="end">End Date</label><br>
-                    <input type="date" id="end" name="end" value=""><br>
                 </div>
-               
 
-                <button class="cta-button" type="submit" value="Submit">Submit</button>
-                <button onclick="back()" value="Back">Cancel</button>
+                <div id="end-div" class="recurring-items">
+                    <label for="end">End Date</label>
+                    <input type="date" id="end" name="end" value="">
+                </div>               
+
+                <button id="submit-button" class="cta-button" type="submit" value="Submit">Submit</button>
+                <button id="back-button" onclick="back()" value="Back">Cancel</button>
             </form>
         </div>
 

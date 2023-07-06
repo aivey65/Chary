@@ -36,36 +36,39 @@ function configureRecurOptions() {
     recurTrue = document.getElementById('recurring-true');
     recurFalse = document.getElementById('recurring-false');
 
+    items = document.getElementsByClassName('recurring-items');
+    options = document.getElementsByName('radio');
+
     if (recurTrue.checked) {
         // Show options for recurring
-        recurDiv = document.getElementById('recurring-items');
-        recurDiv.style.display = "block";
+        for (const recurItem of items) {
+            recurItem.style.display = "flex";
+        }
 
         // Make period radio buttons required
-        options = document.getElementsByName('radio');
-        options.forEach(option => {
+        for (const option of options) {
             option.required = true;
-        });
+        };
     } else if (recurFalse.checked) {
         // Hide options for recurring
-        recurDiv = document.getElementById('recurring-items');
-        recurDiv.style.display = "none";
+        for (const recurItem of items) {
+            recurItem.style.display = "none";
+        }
 
         // Make period radio buttons not required
-        options = document.getElementsByName('radio');
-        options.forEach(option => {
+        for (const option of options) {
             option.required = false;
-        });
+        };
     } else {
         // Hide options for recurring when nothing is checked yet
-        recurDiv = document.getElementById('recurring-items');
-        recurDiv.style.display = "none";
+        for (const recurItem of items) {
+            recurItem.style.display = "none";
+        }
 
         // Make period radio buttons not required
-        options = document.getElementsByName('radio');
-        options.forEach(option => {
+        for (const option of options) {
             option.required = false;
-        });
+        };
     }
 }
 
