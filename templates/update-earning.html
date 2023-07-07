@@ -37,28 +37,28 @@
                 <input type="hidden" id="id" name="id" value={{id}} />
 
                 <div id="name-div">
-                    <label class="required-input" for="name">Earning Name</label>
+                    <label class="required-input" for="name">Title</label>
                     <input type="text" id="name" name="name" value={{name}} required>
                 </div>
 
                 <div id="amount-div">
-                    <label class="required-input" for="amount">Earning Amount</label>
+                    <label class="required-input" for="amount">Amount</label>
                     <input type="text" id="amount" name="amount" value={{amount}} required>
                 </div>
 
                 <div id="description-div">
-                    <label for="description">Earning Description</label>
+                    <label for="description">Description</label>
                     <textarea id="description" name="description" rows="4" cols="50" value={{description}}></textarea>
                 </div>
 
-                <div id="start-div">
-                    <label class="required-input" for="start">Date Received</label>
+                <div id="start-div" class="row6">
+                    <label class="required-input" for="start">Date Initialized</label>
                     <input type="date" id="start" name="start" value={{startDate}} required>
                 </div>
                 
                 <!-- Recurring Inputs -->
-                <p id="recurring-label" class="required-input" for="recurring"> Is this a recurring source of income?</p><br>
-                <div id="recurring-div">                    
+                <p id="recurring-label" class="required-input row4" for="recurring"> Is this a recurring source of income?</p><br>
+                <div id="recurring-div" class="row5">                    
                     {% if recurring %}
                         <input type="radio" id="recurring-true" name="recurring" value="True" checked="checked">
                     {% else %}
@@ -75,8 +75,8 @@
                 </div>
 
                 <!-- Earning Period Inputs -->
-                <p id="period-label" class="required-input recurring-items" for="radio">Choose how often you receive this income:</p><br>
-                <div id="period-div" class="recurring-items">    
+                <p id="period-label" class="required-input recurring-items row7" for="radio">Choose how often you receive this income:</p><br>
+                <div id="period-div" class="recurring-items row8">    
                     {% if recurPeriod == 0 %}
                         <input type="radio" id="daily" name="radio" value="0" checked="checked">
                     {% else %}
@@ -113,7 +113,7 @@
                     <label for='yearly' class="earning-period label-yearly">Yearly</label>
                 </div>
 
-                <div id="end-div" class="recurring-items">
+                <div id="end-div" class="recurring-items row6">
                     <label for="end">End Date</label>
                     <input type="date" id="end" name="end" value={{endDate}}>
                 </div>

@@ -35,28 +35,28 @@
             <div id="alert-section"></div>
             <form action="javascript:submitBudgetForm('create')">
                 <div id="name-div">
-                    <label class="required-input" for="name">Budget Name</label>
+                    <label class="required-input" for="name">Title</label>
                     <input type="text" id="name" name="name" required>
                 </div>
 
                 <div id="description-div">
-                    <label for="description">Budget Description</label>
+                    <label for="description">Description</label>
                     <textarea id="description" name="description" rows="4" cols="50"></textarea>
                 </div>
 
                 <div id="amount-div">
-                    <label class="required-input" for="amount">Budget Amount</label>
+                    <label class="required-input" for="amount">Amount</label>
                     <input type="text" id="amount" name="amount" required>
                 </div>
 
-                <div id="start-div">
-                    <label class="required-input" for="start">Start Date</label>
+                <div id="start-div" class="row8">
+                    <label class="required-input" for="start">Date Initialized</label>
                     <input type="date" id="start" name="start" required>
                 </div>
 
                 <!-- Budget Period Inputs -->
-                <p id="period-label" class="required-input">Choose how long your budget period will be:</p><br>
-                <div id="period-div">                    
+                <p id="period-label" class="required-input row4">Choose how long your budget period will be:</p><br>
+                <div id="period-div" class="row5">                    
                     <input type="radio" id="daily" name="radio" value="0" checked="checked" required>
                     <label for='daily' class="budget-period label-daily">One Day</label>
     
@@ -74,8 +74,8 @@
                 </div>
 
                 <!-- Recurring Inputs -->
-                <p id="recurring-label" class="required-input"> Is this a recurring budget?</p><br>
-                <div id="recurring-div">    
+                <p id="recurring-label" class="required-input row6"> Is this a recurring budget?</p><br>
+                <div id="recurring-div" class="row7">    
                     <input type="radio" id="recurring-true" name="recurring" value="True">
                     <label for='recurring-true' class="label-recurring-true label-recurring">Yes</label>
     
@@ -83,7 +83,7 @@
                     <label for='recurring-false' class="label-recurring-false label-recurring">No</label>
                 </div>
 
-                <div id="end-div" class="recurring-items">
+                <div id="end-div" class="recurring-items row8">
                     <label for="end">End Date</label>
                     <input type="date" id="end" name="end" value="">
                 </div>

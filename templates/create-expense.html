@@ -35,12 +35,12 @@
             <div id="alert-section"></div>
             <form action="javascript:submitExpenseForm('create')" method="post">
                 <div id="name-div">
-                    <label class="required-input" for="name">Expense Name</label>
+                    <label class="required-input" for="name">Title</label>
                     <input type="text" id="name" name="name" required>
                 </div>
 
                 <div id="amount-div">
-                    <label class="required-input" for="amount">Expense Amount</label>
+                    <label class="required-input" for="amount">Amount</label>
                     <input type="text" id="amount" name="amount" required>
                 </div>
 
@@ -54,18 +54,18 @@
                 </div>
 
                 <div id="description-div">
-                    <label for="description" for="description">Expense Description</label>
+                    <label for="description" for="description">Description</label>
                     <textarea id="description" name="description" rows="4" cols="50"></textarea>
                 </div>
 
-                <div id="start-div">
-                    <label class="required-input" for="start">Expense Date</label>
+                <div id="start-div" class="row6">
+                    <label class="required-input" for="start">Date Initialized</label>
                     <input type="date" id="start" name="start" required>
                 </div>
 
                 <!-- Recurring Inputs -->
-                <p id="recurring-label" class="required-input">Is this a recurring expense?</p><br>
-                <div id="recurring-div">                    
+                <p id="recurring-label" class="required-input row4">Is this a recurring expense?</p><br>
+                <div id="recurring-div" class="row5">                    
                     <input type="radio" id="recurring-true" name="recurring" value="True">
                     <label for='recurring-true' class="label-recurring label-recurring-true">Yes</label>
     
@@ -74,10 +74,10 @@
                 </div>
 
                 <!-- Expense Period Inputs -->
-                <p id="period-label" class="required-input recurring-items" for="radio">How often does this expense occur?</p>
-                <div id="period-div" class="recurring-items">    
+                <p id="period-label" class="required-input recurring-items row7" for="radio">How often does this expense occur?</p>
+                <div id="period-div" class="recurring-items row8">    
                     <input type="radio" id="daily" name="radio" value="0" checked="checked">
-                    <label for='daily' class="required-input" class="expense-period label-daily">Daily</label>
+                    <label for='daily' class="expense-period label-daily">Daily</label>
                     
                     <input type="radio" id="weekly" name="radio" value="1">
                     <label for='weekly' class="expense-period label-weekly">Weekly</label>
@@ -92,7 +92,7 @@
                     <label for='yearly' class="expense-period label-yearly">Yearly</label>
                 </div>
 
-                <div id="end-div" class="recurring-items">
+                <div id="end-div" class="recurring-items row6">
                     <label for="end">End Date</label>
                     <input type="date" id="end" name="end" value="">
                 </div>               
