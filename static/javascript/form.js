@@ -179,6 +179,7 @@ function submitExpenseForm() {
                 category: document.getElementById("category").value
             })
         }).then((response) => {
+            console.log(response)
             if (response.status != 201) {
                 message = "- Error: " + String(response.text) + ". Please revise your expense and try again."
                 updateAlertSection(message);

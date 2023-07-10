@@ -71,7 +71,7 @@
 
                 <!-- Recurring Inputs -->
                 <p id="recurring-label" class="required-input row4">Is this a recurring expense?</p><br>
-                <div id="recurring-div row5">    
+                <div id="recurring-div" class="row5">    
                     {% if recurring %}
                         <input type="radio" id="recurring-true" name="recurring" value="True" checked="checked">   
                     {% else %}
@@ -128,7 +128,7 @@
 
                 <div id="end-div" class="recurring-items row6">
                     <label for="end">End Date</label>
-                    <input type="date" id="end" name="end" value={{endDate}} required>
+                    <input type="date" id="end" name="end" value={{endDate}}>
                 </div>
 
                 <button id="submit-button" class="cta-button" type="submit" value="Submit">Submit</button>

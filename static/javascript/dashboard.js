@@ -329,7 +329,7 @@ function generateOverviewExpenses() {
     overviewHeader.textContent = "Recent Expenses";
     overviewHeader.classList.add('module-header');
 
-    const expenseTable = generateTableUI(1, userData.expenses.expenses, userData.currency);
+    const expenseTable = generateTableUI(0, userData.expenses.expenses, userData.currency);
 
     overviewExpenseContainer.append(overviewHeader, expenseTable);
     return overviewExpenseContainer;
@@ -344,7 +344,7 @@ function generateOverviewEarnings() {
     overviewHeader.textContent = "Recent Earnings";
     overviewHeader.classList.add('module-header');
 
-    const earningTable = generateTableUI(0, userData.earnings, userData.currency);
+    const earningTable = generateTableUI(1, userData.earnings, userData.currency);
 
     overviewEarningContainer.append(overviewHeader, earningTable);
     return overviewEarningContainer;

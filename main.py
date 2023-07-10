@@ -244,7 +244,7 @@ def renderUpdateExpense():
 
         # This database method checks to make sure that the user owns the expense they are trying to update
         databaseInfo = database.getExpense(expenseId, session["email"])
-        expenseInfo = databaseInfo["expense"]
+        expenseInfo = databaseInfo["data"]
         categoryInfo = databaseInfo["budgetCategories"]
 
         return render_template(
@@ -358,9 +358,9 @@ def getOneEarning():
 @app.route("/data/create-user", methods=['POST'])
 @login_is_required
 def createUser():
-    username = request.json["name"] if request.json["name"] else ""
-    image = request.json["profile-image"] if request.json["profile-image"] else ""
-    color = request.json["profile-color"] if request.json["profile-color"] else ""
+    username = request.json["name"] if bool(request.json["name"]) else ""
+    image = request.json["profile-image"] if bool(request.json["profile-image"]) else ""
+    color = request.json["profile-color"] if bool(request.json["profile-color"]) else ""
     currency = request.form.get("currency")
     balance = 0
     tutorialFinished = False
@@ -384,13 +384,13 @@ def createUser():
 @app.route("/data/create-budget", methods=['POST'])
 @login_is_required
 def createBudget():
-    name = request.json["name"] if request.json["name"] else ""
-    description = request.json["description"] if request.json["description"] else ""
-    amount = request.json["amount"] if request.json["amount"] else ""
-    recurPeriod = request.json["radio"] if request.json["radio"] else 0
-    startDate = request.json["start"] if request.json["start"] else ""
-    endDate = request.json["end"] if request.json["end"] else ""
-    recurring = request.json["recurring"] if request.json["recurring"] else False
+    name = request.json["name"] if bool(request.json["name"]) else ""
+    description = request.json["description"] if bool(request.json["description"]) else ""
+    amount = request.json["amount"] if bool(request.json["amount"]) else ""
+    recurPeriod = request.json["radio"] if bool(request.json["radio"]) else 0
+    startDate = request.json["start"] if bool(request.json["start"]) else ""
+    endDate = request.json["end"] if bool(request.json["end"]) else ""
+    recurring = request.json["recurring"] if bool(request.json["recurring"]) else False
 
     try:
         database.createBudget(
@@ -416,14 +416,14 @@ def createBudget():
 @app.route("/data/create-expense", methods=['POST'])
 @login_is_required
 def createExpense():
-    name = request.json["name"] if request.json["name"] else ""
-    amount = request.json["amount"] if request.json["amount"] else ""
-    category = request.json["category"] if request.json["category"] else ""
-    description = request.json["description"] if request.json["description"] else ""
-    recurPeriod = request.json["radio"] if request.json["radio"] else ""
-    startDate = request.json["start"] if request.json["start"] else ""
-    endDate = request.json["end"] if request.json["end"] else ""
-    recurring = request.json["recurring"] if request.json["recurring"] else ""
+    name = request.json["name"] if bool(request.json["name"]) else ""
+    amount = request.json["amount"] if bool(request.json["amount"]) else ""
+    category = request.json["category"] if bool(request.json["category"]) else ""
+    description = request.json["description"] if bool(request.json["description"]) else ""
+    recurPeriod = request.json["radio"] if bool(request.json["radio"]) else ""
+    startDate = request.json["start"] if bool(request.json["start"]) else ""
+    endDate = request.json["end"] if bool(request.json["end"]) else ""
+    recurring = request.json["recurring"] if bool(request.json["recurring"]) else ""
     try:
         database.createExpense(
             session["email"], 
@@ -449,13 +449,13 @@ def createExpense():
 @app.route("/data/create-earning", methods=['POST'])
 @login_is_required
 def createEarning():
-    name = request.json["name"] if request.json["name"] else ""
-    amount = request.json["amount"] if request.json["amount"] else ""
-    description = request.json["description"] if request.json["description"] else ""
-    recurPeriod = request.json["radio"] if request.json["radio"] else ""
-    startDate = request.json["start"] if request.json["start"] else ""
-    endDate = request.json["end"] if request.json["end"] else ""
-    recurring = request.json["recurring"] if request.json["recurring"] else ""
+    name = request.json["name"] if bool(request.json["name"]) else ""
+    amount = request.json["amount"] if bool(request.json["amount"]) else ""
+    description = request.json["description"] if bool(request.json["description"]) else ""
+    recurPeriod = request.json["radio"] if bool(request.json["radio"]) else ""
+    startDate = request.json["start"] if bool(request.json["start"]) else ""
+    endDate = request.json["end"] if bool(request.json["end"]) else ""
+    recurring = request.json["recurring"] if bool(request.json["recurring"]) else ""
     try:
         database.createEarning(
             session["email"], 
@@ -508,13 +508,13 @@ def updateUser():
 @login_is_required
 def updateBudget():
     id = request.json["id"]
-    name = request.json["name"] if request.json["name"] else ""
-    description = request.json["description"] if request.json["description"] else ""
-    amount = request.json["amount"] if request.json["amount"] else ""
-    budgetPeriod = request.json["radio"] if request.json["radio"] else 0
-    startDate = request.json["start"] if request.json["start"] else ""
-    endDate = request.json["end"] if request.json["end"] else ""
-    recurring = request.json["recurring"] if request.json["recurring"] else False
+    name = request.json["name"] if bool(request.json["name"]) else ""
+    description = request.json["description"] if bool(request.json["description"]) else ""
+    amount = request.json["amount"] if bool(request.json["amount"]) else ""
+    budgetPeriod = request.json["radio"] if bool(request.json["radio"]) else 0
+    startDate = request.json["start"] if bool(request.json["start"]) else ""
+    endDate = request.json["end"] if bool(request.json["end"]) else ""
+    recurring = request.json["recurring"] if bool(request.json["recurring"]) else False
 
     try:
         database.updateBudget(
@@ -542,14 +542,14 @@ def updateBudget():
 @login_is_required
 def updateExpense():
     id = request.json["id"]
-    name = request.json["name"] if request.json["name"] else ""
-    amount = request.json["amount"] if request.json["amount"] else ""
-    category = request.json["category"] if request.json["category"] else ""
-    description = request.json["description"] if request.json["description"] else ""
-    recurPeriod = request.json["radio"] if request.json["radio"] else ""
-    startDate = request.json["start"] if request.json["start"] else ""
-    endDate = request.json["end"] if request.json["end"] else ""
-    recurring = request.json["recurring"] if request.json["recurring"] else ""
+    name = request.json["name"] if bool(request.json["name"]) else ""
+    amount = request.json["amount"] if bool(request.json["amount"]) else ""
+    category = request.json["category"] if bool(request.json["category"]) else ""
+    description = request.json["description"] if bool(request.json["description"]) else ""
+    recurPeriod = request.json["radio"] if bool(request.json["radio"]) else ""
+    startDate = request.json["start"] if bool(request.json["start"]) else ""
+    endDate = request.json["end"] if bool(request.json["end"]) else ""
+    recurring = request.json["recurring"] if bool(request.json["recurring"]) else ""
     
     try:
         database.updateExpense(
@@ -578,13 +578,13 @@ def updateExpense():
 @login_is_required
 def updateEarning():
     id = request.form.get("id")
-    name = request.json["name"] if request.json["name"] else ""
-    amount = request.json["amount"] if request.json["amount"] else ""
-    description = request.json["description"] if request.json["description"] else ""
-    recurPeriod = request.json["radio"] if request.json["radio"] else ""
-    startDate = request.json["start"] if request.json["start"] else ""
-    endDate = request.json["end"] if request.json["end"] else ""
-    recurring = request.json["recurring"] if request.json["recurring"] else ""
+    name = request.json["name"] if bool(request.json["name"]) else ""
+    amount = request.json["amount"] if bool(request.json["amount"]) else ""
+    description = request.json["description"] if bool(request.json["description"]) else ""
+    recurPeriod = request.json["radio"] if bool(request.json["radio"]) else ""
+    startDate = request.json["start"] if bool(request.json["start"]) else ""
+    endDate = request.json["end"] if bool(request.json["end"]) else ""
+    recurring = request.json["recurring"] if bool(request.json["recurring"]) else ""
     
     try:
         database.updateEarning(

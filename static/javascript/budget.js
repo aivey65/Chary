@@ -59,5 +59,5 @@ function loadBudget(id) {
 }
 
 function dashboardBudgetAction() {
-    window.location.assign("/dashboard");
+    window.location.assign("/dashboard?refresh=false&tab=budgets");
 }

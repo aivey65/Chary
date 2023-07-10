@@ -298,10 +298,11 @@ function generateBudgetsUI(budgets, currency) {
         // Create Popup options for budget info
         const budget_update_img = document.createElement('img');
         budget_update_img.src = "static/images/EditButtonSM.svg";
-        budget_update_img.classList.add('update-img');
+        budget_update_img.classList.add('update-img', 'options');
         
         const budget_update_text = document.createElement('h4');
         budget_update_text.textContent = "Edit";
+        budget_update_text.classList.add('options');
         const budget_update = document.createElement('div');
         budget_update.classList.add('budget-edit', 'options');
         budget_update.addEventListener('click', function() {
@@ -372,45 +373,45 @@ function generateTableUI(type, entityList, currency) {
 
     const tableBody = document.createElement('tbody');
     for (const key in entityList) {
-        const current = entityList[key].data;
-
-        const name = document.createElement('td');
-        name.textContent = current.name;
-
-        const amount = document.createElement('td');
-        amount.textContent = currency + formatNumber(current.amount);
-
-        var expense_category;
-        if (type == 0) {
-            expense_category = document.createElement('td');
-            expense_category.textContent = current.budgetCategory;
-        } 
-
-        const description = document.createElement('td');
-        description.textContent = current.description;
-        description.classList.add('long-text');
-
-        recur = document.createElement('td');
-        if (current.recurring) {
-            const recur_img = document.createElement('img');
-            recur_img.classList.add('recur-img');
-            recur_img.src = "static/images/recurIcon.svg";
-            recur_img.title = "This " + TYPES[type] + " is recurring over a specified period of time";
-            recur.append(recur_img);
-        }
-
-        const update = document.createElement('td');
-        const update_img = document.createElement('img');
-        update_img.src = "static/images/EditButtonSM.svg"
-        update_img.classList.add("update-img");
-        update_img.title = "Update";
-        update_img.addEventListener('click', () => {
-            window.location = "/form/update-" + TYPES[type] + "?id=" + key;
-        })
-        update.append(update_img);
-
         dates = entityList[key].dates;
         dates.forEach(rawDate => {
+            const current = entityList[key].data;
+
+            const name = document.createElement('td');
+            name.textContent = current.name;
+
+            const amount = document.createElement('td');
+            amount.textContent = currency + formatNumber(current.amount);
+
+            var expense_category;
+            if (type == 0) {
+                expense_category = document.createElement('td');
+                expense_category.textContent = current.budgetCategory;
+            } 
+
+            const description = document.createElement('td');
+            description.textContent = current.description;
+            description.classList.add('long-text');
+
+            recur = document.createElement('td');
+            if (current.recurring) {
+                const recur_img = document.createElement('img');
+                recur_img.classList.add('recur-img');
+                recur_img.src = "static/images/recurIcon.svg";
+                recur_img.title = "This " + TYPES[type] + " is recurring over a specified period of time";
+                recur.append(recur_img);
+            }
+
+            const update = document.createElement('td');
+            const update_img = document.createElement('img');
+            update_img.src = "static/images/EditButtonSM.svg"
+            update_img.classList.add("update-img");
+            update_img.title = "Update";
+            update.addEventListener('click', function() {
+                window.location = "/form/update-" + TYPES[type] + "?id=" + key;
+            })
+            update.append(update_img);
+
             const date = document.createElement('td');
             const formatDate =  new Date(rawDate);
             date.textContent = formatDate.toLocaleDateString('en-us', getDateFormattingOptions());
@@ -418,9 +419,9 @@ function generateTableUI(type, entityList, currency) {
             const entityRow = document.createElement('tr');
             entityRow.classList.add('table-row');
             if (type == 0) {
-                entityRow.append(name.cloneNode(true), amount.cloneNode(true), expense_category.cloneNode(true), description.cloneNode(true), date, recur.cloneNode(true), update.cloneNode(true));
+                entityRow.append(name, amount, expense_category, description, date, recur, update);
             } else {
-                entityRow.append(name.cloneNode(true), amount.cloneNode(true), description.cloneNode(true), date, recur.cloneNode(true), update.cloneNode(true));
+                entityRow.append(name, amount, description, date, recur, update);
             }
             tableBody.append(entityRow)
         }) 
