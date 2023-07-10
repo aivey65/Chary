@@ -110,9 +110,9 @@ function submitBudgetForm() {
                 end: document.getElementById("end").value,
                 recurring: document.querySelector("input[name='recurring']:checked").value,
             })
-        }).then((response) => {
-            if (response.status != 201) {
-                message = "- Error: " + String(response.text) + ". Please revise your budget and try again."
+        }).then((response) => response.json()).then((responseData) => {
+            if (responseData.status != 201) {
+                message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again."
                 updateAlertSection(message);
                 window.scrollTo(0, 0);
                 return
@@ -135,9 +135,9 @@ function submitBudgetForm() {
                 end: document.getElementById("end").value,
                 recurring: document.querySelector("input[name='recurring']:checked").value,
             })
-        }).then((response) => {
-            if (response.status != 201) {
-                message = "- Error: " + String(response.text) + ". Please revise your budget and try again."
+        }).then((response) => response.json()).then((responseData) => {
+            if (responseData.status != 201) {
+                message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again."
                 updateAlertSection(message);
                 window.scrollTo(0, 0);
                 return
@@ -178,10 +178,9 @@ function submitExpenseForm() {
                 recurring: document.querySelector("input[name='recurring']:checked").value,
                 category: document.getElementById("category").value
             })
-        }).then((response) => {
-            console.log(response)
-            if (response.status != 201) {
-                message = "- Error: " + String(response.text) + ". Please revise your expense and try again."
+        }).then((response) => response.json()).then((responseData) => {
+            if (responseData.status != 201) {
+                message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again."
                 updateAlertSection(message);
                 window.scrollTo(0, 0);
                 return
@@ -205,9 +204,9 @@ function submitExpenseForm() {
                 recurring: document.querySelector("input[name='recurring']:checked").value,
                 category: document.getElementById("category").value
             })
-        }).then((response) => {
-            if (response.status != 201) {
-                message = "- Error: " + String(response.text) + ". Please revise your expense and try again."
+        }).then((response) => response.json()).then((responseData) => {
+            if (responseData.status != 201) {
+                message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again."
                 updateAlertSection(message);
                 window.scrollTo(0, 0);
                 return
@@ -248,9 +247,9 @@ function submitEarningForm() {
                 recurring: document.querySelector("input[name='recurring']:checked").value,
 
             })
-        }).then((response) => {
-            if (response.status != 201) {
-                message = "- Error: " + String(response.text) + ". Please revise your earning and try again."
+        }).then((response) => response.json()).then((responseData) => {
+            if (responseData.status != 201) {
+                message = "- Error: " + String(responseData.message) + ". Please revise your earning and try again."
                 updateAlertSection(message);
                 window.scrollTo(0, 0);
                 return
@@ -277,7 +276,7 @@ function submitEarningForm() {
         }).then(response => response.json()).then((responseData) => {
             console.log(responseData)
             if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + ". Please revise your earning and try again."
+                message = "- Error: " + String(responseData.message) + " Please revise your earning and try again."
                 updateAlertSection(message);
                 window.scrollTo(0, 0);
                 return
