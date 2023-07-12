@@ -311,6 +311,28 @@ tr:nth-child(odd) td {
     stroke-width: 20;
 }
 
+.carousel {
+    display: flex;
+    flex-direction: row;
+    gap: var(--smallPad);
+    justify-content: center;
+    margin-top: var(--smallPad);
+}
+
+.carousel-dot {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+}
+
+.active-dot {
+    background-color: var(--MainD);
+}
+
+.inactive-dot {
+    background-color: var(--MainL);
+}
+
 /*
 *** Footer styles ***
 */ 

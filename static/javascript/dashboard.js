@@ -46,7 +46,7 @@ function loadOverviewTab() {
     const chartPanel = generateOverviewCharts();
     chartPanel.classList.add('module');
 
-    const budgetPanel = generateOverviewBudgets(userData.budgets, userData.currency);
+    const budgetPanel = generateOverviewBudgets(userData.budgets);
     budgetPanel.classList.add('module');
 
     const profilePanel = generateOverviewProfile();
@@ -67,6 +67,7 @@ function loadOverviewTab() {
     tabBody.append(overviewTab);
 
     changeActiveTab(document.getElementById('overview-tab'))
+    changeActiveDot(0, "overview-dots")
 }
 
 function loadBudgetTab() {
@@ -83,11 +84,7 @@ function loadBudgetTab() {
     tabHead.append(header, addButton);
     tabHead.id = 'tab-head';
 
-    budgetPanel = generateBudgetsUI(userData.budgets, userData.currency);
-
-    const budgetContainer = document.createElement('div');
-    budgetContainer.id = "budget-container";
-    budgetContainer.append(budgetPanel);
+    budgetContainer = generateBudgetsUI(userData.budgets, userData.currency);
 
     const budgetTab = document.createElement('div');
     budgetTab.id = 'budget-section';
@@ -223,8 +220,8 @@ function generateOverviewProfile() {
     return overviewProfileContainer;
 }
 
-function generateOverviewBudgets(budgets, currency) {
-    const overviewBudgetContainer = document.createElement('div');
+function generateOverviewBudgets(budgets) {
+    const overviewBudgetContainer = document.createElement("div");
     overviewBudgetContainer.id = 'budget-snip-container';
     overviewBudgetContainer.classList.add('snip-containers');
 
@@ -232,92 +229,157 @@ function generateOverviewBudgets(budgets, currency) {
     overviewHeader.textContent = "Budget Information";
     overviewHeader.classList.add('module-header');
     overviewBudgetContainer.append(overviewHeader);
+
+    const budgetContainer = generateLimitedOverviewBudgets(budgets, 0, 3);
+    overviewBudgetContainer.append(budgetContainer);
     
-    for (const key in budgets) {
-        const budgetSnippet = document.createElement('div');
-        budgetSnippet.classList.add('budget-snippet');
-        budgetSnippet.addEventListener('click', function(e) {
-            if (!e.target.classList.contains('snip-edit')) {
-                window.location = "/expand-budget?id=" + key;
-            }
-        })
-
-        var recur_img;
-        if (budgets[key].recurring) {
-            recur_img = document.createElement('img');
-            recur_img.src = 'static/images/recurIcon.svg';
-            recur_img.classList.add('recur-img');
-            const period = PERIODS[budgets[key].budgetPeriod].toLocaleLowerCase();
-            recur_img.title = "This budget recurs " + period + ".";
-        }
-
-        const budget_used = document.createElement('p');
-        budget_used.classList.add('snip-budget-used');
-        budget_used.textContent = (budgets[key].usedAmount / budgets[key].amount * 100).toFixed(1) + "% used";
-
-        const budget_edit = document.createElement('img');
-        budget_edit.src = "static/images/EditButtonSM.svg";
-        budget_edit.title = "Edit";
-        budget_edit.classList.add('snip-edit');
-        budget_edit.addEventListener('click', function() {
-            window.location = "/form/update-budget?id=" + key;
-        })
-
-        // Progess SVG
-        const svgDiv = document.createElement('div');
-        svgDiv.classList.add('snip-svg-div');
-
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
-        const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
-        const path2 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
-
-        svg.setAttribute('width', '200');
-        svg.setAttribute('height', '20');
-        svg.setAttribute('viewbox', '0 0 200 60');
-        svg.classList.add('snip-progress-svg');
-        svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-
-        path1.setAttribute('x1', '10');
-        path1.setAttribute('x2', '190');
-        path1.setAttribute('y1', '10');
-        path1.setAttribute('y2', '10');
-        path1.classList.add('snip-outer-progress');
-        path1.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-        svg.append(path1);
-        
-        const fillAmount = budgets[key].usedAmount;
-        if (fillAmount != 0) {
-            path2.setAttribute('x1', '10');
-            path2.setAttribute('x2', '190');
-            path2.setAttribute('y1', '10');
-            path2.setAttribute('y2', '10');
-            path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-    
-            path2Length = path2.getAttribute('x2') - path2.getAttribute('x1');
-            path2.setAttribute('stroke-dasharray', (fillAmount/budgets[key].amount) * path2Length + ' ' + path2Length);
-            path2.classList.add('snip-inner-progress');
-
-            svg.append(path1, path2);  
-        }
-
-        svgDiv.append(svg);
-
-        const budget_name = document.createElement('p');
-        budget_name.classList.add('snip-budget-name');
-        budget_name.textContent = budgets[key].name;
-
-        const budget_main = document.createElement('div');
-        budget_main.classList.add("snip-budget-main");
-        budget_main.append(budget_name, svgDiv);
-
-        // End progress svg
-
-        budgetSnippet.append(recur_img, budget_main, budget_used, budget_edit);
-        
-        overviewBudgetContainer.append(budgetSnippet)
-    }
+    const dotCarousel = budgetCarouselButtons(budgets, "overview-dots", 3);
+    overviewBudgetContainer.append(dotCarousel);
 
     return overviewBudgetContainer;
+}
+
+function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
+    const budgetContainer = document.createElement("div");
+    budgetContainer.id = 'limited-budgets';
+
+    const keys = Object.keys(budgetList)
+    const start = slideNum * maxShow;
+
+    for (var index = 0; index < keys.length; index++) {
+        if (index >= start && index < start + maxShow) {
+            const key = keys[index]
+            const budget = budgetList[key];
+
+            const budgetSnippet = document.createElement('div');
+            budgetSnippet.classList.add('budget-snippet');
+            budgetSnippet.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('snip-edit')) {
+                    window.location = "/expand-budget?id=" + key;
+                }
+            })
+
+            var recur_img;
+            if (budget.recurring) {
+                recur_img = document.createElement('img');
+                recur_img.src = 'static/images/recurIcon.svg';
+                recur_img.classList.add('recur-img');
+                const period = PERIODS[budget.budgetPeriod].toLocaleLowerCase();
+                recur_img.title = "This budget recurs " + period + ".";
+            }
+
+            const budget_used = document.createElement('p');
+            budget_used.classList.add('snip-budget-used');
+            budget_used.textContent = (budget.usedAmount / budget.amount * 100).toFixed(1) + "% used";
+
+            const budget_edit = document.createElement('img');
+            budget_edit.src = "static/images/EditButtonSM.svg";
+            budget_edit.title = "Edit";
+            budget_edit.classList.add('snip-edit');
+            budget_edit.addEventListener('click', function() {
+                window.location = "/form/update-budget?id=" + key;
+            })
+
+            // Progess SVG
+            const svgDiv = document.createElement('div');
+            svgDiv.classList.add('snip-svg-div');
+
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+            const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+            const path2 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+
+            svg.setAttribute('width', '200');
+            svg.setAttribute('height', '20');
+            svg.setAttribute('viewbox', '0 0 200 60');
+            svg.classList.add('snip-progress-svg');
+            svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+
+            path1.setAttribute('x1', '10');
+            path1.setAttribute('x2', '190');
+            path1.setAttribute('y1', '10');
+            path1.setAttribute('y2', '10');
+            path1.classList.add('snip-outer-progress');
+            path1.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+            svg.append(path1);
+            
+            const fillAmount = budget.usedAmount;
+            if (fillAmount != 0) {
+                path2.setAttribute('x1', '10');
+                path2.setAttribute('x2', '190');
+                path2.setAttribute('y1', '10');
+                path2.setAttribute('y2', '10');
+                path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+        
+                path2Length = path2.getAttribute('x2') - path2.getAttribute('x1');
+                path2.setAttribute('stroke-dasharray', (fillAmount/budget.amount) * path2Length + ' ' + path2Length);
+                path2.classList.add('snip-inner-progress');
+
+                svg.append(path1, path2);  
+            }
+
+            svgDiv.append(svg);
+
+            const budget_name = document.createElement('p');
+            budget_name.classList.add('snip-budget-name');
+            budget_name.textContent = budget.name;
+
+            const budget_main = document.createElement('div');
+            budget_main.classList.add("snip-budget-main");
+            budget_main.append(budget_name, svgDiv);
+
+            // End progress svg
+
+            budgetSnippet.append(recur_img, budget_main, budget_used, budget_edit);
+            
+            budgetContainer.append(budgetSnippet)
+        }
+    }
+
+    return budgetContainer;
+}
+
+function budgetCarouselButtons(budgets, uniqueClass, maxShow=3) {
+    budgetsLength = Object.keys(budgets).length
+    numSlides = budgetsLength / maxShow;
+
+    var dotsToReturn = document.createElement("div");
+    dotsToReturn.classList.add("carousel");
+
+    for (var slideNum = 0; slideNum < numSlides; slideNum++) {
+        const dot = document.createElement("div");
+        dot.classList.add("carousel-dot", uniqueClass);
+        dot.addEventListener("click", function() {
+            const budgetsContainer = document.getElementById('limited-budgets');
+            budgetsContainer.innerHTML = "";
+            budgetsContainer.append(generateLimitedOverviewBudgets(budgets, slideNum, maxShow));
+            changeActiveDot(slideNum, uniqueClass)
+            console.log("checking slide num...", slideNum)
+        });
+
+        dotsToReturn.append(dot);
+    }
+
+    return dotsToReturn;
+}
+
+function changeActiveDot(slideNum, uniqueClass) {
+    const buttons = document.getElementsByClassName(uniqueClass);
+    const buttonsLength = Object.keys(buttons).length
+
+    for (var index = 0; index < buttonsLength; index++) {
+        const dot = buttons[index];
+        console.log(dot)
+        console.log("index", index)
+        console.log("slideNum", slideNum)
+
+        if (index == slideNum) {
+            dot.classList.add("active-dot");
+            dot.classList.remove("inactive-dot");
+        } else {
+            dot.classList.add("inactive-dot");
+            dot.classList.remove("active-dot");
+        }
+    }
 }
 
 function generateOverviewExpenses() {

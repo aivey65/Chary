@@ -192,7 +192,6 @@ def getSinglePeriod(startDate, period, includeDate, endDate=None):
     newEndDate: endDate of the current period
     """
     if (includeDate < startDate) or (endDate != None and includeDate > endDate):
-        print("oops")
         return None, None
 
     timeDelta = getTimeDelta(period)
@@ -321,12 +320,11 @@ def getAllActiveBudgets(email, targetDate=date.today()):
                 targetDate,
                 budgetDoc["endDate"]
             )
-            print(start, end)
 
             if start != None and end != None:
-                print("call balance")
                 budgetDoc['usedAmount'] = getBudgetBalance(budgetID, budgetDoc, targetDate)
                 budgetsDict[budgetID] = budgetDoc
+                
                 budgetCategories.append(budgetDoc['name'])
         except Exception as e:
             raise RuntimeError(e)
@@ -365,47 +363,51 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
     if (id not in budgetList):
         raise Exception("User does not have access to this information.")
     else:
-        budgetDoc = getBudget(id, email, targetDate)
-        
-        # "getBudget" already converts the budget's date from ISO format to Date object, so we do not need to change it here
-        # Getting the budget category and the start and end dates for just this current period.
-        budgetCategory = budgetDoc["name"]
-        startDate, endDate = getSinglePeriod(
-            budgetDoc["startDate"],
-            budgetDoc["budgetPeriod"],
-            targetDate, 
-            budgetDoc["endDate"]
-        )
-
-        # Check for valid start and end dates
-        if (startDate == None or endDate == None):
-            raise Exception("This budget was not active during this date.")
-
-        # Run a query for expenses with the same email, budget category
-        expenseList = db.collection('expenses')\
-            .where('email', '==', email)\
-            .where('budgetCategory', '==', budgetCategory)\
-            .stream()
-        
-        returnList = []
-        # Filter for expenses in the same budget period
-        for expense in expenseList:
-            expenseDoc = expense.to_dict()
-
-            expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
-            expenseDoc["startDate"] = date.fromisoformat(expenseDoc['startDate']) if notNull(expenseDoc['startDate']) else None
-
-            occurances, dates = getOccurancesWithinPeriod(
-                startDate, 
-                endDate, 
-                expenseDoc['startDate'], 
-                expenseDoc["endDate"], 
-                expenseDoc['recurPeriod']
+        try:
+            budgetDoc = getBudget(id, email, targetDate)
+            
+            # "getBudget" already converts the budget's date from ISO format to Date object, so we do not need to change it here
+            # Getting the budget category and the start and end dates for just this current period.
+            budgetCategory = budgetDoc["name"]
+            startDate, endDate = getSinglePeriod(
+                budgetDoc["startDate"],
+                budgetDoc["budgetPeriod"],
+                targetDate, 
+                budgetDoc["endDate"]
             )
 
-            if occurances > 0:
-                returnList.append({"data": expenseDoc, "dates": dates})
-        return {"budget": budgetDoc, "expenses": returnList, "currency": userData["currency"]}
+            # Check for valid start and end dates
+            if (startDate == None or endDate == None):
+                raise RuntimeError("This budget was not active during this date.")
+
+            # Run a query for expenses with the same email, budget category
+            expenseList = db.collection('expenses')\
+                .where('email', '==', email)\
+                .where('budgetCategory', '==', budgetCategory)\
+                .stream()
+            
+            returnList = []
+            # Filter for expenses in the same budget period
+            for expense in expenseList:
+                expenseDoc = expense.to_dict()
+
+                expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
+                expenseDoc["startDate"] = date.fromisoformat(expenseDoc['startDate']) if notNull(expenseDoc['startDate']) else None
+
+                occurances, dates = getOccurancesWithinPeriod(
+                    startDate, 
+                    endDate, 
+                    expenseDoc['startDate'], 
+                    expenseDoc["endDate"], 
+                    expenseDoc['recurPeriod']
+                )
+
+                if occurances > 0:
+                    returnList.append({"data": expenseDoc, "dates": dates})
+            return {"budget": budgetDoc, "expenses": returnList, "currency": userData["currency"]}
+        
+        except Exception as e:
+            raise RuntimeError(e)
 
 def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
     """
@@ -428,30 +430,23 @@ def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
         raise Exception("User does not have access to this information.")
     else:
         try:
-            print("we here")
             # Get the active dates and period for the budget
-            if not isinstance(dbStart, date):
-                print("ruh roh")
-                dbStart = date.fromisoformat(budgetDoc["startDate"]) if notNull(budgetDoc["startDate"]) else None
-            if not isinstance(dbEnd, date):
-                print("ruhroh 2")
-                dbEnd = date.fromisoformat(budgetDoc["endDate"]) if notNull(budgetDoc["endDate"]) else None
+            if not isinstance(budgetDoc["startDate"], date):
+                budgetDoc["startDate"] = date.fromisoformat(budgetDoc["startDate"]) if notNull(budgetDoc["startDate"]) else None
+            if not isinstance(budgetDoc["endDate"], date):
+                budgetDoc["endDate"] = date.fromisoformat(budgetDoc["endDate"]) if notNull(budgetDoc["endDate"]) else None
 
-            print(budgetDoc["name"])
             # Getting the budget category and the start and end dates for just this current period.
             budgetCategory = budgetDoc["name"]
             startDate, endDate = getSinglePeriod(
-                dbStart,
+                budgetDoc["startDate"],
                 budgetDoc["budgetPeriod"],
                 targetDate, 
-                dbEnd
+                budgetDoc["endDate"]
             )
-            print("got single period")
-            print("category", budgetCategory)
 
             # Check for valid start and end dates
             if (startDate == None or endDate == None):
-                print("!!!!!")
                 raise Exception("This budget was not active during this date.")
 
             # Run a query for expenses with the same email, budget category
@@ -460,14 +455,14 @@ def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
                 .where('budgetCategory', '==', budgetCategory)\
                 .stream()
             usedAmount = 0
-            print(expenseList)
+
             # Filter for expenses in the same budget period
             for expense in expenseList:
-                print("expense", expense)
                 expenseDoc = expense.to_dict()
+                
                 expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
                 expenseDoc['startDate'] = date.fromisoformat(expenseDoc['startDate']) if notNull(expenseDoc['startDate']) else None
-                print("getting single occurance")
+                
                 occurances, dates = getOccurancesWithinPeriod(
                     startDate, 
                     endDate, 
@@ -475,8 +470,7 @@ def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
                     expenseDoc["endDate"], 
                     expenseDoc['recurPeriod']
                 )
-                print(occurances)
-                print((float(expenseDoc['amount']) * occurances))
+                
                 usedAmount = usedAmount + (float(expenseDoc['amount']) * occurances)
                     
             return usedAmount
@@ -564,11 +558,12 @@ def getBudget(budgetId, userEmail, targetDate=date.today()):
         raise RuntimeError("User email does not match budget!")
     
     budgetDoc = db.collection('budgets').document(budgetId).get().to_dict()
-    budgetDoc["usedAmount"] = getBudgetBalance(budgetId, budgetDoc, targetDate)
+    
 
     # Update ISO format dates into date objects 
     budgetDoc["startDate"] = date.fromisoformat(budgetDoc["startDate"]) if notNull(budgetDoc["startDate"]) else None
     budgetDoc["endDate"] = date.fromisoformat(budgetDoc["endDate"]) if notNull(budgetDoc["endDate"]) else None
+    budgetDoc["usedAmount"] = getBudgetBalance(budgetId, budgetDoc, targetDate)
 
     return budgetDoc
 
@@ -691,8 +686,8 @@ def updateBudget(email, id, name, startDate, endDate="", amount=0, description="
             budget_ref = db.collection('budgets').document(id)
             budget_ref.update({
                 'name': str(name),
-                'startDate': startDate,
-                'endDate': endDate,
+                'startDate': str(startDate),
+                'endDate': str(endDate),
                 'amount': float(amount),
                 'description': str(description),
                 'budgetPeriod': int(recurPeriod),

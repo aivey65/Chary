@@ -220,6 +220,8 @@ def renderUpdateBudget():
 
         # This database method checks to make sure that the user owns the budget they are trying to update
         budgetInfo = database.getBudget(budgetId, session["email"])
+        print(budgetInfo["description"])
+
 
         return render_template(
             'update-budget.html', 
@@ -389,7 +391,7 @@ def createBudget():
     recurPeriod = request.json["radio"] if bool(request.json["radio"]) else 0
     startDate = request.json["start"] if bool(request.json["start"]) else ""
     endDate = request.json["end"] if bool(request.json["end"]) else ""
-    recurring = True if request.json["recurring"] == 'true' else False
+    recurring = True if request.json["recurring"] == 'True' else False
 
     try:
         database.createBudget(
@@ -422,7 +424,7 @@ def createExpense():
     recurPeriod = request.json["radio"] if bool(request.json["radio"]) else ""
     startDate = request.json["start"] if bool(request.json["start"]) else ""
     endDate = request.json["end"] if bool(request.json["end"]) else ""
-    recurring = True if request.json["recurring"] == 'true' else False
+    recurring = True if request.json["recurring"] == 'True' else False
     try:
         database.createExpense(
             session["email"], 
@@ -454,7 +456,7 @@ def createEarning():
     recurPeriod = request.json["radio"] if bool(request.json["radio"]) else ""
     startDate = request.json["start"] if bool(request.json["start"]) else ""
     endDate = request.json["end"] if bool(request.json["end"]) else ""
-    recurring = True if request.json["recurring"] == 'true' else False
+    recurring = True if request.json["recurring"] == 'True' else False
 
     try:
         database.createEarning(
@@ -514,8 +516,8 @@ def updateBudget():
     budgetPeriod = request.json["radio"] if bool(request.json["radio"]) else 0
     startDate = request.json["start"] if bool(request.json["start"]) else ""
     endDate = request.json["end"] if bool(request.json["end"]) else ""
-    recurring = True if request.json["recurring"] == 'true' else False
-
+    recurring = True if request.json["recurring"] == 'True' else False
+    print(request.json["recurring"])
     try:
         database.updateBudget(
             session["email"], 
@@ -549,7 +551,7 @@ def updateExpense():
     recurPeriod = request.json["radio"] if bool(request.json["radio"]) else ""
     startDate = request.json["start"] if bool(request.json["start"]) else ""
     endDate = request.json["end"] if bool(request.json["end"]) else ""
-    recurring = True if request.json["recurring"] == 'true' else False
+    recurring = True if request.json["recurring"] == 'True' else False
     
     try:
         database.updateExpense(
@@ -584,7 +586,7 @@ def updateEarning():
     recurPeriod = request.json["radio"] if bool(request.json["radio"]) else ""
     startDate = request.json["start"] if bool(request.json["start"]) else ""
     endDate = request.json["end"] if bool(request.json["end"]) else ""
-    recurring = True if request.json["recurring"] == 'true' else False
+    recurring = True if request.json["recurring"] == 'True' else False
     
     try:
         database.updateEarning(

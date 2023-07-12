@@ -248,8 +248,8 @@ h4 {
 #budget-container {
     display: flex;
     flex-direction: row;
-    grid-column: span 2;
     margin-top: 10px;
+    flex-wrap: wrap;
 }
 
 .budget-info {

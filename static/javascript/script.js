@@ -261,7 +261,7 @@ function generateBudgetsUI(budgets, currency) {
         optionsImg.classList.add('options-img', 'options');
         optionsImg.title = "Options";
 
-        var recur_img;
+        var recur_img = null;
         if (budgets[key].recurring) {
             recur_img = document.createElement('img');
             recur_img.src = 'static/images/recurIcon.svg';

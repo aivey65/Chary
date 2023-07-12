@@ -61,7 +61,7 @@
 
                 <div id="description-div">
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" rows="4" cols="50" value={{description}}></textarea>
+                    <textarea id="description" name="description" rows="4" cols="50">{{description}}</textarea>
                 </div>
 
                 <div id="start-div">
@@ -128,7 +128,7 @@
 
                 <div id="end-div" class="recurring-items row6">
                     <label for="end">End Date</label>
-                    <input type="date" id="end" name="end" value={{endDate}}>
+                    <input type="date" id="end" name="end" value={{endDate}} required>
                 </div>
 
                 <button id="submit-button" class="cta-button" type="submit" value="Submit">Submit</button>
