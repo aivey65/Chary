@@ -132,7 +132,8 @@ def google_auth():
     id_info = id_token.verify_oauth2_token(
         id_token=credentials._id_token,
         request=token_request,
-        audience=CLIENT_ID
+        audience=CLIENT_ID,
+        clock_skew_in_seconds=5
     )
 
     if (id_info.get("email_verified") == True):

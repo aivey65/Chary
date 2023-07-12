@@ -172,6 +172,8 @@ h4 {
     display: flex;
     flex-direction: column;
     min-width: 25%;
+    min-height: 367px;
+    justify-content: space-between;
 }
 
 .budget-snippet {
@@ -187,6 +189,16 @@ h4 {
     grid-row: 1;
     grid-column: 3;
     align-self: center;
+}
+
+#limited-budgets-container {
+    overflow: hidden;
+}
+
+#limited-budgets {
+    width: 100%;
+    position: relative;
+    transition: left 2s, right 2s;
 }
 
 .snip-budget-main {

@@ -43,28 +43,32 @@ async function updateUserData() {
 }
 
 function loadOverviewTab() {
-    const chartPanel = generateOverviewCharts();
-    chartPanel.classList.add('module');
-
-    const budgetPanel = generateOverviewBudgets(userData.budgets);
-    budgetPanel.classList.add('module');
-
-    const profilePanel = generateOverviewProfile();
-    profilePanel.classList.add('module');
-
-    const earningPanel = generateOverviewEarnings();
-    earningPanel.classList.add('module');
-
-    const expensePanel = generateOverviewExpenses();
-    expensePanel.classList.add('module');
-
     const overviewTab = document.createElement('div');
     overviewTab.id = 'overview-section';
-    overviewTab.append(chartPanel, budgetPanel, profilePanel, earningPanel, expensePanel)
 
     const tabBody = document.getElementById('dashboard-main');
     tabBody.innerHTML = "";
     tabBody.append(overviewTab);
+
+    const chartPanel = generateOverviewCharts();
+    chartPanel.classList.add('module');
+    overviewTab.append(chartPanel);
+
+    const budgetPanel = generateOverviewBudgets(userData.budgets)
+    budgetPanel.classList.add('module');
+    overviewTab.append(budgetPanel);
+
+    const profilePanel = generateOverviewProfile();
+    profilePanel.classList.add('module');
+    overviewTab.append(profilePanel);
+
+    const earningPanel = generateOverviewEarnings();
+    earningPanel.classList.add('module');
+    overviewTab.append(earningPanel);
+
+    const expensePanel = generateOverviewExpenses();
+    expensePanel.classList.add('module');
+    overviewTab.append(expensePanel);
 
     changeActiveTab(document.getElementById('overview-tab'))
     changeActiveDot(0, "overview-dots")
@@ -230,8 +234,10 @@ function generateOverviewBudgets(budgets) {
     overviewHeader.classList.add('module-header');
     overviewBudgetContainer.append(overviewHeader);
 
-    const budgetContainer = generateLimitedOverviewBudgets(budgets, 0, 3);
-    overviewBudgetContainer.append(budgetContainer);
+    const limitedBudgetsContainer = document.createElement("div");
+    limitedBudgetsContainer.id = "limited-budgets-container";
+    limitedBudgetsContainer.append(generateLimitedOverviewBudgets(budgets, 0, 3));
+    overviewBudgetContainer.append(limitedBudgetsContainer);
     
     const dotCarousel = budgetCarouselButtons(budgets, "overview-dots", 3);
     overviewBudgetContainer.append(dotCarousel);
@@ -339,21 +345,19 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
 }
 
 function budgetCarouselButtons(budgets, uniqueClass, maxShow=3) {
-    budgetsLength = Object.keys(budgets).length
-    numSlides = budgetsLength / maxShow;
-
     var dotsToReturn = document.createElement("div");
     dotsToReturn.classList.add("carousel");
+
+    budgetsLength = Object.keys(budgets).length
+    numSlides = Math.ceil(budgetsLength / maxShow);
 
     for (var slideNum = 0; slideNum < numSlides; slideNum++) {
         const dot = document.createElement("div");
         dot.classList.add("carousel-dot", uniqueClass);
-        dot.addEventListener("click", function() {
-            const budgetsContainer = document.getElementById('limited-budgets');
-            budgetsContainer.innerHTML = "";
-            budgetsContainer.append(generateLimitedOverviewBudgets(budgets, slideNum, maxShow));
-            changeActiveDot(slideNum, uniqueClass)
-            console.log("checking slide num...", slideNum)
+
+        const currentSlide = slideNum;
+        dot.addEventListener("click", () => {
+            dotClick(budgets, currentSlide, maxShow, uniqueClass)
         });
 
         dotsToReturn.append(dot);
@@ -362,17 +366,54 @@ function budgetCarouselButtons(budgets, uniqueClass, maxShow=3) {
     return dotsToReturn;
 }
 
+function dotClick(budgets, slideNum, maxShow, uniqueClass) {
+    // First, change which dot is active and get the current and new dot indeces
+    const previousIndex = changeActiveDot(slideNum, uniqueClass)
+
+    // Update the content and create a transition depending on which dot is before the other
+    const budgetContainer = document.getElementById('limited-budgets-container');
+    const firstChild = budgetContainer.firstChild;
+    console.log("first child", firstChild)
+    if (slideNum < previousIndex) {
+        // Create the new slide
+        const newChild = generateLimitedOverviewBudgets(budgets, slideNum, maxShow);
+        budgetContainer.append(newChild);
+        newChild.style.right = "0%";
+        firstChild.addEventListener("transitionend", () => {
+            newChild.style.right = "100%";
+        }, {
+            once: true, 
+        });  
+        firstChild.style.left = "100%";  
+        budgetContainer.removeChild(firstChild);
+        
+    } else if (slideNum > previousIndex) {
+        // Create new slide
+        const newChild = generateLimitedOverviewBudgets(budgets, slideNum, maxShow);
+        budgetContainer.append(newChild);
+        newChild.style.left = "100%";
+        firstChild.addEventListener("transitionend", () => {
+            newChild.style.left = "0%"; 
+        }, {
+            once: true, 
+        });  
+        firstChild.style.right = "0%";
+        budgetContainer.removeChild(firstChild);
+    }
+}
+
 function changeActiveDot(slideNum, uniqueClass) {
     const buttons = document.getElementsByClassName(uniqueClass);
     const buttonsLength = Object.keys(buttons).length
 
+    var previousSlide;
     for (var index = 0; index < buttonsLength; index++) {
         const dot = buttons[index];
-        console.log(dot)
-        console.log("index", index)
-        console.log("slideNum", slideNum)
-
-        if (index == slideNum) {
+        if (dot.classList.contains("active-dot") && index != slideNum) {
+            previousSlide = index;
+            dot.classList.add("inactive-dot");
+            dot.classList.remove("active-dot");
+        } else if (index == slideNum) {
             dot.classList.add("active-dot");
             dot.classList.remove("inactive-dot");
         } else {
@@ -380,6 +421,8 @@ function changeActiveDot(slideNum, uniqueClass) {
             dot.classList.remove("active-dot");
         }
     }
+
+    return previousSlide;
 }
 
 function generateOverviewExpenses() {
