@@ -18,6 +18,9 @@
         <script src='../static/javascript/script.js'></script>
         <script src='../static/javascript/budget.js'></script>
 
+        <!-- Third-party links -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
         <Title>Chary | Budget Detailed View</Title>
     </head>
 
@@ -77,6 +80,7 @@
 
                 <div id="budget-charts" class="main-container module">
                     <h3 class="module-header">Analytics</h3>
+                    <canvas id="budget-use-chart" style="width:100%;max-width:700px"></canvas>
                 </div>
 
                 <div id="budget-facts" class="main-container module">
