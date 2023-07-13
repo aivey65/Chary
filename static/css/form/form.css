@@ -54,6 +54,10 @@ input[type='radio'] {
     height: 100%;
 }
 
+input[type='date'] {
+    cursor: pointer;
+}
+
 .required-input::after {
     content: " *";
     color: var(--MainD);
@@ -146,7 +150,7 @@ input[type='radio'] {
 
 }
 
-#back-button {
+#delete-button {
     grid-row: 9;
     grid-column: 2;
     margin-top: var(--medPad);

@@ -29,7 +29,26 @@ function formatNumber(number) {
     return numberFormatter.format(number);
 }
 
+// Function displays a message and 
+function createAlert(message) {
+    const popupHeader = document.createElement("h3");
+    popupHeader.id = "popup-header";
+    popupHeader.textContent = "WARNING ⚠️";
 
+    const popupText = document.createElement("p");
+    popupText.id = "popup-text";
+    popup.innerText = message;
+
+    const popup = document.createElement("div");
+    popup.id = "popup";
+    popup.append(popupHeader, popupText);
+
+    const popupWrapper = document.createElement("div");
+    popupWrapper.id = "popup-wrapper";
+    popupWrapper.append(popup);
+
+    document.body.append(popupWrapper);
+}
 
 function closeMenu() {
     const navbar = document.getElementsByTagName('nav')[0]

@@ -72,9 +72,9 @@ function configureRecurOptions() {
     }
 }
 
-//////////////////////////////////
+/////////////////////////////////////////
 // Create/Update form submit functions //
-//////////////////////////////////
+/////////////////////////////////////////
 
 function submitUserForm(e) {
 
@@ -285,4 +285,31 @@ function submitEarningForm() {
             }
         });
     }
+}
+
+//////////////////////////////////
+// Delete item submit functions //
+//////////////////////////////////
+function deleteUser() {
+    console.log("delete pressed");
+    return
+    const confirmationMessage = "Are you sure you want to permanantly delete your account? This action cannot be undone.";
+    createAlert(confirmationMessage);
+}
+
+function deleteBudget() {
+    console.log("delete pressed");
+    return
+    const confirmationMessage = "Are you sure you want to permanantly delete this budget? This action cannot be undone.";
+    createAlert(confirmationMessage);
+}
+
+function deleteExpense() {
+    const confirmationMessage = "Are you sure you want to permanantly delete this expense? This action cannot be undone.";
+    createAlert(confirmationMessage);
+}
+
+function deleteEarning() {
+    const confirmationMessage = "Are you sure you want to permanantly delete this earning? This action cannot be undone.";
+    createAlert(confirmationMessage);
 }

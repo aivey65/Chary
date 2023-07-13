@@ -33,6 +33,7 @@
 
         <div class="content non-header" id="acd-earnings">
             <div id="alert-section"></div>
+            <button id="back-button" onclick="back()" value="Back">⟨ Cancel</button>
             <form action="javascript:submitEarningForm('update')">
                 <input type="hidden" id="id" name="id" value={{id}} />
 
@@ -119,7 +120,7 @@
                 </div>
 
                 <button id="submit-button" class="cta-button" type="submit" value="Submit">Submit</button>
-                <button id="back-button" onclick="back()" value="Back">Cancel</button>
+                <button id="delete-button" onclick="deleteEarning()">Delete</button>
             </form>
         </div>
 

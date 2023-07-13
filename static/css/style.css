@@ -159,6 +159,25 @@ a.normal-link:active {
 }
 
 /*
+*** Popup styles
+*/
+#popup-wrapper {
+    width: 100vw;
+    height: 100vh;
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+    background-color: var(--faded);
+
+    position: fixed;
+    overflow: hidden;
+}
+
+#popup {
+    margin: auto;
+    background-color: var(--Background);
+}
+
+/*
 *** More specific styles that still need to be reused ***
 */ 
 
