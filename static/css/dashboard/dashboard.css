@@ -193,6 +193,8 @@ h4 {
 
 #limited-budgets-container {
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
 }
 
 #limited-budgets {

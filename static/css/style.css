@@ -334,6 +334,55 @@ tr:nth-child(odd) td {
 }
 
 /*
+*** Annimations ***
+*/ 
+@keyframes slideOutLeft {
+    0% { 
+        right: 100%; 
+        left: 0px;
+    }
+    100% { 
+        right: 0px; 
+        left: -100%; 
+    }
+}
+
+@keyframes slideInLeft {
+    0% { 
+        right: 0px; 
+        left: -100%;
+    }
+    100% { 
+        right: 100%; 
+        left: 0px; 
+    }
+
+}
+
+@keyframes slideOutRight {
+    0% { 
+        right: 100%; 
+        left: 0px;
+    }
+    100% { 
+        right: 200%; 
+        left: 100%; 
+    }
+
+}
+
+@keyframes slideInRight {
+    0% { 
+        right: 200%; 
+        left: 100%;
+    }
+    100% { 
+        right: 100; 
+        left: 0px; 
+    }
+}
+
+/*
 *** Footer styles ***
 */ 
 

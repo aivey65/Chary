@@ -368,37 +368,31 @@ function budgetCarouselButtons(budgets, uniqueClass, maxShow=3) {
 
 function dotClick(budgets, slideNum, maxShow, uniqueClass) {
     // First, change which dot is active and get the current and new dot indeces
-    const previousIndex = changeActiveDot(slideNum, uniqueClass)
+    const previousIndex = changeActiveDot(slideNum, uniqueClass);
+
+    if (slideNum == previousIndex) {
+        return
+    }
 
     // Update the content and create a transition depending on which dot is before the other
     const budgetContainer = document.getElementById('limited-budgets-container');
     const firstChild = budgetContainer.firstChild;
-    console.log("first child", firstChild)
-    if (slideNum < previousIndex) {
-        // Create the new slide
-        const newChild = generateLimitedOverviewBudgets(budgets, slideNum, maxShow);
-        budgetContainer.append(newChild);
-        newChild.style.right = "0%";
-        firstChild.addEventListener("transitionend", () => {
-            newChild.style.right = "100%";
-        }, {
-            once: true, 
+    const newChild = generateLimitedOverviewBudgets(budgets, slideNum, maxShow);
+    budgetContainer.append(newChild);
+
+    if (slideNum < previousIndex) { // Slide right
+        firstChild.addEventListener("animationend", (e) => {
+            e.target.remove();
         });  
-        firstChild.style.left = "100%";  
-        budgetContainer.removeChild(firstChild);
-        
-    } else if (slideNum > previousIndex) {
-        // Create new slide
-        const newChild = generateLimitedOverviewBudgets(budgets, slideNum, maxShow);
-        budgetContainer.append(newChild);
-        newChild.style.left = "100%";
-        firstChild.addEventListener("transitionend", () => {
-            newChild.style.left = "0%"; 
-        }, {
-            once: true, 
+        newChild.style.animation = "slideInRight 2s";
+        firstChild.style.animation = "slideOutLeft 2s";
+ 
+    } else { // Slide left
+        firstChild.addEventListener("animationend", (e) => {
+            e.target.remove();
         });  
-        firstChild.style.right = "0%";
-        budgetContainer.removeChild(firstChild);
+        newChild.style.animation = "slideInLeft 2s";
+        firstChild.style.animation = "slideOutRight 2s";
     }
 }
 
@@ -409,10 +403,14 @@ function changeActiveDot(slideNum, uniqueClass) {
     var previousSlide;
     for (var index = 0; index < buttonsLength; index++) {
         const dot = buttons[index];
-        if (dot.classList.contains("active-dot") && index != slideNum) {
-            previousSlide = index;
-            dot.classList.add("inactive-dot");
-            dot.classList.remove("active-dot");
+        if (dot.classList.contains("active-dot")) {// This is the previously selected dot
+            if (index == slideNum) { // This means the active dot was clicked again
+                return index;
+            } else {
+                previousSlide = index;
+                dot.classList.add("inactive-dot");
+                dot.classList.remove("active-dot");
+            }
         } else if (index == slideNum) {
             dot.classList.add("active-dot");
             dot.classList.remove("inactive-dot");
