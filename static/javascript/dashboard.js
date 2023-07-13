@@ -265,7 +265,7 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
                 }
             })
 
-            var recur_img;
+            var recur_img = null;
             if (budget.recurring) {
                 recur_img = document.createElement('img');
                 recur_img.src = 'static/images/recurIcon.svg';
@@ -384,15 +384,15 @@ function dotClick(budgets, slideNum, maxShow, uniqueClass) {
         firstChild.addEventListener("animationend", (e) => {
             e.target.remove();
         });  
-        newChild.style.animation = "slideInRight 2s";
-        firstChild.style.animation = "slideOutLeft 2s";
+        newChild.style.animation = "slideInLeft 1.5s ease-in-out";
+        firstChild.style.animation = "slideOutRight 1.5s ease-in-out";
  
     } else { // Slide left
         firstChild.addEventListener("animationend", (e) => {
             e.target.remove();
         });  
-        newChild.style.animation = "slideInLeft 2s";
-        firstChild.style.animation = "slideOutRight 2s";
+        newChild.style.animation = "slideInRight 1.5s ease-in-out";
+        firstChild.style.animation = "slideOutLeft 1.5s ease-in-out";
     }
 }
 
