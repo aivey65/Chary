@@ -338,39 +338,39 @@ tr:nth-child(odd) td {
 */ 
 @keyframes slideOutLeft {
     0% { 
-        transform: translateX(-20%);
+        transform: translateX(0%);
     }
     100% { 
-        transform: translateX(-120%);
+        transform: translateX(-110%);
     }
 }
 
 @keyframes slideInLeft {
     0% { 
-        transform: translateX(-200%);
+        transform: translateX(-110%);
     }
     100% { 
-        transform: translateX(-100%); 
+        transform: translateX(0%); 
     }
 
 }
 
 @keyframes slideOutRight {
     0% { 
-        transform: translateX(10%); 
+        transform: translateX(0%); 
     }
     100% { 
-        transform: translateX(150%); 
+        transform: translateX(110%); 
     }
 
 }
 
 @keyframes slideInRight {
     0% { 
-        transform: translateX(0%);
+        transform: translateX(110%);
     }
     100% { 
-        transform: translateX(-100%);
+        transform: translateX(0%);
     }
 }
 

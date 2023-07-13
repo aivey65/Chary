@@ -384,15 +384,15 @@ function dotClick(budgets, slideNum, maxShow, uniqueClass) {
         firstChild.addEventListener("animationend", (e) => {
             e.target.remove();
         });  
-        newChild.style.animation = "slideInLeft 1.5s ease-in-out";
-        firstChild.style.animation = "slideOutRight 1.5s ease-in-out";
+        newChild.style.animation = "slideInLeft 700ms ease-in-out";
+        firstChild.style.animation = "slideOutRight 700ms ease-in-out";
  
     } else { // Slide left
         firstChild.addEventListener("animationend", (e) => {
             e.target.remove();
         });  
-        newChild.style.animation = "slideInRight 1.5s ease-in-out";
-        firstChild.style.animation = "slideOutLeft 1.5s ease-in-out";
+        newChild.style.animation = "slideInRight 700ms ease-in-out";
+        firstChild.style.animation = "slideOutLeft 700ms ease-in-out";
     }
 }
 
