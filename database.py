@@ -829,18 +829,26 @@ def deleteExpense(email, id):
     expenseList = getUser(email)['data']['expenses']
     if id not in expenseList:
         raise RuntimeError("User does not have access to this data!")
-
-    expense_ref = db.collection('expenses').document(id)
-    expense_ref.delete()
+    
+    try:
+        expense_ref = db.collection('expenses').document(id)
+        expense_ref.delete()
+        updateUserReferenceIds(email, 1, 'expenses', id)
+    except Exception as e:
+        raise e
 
 def deleteEarning(email, id):
     # First check to make sure the user owns the expense they want to delete
     earningList = getUser(email)['data']['earnings']
     if id not in earningList:
         raise RuntimeError("User does not have access to this data!")
-
-    expense_ref = db.collection('expenses').document(id)
-    expense_ref.delete()
+    
+    try:
+        earning_ref = db.collection('earnings').document(id)
+        earning_ref.delete()
+        updateUserReferenceIds(email, 1, 'earnings', id)
+    except Exception as e:
+        raise e
 
 
 #####################################
