@@ -301,10 +301,10 @@ function confirmDelete(entityType) {
     const popup = createAlert(confirmationMessage);
     
     popup.addEventListener("click", (e) => {
-        if (e.target == this) {
-            this.remove();
+        if (e.target == popup) {
+            popup.remove();
         }
-    }, { once:true })
+    });
 
     // Create option buttons for the popup
     const cancelButton = document.createElement("button");
