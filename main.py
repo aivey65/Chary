@@ -614,7 +614,7 @@ def updateEarning():
 ##########################################
 # Routes for delete database information #
 ##########################################
-@app.route("/data/delete-user")
+@app.route("/data/delete-user", methods=['DELETE'])
 @login_is_required
 def deleteUser():
     try:
@@ -622,28 +622,28 @@ def deleteUser():
     except Exception as e:
         return custom_error(e) 
 
-@app.route("/data/delete-budget")
+@app.route("/data/delete-budget", methods=['DELETE'])
 @login_is_required
 def deleteBudget():
-    budgetId = request.args.get("id")
+    budgetId = request.json["id"]
     try:
         database.deleteBudget(session["email"], budgetId)
     except Exception as e:
         return custom_error(e)
 
-@app.route("/data/delete-expense")
+@app.route("/data/delete-expense", methods=['DELETE'])
 @login_is_required
 def deleteExpense():
-    expenseId = request.args.get("id")
+    expenseId = request.json["id"]
     try:
         database.deleteExpense(session["email"], expenseId)
     except Exception as e:
         return custom_error(e)
 
-@app.route("/data/delete-earning")
+@app.route("/data/delete-earning", methods=['DELETE'])
 @login_is_required
 def deleteEarning():
-    earningId = request.args.get("id")
+    earningId = request.json["id"]
     try:
         database.deleteEarning(session["email"], earningId)
     except Exception as e:

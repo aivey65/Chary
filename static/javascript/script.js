@@ -37,7 +37,7 @@ function createAlert(message) {
 
     const popupText = document.createElement("p");
     popupText.id = "popup-text";
-    popup.innerText = message;
+    popupText.innerText = message;
 
     const popup = document.createElement("div");
     popup.id = "popup";
@@ -47,7 +47,7 @@ function createAlert(message) {
     popupWrapper.id = "popup-wrapper";
     popupWrapper.append(popup);
 
-    document.body.append(popupWrapper);
+    return popupWrapper
 }
 
 function closeMenu() {

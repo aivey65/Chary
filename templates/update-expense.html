@@ -31,9 +31,9 @@
             </header>
         </div>
 
-        <div class="content non-header" id="acd-expenses">
+        <div class="content non-header" id="acd-content">
             <div id="alert-section"></div>
-            <button id="back-button" onclick="back()" value="Back">⟨ Cancel</button>
+            <button id="back-button" onclick="back()" type="button" value="Back">⟨ Cancel</button>
             <form action="javascript:submitExpenseForm('update')" method="post">
                 <input type="hidden" id="id" name="id" value={{id}} />
 
@@ -132,8 +132,11 @@
                     <input type="date" id="end" name="end" value={{endDate}} required>
                 </div>
 
-                <button id="submit-button" class="cta-button" type="submit" value="Submit">Submit</button>
-                <button id="delete-button" onclick="deleteExpense()">Delete</button>
+                <button id="submit-entity-button" class="cta-button submit-button" type="submit" value="Submit">Submit</button>
+                <button id="delete-entity-button" class="delete-button" onclick="confirmDelete('expense')" type="button">
+                    Delete
+                    <img class="trash-icon" src="../static/images/TrashButton.svg" alt="trash can icon"/>
+                </button>            
             </form>
         </div>
 

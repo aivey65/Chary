@@ -290,26 +290,74 @@ function submitEarningForm() {
 //////////////////////////////////
 // Delete item submit functions //
 //////////////////////////////////
-function deleteUser() {
-    console.log("delete pressed");
-    return
-    const confirmationMessage = "Are you sure you want to permanantly delete your account? This action cannot be undone.";
-    createAlert(confirmationMessage);
+function confirmDelete(entityType) {
+    var typeString;
+    if (entityType == "user") {
+        typeString = "account";
+    } else {
+        typeString = String(entityType);
+    }
+    const confirmationMessage = "Are you sure you want to permanantly delete this " + typeString + "? This action cannot be undone.";
+    const popup = createAlert(confirmationMessage);
+    
+    popup.addEventListener("click", (e) => {
+        if (e.target == this) {
+            this.remove();
+        }
+    }, { once:true })
+
+    // Create option buttons for the popup
+    const cancelButton = document.createElement("button");
+    cancelButton.textContent = "Cancel";
+    cancelButton.type = "button";
+    cancelButton.style.display = "inline";
+    cancelButton.onclick = function() {
+        popup.remove();
+    }
+    cancelButton.classList.add("cancel-button");
+    popup.firstChild.append(cancelButton);
+
+    const trashcan = document.createElement("img");
+    trashcan.src = "../static/images/TrashButton.svg";
+    trashcan.alt = "Trash can icon";
+    trashcan.classList.add("trash-icon");
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.append(trashcan);
+    deleteButton.type = "button";
+    deleteButton.style.display = "inline-flex";
+    deleteButton.style.marginLeft = "var(--smallPad)";
+    deleteButton.onclick = function() {
+        finalizeDelete(entityType);
+    }
+    deleteButton.classList.add("delete-button");
+    popup.firstChild.append(deleteButton);
+
+    document.getElementById("acd-content").append(popup);
 }
 
-function deleteBudget() {
-    console.log("delete pressed");
-    return
-    const confirmationMessage = "Are you sure you want to permanantly delete this budget? This action cannot be undone.";
-    createAlert(confirmationMessage);
-}
+function finalizeDelete(entityType) {
+    const idToDelete = document.getElementById("id").value;
 
-function deleteExpense() {
-    const confirmationMessage = "Are you sure you want to permanantly delete this expense? This action cannot be undone.";
-    createAlert(confirmationMessage);
-}
-
-function deleteEarning() {
-    const confirmationMessage = "Are you sure you want to permanantly delete this earning? This action cannot be undone.";
-    createAlert(confirmationMessage);
+    console.log('/data/delete-' + entityType + '?id=' + idToDelete);
+    fetch('/data/delete-' + entityType, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            id: idToDelete
+        })
+    }).then(response => console.log(response)).then((responseData) => {
+        console.log(responseData)
+        if (responseData.status != 201) {
+            message = "- Error: " + String(responseData.message) + " Please revise your earning and try again."
+            updateAlertSection(message);
+            window.scrollTo(0, 0);
+            return
+        } else {
+            window.location = "/dashboard?refresh=true&tab=" + entityType;
+        }
+    })
 }

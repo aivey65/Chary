@@ -164,17 +164,38 @@ a.normal-link:active {
 #popup-wrapper {
     width: 100vw;
     height: 100vh;
-    filter: blur(8px);
-    -webkit-filter: blur(8px);
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     background-color: var(--faded);
 
     position: fixed;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #popup {
-    margin: auto;
+    width: 40%;
+    height: 40%;
     background-color: var(--Background);
+    padding: var(--medPad);
+    border-radius: var(--medPad);
+}
+
+.submit-button {
+    margin-top: var(--medPad);
+    margin-bottom: var(--medPad);
+}
+
+.delete-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: var(--medPad);
+    margin-bottom: var(--medPad);
 }
 
 /*
@@ -240,6 +261,11 @@ button {
 .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img {
     width: 1.7rem;
     height: auto;
+}
+
+.trash-icon {
+    width: 1.2rem;
+    height: 1.2rem;
 }
 
 .centered {
