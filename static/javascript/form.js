@@ -329,6 +329,7 @@ function confirmDelete(entityType) {
     deleteButton.style.display = "inline-flex";
     deleteButton.style.marginLeft = "var(--smallPad)";
     deleteButton.onclick = function() {
+        popup.remove();
         finalizeDelete(entityType);
     }
     deleteButton.classList.add("delete-button");
@@ -337,10 +338,14 @@ function confirmDelete(entityType) {
     document.getElementById("acd-content").append(popup);
 }
 
+function budgetDeleteOptions() {
+    finalizeDelete("budget")
+}
+
 function finalizeDelete(entityType) {
     const idToDelete = document.getElementById("id").value;
 
-    console.log('/data/delete-' + entityType + '?id=' + idToDelete);
+    console.log('/data/delete-' + entityType);
     fetch('/data/delete-' + entityType, {
         method: "DELETE",
         headers: {
@@ -349,15 +354,18 @@ function finalizeDelete(entityType) {
         body: JSON.stringify({
             id: idToDelete
         })
-    }).then(response => console.log(response)).then((responseData) => {
-        console.log(responseData)
-        if (responseData.status != 201) {
-            message = "- Error: " + String(responseData.message) + " Please revise your earning and try again."
+    }).then(response => response.json()).then((responseData) => {
+        if (responseData.status != 200) {
+            message = "- Error: " + String(responseData.message) + " Please try again later."
             updateAlertSection(message);
             window.scrollTo(0, 0);
             return
         } else {
-            window.location = "/dashboard?refresh=true&tab=" + entityType;
+            if (entityType == "user") {
+                window.location = "/";
+            } else {
+                window.location = "/dashboard?refresh=true&tab=" + entityType + "s";
+            }
         }
     })
 }

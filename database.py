@@ -780,7 +780,7 @@ def deleteUser(email):
 
     db.collection('users').document(id).delete()
 
-def deleteBudget(email, id, budgetName, method=0, newBudget=None):
+def deleteBudget(email, id, method=0, newBudget=None):
     """
     Parameters
     -------------
@@ -801,7 +801,11 @@ def deleteBudget(email, id, budgetName, method=0, newBudget=None):
         raise RuntimeError("User does not have access to this data!")
 
     try:
-        # Let user chose what to do with expenses associated with the budget they want to delete
+        budget_ref = db.collection('budgets').document(id)
+        budgetDoc = budget_ref.get().to_dict()
+        budgetName = budgetDoc["name"]
+
+        # Let user choose what to do with expenses associated with the budget they want to delete
         # - Delete all expenses
         # - Migrate all expenses to a specified budget
         # - Make all expenses budgetless
@@ -810,15 +814,15 @@ def deleteBudget(email, id, budgetName, method=0, newBudget=None):
 
         for expense in expenseList:
             expense_ref = db.collection('expenses').document(expense)
-            expenseDoc = expense.get().to_dict()
+            expenseDoc = expense_ref.get().to_dict()
 
-            if (expenseDoc.budgetCategory == budgetName):
+            if (expenseDoc["budgetCategory"] == budgetName):
                 expense_ref.update({"budgetCategory": ""})
 
-        db.collection('budgets').document(id).delete() 
+        budget_ref.delete() 
         updateUserReferenceIds(email, 1, 'budgets', id)
     except Exception as e:
-        return e
+        raise RuntimeError(e)
 
 def deleteExpense(email, id):
     # First check to make sure the user owns the expense they want to delete

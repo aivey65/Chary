@@ -619,6 +619,10 @@ def updateEarning():
 def deleteUser():
     try:
         database.deleteUser(session["email"])
+        return {
+            "status": 200,
+            "message": "Delete successful!"
+        }
     except Exception as e:
         return custom_error(e) 
 
@@ -628,6 +632,10 @@ def deleteBudget():
     budgetId = request.json["id"]
     try:
         database.deleteBudget(session["email"], budgetId)
+        return {
+            "status": 200,
+            "message": "Delete successful!"
+        }
     except Exception as e:
         return custom_error(e)
 
@@ -637,6 +645,10 @@ def deleteExpense():
     expenseId = request.json["id"]
     try:
         database.deleteExpense(session["email"], expenseId)
+        return {
+            "status": 200,
+            "message": "Delete successful!"
+        }
     except Exception as e:
         return custom_error(e)
 
@@ -646,6 +658,10 @@ def deleteEarning():
     earningId = request.json["id"]
     try:
         database.deleteEarning(session["email"], earningId)
+        return {
+            "status": 200,
+            "message": "Delete successful!"
+        }
     except Exception as e:
         return custom_error(e)
 
