@@ -381,16 +381,16 @@ function generateTableUI(type, entityList, currency) {
     }
 
     // Create table head row with column titles
-    headRow = document.createElement('tr');
+    const headRow = document.createElement('tr');
     columns.forEach(title => {
-        col = document.createElement('th');
+        const col = document.createElement('th');
         col.textContent = title;
         headRow.append(col);
     })
     const tableHead = document.createElement('thead');
     tableHead.append(headRow);
 
-    const tableBody = document.createElement('tbody');
+    const unsortedRows = document.createElement('div');
     for (const key in entityList) {
         dates = entityList[key].dates;
         dates.forEach(rawDate => {
@@ -412,7 +412,7 @@ function generateTableUI(type, entityList, currency) {
             description.textContent = current.description;
             description.classList.add('long-text');
 
-            recur = document.createElement('td');
+            const recur = document.createElement('td');
             if (current.recurring) {
                 const recur_img = document.createElement('img');
                 recur_img.classList.add('recur-img');
@@ -433,6 +433,8 @@ function generateTableUI(type, entityList, currency) {
 
             const date = document.createElement('td');
             const formatDate =  new Date(rawDate);
+            date.dataset.startDate = formatDate;
+            date.classList.add('start-date');
             date.textContent = formatDate.toLocaleDateString('en-us', getDateFormattingOptions());
 
             const entityRow = document.createElement('tr');
@@ -442,11 +444,71 @@ function generateTableUI(type, entityList, currency) {
             } else {
                 entityRow.append(name, amount, description, date, recur, update);
             }
-            tableBody.append(entityRow)
+
+            unsortedRows.append(entityRow);
         }) 
     }
 
-    table = document.createElement('table');
+    const sortedElements = sortByStartDate(Array.prototype.slice.call(unsortedRows.children));
+    var tableBody = document.createElement('tbody');
+    tableBody.append(...sortedElements);
+
+    if (tableBody.children.length == 0) {
+        const emptyTable = document.createElement('td');
+        emptyTable.classList.add("empty-table");
+        emptyTable.textContent = "None";
+        emptyTable.colSpan = headRow.cells.length;
+        tableBody.append(emptyTable);
+    }
+
+    const table = document.createElement('table');
     table.append(tableHead, tableBody);
+
     return table;
+}
+
+/* Reorders html elements based on the start date attribute
+ * 
+ * @param container (HTMl Parent): Parent class containing the items to be sorted
+ */
+function sortByStartDate(elements, ascending=false) {
+    var length = elements.length;
+
+    for (let i = 0; i < length; i++) {
+        var current = elements[i];
+        var j = i - 1;
+
+        if (j < 0) {
+            continue;
+        }
+
+        var curDate = new Date(elements[i].querySelector('.start-date').dataset.startDate).getTime();
+        var prevDate = new Date(elements[j].querySelector('.start-date').dataset.startDate).getTime();
+
+        if (ascending) {
+            while (prevDate > curDate) {
+                elements[j + 1] = elements[j] // Move previous item to the current item's position
+                j = j - 1;
+                if (j < 0) {
+                    break
+                } else {
+                    var prevDate = new Date(elements[j].querySelector('.start-date').dataset.startDate).getTime();
+                }
+            }
+        } else {
+            while (prevDate < curDate) {
+                elements[j + 1] = elements[j] // Move previous item to the current item's position
+                j = j - 1;
+                if (j < 0) {
+                    break
+                } else {
+                    var prevDate = new Date(elements[j].querySelector('.start-date').dataset.startDate).getTime();
+                }
+            }
+        }
+
+        elements[j + 1] = current;
+    }
+
+    return elements;
 }

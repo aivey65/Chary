@@ -152,6 +152,12 @@ a.normal-link:active {
     width: 20%;
 }
 
+.empty-table {
+    text-align: center;
+    height: 40vh;
+    background-color: var(--Dark);
+}
+
 @keyframes placeholder-fade {
     0%   {background-color: var(--Navy);}
     50%  {background-color: var(--Light);}
