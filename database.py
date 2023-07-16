@@ -1,9 +1,9 @@
 import firebase_admin
 from firebase_admin import firestore
+from google.cloud.firestore_v1.base_query import FieldFilter, Or, And
 from flask import jsonify
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
-
 
 # Application Default credentials are automatically created.
 app = firebase_admin.initialize_app()
@@ -39,7 +39,7 @@ def createUser(email, username, image, color, currency, balance, tutorialFinishe
     }
     
     # First check if there is already a user with that email.
-    checkUser = db.collection('users').where('email', '==', email).stream()
+    checkUser = db.collection('users').where(filter=FieldFilter('email', '==', email)).stream()
     if len(list(checkUser)) > 0:
         raise RuntimeError("There is already an account associated with this email! Try logging in.")
     else:
@@ -274,7 +274,7 @@ def getAllCurrent(email, period=3):
         budgetsDict = budgetData["data"]
         budgetCategories = budgetData["categories"]
 
-        expensesDict = getExpensesInRange(email, startDate, endDate)
+        expensesDict = getMostRecentExpenses(email)
         earningDict = getEarningsInRange(email, startDate, endDate)
 
         user['budgets'] = budgetsDict
@@ -283,12 +283,13 @@ def getAllCurrent(email, period=3):
         user['budgetCategories'] = budgetCategories
         return {"data":user}
     except Exception as e:
+        print(e)
         raise RuntimeError(str(e))
     
 # Get a user's basic information, needed to get list of budgets, expenses, etc.
 def getUser(email):
     # Note: Use of CollectionRef stream() is prefered to get()
-    docs = db.collection('users').where('email', '==', email).stream()
+    docs = db.collection('users').where(filter=FieldFilter('email', '==', email)).stream()
 
     for doc in docs: # Should only run once, since an email should only be present once in database
         userDict = doc.to_dict()
@@ -332,7 +333,7 @@ def getAllActiveBudgets(email, targetDate=date.today()):
     toReturn = {"data":budgetsDict, "categories":budgetCategories}
     return toReturn
 
-# Get a list of budget categoriesx associated with a given user
+# Get a list of budget categories associated with a given user
 def getBudgetCategories(email):
     user = getUser(email)['data']
     budgetList = user['budgets']
@@ -382,8 +383,8 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
 
             # Run a query for expenses with the same email, budget category
             expenseList = db.collection('expenses')\
-                .where('email', '==', email)\
-                .where('budgetCategory', '==', budgetCategory)\
+                .where(filter=FieldFilter('email', '==', email))\
+                .where(filter=FieldFilter('budgetCategory', '==', budgetCategory))\
                 .stream()
             
             returnList = []
@@ -451,8 +452,8 @@ def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
 
             # Run a query for expenses with the same email, budget category
             expenseList = db.collection('expenses')\
-                .where('email', '==', email)\
-                .where('budgetCategory', '==', budgetCategory)\
+                .where(filter=FieldFilter('email', '==', email))\
+                .where(filter=FieldFilter('budgetCategory', '==', budgetCategory))\
                 .stream()
             usedAmount = 0
 
@@ -478,40 +479,58 @@ def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
         except Exception as e:
             raise RuntimeError(e)
 
-# Get a user's expenses
-# NOTE: This every raw expense from the database. It does not create duplicates for recurring expenses
-def getAllExpenses(email):
-    expenseList = db.collection('expenses')\
-            .where('email', '==', email)\
-            .stream()
-    expensesDict = {}
+### Get subset ###
+def getMostRecentExpenses(email, lim=10):
+    """
+    Create filters to get 10+ most recent expenses:
+    - Recurring expenses AND no end date
+    - Recurring expenses AND an end date greater than or equal to today's date
+    - 10 most recent end dates less than or equal to today (We do not care about future events here)
+    """
+
+    # First filter to get 10 most recent
+    filter_1 = FieldFilter("endDate", "<=", date.today().isoformat())
+
+    # Second filter
+    filter_recur = FieldFilter("recurring", "==", True)
+    filter_2 = FieldFilter("endDate", "==", "")
+    filter_3 = FieldFilter("endDate", ">=", date.today().isoformat())
+
+    and_filter1 = And(filters=[filter_recur, filter_2])
+    and_filter2 = And(filters=[filter_recur, filter_3])
+    or_filter = Or(filters=[and_filter2, and_filter1])
+
+    # Execute the filters    
+    expenseList = list(db.collection('expenses')\
+        .where(filter=FieldFilter('email', '==', email))\
+        .where(filter=filter_1)\
+        .limit(lim)\
+        .stream())
+    print("first list", expenseList)
+
+    expenseList2 = db.collection('expenses')\
+        .where(filter=FieldFilter('email', '==', email))\
+        .where(filter=or_filter)\
+        .stream()
+    print("second list", expenseList2)
     
-    # Loop through the expenselist, making requests to the database
-    for expense in expenseList:
-        expenseDoc = expense.to_dict()
-
-        # Update ISO format dates into date objects 
-        expenseDoc["startDate"] = date.fromisoformat(expenseDoc["startDate"]) if notNull(expenseDoc["startDate"]) else None
-        expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
-
-        expensesDict[expense.id] = expenseDoc
-
-    # Get a list of budget categories
-    budgetCategories = getBudgetCategories(email)
-
-    return {"data":expensesDict, "categories":budgetCategories}
-
-def getExpensesInRange(email, startDate, endDate):
-    expenseList = db.collection('expenses')\
-            .where('email', '==', email)\
-            .stream()
-    expensesDict = {}
+    # Merge the filter results
+    for expense in expenseList2:
+        if expense not in expenseList:
+            expenseList.append(expense)
+    print("new list", expenseList)
     
+    expensesDict = {}
     for expense in expenseList: 
         expenseDoc = expense.to_dict()
 
         expenseDoc["startDate"] = date.fromisoformat(expenseDoc["startDate"]) if notNull(expenseDoc["startDate"]) else None
         expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
+        
+        occurances = 0
+        dates = []
+        endDate = min(expenseDoc["endDate"], date.today())
+        startDate = max(expenseDoc["startDate"], (endDate - (getTimeDelta(expenseDoc["recurPeriod"]) * lim)))
 
         occurances, dates = getOccurancesWithinPeriod(
             startDate, 
@@ -520,7 +539,7 @@ def getExpensesInRange(email, startDate, endDate):
             expenseDoc["endDate"],
             expenseDoc['recurPeriod']
         )
-
+    
         if occurances > 0:
             expensesDict[expense.id] = {
                 "data": expenseDoc,
@@ -529,8 +548,143 @@ def getExpensesInRange(email, startDate, endDate):
 
     # Get a list of budget categories
     budgetCategories = getBudgetCategories(email)
+    print(expensesDict)
+    return {"expenses":expensesDict, "categories":budgetCategories}
+
+def getExpensesInRange(email, startDate, endDate):
+    # Include if 
+    # - StartDate is less than or equal to the range end date
+    # AND
+    # - If endDate is null or greater than or equal to range start
+    filter_1 = FieldFilter("startDate", "<=", endDate.isoformat()) 
+    list1 = list(db.collection('expenses')\
+        .where(filter=FieldFilter('email', '==', email))\
+        .where(filter=filter_1)\
+        .stream())
+
+    filter_2A = FieldFilter("endDate", ">=", startDate.isoformat())
+    filter_2B = FieldFilter("endDate", "==", "")
+    filter_2 = Or(filters=[filter_2A, filter_2B])
+
+    list2 = list(db.collection('expenses')\
+        .where(filter=FieldFilter('email', '==', email))\
+        .where(filter=filter_2)\
+        .stream())
+    
+    expensesDict = {}
+    # Create a list of values in both list1 and list2
+    if (len(list1) < len(list2)):
+        for expense in list1:
+            if expense in list2:
+                expenseDoc = expense.to_dict()
+
+                expenseDoc["startDate"] = date.fromisoformat(expenseDoc["startDate"]) if notNull(expenseDoc["startDate"]) else None
+                expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
+
+                occurances, dates = getOccurancesWithinPeriod(
+                    startDate, 
+                    endDate, 
+                    expenseDoc["startDate"],
+                    expenseDoc["endDate"],
+                    expenseDoc['recurPeriod']
+                )
+
+                if occurances > 0:
+                    expensesDict[expense.id] = {
+                        "data": expenseDoc,
+                        "dates": dates
+                    }
+    else:
+        for expense in list2:
+            if expense in list1:
+                expenseDoc = expense.to_dict()
+
+                expenseDoc["startDate"] = date.fromisoformat(expenseDoc["startDate"]) if notNull(expenseDoc["startDate"]) else None
+                expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
+
+                occurances, dates = getOccurancesWithinPeriod(
+                    startDate, 
+                    endDate, 
+                    expenseDoc["startDate"],
+                    expenseDoc["endDate"],
+                    expenseDoc['recurPeriod']
+                )
+
+                if occurances > 0:
+                    expensesDict[expense.id] = {
+                        "data": expenseDoc,
+                        "dates": dates
+                    }
+
+    # Get a list of budget categories
+    budgetCategories = getBudgetCategories(email)
 
     return {"expenses":expensesDict, "categories":budgetCategories}
+
+def getEarningsInRange(email, startDate, endDate):
+    filter_1 = FieldFilter("startDate", "<=", endDate.isoformat()) 
+    list1 = list(db.collection('earnings')\
+        .where(filter=FieldFilter('email', '==', email))\
+        .where(filter=filter_1)\
+        .stream())
+
+    filter_2A = FieldFilter("endDate", ">=", startDate.isoformat())
+    filter_2B = FieldFilter("endDate", "==", "")
+    filter_2 = Or(filters=[filter_2A, filter_2B])
+
+    list2 = list(db.collection('earnings')\
+        .where(filter=FieldFilter('email', '==', email))\
+        .where(filter=filter_2)\
+        .stream())
+    
+    earningsDict = {}
+    # Create a list of values in both list1 and list2
+    if (len(list1) < len(list2)):
+        for earning in list1:
+            if earning in list2:
+                earningDoc = earning.to_dict()
+
+                earningDoc["startDate"] = date.fromisoformat(earningDoc["startDate"]) if notNull(earningDoc["startDate"]) else None
+                earningDoc["endDate"] = date.fromisoformat(earningDoc["endDate"]) if notNull(earningDoc["endDate"]) else None
+
+                occurances, dates = getOccurancesWithinPeriod(
+                    startDate, 
+                    endDate, 
+                    earningDoc["startDate"],
+                    earningDoc["endDate"],
+                    earningDoc['recurPeriod']
+                )
+
+                if occurances > 0:
+                    earningsDict[earning.id] = {
+                        "data": earningDoc,
+                        "dates": dates
+                    }
+    else:
+        for earning in list2:
+            if earning in list1:
+                earningDoc = earning.to_dict()
+
+                earningDoc["startDate"] = date.fromisoformat(earningDoc["startDate"]) if notNull(earningDoc["startDate"]) else None
+                earningDoc["endDate"] = date.fromisoformat(earningDoc["endDate"]) if notNull(earningDoc["endDate"]) else None
+
+                occurances, dates = getOccurancesWithinPeriod(
+                    startDate, 
+                    endDate, 
+                    earningDoc["startDate"],
+                    earningDoc["endDate"],
+                    earningDoc['recurPeriod']
+                )
+
+                if occurances > 0:
+                    earningsDict[earning.id] = {
+                        "data": earningDoc,
+                        "dates": dates
+                    }
+
+    return earningsDict
+
+### Get individual items ###
 
 def getExpense(expenseId, userEmail):
     if (expenseId == "" or userEmail == ""):
@@ -583,39 +737,11 @@ def getEarning(earningId, userEmail):
 
     return earningDoc
 
-def getEarningsInRange(email, startDate, endDate):
-    earningList = db.collection('earnings')\
-            .where('email', '==', email)\
-            .stream()
-    earningsDict = {}
-    
-    for earning in earningList: 
-        earningDoc = earning.to_dict()
-
-        earningDoc["startDate"] = date.fromisoformat(earningDoc["startDate"]) if notNull(earningDoc["startDate"]) else None
-        earningDoc["endDate"] = date.fromisoformat(earningDoc["endDate"]) if notNull(earningDoc["endDate"]) else None
-
-        occurances, dates = getOccurancesWithinPeriod(
-            startDate, 
-            endDate, 
-            earningDoc["startDate"],
-            earningDoc["endDate"],
-            earningDoc['recurPeriod']
-        )
-
-        if occurances > 0:
-            earningsDict[earning.id] = {
-                "data": earningDoc,
-                "dates": dates
-            }
-
-    return earningsDict
-
 ####################
 # Setter functions #
 ####################
 def updateUser(email, username, image, color, currency, balance):
-    user = db.collection('users').where('email', '==', email).stream()
+    user = db.collection('users').where(filter=FieldFilter('email', '==', email)).stream()
 
     # Should only run once, since there should only be one user per email
     if len(list(user)) == 0:
@@ -650,7 +776,7 @@ def updateUserReferenceIds(email, operation, refType, id):
             The ID generated by Firestore to be added or removed from the user.
     """
     if (email != None) and (operation == 1 or operation == 0) and (refType == 'budgets' or refType == 'expenses' or refType == 'earnings' or refType == 'goals'):
-        user = list(db.collection('users').where('email', '==', email).stream())
+        user = list(db.collection('users').where(filter=FieldFilter('email', '==', email)).stream())
 
         # Should only run once, since there should only be one user per email
         if len(user) == 0:
