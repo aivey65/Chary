@@ -303,22 +303,30 @@ th {
     color: var(--Dark);
     font-size: 1em;
     font-weight: 300;
-    padding: 10px;
+    padding: var(--smallPad);
 }
 
 td {
     color:var(--Light);
     font-size: 1em;
     font-weight: 200;
-    padding: 10px;
+    padding: var(--smallPad);
 }
 
-tr:nth-child(even) td {
+tbody:hover {
+    cursor: pointer;
+}
+
+tbody:nth-child(even) td {
     background-color: var(--Dark);
 }
 
-tr:nth-child(odd) td {
+tbody:nth-child(odd) td {
     background-color: var(--Background);
+}
+
+.empty-body {
+    height: 30vh;
 }
 
 .update-img {

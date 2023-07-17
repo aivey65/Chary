@@ -183,7 +183,6 @@ window.addEventListener('scroll', () => {
 /////////////////////////////////
 // Functions for Generating UI //
 /////////////////////////////////
-
 /* Creates and displays UI for the user information panal
  * 
  * @param balance (int): Number value for user's balance
@@ -375,9 +374,9 @@ function generateTableUI(type, entityList, currency) {
     // Configure some values based on table type
     var columns;
     if (type == 0) {
-        columns = ['Name', 'Expense Amount', 'Budget Category', 'Description', 'Date', 'Recurring?', 'Edit']
+        columns = ['Name', 'Expense Amount', 'Budget Category', 'Date', 'Recurring?', 'Edit']
     } else {
-        columns = ['Name', 'Earning Amount', 'Description', 'Date', 'Recurring?', 'Edit'];
+        columns = ['Name', 'Earning Amount', 'Date', 'Recurring?', 'Edit'];
     }
 
     // Create table head row with column titles
@@ -389,6 +388,9 @@ function generateTableUI(type, entityList, currency) {
     })
     const tableHead = document.createElement('thead');
     tableHead.append(headRow);
+
+    const table = document.createElement('table');
+    table.append(tableHead);
 
     const unsortedRows = document.createElement('div');
     for (const key in entityList) {
@@ -408,16 +410,13 @@ function generateTableUI(type, entityList, currency) {
                 expense_category.textContent = current.budgetCategory;
             } 
 
-            const description = document.createElement('td');
-            description.textContent = current.description;
-            description.classList.add('long-text');
-
             const recur = document.createElement('td');
             if (current.recurring) {
                 const recur_img = document.createElement('img');
                 recur_img.classList.add('recur-img');
                 recur_img.src = "static/images/recurIcon.svg";
-                recur_img.title = "This " + TYPES[type] + " is recurring over a specified period of time";
+                const period = PERIODS[current.recurPeriod].toLocaleLowerCase();
+                recur_img.title = "This " + TYPES[type] + " recurs " + period;
                 recur.append(recur_img);
             }
 
@@ -437,34 +436,81 @@ function generateTableUI(type, entityList, currency) {
             date.classList.add('start-date');
             date.textContent = formatDate.toLocaleDateString('en-us', getDateFormattingOptions());
 
-            const entityRow = document.createElement('tr');
-            entityRow.classList.add('table-row');
+            const row1 = document.createElement('tr');
             if (type == 0) {
-                entityRow.append(name, amount, expense_category, description, date, recur, update);
+                row1.append(name, amount, expense_category, date, recur, update);
             } else {
-                entityRow.append(name, amount, description, date, recur, update);
+                row1.append(name, amount, date, recur, update);
             }
 
-            unsortedRows.append(entityRow);
+            // Expand row
+            const description = document.createElement('div');
+            description.textContent = current.description;
+            description.classList.add('long-text', 'expand-description');
+
+            const recurPeriod = document.createElement('div');
+            const period = PERIODS[current.recurPeriod].toLocaleLowerCase();
+            recurPeriod.textContent = "This " + TYPES[type] + " recurs " + period;
+            recurPeriod.classList.add('expand-period');
+
+            const expanseDiv = document.createElement('td');
+            expanseDiv.colSpan = headRow.cells.length;
+            expanseDiv.append(description, recurPeriod)
+
+            const row2 = document.createElement('tr');
+            row2.classList.add('expanse-row');
+            row2.style.display = "none";
+            row2.append(expanseDiv);
+
+            row1.addEventListener("click", () => {
+                toggleExpanse(row2);
+            });
+            row2.addEventListener("click", () => {
+                toggleExpanse(row2);
+            });
+            const tableRow = document.createElement('tbody');
+            tableRow.append(row1, row2);
+
+            unsortedRows.append(tableRow);
         }) 
     }
 
-    const sortedElements = sortByStartDate(Array.prototype.slice.call(unsortedRows.children));
-    var tableBody = document.createElement('tbody');
-    tableBody.append(...sortedElements);
+    if (unsortedRows.children.length > 0) {
+        table.append(...sortByStartDate(Array.prototype.slice.call(unsortedRows.children)));
+    } else {
+        const emptybody = document.createElement('tbody');
+        const emptyRow = document.createElement('tr');
+        const emptyCol = document.createElement('td');
+        emptyCol.classList.add("empty-body");
+        emptyCol.textContent = "None";
+        emptyCol.colSpan = headRow.cells.length;
 
-    if (tableBody.children.length == 0) {
-        const emptyTable = document.createElement('td');
-        emptyTable.classList.add("empty-table");
-        emptyTable.textContent = "None";
-        emptyTable.colSpan = headRow.cells.length;
-        tableBody.append(emptyTable);
+        emptyRow.append(emptyCol);
+        emptybody.append(emptyRow);
+
+        table.append(emptybody);
     }
 
-    const table = document.createElement('table');
-    table.append(tableHead, tableBody);
-
     return table;
+}
+
+/* 
+ * Shows or hides the expanded info in a table
+ */
+function toggleExpanse(expanse) {
+    const rows = document.getElementsByClassName('expanse-row');
+
+    for (const row of rows) {
+        if (row == expanse) {
+            if (row.style.display == "none") {
+                expanse.style.display = "table-row";
+            } else {
+                row.style.display = "none";
+            }
+        } else {
+            row.style.display = "none";
+        }
+    }
 }
 
 /* Reorders html elements based on the start date attribute
