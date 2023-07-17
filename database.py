@@ -506,31 +506,29 @@ def getMostRecentExpenses(email, lim=10):
         .where(filter=filter_1)\
         .limit(lim)\
         .stream())
-    print("first list", expenseList)
 
     expenseList2 = db.collection('expenses')\
         .where(filter=FieldFilter('email', '==', email))\
         .where(filter=or_filter)\
         .stream()
-    print("second list", expenseList2)
-    
+
     # Merge the filter results
     for expense in expenseList2:
         if expense not in expenseList:
             expenseList.append(expense)
-    print("new list", expenseList)
     
     expensesDict = {}
     for expense in expenseList: 
+        print("we here")
         expenseDoc = expense.to_dict()
 
         expenseDoc["startDate"] = date.fromisoformat(expenseDoc["startDate"]) if notNull(expenseDoc["startDate"]) else None
         expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
+        print("start date", expenseDoc["startDate"])
+        print("end date", expenseDoc["endDate"])
         
-        occurances = 0
-        dates = []
-        endDate = min(expenseDoc["endDate"], date.today())
-        startDate = max(expenseDoc["startDate"], (endDate - (getTimeDelta(expenseDoc["recurPeriod"]) * lim)))
+        endDate = min((i for i in [expenseDoc["endDate"], date.today()] if notNull(i)), default=None)
+        startDate = max((i for i in [expenseDoc["startDate"], (endDate - (getTimeDelta(expenseDoc["recurPeriod"]) * lim))] if notNull(i)), default=None)
 
         occurances, dates = getOccurancesWithinPeriod(
             startDate, 
