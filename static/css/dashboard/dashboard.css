@@ -169,30 +169,35 @@ h4 {
 }
 
 #budget-snip-container {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr .2fr;
+    grid-template-rows: .2fr 2fr .2fr;
     width: 25%;
     min-width: 370px;
     min-height: 400px;
     justify-content: space-between;
-}
-
-.budget-snippet {
-    display: grid;
-    grid-template-columns: 2fr .3fr .3fr;
-    gap: 1rem;
-    grid-template-rows: auto 1fr;
     align-items: center;
-    margin-top: 1rem;
 }
 
-.budget-snippet .recur-img {
+#budget-snip-container .module-header {
+    grid-column: 1;
     grid-row: 1;
-    grid-column: 3;
-    align-self: center;
+}
+
+#budget-snip-container .add-icon {
+    grid-column: 2;
+    grid-row: 1;
+} 
+
+#budget-snip-container .carousel {
+    grid-column: 1/3;
+    grid-row: 3;
 }
 
 #limited-budgets-container {
+    grid-column: 1/3;
+    grid-row: 2;
+
     overflow: hidden;
     display: flex;
     width: 100%;
@@ -207,9 +212,21 @@ h4 {
     position: absolute;
 }
 
-.snip-budget-main {
-    grid-row: 1/3;
+.budget-snippet {
+    display: grid;
+    grid-template-columns: .3fr 2fr .3fr .3fr;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.budget-snippet .recur-img {
     grid-column: 1;
+    align-self: center;
+}
+
+.snip-budget-main {
+    grid-column: 2;
     font-size: 1.2rem;
     display: grid;
     gap: .5rem;
@@ -223,13 +240,11 @@ h4 {
 }
 
 .snip-budget-used {
-    grid-row: 1/3;
-    grid-column: 2;
+    grid-column: 3;
 }
 
 .snip-edit {
-    grid-row: 2;
-    grid-column: 3;
+    grid-column: 4;
 }
 
 .snip-budget-name, .snip-budget-used {

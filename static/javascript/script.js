@@ -368,7 +368,7 @@ function generateBudgetsUI(budgets, currency) {
  * @param entityList (List): List of a user's expenses or earnings
  * @param currency (string): A single character representing the user's currency symbol
  */
-function generateTableUI(type, entityList, currency) {
+function generateTableUI(type, entityList, currency, limit=null) {
     const TYPES = ['expense', 'earning'];
         
     // Configure some values based on table type
@@ -476,7 +476,15 @@ function generateTableUI(type, entityList, currency) {
     }
 
     if (unsortedRows.children.length > 0) {
-        table.append(...sortByStartDate(Array.prototype.slice.call(unsortedRows.children)));
+        if (limit) {
+            const sortedElements = sortByStartDate(Array.prototype.slice.call(unsortedRows.children));
+            const sortedLength = sortedElements.length;
+            for (var index = 0; index < limit && index < sortedLength; index++) {
+                table.append(sortedElements[index])
+            }
+        } else {
+            table.append(...sortByStartDate(Array.prototype.slice.call(unsortedRows.children)));
+        }
     } else {
         const emptybody = document.createElement('tbody');
         const emptyRow = document.createElement('tr');

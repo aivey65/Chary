@@ -232,7 +232,7 @@ button {
 }
 
 #add-budget-button, #add-earning-button, #add-expense-button {
-    margin-left: 1em;
+    margin-left: 2em;
     background-color: var(--ContrastL);
     color: var(--Dark);
     border: solid 2px var(--ContrastL);
@@ -258,6 +258,15 @@ button {
 .icon {
     width: 2rem;
     height: 2rem;
+}
+
+.add-icon {
+    padding: .5rem;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .icon:hover, #large-logo {
@@ -375,7 +384,6 @@ tbody:nth-child(odd) td {
     flex-direction: row;
     gap: var(--smallPad);
     justify-content: center;
-    margin-top: var(--smallPad);
 }
 
 .carousel-dot {

@@ -82,7 +82,11 @@ function loadBudgetTab() {
     const addButton = document.createElement('button');
     addButton.onclick = goToBudgetForm;
     addButton.id = "add-budget-button";
-    addButton.textContent = "+ New";
+    addButton.classList.add("add-icon");
+    const addIcon = document.createElement("img");
+    addIcon.src = "../static/images/PlusIcon.svg";
+    addIcon.alt = "Add icon";
+    addButton.append(addIcon);
 
     const tabHead = document.createElement('div');
     tabHead.append(header, addButton);
@@ -109,7 +113,11 @@ function loadEarningTab() {
     const addButton = document.createElement('button');
     addButton.onclick = goToEarningForm;
     addButton.id = "add-earning-button";
-    addButton.textContent = "+ New";
+    addButton.classList.add("add-icon");
+    const addIcon = document.createElement("img");
+    addIcon.src="../static/images/PlusIcon.svg";
+    addIcon.alt = "Add icon";
+    addButton.append(addIcon);
 
     const tabHead = document.createElement('div');
     tabHead.append(header, addButton);
@@ -141,7 +149,11 @@ function loadExpenseTab() {
     const addButton = document.createElement('button');
     addButton.onclick = goToExpenseForm;
     addButton.id = 'add-expense-button';
-    addButton.textContent = "+ New";
+    addButton.classList.add("add-icon");
+    const addIcon = document.createElement("img");
+    addIcon.src="../static/images/PlusIcon.svg";
+    addIcon.alt = "Add icon";
+    addButton.append(addIcon);
 
     const tabHead = document.createElement('div');
     tabHead.append(header, addButton);
@@ -233,6 +245,16 @@ function generateOverviewBudgets(budgets) {
     overviewHeader.textContent = "Budget Information";
     overviewHeader.classList.add('module-header');
     overviewBudgetContainer.append(overviewHeader);
+
+    const addButton = document.createElement('button');
+    addButton.onclick = goToBudgetForm;
+    addButton.id = "add-budget-button";
+    addButton.classList.add("add-icon");
+    const addIcon = document.createElement("img");
+    addIcon.src = "../static/images/PlusIcon.svg";
+    addIcon.alt = "Add icon";
+    addButton.append(addIcon);
+    overviewBudgetContainer.append(addButton);
 
     const limitedBudgetsContainer = document.createElement("div");
     limitedBudgetsContainer.id = "limited-budgets-container";
@@ -432,9 +454,18 @@ function generateOverviewExpenses() {
     overviewHeader.textContent = "Recent Expenses";
     overviewHeader.classList.add('module-header');
 
-    const expenseTable = generateTableUI(0, userData.expenses.expenses, userData.currency);
+    const addButton = document.createElement('button');
+    addButton.onclick = goToExpenseForm;
+    addButton.id = 'add-expense-button';
+    addButton.classList.add("add-icon");
+    const addIcon = document.createElement("img");
+    addIcon.src="../static/images/PlusIcon.svg";
+    addIcon.alt = "Add icon";
+    addButton.append(addIcon);
 
-    overviewExpenseContainer.append(overviewHeader, expenseTable);
+    const expenseTable = generateTableUI(0, userData.expenses.expenses, userData.currency, 5);
+
+    overviewExpenseContainer.append(overviewHeader, addButton, expenseTable);
     return overviewExpenseContainer;
 }
 
@@ -447,8 +478,17 @@ function generateOverviewEarnings() {
     overviewHeader.textContent = "Recent Earnings";
     overviewHeader.classList.add('module-header');
 
-    const earningTable = generateTableUI(1, userData.earnings, userData.currency);
+    const addButton = document.createElement('button');
+    addButton.onclick = goToEarningForm;
+    addButton.id = "add-earning-button";
+    addButton.classList.add("add-icon");
+    const addIcon = document.createElement("img");
+    addIcon.src="../static/images/PlusIcon.svg";
+    addIcon.alt = "Add icon";
+    addButton.append(addIcon);
 
-    overviewEarningContainer.append(overviewHeader, earningTable);
+    const earningTable = generateTableUI(1, userData.earnings, userData.currency, 5);
+
+    overviewEarningContainer.append(overviewHeader, addButton, earningTable);
     return overviewEarningContainer;
 }
