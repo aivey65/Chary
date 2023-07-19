@@ -1,5 +1,3 @@
-import Chart from 'chart.js/auto'
-
 var userData = null;
 const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"]
 
@@ -219,13 +217,28 @@ function generateOverviewCharts() {
     overviewHeader.classList.add('module-header');
     overviewChartContainer.append(overviewHeader);
 
+    // Configure data for creating all charts
+    const data = [
+        [
+            { year: 2010, count: 10 },
+            { year: 2011, count: 20 },
+            { year: 2012, count: 15 },
+            { year: 2013, count: 25 },
+            { year: 2014, count: 22 },
+            { year: 2015, count: 30 },
+            { year: 2016, count: 28 },
+        ],
+    ]
+
+    const currentChart = generateVariousCharts(data, 0, 1);
+
     const chartContainer = document.createElement("div");
-    chartContainer.id = "limited-budgets-container";
-    chartContainer.append(generateVariousCharts(pass));
+    chartContainer.id = "chart-container";
+    chartContainer.append(currentChart);
     overviewChartContainer.append(chartContainer);
     
-    const dotCarousel = carouselButtons(budgets, "overview-dots", 3, generateVariousCharts);
-    overviewBudgetContainer.append(dotCarousel);
+    const dotCarousel = carouselButtons(data, "overview-chart-dots", 1, generateVariousCharts);
+    overviewChartContainer.append(dotCarousel);
 
     return overviewChartContainer;
 }
@@ -278,8 +291,34 @@ function generateOverviewBudgets(budgets) {
 }
 
 function generateVariousCharts(dataList, slideNum, maxShow) {
-    const singularChartContainer = document.createElement("div");
-    singularChartContainer.id = 'single-chart';
+    const currentChart = document.createElement('canvas');
+    currentChart.id = 'current-chart';
+
+    if (slideNum == 0) {
+        const data = dataList[slideNum];
+        new Chart(currentChart, {
+            type: "bar",
+            data: {
+                labels: data.map(row => row.year),
+                datasets: [{
+                    label: "Acquisitions by year",
+                    data: data.map(row => row.count),
+                    backgroundColor: "#6ACD5F",
+                }],
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    }
+
+    return currentChart;
 }
 
 function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
