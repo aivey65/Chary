@@ -1,5 +1,83 @@
+/*
+*** General Styles for All Tabs in Dashboard ***
+*/
+
+h2 {
+    font-size:1.5em;
+}
+
+h4 {
+    font-size: .8em;
+}
+
+#dashboard-content {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: var(--lgPad);
+    margin-bottom: var(--lgPad);
+    width: 100%;
+}
+
+/*
+*** Styles for Tabs Section of Dashboard ***
+*/
+#dashboard-left {
+    width: 100%;
+
+}
+
+#dashboard-tabs {
+    display: none;
+    grid-row: 1;
+    max-width: inherit;
+    width: inherit;
+    padding-top: 4.8rem;
+}
+
+#dashboard-tabs ul {
+    margin: 0rem;
+    padding: 0rem;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    overflow: scroll;
+}
+
+#dashboard-tabs li {
+    margin-bottom: 1rem;
+    border-radius: 0rem 50rem 50rem 0rem;
+    padding: 0.8rem;
+}
+
+#dashboard-profile {
+    display: none;
+}
+
 #budget-container {
     display: flex;
     flex-direction: row;
     overflow-x: hidden;
+}
+
+/*
+*** Styles for Overview Section of Dashboard ***
+*/
+#overview-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 1.4rem;
+}
+
+.snip-containers {
+    background-color: var(--Dark);
+    border-radius: 20px;
+    flex: auto;
+}
+
+#chart-snip-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--smallPad);
 }
