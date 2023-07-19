@@ -1,3 +1,5 @@
+import Chart from 'chart.js/auto'
+
 var userData = null;
 const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"]
 
@@ -217,6 +219,14 @@ function generateOverviewCharts() {
     overviewHeader.classList.add('module-header');
     overviewChartContainer.append(overviewHeader);
 
+    const chartContainer = document.createElement("div");
+    chartContainer.id = "limited-budgets-container";
+    chartContainer.append(generateVariousCharts(pass));
+    overviewChartContainer.append(chartContainer);
+    
+    const dotCarousel = carouselButtons(budgets, "overview-dots", 3, generateVariousCharts);
+    overviewBudgetContainer.append(dotCarousel);
+
     return overviewChartContainer;
 }
 
@@ -261,10 +271,15 @@ function generateOverviewBudgets(budgets) {
     limitedBudgetsContainer.append(generateLimitedOverviewBudgets(budgets, 0, 3));
     overviewBudgetContainer.append(limitedBudgetsContainer);
     
-    const dotCarousel = budgetCarouselButtons(budgets, "overview-dots", 3);
+    const dotCarousel = carouselButtons(budgets, "overview-budget-dots", 3, generateLimitedOverviewBudgets);
     overviewBudgetContainer.append(dotCarousel);
 
     return overviewBudgetContainer;
+}
+
+function generateVariousCharts(dataList, slideNum, maxShow) {
+    const singularChartContainer = document.createElement("div");
+    singularChartContainer.id = 'single-chart';
 }
 
 function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
@@ -366,12 +381,12 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
     return budgetContainer;
 }
 
-function budgetCarouselButtons(budgets, uniqueClass, maxShow=3) {
+function carouselButtons(items, uniqueClass, maxShow=3, nextSlideGenerator) {
     var dotsToReturn = document.createElement("div");
     dotsToReturn.classList.add("carousel");
 
-    budgetsLength = Object.keys(budgets).length
-    numSlides = Math.ceil(budgetsLength / maxShow);
+    itemsLength = Object.keys(items).length
+    numSlides = Math.ceil(itemsLength / maxShow);
 
     for (var slideNum = 0; slideNum < numSlides; slideNum++) {
         const dot = document.createElement("div");
@@ -379,7 +394,7 @@ function budgetCarouselButtons(budgets, uniqueClass, maxShow=3) {
 
         const currentSlide = slideNum;
         dot.addEventListener("click", () => {
-            dotClick(budgets, currentSlide, maxShow, uniqueClass)
+            dotClick(currentSlide, uniqueClass, nextSlideGenerator(items, slideNum, maxShow))
         });
 
         dotsToReturn.append(dot);
@@ -388,7 +403,7 @@ function budgetCarouselButtons(budgets, uniqueClass, maxShow=3) {
     return dotsToReturn;
 }
 
-function dotClick(budgets, slideNum, maxShow, uniqueClass) {
+function dotClick(slideNum, uniqueClass, newChildFunc) {
     // First, change which dot is active and get the current and new dot indeces
     const previousIndex = changeActiveDot(slideNum, uniqueClass);
 
@@ -399,7 +414,7 @@ function dotClick(budgets, slideNum, maxShow, uniqueClass) {
     // Update the content and create a transition depending on which dot is before the other
     const budgetContainer = document.getElementById('limited-budgets-container');
     const firstChild = budgetContainer.firstChild;
-    const newChild = generateLimitedOverviewBudgets(budgets, slideNum, maxShow);
+    const newChild = newChildFunc();
     budgetContainer.append(newChild);
 
     if (slideNum < previousIndex) { // Slide right
