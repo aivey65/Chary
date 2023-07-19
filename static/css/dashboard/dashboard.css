@@ -121,7 +121,10 @@ h4 {
 }
 
 #chart-snip-container {
-    width: 65%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--smallPad);
 }
 
 #user-info-container {
@@ -171,9 +174,10 @@ h4 {
 #budget-snip-container {
     display: grid;
     grid-template-columns: 1fr .2fr;
-    grid-template-rows: .2fr 2fr .2fr;
+    grid-template-rows: .2fr 1fr .2fr;
+    gap: var(--smallPad);
     width: 25%;
-    min-width: 370px;
+    min-width: 400px;
     min-height: 400px;
     justify-content: space-between;
     align-items: center;
@@ -268,10 +272,26 @@ h4 {
 
 #earning-snip-container, #expense-snip-container {
     width: 65%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: .2fr 1fr;
 }
 
 #earning-snip-container h3, #expense-snip-container h3 {
     margin-bottom: var(--medPad);
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#earning-snip-container .add-icon, #expense-snip-container .add-icon {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+}
+
+#earning-snip-container table, #expense-snip-container table {
+    grid-column: 1/3;
+    grid-row: 2;
 }
 
 /*

@@ -283,7 +283,6 @@ def getAllCurrent(email, period=3):
         user['budgetCategories'] = budgetCategories
         return {"data":user}
     except Exception as e:
-        print(e)
         raise RuntimeError(str(e))
     
 # Get a user's basic information, needed to get list of budgets, expenses, etc.
@@ -519,13 +518,10 @@ def getMostRecentExpenses(email, lim=10):
     
     expensesDict = {}
     for expense in expenseList: 
-        print("we here")
         expenseDoc = expense.to_dict()
 
         expenseDoc["startDate"] = date.fromisoformat(expenseDoc["startDate"]) if notNull(expenseDoc["startDate"]) else None
         expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
-        print("start date", expenseDoc["startDate"])
-        print("end date", expenseDoc["endDate"])
         
         endDate = min((i for i in [expenseDoc["endDate"], date.today()] if notNull(i)), default=None)
         startDate = max((i for i in [expenseDoc["startDate"], (endDate - (getTimeDelta(expenseDoc["recurPeriod"]) * lim))] if notNull(i)), default=None)
@@ -546,7 +542,6 @@ def getMostRecentExpenses(email, lim=10):
 
     # Get a list of budget categories
     budgetCategories = getBudgetCategories(email)
-    print(expensesDict)
     return {"expenses":expensesDict, "categories":budgetCategories}
 
 def getExpensesInRange(email, startDate, endDate):

@@ -70,8 +70,9 @@ function loadOverviewTab() {
     expensePanel.classList.add('module');
     overviewTab.append(expensePanel);
 
-    changeActiveTab(document.getElementById('overview-tab'))
-    changeActiveDot(0, "overview-dots")
+    changeActiveTab(document.getElementById('overview-tab'));
+    changeActiveDot(0, "overview-budget-dots");
+    changeActiveDot(0, "overview-chart-dots");
 }
 
 function loadBudgetTab() {
@@ -307,6 +308,7 @@ function generateVariousCharts(dataList, slideNum, maxShow) {
                 }],
             },
             options: {
+                maintainAspectRatio: false,
                 scales: {
                     yAxes: [{
                         ticks: {
@@ -433,7 +435,7 @@ function carouselButtons(items, uniqueClass, maxShow=3, nextSlideGenerator) {
 
         const currentSlide = slideNum;
         dot.addEventListener("click", () => {
-            dotClick(currentSlide, uniqueClass, nextSlideGenerator(items, slideNum, maxShow))
+            dotClick(currentSlide, uniqueClass, () => {return nextSlideGenerator(items, currentSlide, maxShow)})
         });
 
         dotsToReturn.append(dot);
