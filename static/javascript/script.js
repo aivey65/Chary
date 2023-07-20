@@ -137,7 +137,7 @@ function fillProfilePics(imageToUse=null) {
     const userIcon = document.getElementById('nav-profile-icon');
     const profileOptionsPanel = document.getElementById('profile-options');
 
-    if (userIcon) {
+    if (userIcon && window.getComputedStyle(userIcon).getPropertyValue('display') != "none") {
         userIcon.addEventListener('click', (event) => {
             optionsToggle(event.target, profileOptionsPanel, "grid");
         }, false);
@@ -170,11 +170,21 @@ window.addEventListener('scroll', () => {
 
     // Hide/show nav bar when scrolling
     const logo = document.getElementById('toggle-icon')
-    if(logo.display != 'none' && logo.classList.contains('hamburg')) {
+    if(logo.display != 'none') {
         if (prevScrollpos > currentScrollPos) {
-            document.getElementsByTagName("header")[0].style.transform = "translateY(0px)";
+            if (document.getElementById('dashboard-left')) {
+                document.getElementById("dashboard-left").style.transform = "translateY(0px)";
+            }
+            if (logo.classList.contains('hamburg')) {
+                document.getElementsByTagName("header")[0].style.transform = "translateY(0px)";
+            }
         } else {
-            document.getElementsByTagName("header")[0].style.transform = "translateY(-70px)";
+            if (document.getElementById('dashboard-left')) {
+                document.getElementById('dashboard-left').style.transform = "translateY(calc(-1 * var(--navPad)))";
+            }
+            if (logo.classList.contains('hamburg')) {
+                document.getElementsByTagName("header")[0].style.transform = "translateY(-70px)";
+            }
         }
         prevScrollpos = currentScrollPos;
     }
@@ -400,17 +410,21 @@ function generateTableUI(type, entityList, currency, limit=null) {
 
             const name = document.createElement('td');
             name.textContent = current.name;
+            name.classList.add('td-name');
 
             const amount = document.createElement('td');
             amount.textContent = currency + formatNumber(current.amount);
+            amount.classList.add('td-amount');
 
             var expense_category;
             if (type == 0) {
                 expense_category = document.createElement('td');
                 expense_category.textContent = current.budgetCategory;
+                expense_category.classList.add('td-category');
             } 
 
             const recur = document.createElement('td');
+            recur.classList.add('td-recur');
             if (current.recurring) {
                 const recur_img = document.createElement('img');
                 recur_img.classList.add('recur-img');
@@ -421,6 +435,7 @@ function generateTableUI(type, entityList, currency, limit=null) {
             }
 
             const update = document.createElement('td');
+            update.classList.add('td-update');
             const update_img = document.createElement('img');
             update_img.src = "static/images/EditButtonSM.svg"
             update_img.classList.add("update-img");
@@ -437,6 +452,7 @@ function generateTableUI(type, entityList, currency, limit=null) {
             date.textContent = formatDate.toLocaleDateString('en-us', getDateFormattingOptions());
 
             const row1 = document.createElement('tr');
+            row1.classList.add('main-row');
             if (type == 0) {
                 row1.append(name, amount, expense_category, date, recur, update);
             } else {

@@ -33,6 +33,7 @@ Defining color values to make it easier to change later on
     --medPad: 30px;
     --lgPad: 40px;
     --DesktopPadBody: 40px;
+    --navPad: 130px;
 }
 
 *, *::before, *::after {
@@ -279,16 +280,6 @@ button {
     cursor: pointer;
 }
 
-.recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img {
-    width: 1.7rem;
-    height: auto;
-}
-
-.trash-icon {
-    width: 1.2rem;
-    height: 1.2rem;
-}
-
 .centered {
     text-align: center;
 }
@@ -311,33 +302,6 @@ table {
     width: 100%;
     text-align: center;
     vertical-align: middle;
-}
-
-th {
-    background-color: var(--MainL);
-    color: var(--Dark);
-    font-size: 1em;
-    font-weight: 300;
-    padding: var(--smallPad);
-}
-
-td {
-    color:var(--Light);
-    font-size: 1em;
-    font-weight: 200;
-    padding: var(--smallPad);
-}
-
-tbody:hover {
-    cursor: pointer;
-}
-
-tbody:nth-child(even) td {
-    background-color: var(--Dark);
-}
-
-tbody:nth-child(odd) td {
-    background-color: var(--Background);
 }
 
 .empty-body {
@@ -580,7 +544,15 @@ Creating the navigation bar depending on the size of the user's screen
         list-style: none;
     }
 
-    nav li {
+    #profile-options {
+        display: contents;
+    }
+
+    #nav-profile-icon {
+        display: none;
+    }
+
+    nav li, #profile-options a {
         margin-bottom: 1.2rem;
         margin-left: 2rem;
         padding: .5rem .5rem .5rem 1.2rem;
@@ -591,9 +563,19 @@ Creating the navigation bar depending on the size of the user's screen
     nav li:hover {
         background-color: var(--MainD);
     }
+    
+    #profile-options a:hover {
+        background-color: var(--MainD);
+        color: var(--Light);
+    }
 
     nav li:active {
         background-color: var(--MainD);
+    }
+
+    #profile-options a:active {
+        background-color: var(--MainD);
+        color: var(--Light);
     }
 
     nav li:hover a {
@@ -616,6 +598,10 @@ Creating the navigation bar depending on the size of the user's screen
         margin-right: 0.8rem;
     }
 
+    .nav-nolink {
+        display: none;
+    }
+
     /* Non nav mobile */
 
     .non-header {
@@ -634,6 +620,48 @@ Creating the navigation bar depending on the size of the user's screen
         height: 100%;
         min-height: 30vh;
         width: 100%;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tbody {
+        display: block;
+        border-bottom: solid 1px var(--Navy);
+        padding-top: var(--mobilePad);
+        padding-bottom: var(--mobilePad);
+    }
+
+    tbody:last-child {
+        border-bottom: none;
+    }
+
+    tbody .main-row {
+        display: grid;
+        gap: var(--mobilePad);
+        grid-template-columns: .2fr 1fr .3fr;
+        grid-template-rows: auto auto auto;
+    }
+    
+    .main-row td {
+        color:var(--Light);
+        font-weight: 200;
+        text-align: left;
+    }
+    
+    tbody:hover {
+        cursor: pointer;
+    }
+
+    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img {
+        width: 1.5rem;
+        height: auto;
+    }
+    
+    .trash-icon {
+        width: 1.2rem;
+        height: 1.2rem;
     }
 }
 
@@ -775,5 +803,42 @@ Creating the navigation bar depending on the size of the user's screen
         height: 100%;
         min-height: 30vh;
         width: 100%;
+    }
+
+    th {
+        background-color: var(--MainL);
+        color: var(--Dark);
+        font-size: 1em;
+        font-weight: 300;
+        padding: var(--smallPad);
+    }
+    
+    td {
+        color:var(--Light);
+        font-size: 1em;
+        font-weight: 200;
+        padding: var(--smallPad);
+    }
+    
+    tbody:hover {
+        cursor: pointer;
+    }
+    
+    tbody:nth-child(even) td {
+        background-color: var(--Dark);
+    }
+    
+    tbody:nth-child(odd) td {
+        background-color: var(--Background);
+    }
+
+    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img {
+        width: 1.7rem;
+        height: auto;
+    }
+    
+    .trash-icon {
+        width: 1.2rem;
+        height: 1.2rem;
     }
 }

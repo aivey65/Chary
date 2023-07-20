@@ -13,7 +13,6 @@ h4 {
 #dashboard-content {
     display: grid;
     grid-template-rows: auto 1fr;
-    gap: var(--smallPad);
     margin-bottom: var(--lgPad);
     width: 100%;
 }
@@ -23,13 +22,24 @@ h4 {
 */
 #dashboard-left {
     width: 100%;
+    overflow: scroll;
     height: fit-content;
     border-bottom: solid 1px var(--Navy);
     background-color: var(--Dark);
+    transition: .4s ease-in-out;
+    position: fixed;
+    z-index: +2;
+}
+
+#dashboard-left ::-webkit-scrollbar {
+    height: 0;
+    scrollbar-width: 0;
+    scrollbar-base-color: transparent;
+    -ms-overflow-style: none;
+    display: none;
 }
 
 #dashboard-tabs {
-    grid-row: 1;
     max-width: inherit;
     width: inherit;
     padding-top: 4.8rem;
@@ -40,6 +50,7 @@ h4 {
 #dashboard-tabs ul {
     margin: 0rem;
     padding: 0rem;
+    gap: var(--smallPad);
     list-style: none;
     display: flex;
     flex-direction: row;
@@ -97,12 +108,12 @@ h4 {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    gap: 1.4rem;
+    gap: .5rem;
+    padding-top: var(--navPad);
 }
 
 .snip-containers {
-    padding-left: var(--mobilePad);
-    padding-right: var(--mobilePad);
+    padding: var(--mobilePad);
     width: 100vw;
 }
 
@@ -122,10 +133,9 @@ h4 {
     grid-template-columns: 1fr .2fr;
     grid-template-rows: .3fr 1fr .3fr;
     gap: var(--smallPad);
-    height: 40vh;
+    min-height: 60vh;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--background);
 }
 
 #budget-snip-container .module-header {
@@ -213,4 +223,66 @@ h4 {
     stroke-width: 15;
     stroke-linecap: round;
     stroke: var(--ContrastL);
+}
+
+#earning-snip-container, #expense-snip-container {
+    display: grid;
+    grid-template-columns: 1fr .3fr;
+    grid-template-rows: auto 1fr;
+    margin: var(--mobilePad);
+    background-color: var(--Dark);
+    border: solid 1px var(--Navy);
+    border-radius: var(--mobilePad);
+    width: calc(100vw - (2 * var(--mobilePad)));
+}
+
+#earning-snip-container h3, #expense-snip-container h3 {
+    margin-bottom: var(--medPad);
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#earning-snip-container .add-icon, #expense-snip-container .add-icon {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+}
+
+#earning-snip-container table, #expense-snip-container table {
+    grid-column: 1/3;
+    grid-row: 2;
+    height: fit-content;
+}
+
+.td-recur {
+    grid-column: 1;
+}
+
+.td-name {
+    font-size: 1em;
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.start-date {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: .8em;
+}
+
+.td-category {
+    grid-column: 2;
+    grid-row: 3;
+    font-size: .8em;
+    font-style: italic;
+}
+
+.td-amount {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.td-update {
+    grid-column: 3;
+    grid-row: 3;
 }
