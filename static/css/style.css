@@ -356,10 +356,6 @@ tbody:nth-child(odd) td {
     overflow: hidden;
 }
 
-.module {
-    padding: var(--medPad);
-}
-
 .module-header {
     font-size: 1.45rem;
     font-weight: 300;
@@ -623,8 +619,6 @@ Creating the navigation bar depending on the size of the user's screen
     /* Non nav mobile */
 
     .non-header {
-        padding-left: var(--mobilePad);
-        padding-right: var(--mobilePad);
         overflow: hidden;
         width: 100%;
     }
@@ -768,6 +762,10 @@ Creating the navigation bar depending on the size of the user's screen
     .non-header {
         padding-left: var(--DesktopPadBody);
         padding-right: var(--DesktopPadBody);
+    }
+
+    .module {
+        padding: var(--medPad);
     }
 
     #chart-container {
