@@ -133,27 +133,43 @@ function windowClick(optionsPanel, button) {
     }
 }
 
-function fillProfilePics(imageToUse=null) {
-    const userIcon = document.getElementById('nav-profile-icon');
-    const profileOptionsPanel = document.getElementById('profile-options');
+async function fillProfilePics(image=null) {
+    navConfig();
+    window.addEventListener('resize', () => {
+        navConfig();
+    });
 
-    if (userIcon && window.getComputedStyle(userIcon).getPropertyValue('display') != "none") {
-        userIcon.addEventListener('click', (event) => {
-            optionsToggle(event.target, profileOptionsPanel, "grid");
-        }, false);
-    }
+    var imageToUse = image;
 
     const pictures = document.getElementsByClassName('profile-icon');
     for (pic of pictures) {
         if (imageToUse == null) {
-            fetch('/data/user').then(response => response.json()).then((responseData) => {
-                    imageToUse = responseData.data.profileImage;
-                    pic.src = "../static/images/profileImages/" + imageToUse + ".svg"
-                    
-                });
-            } else {
+            await fetch('/data/user').then(response => response.json()).then((responseData) => {
+                imageToUse = responseData.data.profileImage;
                 pic.src = "../static/images/profileImages/" + imageToUse + ".svg"
-            }
+                console.log("completed")
+            });
+        } else {
+            pic.src = "../static/images/profileImages/" + imageToUse + ".svg"
+        }
+    }
+}
+
+function navConfig() {
+    const userIcon = document.getElementById('nav-profile-icon');
+    const profileOptionsPanel = document.getElementById('profile-options');
+    console.log(window.innerWidth)
+    
+    if (window.innerWidth > 767) {
+        console.log("desktop")
+        userIcon.onclick = (event) => {
+            optionsToggle(event.target, profileOptionsPanel, "grid");
+        };
+        profileOptionsPanel.style.display = "none";
+    } else {
+        console.log("mobile")
+        userIcon.onclick = null;
+        profileOptionsPanel.style.display = "contents";
     }
 }
 
@@ -169,8 +185,8 @@ window.addEventListener('scroll', () => {
     const currentScrollPos = window.pageYOffset;
 
     // Hide/show nav bar when scrolling
-    const logo = document.getElementById('toggle-icon')
-    if(logo.display != 'none') {
+    const logo = document.getElementById('toggle-icon');
+    if(window.getComputedStyle(logo).getPropertyValue("display") != 'none') {
         if (prevScrollpos > currentScrollPos) {
             if (document.getElementById('dashboard-left')) {
                 document.getElementById("dashboard-left").style.transform = "translateY(0px)";

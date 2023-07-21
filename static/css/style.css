@@ -34,6 +34,7 @@ Defining color values to make it easier to change later on
     --lgPad: 40px;
     --DesktopPadBody: 40px;
     --navPad: 130px;
+    --smallNavPad: 80px;
 }
 
 *, *::before, *::after {
@@ -154,6 +155,13 @@ a.normal-link:active {
     width: 20%;
 }
 
+.placeholder-area {
+    height: min(100%, 50vh);
+    width: 100vw;
+    position: relative;
+    top: 0px;
+}
+
 .empty-table {
     text-align: center;
     height: 40vh;
@@ -169,30 +177,6 @@ a.normal-link:active {
 /*
 *** Popup styles
 */
-#popup-wrapper {
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    background-color: var(--faded);
-
-    position: fixed;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#popup {
-    width: 40%;
-    height: 40%;
-    background-color: var(--Background);
-    padding: var(--medPad);
-    border-radius: var(--medPad);
-}
-
 .submit-button {
     margin-top: var(--medPad);
     margin-bottom: var(--medPad);
@@ -553,6 +537,8 @@ Creating the navigation bar depending on the size of the user's screen
     }
 
     nav li, #profile-options a {
+        display: block;
+        width: 100%;
         margin-bottom: 1.2rem;
         margin-left: 2rem;
         padding: .5rem .5rem .5rem 1.2rem;
@@ -662,6 +648,36 @@ Creating the navigation bar depending on the size of the user's screen
     .trash-icon {
         width: 1.2rem;
         height: 1.2rem;
+    }
+
+    #acd-budgets,
+    #acd-earnings,
+    #acd-expenses,
+    #acd-content {
+        padding-top: var(--smallNavPad);
+    }
+
+    #popup-wrapper {
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        background-color: var(--faded);
+    
+        position: fixed;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    #popup {
+        margin: var(--mobilePad);
+        background-color: var(--Background);
+        padding: var(--medPad);
+        border-radius: var(--medPad);
     }
 }
 
@@ -788,8 +804,7 @@ Creating the navigation bar depending on the size of the user's screen
     /* Non-nav desktop */
 
     .non-header {
-        padding-left: var(--DesktopPadBody);
-        padding-right: var(--DesktopPadBody);
+        padding: var(--DesktopPadBody);
     }
 
     .module {
@@ -840,5 +855,23 @@ Creating the navigation bar depending on the size of the user's screen
     .trash-icon {
         width: 1.2rem;
         height: 1.2rem;
+    }
+
+    #acd-budgets h2,
+    #acd-earnings h2,
+    #acd-expenses h2,
+    #acd-content h2 {
+        float: left;
+        position: relative;
+        display: inline;
+        margin: auto;
+    }
+
+    #acd-budgets #back-button,
+    #acd-earnings #back-button,
+    #acd-expenses #back-button,
+    #acd-content #back-button {
+        position: relative;
+        left: -100%;
     }
 }

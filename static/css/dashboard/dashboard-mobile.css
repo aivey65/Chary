@@ -15,6 +15,7 @@ h4 {
     grid-template-rows: auto 1fr;
     margin-bottom: var(--lgPad);
     width: 100%;
+    min-height: 90vh;
 }
 
 /*
@@ -101,6 +102,10 @@ h4 {
     margin-top: 20px;
 }
 
+#overview-section, #budget-section, #earning-section, #expense-section {
+    padding-top: calc(var(--navPad) + 10px);
+}
+
 /*
 *** Styles for Overview Section of Dashboard ***
 */
@@ -109,7 +114,6 @@ h4 {
     flex-direction: column;
     justify-content: space-evenly;
     gap: .5rem;
-    padding-top: var(--navPad);
 }
 
 .snip-containers {
@@ -133,7 +137,9 @@ h4 {
     grid-template-columns: 1fr .2fr;
     grid-template-rows: .3fr 1fr .3fr;
     gap: var(--smallPad);
-    min-height: 60vh;
+    min-height: 370px;
+    height: 60vh;
+    max-height: 450px;
     justify-content: space-between;
     align-items: center;
 }
@@ -141,6 +147,7 @@ h4 {
 #budget-snip-container .module-header {
     grid-column: 1;
     grid-row: 1;
+    white-space: nowrap;
 }
 
 #budget-snip-container .add-icon {
@@ -286,4 +293,29 @@ h4 {
 .td-update {
     grid-column: 3;
     grid-row: 3;
+}
+
+/*
+*** Styles for Earning and Expense Section of Dashboard ***
+*/
+
+#earning-container table, #expense-container table {
+    margin: var(--mobilePad);
+    padding: var(--mobilePad);
+    background-color: var(--Dark);
+    border: solid 1px var(--Navy);
+    border-collapse: separate;
+    border-radius: var(--mobilePad);
+    width: calc(100vw - (2 * var(--mobilePad)));
+}
+
+#tab-head, #tab-header{
+    margin-left: var(--mobilePad);
+    margin-right: var(--mobilePad);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#add-earning-button, #add-expense-button {
+    justify-self: flex-end;
 }

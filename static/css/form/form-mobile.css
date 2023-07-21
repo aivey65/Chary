@@ -1,0 +1,177 @@
+.content {
+    color: var(--Light);
+    width: min-content;
+    padding: var(--mobilePad);
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: .5fr 1fr .2fr .2fr .5fr .5fr .2fr .1fr .2fr;
+    gap: 0px var(--mobilePad);
+    margin: auto;
+    width: calc(100vw - (2 * var(--mobilePad)));
+}
+
+label, p {
+    font-size: 1rem;
+    font-weight: 200;
+    margin-bottom: .2rem;
+}
+
+input[type='text'], textarea {
+    background-color: var(--Light);
+    border-radius: 1em;
+    border: none;
+    padding: 1rem;
+
+}
+
+select, input[type='date'] {
+    background-color: var(--Light);
+    padding: .6rem;
+    border: none;
+}
+
+select {
+    border-radius: 1rem 1rem 0rem 0rem;
+    appearance: none;
+    background-image: url("../../images/down-icon.svg");
+    background-repeat: no-repeat;
+    background-position: 90% 50%;
+    background-size: 1rem;
+}
+
+input[type='date'] {
+    border-radius: 1rem;
+}
+
+input[type='text'], input[type='date'] {
+    width: fit-content;
+}
+
+input[type='radio'] {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+input[type='date'] {
+    cursor: pointer;
+}
+
+.required-input::after {
+    content: " *";
+    color: var(--MainD);
+}
+
+#recurring-true:checked ~ .label-recurring-true,
+#recurring-false:checked ~ .label-recurring-false,
+#daily:checked ~ .label-daily,
+#weekly:checked ~ .label-weekly,
+#biweekly:checked ~ .label-biweekly,
+#monthly:checked ~ .label-monthly,
+#yearly:checked ~ .label-yearly {
+    background-color: var(--MainD);
+    border-color: var(--MainD);
+}
+
+.label-recurring, .budget-period, .expense-period, .earning-period {
+    cursor: pointer;
+    background-color: var(--Background);
+    color: var(--Light);
+    padding: 1em;
+    border: 2px solid var(--Light);
+    border-radius: 1em;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    min-width: 5rem;
+}
+
+#name-div, #description-div,
+#amount-div, #start-div,
+#end-div, #category-div {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--smallPad);
+}
+
+#recurring-div, #period-div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mobilePad);
+    margin-top: var(--mobilePad);
+}
+
+#name-div {
+    grid-row: 1;
+    grid-column: 1;
+}
+
+#description-div {
+    grid-row: 2;
+    grid-column: 1/3;
+}
+
+#category-div {
+    grid-row: 3;
+    grid-column: 1;
+}
+
+#amount-div {
+    grid-row: 1;
+    grid-column: 2;
+}
+
+#period-label, #recurring-label {
+    grid-column: 1/3;
+    margin-top: var(--smallPad);
+}
+
+#period-div {
+    grid-column: 1/3;
+    justify-content: space-evenly;
+}
+
+#start-div {
+    grid-column: 1;
+}
+
+#end-div {
+    grid-column: 2;
+}
+
+#submit-entity-button {
+    grid-row: 9;
+    grid-column: 1;
+}
+
+#delete-entity-button {
+    grid-row: 9;
+    grid-column: 2;
+    justify-self: end;
+}
+
+.row4 {
+    grid-row: 4;
+}
+
+.row5 {
+    grid-row: 5;
+}
+
+.row6 {
+    grid-row: 6;
+}
+
+.row7 {
+    grid-row: 7;
+}
+
+.row8 {
+    grid-row: 8;
+}

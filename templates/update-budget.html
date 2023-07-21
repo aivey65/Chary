@@ -12,7 +12,7 @@
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
         <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/form/form.css'>
-        <link rel='stylesheet' media='screen and (max-width:768px)' href='../static/css/form/form-mobile.css'>
+        <link rel='stylesheet' media='screen and (max-width:767px)' href='../static/css/form/form-mobile.css'>
 
         <!-- JavaScript links -->
         <script src='../static/javascript/form.js'></script>
@@ -34,6 +34,7 @@
         <div class="content non-header" id="acd-content">
             <div id="alert-section"></div>
             <button id="back-button" onclick="back()" type="button" value="Back">⟨ Cancel</button>
+            <h2>Update Budget</h2>
             <form action="javascript:submitBudgetForm('update')">
                 <input type="hidden" id="id" name="id" value={{id}} />
 

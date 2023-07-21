@@ -302,7 +302,7 @@ function generateVariousCharts(dataList, slideNum, maxShow) {
             data: {
                 labels: data.map(row => row.year),
                 datasets: [{
-                    label: "Acquisitions by year",
+                    label: "Expenses by Month ",
                     data: data.map(row => row.count),
                     backgroundColor: "#6ACD5F",
                 }],
