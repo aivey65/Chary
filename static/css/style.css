@@ -690,6 +690,7 @@ Creating the navigation bar depending on the size of the user's screen
     }
 
     header {
+        transform: translateY(0px) !important;
         display: grid;
         align-items: center;
         background-size: 100%;

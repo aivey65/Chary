@@ -35,6 +35,7 @@ h4 {
     grid-template-rows: 0.3fr 1fr;
     align-items: start;
     justify-items: center;
+    transform: translateY(0px) !important;
 }
 
 #dashboard-profile {

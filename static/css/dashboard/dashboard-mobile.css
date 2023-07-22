@@ -23,29 +23,54 @@ h4 {
 */
 #dashboard-left {
     width: 100%;
-    overflow: scroll;
+    overflow-x: scroll;
+    overflow-y: hidden;
     height: fit-content;
-    border-bottom: solid 1px var(--Navy);
-    background-color: var(--Dark);
     transition: .4s ease-in-out;
     position: fixed;
-    z-index: +2;
+    z-index: +6;
 }
 
 #dashboard-left ::-webkit-scrollbar {
-    height: 0;
-    scrollbar-width: 0;
+    height: 10px;
+    width: 0px;
+    scrollbar-width: 100%;
+    scrollbar-base-color: var(--Dark);
+    -ms-overflow-style: none;
+}
+
+#dashboard-left ::-webkit-scrollbar-corner {
+    height: 0px;
+    scrollbar-width: 0%;
     scrollbar-base-color: transparent;
     -ms-overflow-style: none;
     display: none;
 }
 
+#dashboard-left ::-webkit-scrollbar-thumb {
+    background-color: #00000000;
+    transition: background-color 2s;
+    -webkit-transition: background-color 2s;
+    -moz-transition: background-color 2s;
+}
+
+#dashboard-left:hover ::-webkit-scrollbar {
+    background-color: var(--Dark);
+    -ms-overflow-style: auto;
+    display: block;
+}
+
+#dashboard-left:hover ::-webkit-scrollbar-thumb {
+    height: 2px;
+    border-radius: var(--mobilePad);
+    background-color: #5b575789;
+}
+
 #dashboard-tabs {
-    max-width: inherit;
-    width: inherit;
+    border-bottom: solid 1px var(--Navy);
+    background-color: var(--Dark);
+    transition: .4s ease-in-out;
     padding-top: 4.8rem;
-    margin-left: var(--mobilePad);
-    margin-right: var(--mobilePad);
 }
 
 #dashboard-tabs ul {
@@ -96,14 +121,20 @@ h4 {
 
 #dashboard-main h1 {
     display: inline;
+    font-weight: 400;
+    font-size: 2.8rem;
 }
 
 #earning-container, #expense-container {
     margin-top: 20px;
 }
 
-#overview-section, #budget-section, #earning-section, #expense-section {
-    padding-top: calc(var(--navPad) + 10px);
+#overview-section {
+    padding-top: calc(var(--navPad));
+}
+
+#budget-section, #earning-section, #expense-section {
+    padding-top: calc(var(--navPad) + var(--smallPad));
 }
 
 /*
@@ -122,6 +153,7 @@ h4 {
 }
 
 #chart-snip-container {
+    padding-top: var(--lgPad);
     display: flex;
     flex-direction: column;
     gap: var(--smallPad);
@@ -296,6 +328,130 @@ h4 {
 }
 
 /*
+*** Styles for Budget Section of Dashboard ***
+*/
+
+#budget-container {
+    display: flex;
+    gap: var(--mobilePad);
+    justify-content: center;
+    flex-direction: row;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+
+.budget-info {
+    padding: 1.3em;
+    background-color: var(--Dark);
+    width: 44%;
+    height: fit-content;
+    max-height: 350px;
+    display: grid;
+    grid-template-rows: .8fr .8fr 1.8fr 1fr auto;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    border-radius: 10%;
+    cursor: pointer;
+}
+
+.svg-div {
+    height: 0px;
+    grid-row: 3;
+    grid-column: 1/3;
+}
+
+.svg-div svg {
+    transform: scale(.7);
+}
+
+.recur-img {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
+    justify-self: start;
+    vertical-align: middle;
+}
+
+.options-div {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    justify-self: end;
+    z-index: 2;
+}
+
+.options-img {
+    margin: 5px;
+}
+
+.options-panel {
+    position: absolute;
+    width: fit-content;
+    background-color: var(--Navy);
+    border-radius: 10px;
+    box-shadow: black 5px 5px 10px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.budget-more, .budget-edit {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    padding: var(--smallPad);
+}
+
+.budget-more h4, .budget-edit h4 {
+    color: var(--Light);
+    font-size: 1rem;
+    font-weight: 200;
+    margin: 0px 0px 0px var(--smallPad);
+}
+
+.budget-more:hover {
+    background-color: var(--faded);
+    border-radius: 0px 0px 10px 10px;
+}
+
+.budget-edit:hover {
+    background-color: var(--faded);
+    border-radius: 10px 10px 0px 0px;
+}
+
+.budget-name {
+    margin: 0px;
+    max-width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    grid-row: 2;
+    grid-column: 1/3;
+    font-size: 1.3rem;
+}
+
+.fraction-top, .fraction-bottom, .fraction-slash {
+    grid-row: 4;
+    grid-column: 1/3;
+}
+
+.fraction-slash {
+    font-size: 1.5em;
+}
+
+.fraction-top {
+    text-align: right;
+    transform: translate(-80%, 0%);
+    font-weight: 300;
+    font-size: .8rem;
+}
+
+.fraction-bottom {
+    transform: translate(80%, 40%);
+    font-weight: 300;
+    font-size: .8rem;
+}
+
+/*
 *** Styles for Earning and Expense Section of Dashboard ***
 */
 
@@ -309,7 +465,7 @@ h4 {
     width: calc(100vw - (2 * var(--mobilePad)));
 }
 
-#tab-head, #tab-header{
+#tab-head {
     margin-left: var(--mobilePad);
     margin-right: var(--mobilePad);
     display: grid;

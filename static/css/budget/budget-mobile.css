@@ -1,0 +1,76 @@
+#page-content {
+    padding-top: calc(var(--navPad) + var(--smallPad));
+    padding-left: var(--mobilePad);
+    padding-right: var(--mobilePad);
+    padding-bottom: var(--medPad) ;
+}
+
+#earning-container table, #expense-container table {
+    background-color: var(--Dark);
+    border: solid 1px var(--Navy);
+    border-collapse: separate;
+    border-radius: var(--mobilePad);
+    width: calc(100vw - (2 * var(--mobilePad)));
+}
+
+#tab-head {
+    margin-left: var(--mobilePad);
+    margin-right: var(--mobilePad);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#add-earning-button, #add-expense-button {
+    justify-self: flex-end;
+}
+
+#earning-container h3, #expense-container h3 {
+    margin-bottom: var(--medPad);
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#earning-container .add-icon, #expense-container .add-icon {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+}
+
+#earning-container table, #expense-container table {
+    grid-column: 1/3;
+    grid-row: 2;
+    height: fit-content;
+}
+
+.td-recur {
+    grid-column: 1;
+}
+
+.td-name {
+    font-size: 1em;
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.start-date {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: .8em;
+}
+
+.td-category {
+    grid-column: 2;
+    grid-row: 3;
+    font-size: .8em;
+    font-style: italic;
+}
+
+.td-amount {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.td-update {
+    grid-column: 3;
+    grid-row: 3;
+}

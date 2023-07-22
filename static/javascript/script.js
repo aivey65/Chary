@@ -147,7 +147,6 @@ async function fillProfilePics(image=null) {
             await fetch('/data/user').then(response => response.json()).then((responseData) => {
                 imageToUse = responseData.data.profileImage;
                 pic.src = "../static/images/profileImages/" + imageToUse + ".svg"
-                console.log("completed")
             });
         } else {
             pic.src = "../static/images/profileImages/" + imageToUse + ".svg"
@@ -158,7 +157,6 @@ async function fillProfilePics(image=null) {
 function navConfig() {
     const userIcon = document.getElementById('nav-profile-icon');
     const profileOptionsPanel = document.getElementById('profile-options');
-    console.log(window.innerWidth)
     
     if (window.innerWidth > 767) {
         console.log("desktop")
