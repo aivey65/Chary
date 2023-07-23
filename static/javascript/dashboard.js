@@ -219,26 +219,16 @@ function generateOverviewCharts() {
     overviewChartContainer.append(overviewHeader);
 
     // Configure data for creating all charts
-    const data = [
-        [
-            { year: 2010, count: 10 },
-            { year: 2011, count: 20 },
-            { year: 2012, count: 15 },
-            { year: 2013, count: 25 },
-            { year: 2014, count: 22 },
-            { year: 2015, count: 30 },
-            { year: 2016, count: 28 },
-        ],
-    ]
-
-    const currentChart = generateVariousCharts(data, 0, 1);
+    const chartData = allChartDataAsArray();
+    const currentChart = generateVariousCharts(chartData, 0, 1);
+    console.log(currentChart)
 
     const chartContainer = document.createElement("div");
     chartContainer.id = "chart-container";
     chartContainer.append(currentChart);
     overviewChartContainer.append(chartContainer);
     
-    const dotCarousel = carouselButtons(data, "overview-chart-dots", 1, generateVariousCharts);
+    const dotCarousel = carouselButtons(chartData, "overview-chart-dots", "chart-container", 1, generateVariousCharts);
     overviewChartContainer.append(dotCarousel);
 
     return overviewChartContainer;
@@ -285,24 +275,79 @@ function generateOverviewBudgets(budgets) {
     limitedBudgetsContainer.append(generateLimitedOverviewBudgets(budgets, 0, 3));
     overviewBudgetContainer.append(limitedBudgetsContainer);
     
-    const dotCarousel = carouselButtons(budgets, "overview-budget-dots", 3, generateLimitedOverviewBudgets);
+    const dotCarousel = carouselButtons(budgets, "overview-budget-dots", "limited-budgets-container", 3, generateLimitedOverviewBudgets);
     overviewBudgetContainer.append(dotCarousel);
 
     return overviewBudgetContainer;
 }
 
-function generateVariousCharts(dataList, slideNum, maxShow) {
-    const currentChart = document.createElement('canvas');
-    currentChart.id = 'current-chart';
-
+function generateVariousCharts(items, slideNum, maxShow) {
     if (slideNum == 0) {
-        const data = dataList[slideNum];
-        new Chart(currentChart, {
+        const totalChart = document.createElement('canvas');
+        // Shows the estimated total amount budgeted with a pie chart
+        const dataExpected = items[0].total;
+        new Chart(totalChart, {
+            type: "pie",
+            data: {
+                labels: dataExpected.map(row => row.year),
+                datasets: [{
+                    label: "Total Budget Amount",
+                    data: dataExpected.map(row => row.count),
+                    backgroundColor: "#6ACD5F",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        const actualChart = document.createElement('canvas');
+        // Shows the actual current amount spent in each budget
+        const dataActual = items[0].actual;
+        new Chart(actualChart, {
+            type: "pie",
+            data: {
+                labels: dataActual.map(row => row.year),
+                datasets: [{
+                    label: "Expenses by Month ",
+                    data: dataActual.map(row => row.count),
+                    backgroundColor: "#6ACD5F",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });  
+        
+        const returnDiv = document.createElement('div');
+        returnDiv.id = 'limited-charts';
+        returnDiv.append(totalChart, actualChart)
+        return returnDiv;
+    } else if (slideNum == 1) {
+        const expenseChart = document.createElement('canvas');
+        expenseChart.id = 'limited-charts';
+
+        const data = items[1];
+        new Chart(expenseChart, {
             type: "bar",
             data: {
                 labels: data.map(row => row.year),
                 datasets: [{
-                    label: "Expenses by Month ",
+                    label: "Expenses per Month",
                     data: data.map(row => row.count),
                     backgroundColor: "#6ACD5F",
                 }],
@@ -318,9 +363,37 @@ function generateVariousCharts(dataList, slideNum, maxShow) {
                 }
             }
         });
-    }
 
-    return currentChart;
+        return expenseChart;
+    } else if (slideNum == 2) {
+        const earningChart = document.createElement('canvas');
+        earningChart.id = "limited-charts";
+
+        const data = items[2];
+        new Chart(earningChart, {
+            type: "bar",
+            data: {
+                labels: data.map(row => row.year),
+                datasets: [{
+                    label: "Earnings per Month",
+                    data: data.map(row => row.count),
+                    backgroundColor: "#6ACD5F",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        return earningChart;
+    }
 }
 
 function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
@@ -422,12 +495,13 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
     return budgetContainer;
 }
 
-function carouselButtons(items, uniqueClass, maxShow=3, nextSlideGenerator) {
+function carouselButtons(items, uniqueClass, containerId, maxShow=3, nextSlideGenerator) {
     var dotsToReturn = document.createElement("div");
     dotsToReturn.classList.add("carousel");
 
     itemsLength = Object.keys(items).length
     numSlides = Math.ceil(itemsLength / maxShow);
+    console.log(numSlides)
 
     for (var slideNum = 0; slideNum < numSlides; slideNum++) {
         const dot = document.createElement("div");
@@ -435,7 +509,7 @@ function carouselButtons(items, uniqueClass, maxShow=3, nextSlideGenerator) {
 
         const currentSlide = slideNum;
         dot.addEventListener("click", () => {
-            dotClick(currentSlide, uniqueClass, () => {return nextSlideGenerator(items, currentSlide, maxShow)})
+            dotClick(currentSlide, uniqueClass, containerId, () => {return nextSlideGenerator(items, currentSlide, maxShow)})
         });
 
         dotsToReturn.append(dot);
@@ -444,7 +518,7 @@ function carouselButtons(items, uniqueClass, maxShow=3, nextSlideGenerator) {
     return dotsToReturn;
 }
 
-function dotClick(slideNum, uniqueClass, newChildFunc) {
+function dotClick(slideNum, uniqueClass, containerId, newChildFunc) {
     // First, change which dot is active and get the current and new dot indeces
     const previousIndex = changeActiveDot(slideNum, uniqueClass);
 
@@ -453,10 +527,10 @@ function dotClick(slideNum, uniqueClass, newChildFunc) {
     }
 
     // Update the content and create a transition depending on which dot is before the other
-    const budgetContainer = document.getElementById('limited-budgets-container');
-    const firstChild = budgetContainer.firstChild;
+    const itemContainer = document.getElementById(containerId);
+    const firstChild = itemContainer.firstChild;
     const newChild = newChildFunc();
-    budgetContainer.append(newChild);
+    itemContainer.append(newChild);
 
     if (slideNum < previousIndex) { // Slide right
         firstChild.addEventListener("animationend", (e) => {
@@ -552,45 +626,70 @@ function generateOverviewEarnings() {
 ///////////////////////////////////
 // Chart Configurating Functions //
 ///////////////////////////////////
+function allChartDataAsArray() {
+    var toReturn = [];
+    toReturn.push({
+        "total": totalBudgetsAndAmounts(), 
+        "actual": actualBudgetsAndAmounts()
+    })
+    toReturn.push(expensesPerMonth(), earningsPerMonth());
+    return toReturn;
+}
+
 function totalBudgetsAndAmounts() {
+    console.log(userData.budgets)
     const data = [
-        [
-            { year: 2010, count: 10 },
-            { year: 2011, count: 20 },
-            { year: 2012, count: 15 },
-            { year: 2013, count: 25 },
-            { year: 2014, count: 22 },
-            { year: 2015, count: 30 },
-            { year: 2016, count: 28 },
-        ],
+        { year: 2010, count: 10 },
+        { year: 2011, count: 20 },
+        { year: 2012, count: 15 },
+        { year: 2013, count: 25 },
+        { year: 2014, count: 22 },
+        { year: 2015, count: 30 },
+        { year: 2016, count: 28 }
     ]
+
+    return data;
+}
+
+function actualBudgetsAndAmounts() {
+    const data = [
+        { year: 2010, count: 10 },
+        { year: 2011, count: 20 },
+        { year: 2012, count: 15 },
+        { year: 2013, count: 25 },
+        { year: 2014, count: 22 },
+        { year: 2015, count: 30 },
+        { year: 2016, count: 28 }
+    ]
+
+    return data;
 }
 
 function expensesPerMonth() {
     const data = [
-        [
-            { year: 2010, count: 10 },
-            { year: 2011, count: 20 },
-            { year: 2012, count: 15 },
-            { year: 2013, count: 25 },
-            { year: 2014, count: 22 },
-            { year: 2015, count: 30 },
-            { year: 2016, count: 28 },
-        ],
+        { year: 2010, count: 10 },
+        { year: 2011, count: 20 },
+        { year: 2012, count: 15 },
+        { year: 2013, count: 25 },
+        { year: 2014, count: 22 },
+        { year: 2015, count: 30 },
+        { year: 2016, count: 28 }
     ]
+
+    return data;
 }
 
-function totalBudgetsAndAmounts() {
-    
+function earningsPerMonth() {
+
     const data = [
-        [
-            { year: 2010, count: 10 },
-            { year: 2011, count: 20 },
-            { year: 2012, count: 15 },
-            { year: 2013, count: 25 },
-            { year: 2014, count: 22 },
-            { year: 2015, count: 30 },
-            { year: 2016, count: 28 },
-        ],
+        { year: 2010, count: 10 },
+        { year: 2011, count: 20 },
+        { year: 2012, count: 15 },
+        { year: 2013, count: 25 },
+        { year: 2014, count: 22 },
+        { year: 2015, count: 30 },
+        { year: 2016, count: 28 }
     ]
+
+    return data;
 }

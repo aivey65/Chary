@@ -159,13 +159,11 @@ function navConfig() {
     const profileOptionsPanel = document.getElementById('profile-options');
     
     if (window.innerWidth > 767) {
-        console.log("desktop")
         userIcon.onclick = (event) => {
             optionsToggle(event.target, profileOptionsPanel, "grid");
         };
         profileOptionsPanel.style.display = "none";
     } else {
-        console.log("mobile")
         userIcon.onclick = null;
         profileOptionsPanel.style.display = "contents";
     }

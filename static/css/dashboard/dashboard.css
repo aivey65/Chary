@@ -199,7 +199,7 @@ h4 {
     grid-row: 3;
 }
 
-#limited-budgets-container {
+#limited-budgets-container, #chart-container {
     grid-column: 1/3;
     grid-row: 2;
 
@@ -211,7 +211,7 @@ h4 {
     position: relative;
 }
 
-#limited-budgets {
+#limited-budgets, #limited-charts {
     transform-origin: center;
     width: 100%;
     position: absolute;
