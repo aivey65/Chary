@@ -2,13 +2,24 @@
 ScRe = /[\$\xA2-\xA5\u058F\u060B\u09F2\u09F3\u09FB\u0AF1\u0BF9\u0E3F\u17DB\u20A0-\u20BD\uA838\uFDFC\uFE69\uFF04\uFFE0\uFFE1\uFFE5\uFFE6]/;
 numbers = /^\d*\.?\d+$/;
 
-function formLoad() {
-    configureRecurOptions();
+function formLoad(configureDate=false) {
     fillProfilePics();
 
+    if (configureDate) {
+        const dateInputs = document.querySelectorAll('input[type="date"]'); // The date input needs to be adjusted when the date changes
+        dateInputs.forEach(input => {
+            input.addEventListener("change", configureDateInput);
+        })
+        const radioPeriod = document.querySelectorAll("input[name='radio']"); // The date input also needs to be adjusted when the period changes
+        radioPeriod.forEach(period => {
+            period.addEventListener("change", configureDateInput);
+        })
+    }
+
+    configureRecurOptions();
     const recurRadio = document.querySelectorAll('input[name="recurring"]');
     recurRadio.forEach(option => {
-        option.addEventListener("change", configureRecurOptions)
+        option.addEventListener("change", configureRecurOptions);
     });
 }
 
@@ -30,6 +41,55 @@ function checkCurrency(currency) {
 
 function checkAmount(amount) {
     return numbers.test(amount);
+}
+
+function configureDateInput() {
+    const period = document.querySelector("input[name='radio']:checked").value;
+    const start = document.getElementById("start");
+    const end =  document.getElementById("end");
+
+    // Creating UTC dates
+    var startDate = null;
+    var endDate = null;
+    if (start.value != "") {
+        var UTCDate = start.value.split('-');
+        UTCDate[1] = UTCDate[1] - 1;
+        startDate = new Date(...UTCDate);
+    }
+    if (end.value != "") {
+        var UTCDate = end.value.split('-');
+        UTCDate[1] = UTCDate[1] - 1;
+        endDate = new Date(...UTCDate);
+    }
+    
+    if (period == 1 || period == 2) { // Weekly
+        if (startDate) {
+            startDate = new Date(startDate.setDate(startDate.getDate() - startDate.getDay()));
+            start.value = startDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+        }
+        if (endDate) {
+            endDate = new Date(endDate.setDate(endDate.getDate() - endDate.getDay() + 6));
+            end.value = endDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+        }
+    } else if (period == 3) { // Monthly
+        if (startDate) {
+            startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+            start.value = startDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+        }
+        if (endDate) {
+            endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0);
+            end.value = endDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+        }
+    } else if (period == 4) { // Yearly
+        if (startDate) {
+            startDate = new Date(startDate.getFullYear(), 0, 1);
+            start.value = startDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+        }
+        if (endDate) {
+            endDate = new Date(endDate.getFullYear(), 11, 31);
+            end.value = endDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+        }
+    }
 }
 
 function configureRecurOptions() {

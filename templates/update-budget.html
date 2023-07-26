@@ -21,7 +21,7 @@
         <Title>Chary | Update Budget</Title>
     </head>
 
-    <body onload="formLoad()">
+    <body onload="formLoad(true)">
         <div id="header-container">
             <header>
                 <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()" alt='Chary logo'>
@@ -59,7 +59,11 @@
                 </div>
 
                 <!-- Budget Period Inputs -->
-                <p id="period-label" class="required-input row4">Choose how long your budget period will be:</p><br>
+                <p id="period-label" class="row4">
+                    Choose how long your budget period will be:<span class="required-input"></span> 
+                    <br>
+                    <i>Note: Budgets can only start on the first date of a chosen time period.</i>
+                </p><br>                
                 <div id="period-div" class="row5">    
                     {% if recurPeriod == 0 %}
                         <input type="radio" id="daily" name="radio" value="0" checked="checked" required>
@@ -74,13 +78,6 @@
                         <input type="radio" id="weekly" name="radio" value="1" required>
                     {% endif %} 
                     <label for='weekly' class="budget-period label-weekly">One Week</label>
-                    
-                    {% if recurPeriod == 2 %}
-                        <input type="radio" id="biweekly" name="radio" value="2" checked="checked" required>
-                    {% else %}
-                        <input type="radio" id="biweekly" name="radio" value="2" required>
-                    {% endif %} 
-                    <label for='biweekly' class="budget-period label-biweekly">Two Weeks</label>
     
                     {% if recurPeriod == 3 %}
                         <input type="radio" id="monthly" name="radio" value="3" checked="checked" required>

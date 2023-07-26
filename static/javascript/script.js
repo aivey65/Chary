@@ -194,7 +194,7 @@ window.addEventListener('scroll', () => {
             }
         } else {
             if (document.getElementById('dashboard-left')) {
-                document.getElementById('dashboard-left').style.transform = "translateY(calc(-1 * var(--navPad)))";
+                document.getElementById('dashboard-left').style.transform = "translateY(calc(-1.2 * var(--navPad)))";
             }
             if (logo.classList.contains('hamburg')) {
                 document.getElementsByTagName("header")[0].style.transform = "translateY(-70px)";

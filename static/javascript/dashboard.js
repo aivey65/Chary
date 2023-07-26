@@ -221,7 +221,6 @@ function generateOverviewCharts() {
     // Configure data for creating all charts
     const chartData = allChartDataAsArray();
     const currentChart = generateVariousCharts(chartData, 0, 1);
-    console.log(currentChart)
 
     const chartContainer = document.createElement("div");
     chartContainer.id = "chart-container";
@@ -350,7 +349,6 @@ function generateVariousCharts(items, slideNum, maxShow) {
         return returnDiv;
     } else if (slideNum == 1) {
         const expenseChart = document.createElement('canvas');
-        expenseChart.id = 'limited-charts';
 
         const data = items[1];
         new Chart(expenseChart, {
@@ -360,9 +358,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 datasets: [{
                     label: "Expenses per Month",
                     data: data.map(row => row.count),
-                    backgroundColor: DATA_RANGE.sort(() => Math.random() - 0.5),
-                    borderColor: "#f6d4d2",
-                    borderWidth: 1.5,
+                    backgroundColor: "#6ACD5F",
                 }],
             },
             options: {
@@ -377,10 +373,12 @@ function generateVariousCharts(items, slideNum, maxShow) {
             }
         });
 
-        return expenseChart;
+        const returnDiv = document.createElement('div');
+        returnDiv.id = 'limited-charts';
+        returnDiv.append(expenseChart);
+        return returnDiv;
     } else if (slideNum == 2) {
         const earningChart = document.createElement('canvas');
-        earningChart.id = "limited-charts";
 
         const data = items[2];
         new Chart(earningChart, {
@@ -390,9 +388,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 datasets: [{
                     label: "Earnings per Month",
                     data: data.map(row => row.count),
-                    backgroundColor: DATA_RANGE.sort(() => Math.random() - 0.5),
-                    borderColor: "#f6d4d2",
-                    borderWidth: 1.5,
+                    backgroundColor: "#6ACD5F",
                 }],
             },
             options: {
@@ -407,7 +403,10 @@ function generateVariousCharts(items, slideNum, maxShow) {
             }
         });
 
-        return earningChart;
+        const returnDiv = document.createElement('div');
+        returnDiv.id = 'limited-charts';
+        returnDiv.append(earningChart);
+        return returnDiv;
     }
 }
 
@@ -516,19 +515,33 @@ function carouselButtons(items, uniqueClass, containerId, maxShow=3, nextSlideGe
 
     itemsLength = Object.keys(items).length
     numSlides = Math.ceil(itemsLength / maxShow);
-    console.log(numSlides)
 
     for (var slideNum = 0; slideNum < numSlides; slideNum++) {
         const dot = document.createElement("div");
         dot.classList.add("carousel-dot", uniqueClass);
-
         const currentSlide = slideNum;
-        dot.addEventListener("click", () => {
-            dotClick(currentSlide, uniqueClass, containerId, () => {return nextSlideGenerator(items, currentSlide, maxShow)})
-        });
-
+        dot.dataset.slideNum = currentSlide;
         dotsToReturn.append(dot);
     }
+
+    // Add click event listener
+    var transitionRunning = false;
+    dotsToReturn.addEventListener("click", (e) => {
+        if (transitionRunning == false) {
+            transitionRunning = true;
+
+            if (e.target.classList.contains('carousel-dot')) {
+                const slide = e.target.dataset.slideNum;
+                dotClick(slide, uniqueClass, containerId, () => {return nextSlideGenerator(items, slide, maxShow)})
+            } 
+
+            setTimeout(() => {
+                transitionRunning = false;
+                console.log("after", transitionRunning)
+            }, 1000);
+
+        }
+    })
 
     return dotsToReturn;
 }

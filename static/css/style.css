@@ -355,7 +355,7 @@ table {
 }
 
 .half-size {
-    width: 50%;
+    width: 45%;
     height: 100%;
     display: inline-block;
 }
@@ -818,15 +818,6 @@ Creating the navigation bar depending on the size of the user's screen
         padding: var(--medPad);
     }
 
-    #chart-container {
-        display: grid;
-        grid-template-columns: minmax(0, 3fr);
-        grid-template-rows: minmax(0, 1fr);
-        height: 100%;
-        min-height: 30vh;
-        width: 100%;
-    }
-
     th {
         background-color: var(--MainL);
         color: var(--Dark);
@@ -879,6 +870,6 @@ Creating the navigation bar depending on the size of the user's screen
     #acd-expenses #back-button,
     #acd-content #back-button {
         position: relative;
-        left: -100%;
+        right: 80%;
     }
 }

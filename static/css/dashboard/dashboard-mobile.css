@@ -23,7 +23,6 @@ h4 {
 */
 #dashboard-left {
     width: 100%;
-    overflow-x: scroll;
     overflow-y: hidden;
     height: fit-content;
     transition: .4s ease-in-out;
@@ -149,7 +148,7 @@ h4 {
 
 .snip-containers {
     padding: var(--mobilePad);
-    width: 100vw;
+    width: 100%;
 }
 
 #chart-snip-container {
@@ -158,6 +157,23 @@ h4 {
     flex-direction: column;
     gap: var(--smallPad);
     background-color: var(--Dark);
+    width: 100%;
+}
+
+#chart-container {
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-height: 20vh;
+    justify-content: center;
+    position: relative;
+}
+
+#limited-charts {
+    display: flex;
+    justify-content: center;
+    gap: var(--mobilePad);
 }
 
 #profile-snip-container {
@@ -172,6 +188,7 @@ h4 {
     min-height: 370px;
     height: 60vh;
     max-height: 450px;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
 }
@@ -209,11 +226,6 @@ h4 {
     transform-origin: center;
     width: 100%;
     height: 100%;
-}
-
-#limited-budgets {
-    transform-origin: center;
-    width: 100%;
     position: absolute;
 }
 
@@ -279,7 +291,7 @@ h4 {
     background-color: var(--Dark);
     border: solid 1px var(--Navy);
     border-radius: var(--mobilePad);
-    width: calc(100vw - (2 * var(--mobilePad)));
+    width: auto;
 }
 
 #earning-snip-container h3, #expense-snip-container h3 {
