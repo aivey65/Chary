@@ -1,3 +1,5 @@
+const DATA_RANGE = ["#BB2537", "#C26DD9", "#C5E58B", "#4E88BC", "#DB5156", "#FFEF85", "#A533C1", "#7DD373", "#60A3C9", "#F27755"];
+
 // Date formatting
 function getDateFormattingOptions(long=true) {
     return { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };

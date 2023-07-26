@@ -283,9 +283,10 @@ function generateOverviewBudgets(budgets) {
 
 function generateVariousCharts(items, slideNum, maxShow) {
     if (slideNum == 0) {
+        // First create a 'total' chart to show the expected budget amounts
         const totalChart = document.createElement('canvas');
-        // Shows the estimated total amount budgeted with a pie chart
         const dataExpected = items[0].total;
+        Chart.defaults.global.legend.display = false;
         new Chart(totalChart, {
             type: "pie",
             data: {
@@ -293,49 +294,59 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 datasets: [{
                     label: "Total Budget Amount",
                     data: dataExpected.map(row => row.count),
-                    backgroundColor: "#6ACD5F",
+                    backgroundColor: DATA_RANGE.sort(() => Math.random() - 0.5),
+                    borderColor: "#f6d4d2",
+                    borderWidth: 1.5,
                 }],
             },
             options: {
                 maintainAspectRatio: false,
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "Total Budgeted Amount"
+                    }
                 }
             }
         });
+        const totalChartContainer = document.createElement("div");
+        totalChartContainer.append(totalChart);
+        totalChartContainer.classList.add("half-size");
 
+        // Create an 'actual' chart to show the current amount spent of each budget
         const actualChart = document.createElement('canvas');
-        // Shows the actual current amount spent in each budget
+        actualChart.classList.add("half-size");
+        actualChart.width = "50%";
+
         const dataActual = items[0].actual;
         new Chart(actualChart, {
             type: "pie",
             data: {
                 labels: dataActual.map(row => row.year),
                 datasets: [{
-                    label: "Expenses by Month ",
                     data: dataActual.map(row => row.count),
-                    backgroundColor: "#6ACD5F",
+                    backgroundColor: DATA_RANGE.sort(() => Math.random() - 0.5),
+                    borderColor: "#f6d4d2",
+                    borderWidth: 1.5,
                 }],
             },
             options: {
                 maintainAspectRatio: false,
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "Actual Amount Used"
+                    }
                 }
             }
         });  
+        const actualChartContainer = document.createElement("div");
+        actualChartContainer.append(actualChart);
+        actualChartContainer.classList.add("half-size");
         
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
-        returnDiv.append(totalChart, actualChart)
+        returnDiv.append(totalChartContainer, actualChartContainer);
         return returnDiv;
     } else if (slideNum == 1) {
         const expenseChart = document.createElement('canvas');
@@ -349,7 +360,9 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 datasets: [{
                     label: "Expenses per Month",
                     data: data.map(row => row.count),
-                    backgroundColor: "#6ACD5F",
+                    backgroundColor: DATA_RANGE.sort(() => Math.random() - 0.5),
+                    borderColor: "#f6d4d2",
+                    borderWidth: 1.5,
                 }],
             },
             options: {
@@ -377,7 +390,9 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 datasets: [{
                     label: "Earnings per Month",
                     data: data.map(row => row.count),
-                    backgroundColor: "#6ACD5F",
+                    backgroundColor: DATA_RANGE.sort(() => Math.random() - 0.5),
+                    borderColor: "#f6d4d2",
+                    borderWidth: 1.5,
                 }],
             },
             options: {

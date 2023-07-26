@@ -354,6 +354,12 @@ table {
     background-color: var(--MainL);
 }
 
+.half-size {
+    width: 50%;
+    height: 100%;
+    display: inline-block;
+}
+
 /*
 *** Annimations ***
 */ 
