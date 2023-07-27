@@ -221,8 +221,6 @@ def renderUpdateBudget():
 
         # This database method checks to make sure that the user owns the budget they are trying to update
         budgetInfo = database.getBudget(budgetId, session["email"])
-        print(budgetInfo["description"])
-
 
         return render_template(
             'update-budget.html', 
@@ -300,11 +298,10 @@ def renderUpdateEarning():
 def getAllCurrent():
     try:
         period = request.args.get("period")
-        if period:
-            return database.getAllCurrent(session["email"], period)
-        else:
-            return database.getAllCurrent(session["email"])
+        targetDate = request.args.get("target")
+        return database.getAllCurrent(session["email"], int(period), str(targetDate))
     except Exception as e:
+        print(e)
         return custom_error(e)
 
 @app.route("/data/user")
@@ -518,7 +515,6 @@ def updateBudget():
     startDate = request.json["start"] if bool(request.json["start"]) else ""
     endDate = request.json["end"] if bool(request.json["end"]) else ""
     recurring = True if request.json["recurring"] == 'True' else False
-    print(request.json["recurring"])
     try:
         database.updateBudget(
             session["email"], 

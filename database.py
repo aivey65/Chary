@@ -1,3 +1,4 @@
+import calendar
 import firebase_admin
 from firebase_admin import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter, Or, And
@@ -16,6 +17,25 @@ def notNull(variable):
         return False
     else:
         return True
+    
+def getCurrentWeek(currentDate=date.today()):
+    start = currentDate - timedelta(days=(currentDate.weekday() + 1) % 7)
+    end = start + timedelta(days=6)
+
+    return start, end
+
+def getCurrentMonth(currentDate=date.today()):
+    month = currentDate.month
+    year = currentDate.year
+
+    DOW, num_days = calendar.monthrange(year, month)
+    
+    return date(year, month, 1), date(year, month, num_days)
+
+def getCurrentYear(currentDate=date.today()):
+    year = currentDate.year
+
+    return date(year, 1, 1), date(year, 12, 31)
 
 ####################
 # Create functions #
@@ -262,11 +282,22 @@ def getOccurancesWithinPeriod(startDate, endDate, targetStartDate, targetEndDate
             newStartDate = newStartDate + timeDelta
     return occurances, occurranceDates
 
-def getAllCurrent(email, period=3):
+def getAllCurrent(email, period, targetDate):
     try:
-        timeDelta = getTimeDelta(period)
-        endDate = date.today()
-        startDate = endDate - timeDelta
+        targetDate = date.fromisoformat(targetDate)
+        startDate = None
+        endDate = None
+
+        if period == 0:
+            startDate = targetDate
+            endDate = targetDate
+        elif period == 1 or period == 2:
+            startDate, endDate = getCurrentWeek(targetDate)
+        elif period == 3:
+            startDate, endDate = getCurrentMonth(targetDate)
+        elif period == 4:
+            startDate, endDate = getCurrentYear(targetDate)
+            print(startDate, endDate)
 
         user = getUser(email)['data']
 
@@ -274,11 +305,15 @@ def getAllCurrent(email, period=3):
         budgetsDict = budgetData["data"]
         budgetCategories = budgetData["categories"]
 
-        expensesDict = getMostRecentExpenses(email)
+        RecentExpensesDict = getMostRecentExpenses(email)
+        expenseDict = getExpensesInRange(email, startDate, endDate)
         earningDict = getEarningsInRange(email, startDate, endDate)
 
         user['budgets'] = budgetsDict
-        user['expenses'] = expensesDict
+        user['expenses'] = {
+            "recent": RecentExpensesDict,
+            "all": expenseDict
+        }
         user['earnings'] = earningDict
         user['budgetCategories'] = budgetCategories
         return {"data":user}
@@ -302,7 +337,8 @@ def getAllActiveBudgets(email, targetDate=date.today()):
     
     """
     budgetList = getUser(email)['data']['budgets']
-    budgetsDict = {}
+    activeBudgetsDict = {}
+    inactiveBudgetsDict = {}
     budgetCategories = []
 
     for budgetID in budgetList:
@@ -323,13 +359,20 @@ def getAllActiveBudgets(email, targetDate=date.today()):
 
             if start != None and end != None:
                 budgetDoc['usedAmount'] = getBudgetBalance(budgetID, budgetDoc, targetDate)
-                budgetsDict[budgetID] = budgetDoc
+                activeBudgetsDict[budgetID] = budgetDoc
                 
                 budgetCategories.append(budgetDoc['name'])
+            else:
+                inactiveBudgetsDict[budgetID] = budgetDoc
         except Exception as e:
             raise RuntimeError(e)
 
-    toReturn = {"data":budgetsDict, "categories":budgetCategories}
+    toReturn = {
+        "data":{
+            "active": activeBudgetsDict,
+            "inactive": inactiveBudgetsDict
+        }, 
+        "categories":budgetCategories}
     return toReturn
 
 # Get a list of budget categories associated with a given user

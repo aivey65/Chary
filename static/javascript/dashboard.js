@@ -36,7 +36,9 @@ async function loadDashboard(refresh="false", tab="overview") {
 // Refresh boolean should be set to true when there is already user data saved, but it
 // needs to be updated.
 async function updateUserData() {
-    const response = await fetch('/data/all-current').then(response => response.json()).then((responseData) => {
+    const targetDate = new Date().toLocaleDateString("en-CA", {timeZone:"UTC"})
+
+    const response = await fetch('/data/all-current?period=4&target=' + targetDate).then(response => response.json()).then((responseData) => {
         userData = responseData.data;
     });
     return response;
@@ -54,7 +56,7 @@ function loadOverviewTab() {
     chartPanel.classList.add('module');
     overviewTab.append(chartPanel);
 
-    const budgetPanel = generateOverviewBudgets(userData.budgets)
+    const budgetPanel = generateOverviewBudgets(userData.budgets.active)
     budgetPanel.classList.add('module');
     overviewTab.append(budgetPanel);
 
@@ -93,7 +95,7 @@ function loadBudgetTab() {
     tabHead.append(header, addButton);
     tabHead.id = 'tab-head';
 
-    budgetContainer = generateBudgetsUI(userData.budgets, userData.currency);
+    budgetContainer = generateBudgetsUI(userData.budgets.active, userData.currency);
 
     const budgetTab = document.createElement('div');
     budgetTab.id = 'budget-section';
@@ -160,7 +162,7 @@ function loadExpenseTab() {
     tabHead.append(header, addButton);
     tabHead.id = 'tab-head';
 
-    const table = generateTableUI(0, userData.expenses.expenses, userData.currency);
+    const table = generateTableUI(0, userData.expenses.recent.expenses, userData.currency);
 
     const expenseContainer = document.createElement('div');
     expenseContainer.id = 'expense-container';
@@ -354,10 +356,10 @@ function generateVariousCharts(items, slideNum, maxShow) {
         new Chart(expenseChart, {
             type: "bar",
             data: {
-                labels: data.map(row => row.year),
+                labels: Object.keys(data),
                 datasets: [{
                     label: "Expenses per Month",
-                    data: data.map(row => row.count),
+                    data: Object.values(data),
                     backgroundColor: "#6ACD5F",
                 }],
             },
@@ -620,7 +622,7 @@ function generateOverviewExpenses() {
     addIcon.alt = "Add icon";
     addButton.append(addIcon);
 
-    const expenseTable = generateTableUI(0, userData.expenses.expenses, userData.currency, 5);
+    const expenseTable = generateTableUI(0, userData.expenses.recent.expenses, userData.currency, 5);
 
     overviewExpenseContainer.append(overviewHeader, addButton, expenseTable);
     return overviewExpenseContainer;
@@ -660,14 +662,15 @@ function allChartDataAsArray() {
 }
 
 function totalBudgetsAndAmounts() {
-    const keys = Object.keys(userData.budgets)
+    const budgetList = userData.budgets.active;
+    const keys = Object.keys(budgetList);
     const totalData = [];
     const actualData = [];
 
     for (const key of keys) {
-        var current = userData.budgets[key];
-        totalData.push({ budgetName: current.name, amount: current.amount })
-        actualData.push({ budgetName: current.name, amount: current.usedAmount })
+        var current = budgetList[key];
+        totalData.push({ budgetName: current.name, amount: current.amount });
+        actualData.push({ budgetName: current.name, amount: current.usedAmount });
     }
 
     totalData.sort((a, b) => {
@@ -680,31 +683,23 @@ function totalBudgetsAndAmounts() {
     return { "total": totalData, "actual": actualData };
 }
 
-function actualBudgetsAndAmounts() {
-    const data = [
-        { year: 2010, count: 10 },
-        { year: 2011, count: 20 },
-        { year: 2012, count: 15 },
-        { year: 2013, count: 25 },
-        { year: 2014, count: 22 },
-        { year: 2015, count: 30 },
-        { year: 2016, count: 28 }
-    ]
+function expensesPerMonth(currentYear) {
+    const expenseList = userData.expenses.all.expenses;
 
-    return data;
-}
+    const keys = Object.keys(expenseList);
+    const data = {};
 
-function expensesPerMonth() {
-    const data = [
-        { year: 2010, count: 10 },
-        { year: 2011, count: 20 },
-        { year: 2012, count: 15 },
-        { year: 2013, count: 25 },
-        { year: 2014, count: 22 },
-        { year: 2015, count: 30 },
-        { year: 2016, count: 28 }
-    ]
-
+    for (const key of keys) {
+        const amount = expenseList[key].data.amount
+        const dates = expenseList[key].dates
+        
+        for (const date of dates) {
+            var curMonth = new Date(date);
+            curMonth = curMonth.toLocaleString('default', { month: 'long' });
+            data[curMonth] = data[curMonth] ? data[curMonth] + amount : amount;
+        }
+    }
+    console.log(data)
     return data;
 }
 
