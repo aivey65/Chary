@@ -289,13 +289,13 @@ function generateVariousCharts(items, slideNum, maxShow) {
         new Chart(totalChart, {
             type: "pie",
             data: {
-                labels: dataExpected.map(row => row.year),
+                labels: dataExpected.map(row => row.budgetName),
                 datasets: [{
                     label: "Total Budget Amount",
-                    data: dataExpected.map(row => row.count),
+                    data: dataExpected.map(row => row.amount),
                     backgroundColor: DATA_RANGE.sort(() => Math.random() - 0.5),
-                    borderColor: "#f6d4d2",
-                    borderWidth: 1.5,
+                    borderColor: "#100007",
+                    borderWidth: 3.5,
                 }],
             },
             options: {
@@ -321,12 +321,12 @@ function generateVariousCharts(items, slideNum, maxShow) {
         new Chart(actualChart, {
             type: "pie",
             data: {
-                labels: dataActual.map(row => row.year),
+                labels: dataActual.map(row => row.budgetName),
                 datasets: [{
-                    data: dataActual.map(row => row.count),
+                    data: dataActual.map(row => row.amount),
                     backgroundColor: DATA_RANGE.sort(() => Math.random() - 0.5),
-                    borderColor: "#f6d4d2",
-                    borderWidth: 1.5,
+                    borderColor: "#100007",
+                    borderWidth: 3.5,
                 }],
             },
             options: {
@@ -537,7 +537,6 @@ function carouselButtons(items, uniqueClass, containerId, maxShow=3, nextSlideGe
 
             setTimeout(() => {
                 transitionRunning = false;
-                console.log("after", transitionRunning)
             }, 1000);
 
         }
@@ -656,27 +655,29 @@ function generateOverviewEarnings() {
 ///////////////////////////////////
 function allChartDataAsArray() {
     var toReturn = [];
-    toReturn.push({
-        "total": totalBudgetsAndAmounts(), 
-        "actual": actualBudgetsAndAmounts()
-    })
-    toReturn.push(expensesPerMonth(), earningsPerMonth());
+    toReturn.push(totalBudgetsAndAmounts(), expensesPerMonth(), earningsPerMonth());
     return toReturn;
 }
 
 function totalBudgetsAndAmounts() {
-    console.log(userData.budgets)
-    const data = [
-        { year: 2010, count: 10 },
-        { year: 2011, count: 20 },
-        { year: 2012, count: 15 },
-        { year: 2013, count: 25 },
-        { year: 2014, count: 22 },
-        { year: 2015, count: 30 },
-        { year: 2016, count: 28 }
-    ]
+    const keys = Object.keys(userData.budgets)
+    const totalData = [];
+    const actualData = [];
 
-    return data;
+    for (const key of keys) {
+        var current = userData.budgets[key];
+        totalData.push({ budgetName: current.name, amount: current.amount })
+        actualData.push({ budgetName: current.name, amount: current.usedAmount })
+    }
+
+    totalData.sort((a, b) => {
+        return a.amount - b.amount;
+    })
+    actualData.sort((a, b) => {
+        return a.amount - b.amount;
+    })
+
+    return { "total": totalData, "actual": actualData };
 }
 
 function actualBudgetsAndAmounts() {
