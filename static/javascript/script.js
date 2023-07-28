@@ -1,8 +1,27 @@
-const DATA_RANGE = ["#BB2537", "#C26DD9", "#C5E58B", "#4E88BC", "#DB5156", "#FFEF85", "#A533C1", "#7DD373", "#60A3C9", "#F27755"];
+const DATA_RANGE = ["#6acd5f", "#97d369", "#bad978", "#d7df8d", "#eee6a4", "#ffeebf", "#f7d3a2", "#efb68a", "#e69979", "#db7c6f", "#cd5f6a"];
 
 // Date formatting
 function getDateFormattingOptions(long=true) {
     return { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
+}
+
+function getEmptyMonthMap() {
+    const monthMap = new Map();
+
+    monthMap.set("January", 0);
+    monthMap.set("February", 0);
+    monthMap.set("March", 0);
+    monthMap.set("April", 0);
+    monthMap.set("May", 0);
+    monthMap.set("June", 0);
+    monthMap.set("July", 0);
+    monthMap.set("August", 0);
+    monthMap.set("September", 0);
+    monthMap.set("October", 0);
+    monthMap.set("November", 0);
+    monthMap.set("December", 0);
+
+    return monthMap;
 }
 
 // Navigation functions
