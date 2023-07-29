@@ -1,5 +1,6 @@
 import calendar
 import firebase_admin
+import pytz
 from firebase_admin import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter, Or, And
 from flask import jsonify
@@ -297,7 +298,6 @@ def getAllCurrent(email, period, targetDate):
             startDate, endDate = getCurrentMonth(targetDate)
         elif period == 4:
             startDate, endDate = getCurrentYear(targetDate)
-            print(startDate, endDate)
 
         user = getUser(email)['data']
 

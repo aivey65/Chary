@@ -356,10 +356,10 @@ function generateVariousCharts(items, slideNum, maxShow) {
         new Chart(expenseChart, {
             type: "bar",
             data: {
-                // labels: data.keys,
+                labels: data.labels,
                 datasets: [{
                     label: "Expenses per Month",
-                    data: data.entries(),
+                    data: data.values,
                     backgroundColor: "#6ACD5F",
                 }],
             },
@@ -694,12 +694,22 @@ function expensesPerMonth(currentYear) {
         const dates = expenseList[key].dates
         
         for (const date of dates) {
-            var curMonth = new Date(date);
-            curMonth = curMonth.toLocaleString('default', { month: 'long' });
-            data.set(curMonth, data.get(curMonth) + amount);
+            const localDate = new Date(date);
+            var curDate = new Date(localDate.getFullYear(), localDate.getMonth(), localDate.getDate());
+            console.log(curDate)
+            const todayDate = new Date().setHours(0,0,0,0);
+
+            if (curDate <= todayDate) {
+                const curMonth = curDate.getMonth();
+                data.values[curMonth] = data.values[curMonth] + amount;
+                if (curMonth == 11) {
+                    console.log("date", curDate)
+                    console.log(data)
+                }
+            }
         }
     }
-    console.log(data.entries())
+
     return data;
 }
 

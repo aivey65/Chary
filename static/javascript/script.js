@@ -6,20 +6,17 @@ function getDateFormattingOptions(long=true) {
 }
 
 function getEmptyMonthMap() {
-    const monthMap = new Map();
-
-    monthMap.set("January", 0);
-    monthMap.set("February", 0);
-    monthMap.set("March", 0);
-    monthMap.set("April", 0);
-    monthMap.set("May", 0);
-    monthMap.set("June", 0);
-    monthMap.set("July", 0);
-    monthMap.set("August", 0);
-    monthMap.set("September", 0);
-    monthMap.set("October", 0);
-    monthMap.set("November", 0);
-    monthMap.set("December", 0);
+    var monthValues = []
+    for(var i = 0; i < 12; i++) {
+        monthValues.push(0);
+    }
+    
+    const monthMap = {
+        "labels": [
+            "January", "February", "March", "April", "May", "June", "July", "August","September", "October", "November", "December"
+        ],
+        "values": monthValues
+    }
 
     return monthMap;
 }
