@@ -215,11 +215,6 @@ function generateOverviewCharts() {
     overviewChartContainer.id = 'chart-snip-container';
     overviewChartContainer.classList.add('snip-containers');
 
-    const overviewHeader = document.createElement('h3');
-    overviewHeader.textContent = "Analytics";
-    overviewHeader.classList.add('module-header');
-    overviewChartContainer.append(overviewHeader);
-
     // Configure data for creating all charts
     const chartData = allChartDataAsArray();
     const currentChart = generateVariousCharts(chartData, 0, 1);
@@ -288,6 +283,10 @@ function generateVariousCharts(items, slideNum, maxShow) {
         const totalChart = document.createElement('canvas');
         const dataExpected = items[0].total;
         Chart.defaults.global.legend.display = false;
+
+        let expectedSum = 0;
+        dataExpected.map(row => expectedSum += row.amount);
+
         new Chart(totalChart, {
             type: "pie",
             data: {
@@ -301,11 +300,19 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 }],
             },
             options: {
+                title: {
+                    display: true,
+                    text: ["Total Amount Budgeted", userData.currency + expectedSum.toFixed(2)],
+                    class: "chart-title"
+                },
                 maintainAspectRatio: false,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: "Total Budgeted Amount"
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            let dataArray = data.datasets[0].data;
+                            let textArray = data.labels;
+                            return textArray[tooltipItems.index] + ": " + userData.currency + dataArray[tooltipItems.index];
+                        }
                     }
                 }
             }
@@ -320,6 +327,9 @@ function generateVariousCharts(items, slideNum, maxShow) {
         actualChart.width = "50%";
 
         const dataActual = items[0].actual;
+        let actualSum = 0;
+        dataActual.map(row => actualSum += row.amount);
+
         new Chart(actualChart, {
             type: "pie",
             data: {
@@ -332,11 +342,19 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 }],
             },
             options: {
+                title: {
+                    display: true,
+                    text: ["Actual Amount Used", userData.currency + actualSum.toFixed(2)],
+                    class: "chart-title"
+                },
                 maintainAspectRatio: false,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: "Actual Amount Used"
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            let dataArray = data.datasets[0].data;
+                            let textArray = data.labels;
+                            return textArray[tooltipItems.index] + ": " + userData.currency + dataArray[tooltipItems.index];
+                        }
                     }
                 }
             }
@@ -358,19 +376,36 @@ function generateVariousCharts(items, slideNum, maxShow) {
             data: {
                 labels: data.labels,
                 datasets: [{
-                    label: "Expenses per Month",
+                    label: "Amount (" + userData.currency + ")",
                     data: data.values,
                     backgroundColor: "#6ACD5F",
                 }],
             },
             options: {
+                title: {
+                    display: true,
+                    text: "Expenses per Month",
+                    class: "chart-title"
+                },
                 maintainAspectRatio: false,
                 scales: {
                     yAxes: [{
                         ticks: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            maxTicksLimit: 5
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Amount (" + userData.currency + ")"
                         }
                     }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            return userData.currency + tooltipItems.yLabel.toString();
+                        }
+                    }
                 }
             }
         });
@@ -386,21 +421,38 @@ function generateVariousCharts(items, slideNum, maxShow) {
         new Chart(earningChart, {
             type: "bar",
             data: {
-                labels: data.map(row => row.year),
+                labels: data.labels,
                 datasets: [{
-                    label: "Earnings per Month",
-                    data: data.map(row => row.count),
+                    label: "Amount (" + userData.currency + ")",
+                    data: data.values,
                     backgroundColor: "#6ACD5F",
                 }],
             },
             options: {
+                title: {
+                    display: true,
+                    text: "Earnings per Month",
+                    class: "chart-title"
+                },
                 maintainAspectRatio: false,
                 scales: {
                     yAxes: [{
                         ticks: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            maxTicksLimit: 5
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Amount (" + userData.currency + ")"
                         }
                     }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            return userData.currency + tooltipItems.yLabel.toString();
+                        }
+                    }
                 }
             }
         });
@@ -695,17 +747,12 @@ function expensesPerMonth(currentYear) {
         
         for (const date of dates) {
             const localDate = new Date(date);
-            var curDate = new Date(localDate.getFullYear(), localDate.getMonth(), localDate.getDate());
-            console.log(curDate)
+            var curDate = new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
             const todayDate = new Date().setHours(0,0,0,0);
 
             if (curDate <= todayDate) {
                 const curMonth = curDate.getMonth();
                 data.values[curMonth] = data.values[curMonth] + amount;
-                if (curMonth == 11) {
-                    console.log("date", curDate)
-                    console.log(data)
-                }
             }
         }
     }
@@ -714,16 +761,26 @@ function expensesPerMonth(currentYear) {
 }
 
 function earningsPerMonth() {
+    const earningList = userData.earnings;
 
-    const data = [
-        { year: 2010, count: 10 },
-        { year: 2011, count: 20 },
-        { year: 2012, count: 15 },
-        { year: 2013, count: 25 },
-        { year: 2014, count: 22 },
-        { year: 2015, count: 30 },
-        { year: 2016, count: 28 }
-    ]
+    const keys = Object.keys(earningList);
+    const data = getEmptyMonthMap();
+
+    for (const key of keys) {
+        const amount = earningList[key].data.amount
+        const dates = earningList[key].dates
+        
+        for (const date of dates) {
+            const localDate = new Date(date);
+            var curDate = new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
+            const todayDate = new Date().setHours(0,0,0,0);
+
+            if (curDate <= todayDate) {
+                const curMonth = curDate.getMonth();
+                data.values[curMonth] = data.values[curMonth] + amount;
+            }
+        }
+    }
 
     return data;
 }
