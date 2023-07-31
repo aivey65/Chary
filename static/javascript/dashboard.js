@@ -278,14 +278,13 @@ function generateOverviewBudgets(budgets) {
 }
 
 function generateVariousCharts(items, slideNum, maxShow) {
+    Chart.defaults.global.legend.display = false;
+
     if (slideNum == 0) {
         // First create a 'total' chart to show the expected budget amounts
         const totalChart = document.createElement('canvas');
         const dataExpected = items[0].total;
-        Chart.defaults.global.legend.display = false;
-
-        let expectedSum = 0;
-        dataExpected.map(row => expectedSum += row.amount);
+        let expectedSum = items[0].totalSum;
 
         new Chart(totalChart, {
             type: "pie",
@@ -294,16 +293,15 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 datasets: [{
                     label: "Total Budget Amount",
                     data: dataExpected.map(row => row.amount),
-                    backgroundColor: DATA_RANGE.sort(() => Math.random() - 0.5),
+                    backgroundColor: dataExpected.map(row => row.color),
                     borderColor: "#100007",
-                    borderWidth: 3.5,
+                    borderWidth: 3,
                 }],
             },
             options: {
                 title: {
                     display: true,
-                    text: ["Total Amount Budgeted", userData.currency + expectedSum.toFixed(2)],
-                    class: "chart-title"
+                    text: ["Total Amount Budgeted", userData.currency + expectedSum],
                 },
                 maintainAspectRatio: false,
                 tooltips: {
@@ -323,12 +321,8 @@ function generateVariousCharts(items, slideNum, maxShow) {
 
         // Create an 'actual' chart to show the current amount spent of each budget
         const actualChart = document.createElement('canvas');
-        actualChart.classList.add("half-size");
-        actualChart.width = "50%";
-
         const dataActual = items[0].actual;
-        let actualSum = 0;
-        dataActual.map(row => actualSum += row.amount);
+        let actualSum = items[0].actualSum;
 
         new Chart(actualChart, {
             type: "pie",
@@ -336,16 +330,15 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 labels: dataActual.map(row => row.budgetName),
                 datasets: [{
                     data: dataActual.map(row => row.amount),
-                    backgroundColor: DATA_RANGE.sort(() => Math.random() - 0.5),
+                    backgroundColor: dataActual.map(row => row.color),
                     borderColor: "#100007",
-                    borderWidth: 3.5,
+                    borderWidth: 3,
                 }],
             },
             options: {
                 title: {
                     display: true,
-                    text: ["Actual Amount Used", userData.currency + actualSum.toFixed(2)],
-                    class: "chart-title"
+                    text: ["Actual Amount Used", userData.currency + actualSum]
                 },
                 maintainAspectRatio: false,
                 tooltips: {
@@ -369,8 +362,8 @@ function generateVariousCharts(items, slideNum, maxShow) {
         return returnDiv;
     } else if (slideNum == 1) {
         const expenseChart = document.createElement('canvas');
-
         const data = items[1];
+
         new Chart(expenseChart, {
             type: "bar",
             data: {
@@ -416,8 +409,8 @@ function generateVariousCharts(items, slideNum, maxShow) {
         return returnDiv;
     } else if (slideNum == 2) {
         const earningChart = document.createElement('canvas');
-
         const data = items[2];
+
         new Chart(earningChart, {
             type: "bar",
             data: {
@@ -716,13 +709,33 @@ function allChartDataAsArray() {
 function totalBudgetsAndAmounts() {
     const budgetList = userData.budgets.active;
     const keys = Object.keys(budgetList);
-    const totalData = [];
-    const actualData = [];
+    const colors = DATA_RANGE.sort(() => Math.random() - 0.5);
+    const colorLength = colors.length;
 
+    const totalData = [];
+    var totalSum = 0;
+    const actualData = [];
+    var actualSum = 0;
+
+    var index = 0;
     for (const key of keys) {
         var current = budgetList[key];
-        totalData.push({ budgetName: current.name, amount: current.amount });
-        actualData.push({ budgetName: current.name, amount: current.usedAmount });
+
+        totalData.push({ budgetName: current.name, amount: current.amount, color: colors[index % colorLength] });
+        totalSum += current.amount;
+
+        actualData.push({ budgetName: current.name, amount: current.usedAmount, color: colors[index % colorLength] });
+        actualSum += current.usedAmount;
+
+        index++;
+    }
+
+    // Round sums before adding the 'unused' amount
+    totalSum = parseFloat(totalSum.toFixed(2));
+    actualSum = parseFloat(actualSum.toFixed(2));
+
+    if (actualSum < totalSum) {
+        actualData.push({ budgetName: "Unused", amount: totalSum - actualSum, color: "#100007" });
     }
 
     totalData.sort((a, b) => {
@@ -732,7 +745,7 @@ function totalBudgetsAndAmounts() {
         return a.amount - b.amount;
     })
 
-    return { "total": totalData, "actual": actualData };
+    return { "total": totalData, "actual": actualData, "totalSum": totalSum, "actualSum": actualSum };
 }
 
 function expensesPerMonth(currentYear) {

@@ -490,23 +490,48 @@ function generateTableUI(type, entityList, currency, limit=null) {
             }
 
             // Expand row
+            const desLabel = document.createElement("h4");
+            desLabel.textContent = "Description";
+            const desText = document.createElement("p");
+            desText.textContent = current.description || "None";
             const description = document.createElement('div');
-            description.textContent = current.description;
-            description.classList.add('long-text', 'expand-description');
+            description.append(desLabel, desText);
 
             const recurPeriod = document.createElement('div');
-            const period = PERIODS[current.recurPeriod].toLocaleLowerCase();
-            recurPeriod.textContent = "This " + TYPES[type] + " recurs " + period;
-            recurPeriod.classList.add('expand-period');
+            const recurStartDate = document.createElement('div');
+            const recurEndDate = document.createElement('div');
+            if (current.recurring) {
+                const recLabel = document.createElement("h4");
+                recLabel.textContent = "Recurring Period"
+                const recText = document.createElement("p");
+                recText.textContent = "This " + TYPES[type] + " recurs " + PERIODS[current.recurPeriod].toLocaleLowerCase();
+                recurPeriod.append(recLabel, recText);
 
-            const expanseDiv = document.createElement('td');
-            expanseDiv.colSpan = headRow.cells.length;
-            expanseDiv.append(description, recurPeriod)
+                const recStartLabel = document.createElement("h4");
+                recStartLabel.textContent = "Recurrance Start Date";
+                const recStart = document.createElement("p");
+                recStart.textContent = current.startDate || "None";
+                recurStartDate.append(recStartLabel, recStart);
+
+                const recEndLabel = document.createElement("h4");
+                recEndLabel.textContent = "Recurrance End Date";
+                const recEnd = document.createElement("p");
+                recEnd.textContent = current.endDate || "None";
+                recurEndDate.append(recEndLabel, recEnd);
+            }
+
+            const expanseDiv = document.createElement('div');
+            expanseDiv.classList.add("expanse-div");
+            expanseDiv.append(description, recurPeriod, recurStartDate, recurEndDate);
+
+            const expanseTD = document.createElement('td');
+            expanseTD.colSpan = headRow.cells.length;
+            expanseTD.append(expanseDiv);
 
             const row2 = document.createElement('tr');
             row2.classList.add('expanse-row');
             row2.style.display = "none";
-            row2.append(expanseDiv);
+            row2.append(expanseTD);
 
             row1.addEventListener("click", () => {
                 toggleExpanse(row2);
