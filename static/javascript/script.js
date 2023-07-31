@@ -510,13 +510,23 @@ function generateTableUI(type, entityList, currency, limit=null) {
                 const recStartLabel = document.createElement("h4");
                 recStartLabel.textContent = "Recurrance Start Date";
                 const recStart = document.createElement("p");
-                recStart.textContent = current.startDate || "None";
+                if (current.startDate) {
+                    const formatDate =  new Date(current.startDate);
+                    recStart.textContent = formatDate.toLocaleDateString('en-us', getDateFormattingOptions());
+                } else {
+                    recStart.textContent = "None";
+                }
                 recurStartDate.append(recStartLabel, recStart);
 
                 const recEndLabel = document.createElement("h4");
                 recEndLabel.textContent = "Recurrance End Date";
                 const recEnd = document.createElement("p");
-                recEnd.textContent = current.endDate || "None";
+                if (current.endDate) {
+                    const formatDate =  new Date(current.endDate);
+                    recEnd.textContent = formatDate.toLocaleDateString('en-us', getDateFormattingOptions());
+                } else {
+                    recEnd.textContent = "None";
+                }
                 recurEndDate.append(recEndLabel, recEnd);
             }
 

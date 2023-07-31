@@ -480,7 +480,7 @@ h4 {
     border: solid 1px var(--Navy);
     border-collapse: separate;
     border-radius: var(--mobilePad);
-    width: calc(100vw - (2 * var(--mobilePad)));
+    width: calc(100vw - (3 * var(--mobilePad)));
 }
 
 #tab-head {

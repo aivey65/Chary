@@ -295,7 +295,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     data: dataExpected.map(row => row.amount),
                     backgroundColor: dataExpected.map(row => row.color),
                     borderColor: "#100007",
-                    borderWidth: 3,
+                    borderWidth: 2.5,
                 }],
             },
             options: {
@@ -332,7 +332,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     data: dataActual.map(row => row.amount),
                     backgroundColor: dataActual.map(row => row.color),
                     borderColor: "#100007",
-                    borderWidth: 3,
+                    borderWidth: 2.5,
                 }],
             },
             options: {
@@ -735,7 +735,7 @@ function totalBudgetsAndAmounts() {
     actualSum = parseFloat(actualSum.toFixed(2));
 
     if (actualSum < totalSum) {
-        actualData.push({ budgetName: "Unused", amount: totalSum - actualSum, color: "#100007" });
+        actualData.push({ budgetName: "Unused", amount: totalSum - actualSum, color: "#2F2E41" });
     }
 
     totalData.sort((a, b) => {
