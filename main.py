@@ -6,6 +6,10 @@ import requests
 from flask import Flask, session, abort, redirect, request, render_template
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
+import bcrypt
+import hmac
+import hashlib
+from base64 import b64encode
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
 from functools import wraps
@@ -152,6 +156,104 @@ def google_auth():
     else:
         abort(403)
 
+# @login_is_required
+# @app.route("/chary")
+# def googleLogin():
+#     authorization_url, state = flow.authorization_url(
+#         access_type='offline',
+#         include_granted_scopes='true'
+#     )
+#     session["state"] = state
+#     return redirect(authorization_url)
+
+@app.route("/chary/auth/validate")
+def chary_auth(): 
+    pass
+
+@app.route("/data/create-user/chary", methods=['POST'])
+def createUser():
+    email = request.json["email"]
+    username = ""
+    password = request.json["password"]
+    image = ""
+    color = ""
+    currency = ""
+    balance = 0
+    tutorialFinished = False
+    profileCreation = False
+    google = True
+
+    salt = b64encode(bcrypt.gensalt())
+    pepperedPass = hmac.new(b64encode(os.getenv("SECRET_PEPPER")), b64encode(password), hashlib.sha256)
+    hashedPass = bcrypt(b64encode(pepperedPass), salt)
+
+    try:
+        database.createUser(
+            email, 
+            username,
+            hashedPass,
+            salt,
+            image,
+            color,
+            currency, 
+            balance,
+            tutorialFinished, 
+            profileCreation,
+            google 
+        )
+        
+        session["email"] = email
+
+        return {
+            "status": 201,
+            "message": "Creation successful!"
+        }
+    except Exception as e:
+        return {
+            "status": 400,
+            "message": str(e)
+        }
+
+@app.route("/data/create-user/google", methods=['POST'])
+def createUser():
+    email = session["email"]
+    username = ""
+    password = request.json["password"]
+    image = ""
+    color = ""
+    currency = ""
+    balance = 0
+    tutorialFinished = False
+    profileCreation = False
+    google = True
+
+    salt = b64encode(bcrypt.gensalt())
+    pepperedPass = hmac.new(b64encode(os.getenv("SECRET_PEPPER")), b64encode(password), hashlib.sha256)
+    hashedPass = bcrypt(b64encode(pepperedPass), salt)
+
+    try:
+        database.createUser(
+            email, 
+            username,
+            hashedPass,
+            salt,
+            image,
+            color,
+            currency, 
+            balance,
+            tutorialFinished, 
+            profileCreation,
+            google 
+        )
+        return {
+            "status": 201,
+            "message": "Creation successful!"
+        }
+    except Exception as e:
+        return {
+            "status": 400,
+            "message": str(e)
+        }
 
 #######################################
 # Pages that need authenticated login #
@@ -305,7 +407,6 @@ def getAllCurrent():
         targetDate = request.args.get("target")
         return database.getAllCurrent(session["email"], int(period), str(targetDate))
     except Exception as e:
-        print(e)
         return custom_error(e)
 
 @app.route("/data/user")
@@ -357,32 +458,6 @@ def getOneExpense():
 def getOneEarning():
     earningId = request.args.get("id")
     return database.getEarning(earningId, session["email"])
-
-@app.route("/data/create-user", methods=['POST'])
-@login_is_required
-def createUser():
-    username = request.json["name"] if bool(request.json["name"]) else ""
-    image = request.json["profile-image"] if bool(request.json["profile-image"]) else ""
-    color = request.json["profile-color"] if bool(request.json["profile-color"]) else ""
-    currency = request.json["currency"]
-    balance = 0
-    tutorialFinished = False
-    profileCreation = False
-
-    try:
-        database.createUser(
-            session["email"], 
-            username,
-            image,
-            color,
-            currency, 
-            balance,
-            tutorialFinished, 
-            profileCreation, 
-        )
-        return redirect("/dashboard")
-    except Exception as e:
-        return custom_error(e)
 
 @app.route("/data/create-budget", methods=['POST'])
 @login_is_required

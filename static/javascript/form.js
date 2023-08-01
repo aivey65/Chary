@@ -136,7 +136,37 @@ function configureRecurOptions() {
 // Create/Update form submit functions //
 /////////////////////////////////////////
 
-function submitUserForm(e) {
+function submitSignupForm() {
+    alertSection.innerHTML = "";
+
+    if (document.getElementById('pass').value != document.getElementById("pass-check")) {
+        updateAlertSection("- Passwords do not match. Re-enter them and try again.");
+        window.scrollTo(0, 0);
+        return;
+    }
+
+    fetch('/data/create-user', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: document.getElementById('email').value,
+            password: document.getElementById('pass').value,
+        })
+    }).then((response) => response.json()).then((responseData) => {
+        if (responseData.status != 201) {
+            message = "- Error: " + String(responseData.message) + ". Please try again."
+            updateAlertSection(message);
+            window.scrollTo(0, 0);
+            return;
+        } else {
+            window.location = "/dashboard";
+        }
+    })
+}
+
+function submitLoginForm() {
 
 }
 
@@ -146,10 +176,10 @@ function submitBudgetForm() {
     alertSection.innerHTML = "";
 
     if(!checkAmount(budgetAmount.value)) {
-        message = "- The budget amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45)."
+        message = "- The budget amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
         updateAlertSection(message);
         window.scrollTo(0, 0);
-        return
+        return;
     }
 
     const budgetId = document.getElementById('id');

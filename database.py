@@ -40,10 +40,12 @@ def getCurrentYear(currentDate=date.today()):
 ####################
 # Create functions #
 ####################
-def createUser(email, username, image, color, currency, balance, tutorialFinished, profileCreation, password=None, google=True):
+def createUser(email, username, password, salt, image, color, currency, balance, tutorialFinished, profileCreation, google):
     newUser = {
         'email': str(email),
         'username': str(username),
+        'password': str(password),
+        'salt': str(salt),
         'profileImage': str(image),
         'profileColor': str(color),
         'currency': str(currency),
@@ -53,8 +55,8 @@ def createUser(email, username, image, color, currency, balance, tutorialFinishe
         'budgets': [], 
         'earnings': [],
         'expenses': [],
+        'goals': [],
         'joinDate': date.today().isoformat(),
-        'password': str(password),
         'google': str(google)
     }
     
