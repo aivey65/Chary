@@ -50,6 +50,10 @@ def renderAbout():
 def renderLogin():
     return render_template('login.html', loggedIn=isLoggedIn(), nav=renderedNav())
 
+@app.route("/signup")
+def renderSignup():
+    return render_template('signup.html', loggedIn=isLoggedIn(), nav=renderedNav())
+
 @app.route("/privacy")
 def renderPrivacyPolicy():
     return render_template('privacy-policy.html', loggedIn=isLoggedIn(), nav=renderedNav())
@@ -97,7 +101,7 @@ def renderedNav():
                 <li><a href='/'>Home</a></li>
                 <li><a href='/about'>About</a></li>
                 <li><a href='/login'>Sign In</a></li>
-                <li><a href="/login">Sign Up</a></li>
+                <li><a href="/signup">Sign Up</a></li>
             </ul>
         """
 
