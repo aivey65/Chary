@@ -170,11 +170,11 @@ def chary_auth():
                 "message": "We could not find an account with that email. Try signing up for a new account."
             }
         if (potentialUser.get('google') == False):
-            salt = potentialUser.get('salt')
-            hashedPassword = potentialUser.get('password')
+            salt = potentialUser.get('salt').encode("utf-8")
+            hashedPassword = potentialUser.get('password').encode("utf-8")
             # Hash the provided password and compare it to the hash in the database
             givenPassPepper = hmac.new(b64encode(os.getenv("SECRET_PEPPER").encode("utf-8")), b64encode(givenPassword.encode("utf-8")), hashlib.sha256).digest()
-            givenPassHash = bcrypt.hashpw(b64encode(givenPassPepper), salt.encode("utf-8"))
+            givenPassHash = bcrypt.hashpw(b64encode(givenPassPepper), salt)
 
             if (givenPassHash == hashedPassword):
                 session["email"] = givenEmail
@@ -221,7 +221,7 @@ def createUserChary():
         database.createUser(
             email, 
             username,
-            hashedPass,
+            hashedPass.decode("utf-8"),
             salt.decode("utf-8"),
             image,
             color,
