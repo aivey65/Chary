@@ -175,6 +175,9 @@ async function fillProfilePics(image=null) {
 function navConfig() {
     const userIcon = document.getElementById('nav-profile-icon');
     const profileOptionsPanel = document.getElementById('profile-options');
+    if (!userIcon) {
+        return
+    }
     
     if (window.innerWidth > 767) {
         userIcon.onclick = (event) => {

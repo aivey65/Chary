@@ -46,7 +46,7 @@ def createUser(email, username, password, salt, image, color, currency, balance,
         'username': str(username),
         'password': str(password),
         'salt': str(salt),
-        'profileImage': str(image),
+        'profileImage': "undraw_blank",
         'profileColor': str(color),
         'currency': str(currency),
         'balance': float(balance),
@@ -57,7 +57,7 @@ def createUser(email, username, password, salt, image, color, currency, balance,
         'expenses': [],
         'goals': [],
         'joinDate': date.today().isoformat(),
-        'google': str(google)
+        'google': bool(google)
     }
     
     # First check if there is already a user with that email.
@@ -323,16 +323,18 @@ def getAllCurrent(email, period, targetDate):
     
 # Get a user's basic information, needed to get list of budgets, expenses, etc.
 def getUser(email):
-    # Note: Use of CollectionRef stream() is prefered to get()
-    docs = db.collection('users').where(filter=FieldFilter('email', '==', email)).stream()
+    try:
+        # Note: Use of CollectionRef stream() is prefered to get()
+        docs = db.collection('users').where(filter=FieldFilter('email', '==', email)).stream()
 
-    for doc in docs: # Should only run once, since an email should only be present once in database
-        userDict = doc.to_dict()
-        # Update ISO format dates into date objects 
-        userDict["joinDate"] = date.fromisoformat(userDict["joinDate"]) if notNull(userDict["joinDate"]) else None
-        return {"data":userDict}
-    
-    return None
+        for doc in docs: # Should only run once, since an email should only be present once in database
+            userDict = doc.to_dict()
+            # Update ISO format dates into date objects 
+            userDict["joinDate"] = date.fromisoformat(userDict["joinDate"]) if notNull(userDict["joinDate"]) else None
+            return {"data":userDict}
+    except Exception as e:
+        print(e)
+        return None
 
 def getAllActiveBudgets(email, targetDate=date.today()):
     """

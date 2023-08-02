@@ -8,3 +8,71 @@ window.addEventListener('scroll', () => {
     var yvalue = scrolltotop * factor;
     document.body.style.backgroundPosition = "left " + yvalue + "px";
 });
+
+function updateAlertSection(message, add=false) {
+    alertSection = document.getElementById('alert-section');
+    if (!add) {
+        alertSection.innerHTML = "";
+    }
+
+    newAlert = document.createElement('h4');
+    newAlert.textContent = message;
+
+    alertSection.appendChild(newAlert);
+}
+
+function submitSignupForm() {
+    const alertSection = document.getElementById('alert-section');
+    alertSection.innerHTML = "";
+
+    if (document.getElementById('pass').value != document.getElementById("pass-check").value) {
+        updateAlertSection("- Passwords do not match. Re-enter them and try again.");
+        window.scrollTo(0, 0);
+        return;
+    }
+
+    fetch('/data/create-user/chary', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: document.getElementById('email').value,
+            password: document.getElementById('pass').value,
+        })
+    }).then((response) => response.json()).then((responseData) => {
+        if (responseData.status != 201) {
+            message = "- Error: " + String(responseData.message)
+            updateAlertSection(message);
+            window.scrollTo(0, 0);
+            return;
+        } else {
+            window.location = "/dashboard";
+        }
+    })
+}
+
+function submitLoginForm() {
+    const alertSection = document.getElementById('alert-section');
+    alertSection.innerHTML = "";
+
+    fetch('/chary/auth/validate', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: document.getElementById('email').value,
+            password: document.getElementById('pass').value,
+        })
+    }).then((response) => response.json()).then((responseData) => {
+        if (responseData.status != 200) {
+            message = "- Error: " + String(responseData.message)
+            updateAlertSection(message);
+            window.scrollTo(0, 0);
+            return;
+        } else {
+            window.location = "/dashboard";
+        }
+    })
+}

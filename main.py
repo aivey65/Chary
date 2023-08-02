@@ -156,49 +156,52 @@ def google_auth():
     else:
         abort(403)
 
-@app.route("/chary/auth/validate")
+@app.route("/chary/auth/validate", methods=['POST'])
 def chary_auth(): 
-    givenEmail = request.json["email"]
-    givenPassword = request.json["password"]
+    try:
+        givenEmail = request.json["email"]
+        givenPassword = request.json["password"]
 
-    potentialUser = database.getUser(givenEmail)
+        potentialUser = database.getUser(givenEmail).get('data')
 
-    if (potentialUser == None):
-        return {
-            "status": 400,
-            "message": "We could not find an account with that email. Try signing up for a new account."
-        }
-
-    if (potentialUser.google == False):
-        salt = potentialUser.salt
-        hashedPassword = potentialUser.password
-
-        # Hash the provided password and compare it to the hash in the database
-        givenPassPepper = hmac.new(b64encode(os.getenv("SECRET_PEPPER")), b64encode(givenPassword), hashlib.sha256)
-        givenPassHash = bcrypt.hashpw(b64encode(givenPassPepper), salt)
-
-        if (givenPassHash == hashedPassword):
-            session["email"] = givenEmail
-            session["chary_id"] = b64encode(os.urandom(32))
+        if (potentialUser == None):
             return {
-                "status": 200,
-                "message": "Login successful!"
+                "status": 400,
+                "message": "We could not find an account with that email. Try signing up for a new account."
             }
+        if (potentialUser.get('google') == False):
+            salt = potentialUser.get('salt')
+            hashedPassword = potentialUser.get('password')
+            # Hash the provided password and compare it to the hash in the database
+            givenPassPepper = hmac.new(b64encode(os.getenv("SECRET_PEPPER").encode("utf-8")), b64encode(givenPassword.encode("utf-8")), hashlib.sha256).digest()
+            givenPassHash = bcrypt.hashpw(b64encode(givenPassPepper), salt.encode("utf-8"))
+
+            if (givenPassHash == hashedPassword):
+                session["email"] = givenEmail
+                session["chary_id"] = b64encode(os.urandom(32))
+                return {
+                    "status": 200,
+                    "message": "Login successful!"
+                }
+            else:
+                return {
+                    "status": 400,
+                    "message": "The password provided is not correct."
+                }
         else:
             return {
                 "status": 400,
-                "message": "The password provided is not correct. Please try again."
+                "message": 'This email was used to sign up via Google Sign In. In order to log in, please click the "Sign in with Google" button.'
             }
-    else:
+    except Exception as e:
         return {
-            "status": 400,
-            "message": 'This email was used to sign up via Google Sign In. In order to log in, please click the "Sign in with Google" button.'
-        }
-
+                "status": 400,
+                "message": str(e) + "."
+            }
 
 
 @app.route("/data/create-user/chary", methods=['POST'])
-def createUser():
+def createUserChary():
     email = request.json["email"]
     username = ""
     password = request.json["password"]
@@ -208,18 +211,18 @@ def createUser():
     balance = 0
     tutorialFinished = False
     profileCreation = False
-    google = True
+    google = False
 
-    salt = b64encode(bcrypt.gensalt())
-    pepperedPass = hmac.new(b64encode(os.getenv("SECRET_PEPPER")), b64encode(password), hashlib.sha256)
-    hashedPass = bcrypt(b64encode(pepperedPass), salt)
+    salt = bcrypt.gensalt()
+    pepperedPass = hmac.new(b64encode(os.getenv("SECRET_PEPPER").encode("utf-8")), b64encode(password.encode("utf-8")), hashlib.sha256).digest()
+    hashedPass = bcrypt.hashpw(b64encode(pepperedPass), salt)
 
     try:
         database.createUser(
             email, 
             username,
             hashedPass,
-            salt,
+            salt.decode("utf-8"),
             image,
             color,
             currency, 
@@ -243,10 +246,11 @@ def createUser():
         }
 
 @app.route("/data/create-user/google", methods=['POST'])
-def createUser():
+def createUserGoogle():
     email = session["email"]
     username = ""
     password = request.json["password"]
+    salt = ""
     image = ""
     color = ""
     currency = ""
@@ -255,15 +259,11 @@ def createUser():
     profileCreation = False
     google = True
 
-    salt = b64encode(bcrypt.gensalt())
-    pepperedPass = hmac.new(b64encode(os.getenv("SECRET_PEPPER")), b64encode(password), hashlib.sha256)
-    hashedPass = bcrypt(b64encode(pepperedPass), salt)
-
     try:
         database.createUser(
             email, 
             username,
-            hashedPass,
+            password,
             salt,
             image,
             color,

@@ -24,7 +24,7 @@
         <Title>Chary | Log In</Title>
     </head>
 
-    <body onload="fillProfilePics()">
+    <body>
         <div id="header-container">
             <header>
                 <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()" alt='Chary logo'>
@@ -41,10 +41,11 @@
                 </div>
                 <div id="login-card">
                     <h1>Log In</h1>
+                    <div id="alert-section"></div>
                     <img id="unavailable-img" src="../static/images/Currently_unavailable.svg"/>
-                    <form action="javascript:submitBudgetForm('create')" id="login-form">
+                    <form action="javascript:submitLoginForm()" id="login-form">
                         <input type="email" id="email" name="email" placeholder="Email" required><br>
-                        <input type="text" id="pass" name="pass" placeholder="Password" required><br>
+                        <input type="password" id="pass" name="pass" placeholder="Password" required><br>
                         <button id="submit-entity-button" class="submit-button cta-button" type="submit" value="Submit">Submit</button>
                     </form>
                     <hr>
