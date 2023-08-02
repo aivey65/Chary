@@ -69,7 +69,7 @@ def renderPrivacyPolicy():
 def login_is_required(function):
     @wraps(function)
     def wrapper(*args, **kwargs):
-        if "google_id" not in session:
+        if ("google_id" not in session) and ("chary_id" not in session):
             return abort(401)
         else:
             return function()
@@ -77,7 +77,7 @@ def login_is_required(function):
     return wrapper
 
 def isLoggedIn():
-    if "google_id" not in session:
+    if ("google_id" not in session) and ("chary_id" not in session):
         return False
     else:
         return True
@@ -156,19 +156,46 @@ def google_auth():
     else:
         abort(403)
 
-# @login_is_required
-# @app.route("/chary")
-# def googleLogin():
-#     authorization_url, state = flow.authorization_url(
-#         access_type='offline',
-#         include_granted_scopes='true'
-#     )
-#     session["state"] = state
-#     return redirect(authorization_url)
-
 @app.route("/chary/auth/validate")
 def chary_auth(): 
-    pass
+    givenEmail = request.json["email"]
+    givenPassword = request.json["password"]
+
+    potentialUser = database.getUser(givenEmail)
+
+    if (potentialUser == None):
+        return {
+            "status": 400,
+            "message": "We could not find an account with that email. Try signing up for a new account."
+        }
+
+    if (potentialUser.google == False):
+        salt = potentialUser.salt
+        hashedPassword = potentialUser.password
+
+        # Hash the provided password and compare it to the hash in the database
+        givenPassPepper = hmac.new(b64encode(os.getenv("SECRET_PEPPER")), b64encode(givenPassword), hashlib.sha256)
+        givenPassHash = bcrypt.hashpw(b64encode(givenPassPepper), salt)
+
+        if (givenPassHash == hashedPassword):
+            session["email"] = givenEmail
+            session["chary_id"] = b64encode(os.urandom(32))
+            return {
+                "status": 200,
+                "message": "Login successful!"
+            }
+        else:
+            return {
+                "status": 400,
+                "message": "The password provided is not correct. Please try again."
+            }
+    else:
+        return {
+            "status": 400,
+            "message": 'This email was used to sign up via Google Sign In. In order to log in, please click the "Sign in with Google" button.'
+        }
+
+
 
 @app.route("/data/create-user/chary", methods=['POST'])
 def createUser():
@@ -203,6 +230,7 @@ def createUser():
         )
         
         session["email"] = email
+        session["chary_id"] = b64encode(os.urandom(32))
 
         return {
             "status": 201,

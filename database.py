@@ -331,6 +331,8 @@ def getUser(email):
         # Update ISO format dates into date objects 
         userDict["joinDate"] = date.fromisoformat(userDict["joinDate"]) if notNull(userDict["joinDate"]) else None
         return {"data":userDict}
+    
+    return None
 
 def getAllActiveBudgets(email, targetDate=date.today()):
     """
