@@ -1,6 +1,6 @@
 .content {
     color: var(--Light);
-    width: min-content;
+    width: 100%;
     padding: var(--mobilePad);
 }
 
@@ -10,7 +10,7 @@ form {
     grid-template-rows: .5fr 1fr .2fr .2fr .5fr .5fr .2fr .1fr .2fr;
     gap: 0px var(--mobilePad);
     margin: auto;
-    width: calc(100vw - (2 * var(--mobilePad)));
+    width: 100%;
 }
 
 label, p {

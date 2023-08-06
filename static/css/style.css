@@ -736,6 +736,14 @@ Creating the navigation bar depending on the size of the user's screen
         padding: var(--medPad);
         border-radius: var(--medPad);
     }
+
+    .shadow-left {
+        box-shadow: inset 8rem 0rem 2rem -8rem var(--MainL);
+    }
+
+    .shadow-right {
+        box-shadow: inset -8rem 0rem 2rem -8rem var(--MainL);
+    }
 }
 
 /*
@@ -935,24 +943,6 @@ Creating the navigation bar depending on the size of the user's screen
     .trash-icon {
         width: 1.2rem;
         height: 1.2rem;
-    }
-
-    #acd-budgets h2,
-    #acd-earnings h2,
-    #acd-expenses h2,
-    #acd-content h2 {
-        float: left;
-        position: relative;
-        display: inline;
-        margin: auto;
-    }
-
-    #acd-budgets #back-button,
-    #acd-earnings #back-button,
-    #acd-expenses #back-button,
-    #acd-content #back-button {
-        position: relative;
-        right: 80%;
     }
 
     #popup-wrapper {

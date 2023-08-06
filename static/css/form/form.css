@@ -3,6 +3,43 @@
     width: min-content;
 }
 
+#acd-content {
+    display: grid;
+    grid-template-columns: .5fr 1fr .5fr;
+    grid-template-rows: auto auto 1fr;
+    gap: 0px var(--medPad);
+}
+
+#acd-content #back-button {
+    grid-row: 1;
+    grid-column: 1;
+    width: max-content;
+}
+
+#acd-content h2 {
+    grid-row: 1;
+    grid-column: 2;
+    margin: 0px;
+}
+
+#acd-content #alert-section {
+    grid-row: 2;
+    grid-column: 2;
+}
+
+#acd-content form {
+    grid-row: 3;
+    grid-column: 2;
+}
+
+#alert-section h4 {
+    margin: 0px;
+    font-weight: 400;
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+    color: var(--MainD);
+}
+
 form {
     display: grid;
     grid-template-columns: 1fr 1fr;

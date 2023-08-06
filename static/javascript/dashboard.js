@@ -8,8 +8,9 @@ async function loadDashboard(refresh="false", tab="overview") {
         const response = updateUserData();
         response.then(() => {
             fillProfilePics(userData.profileImage);
+            addHorizontalScrollShadow();
             document.getElementById("dashboard-tabs").style.display = "block";
-            
+             
             if (tab == "overview") {
                 loadOverviewTab();
             } else if (tab == "budgets") {
@@ -204,6 +205,17 @@ function changeActiveTab(newActiveTab) {
     }
 
     newActiveTab.classList.add('active');
+}
+
+function addHorizontalScrollShadow() {
+    const parent = document.getElementById('dashboard-tabs');
+    const child = parent.getElementsByTagName('ul')[0];
+    sideScrollShadow(parent, child);
+    
+    child.addEventListener('scroll', () => {
+        console.log("scroll detected")
+        sideScrollShadow(parent, child);
+    });
 }
 
 ////////////////////////////

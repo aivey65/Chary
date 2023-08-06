@@ -211,7 +211,7 @@ function submitExpenseForm() {
     if(!checkAmount(expenseAmount.value)) {
         message = "- The expense amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45)."
         updateAlertSection(message);
-        window.scrollY(0);
+        window.scrollTo(0, 0);
     }
 
     const expenseId = document.getElementById('id');
