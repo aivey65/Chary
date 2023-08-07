@@ -38,9 +38,7 @@
             <button id="back-button" onclick="dashboardBudgetAction()">⟨ Back</button>
             <div id="budget-main">
                 <div id="budget-basic" class="main-container module">
-                    <div id="details-svg-container">
-                        <svg width="200" height="120" viewbox="0 0 200 120" class="progress-svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M15,100 a60,60 0 0,1 170,0" class="outer-progress" xmlns:xlink="http://www.w3.org/1999/xlink"></path></svg>
-                    </div>
+                    <div id="details-chart-container"></div>
                     <div id="details-amount">
                         <div class="placeholder placeholder-p"></div>
                         <p id="fraction-top" class="fraction-top"></p>
@@ -76,14 +74,6 @@
                         <div class="placeholder placeholder-p"></div>
                     </div>
                     <img id="details-edit" class="update-img icon" src="../static/images/EditButtonSM.svg" alt="Edit icon"/>
-                </div>
-
-                <div id="budget-charts" class="main-container module">
-                    <h3 class="module-header">Analytics</h3>
-                    <canvas id="budget-use-chart" style="width:100%;max-width:700px"></canvas>
-                </div>
-
-                <div id="budget-facts" class="main-container module">
                 </div>
 
                 <div id="budget-expenses" class="main-container module">

@@ -1,4 +1,9 @@
-const DATA_RANGE = ["#6acd5f", "#97d369", "#bad978", "#d7df8d", "#eee6a4", "#ffeebf", "#f7d3a2", "#efb68a", "#e69979", "#db7c6f", "#cd5f6a"];
+const DATA_COLORS = ["#6acd5f", "#97d369", "#bad978", "#d7df8d", "#eee6a4", "#ffeebf", "#f7d3a2", "#efb68a", "#e69979", "#db7c6f", "#cd5f6a"];
+const COLORS_GREEN = "#6ACD5F";
+const COLORS_NAVY = "#2F2E41";
+const COLORS_RED = "#A82130";
+const COLORS_PINK = "#CD5F6A";
+const COLORS_DARK = "#100007";
 
 // Date formatting
 function getDateFormattingOptions(long=true) {
@@ -239,6 +244,103 @@ function sideScrollShadow(parent, child) {
         parent.classList.remove("shadow-right");
         parent.classList.remove("shadow-left");
     }
+}
+
+////////////////////////////
+// Functions for Carousel //
+////////////////////////////
+
+function carouselButtons(items, uniqueClass, containerId, maxShow=3, nextSlideGenerator) {
+    var dotsToReturn = document.createElement("div");
+    dotsToReturn.classList.add("carousel");
+
+    itemsLength = Object.keys(items).length
+    numSlides = Math.ceil(itemsLength / maxShow);
+
+    for (var slideNum = 0; slideNum < numSlides; slideNum++) {
+        const dot = document.createElement("div");
+        dot.classList.add("carousel-dot", uniqueClass);
+        const currentSlide = slideNum;
+        dot.dataset.slideNum = currentSlide;
+        dotsToReturn.append(dot);
+    }
+
+    // Add click event listener
+    var transitionRunning = false;
+    dotsToReturn.addEventListener("click", (e) => {
+        if (transitionRunning == false) {
+            transitionRunning = true;
+
+            if (e.target.classList.contains('carousel-dot')) {
+                const slide = e.target.dataset.slideNum;
+                dotClick(slide, uniqueClass, containerId, () => {return nextSlideGenerator(items, slide, maxShow)})
+            } 
+
+            setTimeout(() => {
+                transitionRunning = false;
+            }, 1000);
+
+        }
+    })
+
+    return dotsToReturn;
+}
+
+function dotClick(slideNum, uniqueClass, containerId, newChildFunc) {
+    // First, change which dot is active and get the current and new dot indeces
+    const previousIndex = changeActiveDot(slideNum, uniqueClass);
+
+    if (slideNum == previousIndex) {
+        return
+    }
+
+    // Update the content and create a transition depending on which dot is before the other
+    const itemContainer = document.getElementById(containerId);
+    const firstChild = itemContainer.firstChild;
+    const newChild = newChildFunc();
+    itemContainer.append(newChild);
+
+    if (slideNum < previousIndex) { // Slide right
+        firstChild.addEventListener("animationend", (e) => {
+            e.target.remove();
+        });  
+        newChild.style.animation = "slideInLeft 700ms ease-in-out";
+        firstChild.style.animation = "slideOutRight 700ms ease-in-out";
+ 
+    } else { // Slide left
+        firstChild.addEventListener("animationend", (e) => {
+            e.target.remove();
+        });  
+        newChild.style.animation = "slideInRight 700ms ease-in-out";
+        firstChild.style.animation = "slideOutLeft 700ms ease-in-out";
+    }
+}
+
+function changeActiveDot(slideNum, uniqueClass) {
+    const buttons = document.getElementsByClassName(uniqueClass);
+    const buttonsLength = Object.keys(buttons).length
+
+    var previousSlide;
+    for (var index = 0; index < buttonsLength; index++) {
+        const dot = buttons[index];
+        if (dot.classList.contains("active-dot")) {// This is the previously selected dot
+            if (index == slideNum) { // This means the active dot was clicked again
+                return index;
+            } else {
+                previousSlide = index;
+                dot.classList.add("inactive-dot");
+                dot.classList.remove("active-dot");
+            }
+        } else if (index == slideNum) {
+            dot.classList.add("active-dot");
+            dot.classList.remove("inactive-dot");
+        } else {
+            dot.classList.add("inactive-dot");
+            dot.classList.remove("active-dot");
+        }
+    }
+
+    return previousSlide;
 }
 
 /////////////////////////////////

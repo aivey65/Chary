@@ -306,7 +306,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     label: "Total Budget Amount",
                     data: dataExpected.map(row => row.amount),
                     backgroundColor: dataExpected.map(row => row.color),
-                    borderColor: "#100007",
+                    borderColor: COLORS_NAVY,
                     borderWidth: 2.5,
                 }],
             },
@@ -343,7 +343,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 datasets: [{
                     data: dataActual.map(row => row.amount),
                     backgroundColor: dataActual.map(row => row.color),
-                    borderColor: "#100007",
+                    borderColor: COLORS_NAVY,
                     borderWidth: 2.5,
                 }],
             },
@@ -383,7 +383,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 datasets: [{
                     label: "Amount (" + userData.currency + ")",
                     data: data.values,
-                    backgroundColor: "#6ACD5F",
+                    backgroundColor: COLORS_GREEN,
                 }],
             },
             options: {
@@ -430,7 +430,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 datasets: [{
                     label: "Amount (" + userData.currency + ")",
                     data: data.values,
-                    backgroundColor: "#6ACD5F",
+                    backgroundColor: COLORS_GREEN,
                 }],
             },
             options: {
@@ -568,99 +568,6 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
     return budgetContainer;
 }
 
-function carouselButtons(items, uniqueClass, containerId, maxShow=3, nextSlideGenerator) {
-    var dotsToReturn = document.createElement("div");
-    dotsToReturn.classList.add("carousel");
-
-    itemsLength = Object.keys(items).length
-    numSlides = Math.ceil(itemsLength / maxShow);
-
-    for (var slideNum = 0; slideNum < numSlides; slideNum++) {
-        const dot = document.createElement("div");
-        dot.classList.add("carousel-dot", uniqueClass);
-        const currentSlide = slideNum;
-        dot.dataset.slideNum = currentSlide;
-        dotsToReturn.append(dot);
-    }
-
-    // Add click event listener
-    var transitionRunning = false;
-    dotsToReturn.addEventListener("click", (e) => {
-        if (transitionRunning == false) {
-            transitionRunning = true;
-
-            if (e.target.classList.contains('carousel-dot')) {
-                const slide = e.target.dataset.slideNum;
-                dotClick(slide, uniqueClass, containerId, () => {return nextSlideGenerator(items, slide, maxShow)})
-            } 
-
-            setTimeout(() => {
-                transitionRunning = false;
-            }, 1000);
-
-        }
-    })
-
-    return dotsToReturn;
-}
-
-function dotClick(slideNum, uniqueClass, containerId, newChildFunc) {
-    // First, change which dot is active and get the current and new dot indeces
-    const previousIndex = changeActiveDot(slideNum, uniqueClass);
-
-    if (slideNum == previousIndex) {
-        return
-    }
-
-    // Update the content and create a transition depending on which dot is before the other
-    const itemContainer = document.getElementById(containerId);
-    const firstChild = itemContainer.firstChild;
-    const newChild = newChildFunc();
-    itemContainer.append(newChild);
-
-    if (slideNum < previousIndex) { // Slide right
-        firstChild.addEventListener("animationend", (e) => {
-            e.target.remove();
-        });  
-        newChild.style.animation = "slideInLeft 700ms ease-in-out";
-        firstChild.style.animation = "slideOutRight 700ms ease-in-out";
- 
-    } else { // Slide left
-        firstChild.addEventListener("animationend", (e) => {
-            e.target.remove();
-        });  
-        newChild.style.animation = "slideInRight 700ms ease-in-out";
-        firstChild.style.animation = "slideOutLeft 700ms ease-in-out";
-    }
-}
-
-function changeActiveDot(slideNum, uniqueClass) {
-    const buttons = document.getElementsByClassName(uniqueClass);
-    const buttonsLength = Object.keys(buttons).length
-
-    var previousSlide;
-    for (var index = 0; index < buttonsLength; index++) {
-        const dot = buttons[index];
-        if (dot.classList.contains("active-dot")) {// This is the previously selected dot
-            if (index == slideNum) { // This means the active dot was clicked again
-                return index;
-            } else {
-                previousSlide = index;
-                dot.classList.add("inactive-dot");
-                dot.classList.remove("active-dot");
-            }
-        } else if (index == slideNum) {
-            dot.classList.add("active-dot");
-            dot.classList.remove("inactive-dot");
-        } else {
-            dot.classList.add("inactive-dot");
-            dot.classList.remove("active-dot");
-        }
-    }
-
-    return previousSlide;
-}
-
 function generateOverviewExpenses() {
     const overviewExpenseContainer = document.createElement('div');
     overviewExpenseContainer.id = 'expense-snip-container';
@@ -721,7 +628,7 @@ function allChartDataAsArray() {
 function totalBudgetsAndAmounts() {
     const budgetList = userData.budgets.active;
     const keys = Object.keys(budgetList);
-    const colors = DATA_RANGE.sort(() => Math.random() - 0.5);
+    const colors = DATA_COLORS.sort(() => Math.random() - 0.5);
     const colorLength = colors.length;
 
     const totalData = [];
@@ -747,7 +654,7 @@ function totalBudgetsAndAmounts() {
     actualSum = parseFloat(actualSum.toFixed(2));
 
     if (actualSum < totalSum) {
-        actualData.push({ budgetName: "Unused", amount: totalSum - actualSum, color: "#2F2E41" });
+        actualData.push({ budgetName: "Unused", amount: totalSum - actualSum, color: COLORS_NAVY });
     }
 
     totalData.sort((a, b) => {
