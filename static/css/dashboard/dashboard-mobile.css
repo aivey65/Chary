@@ -128,10 +128,6 @@ h4 {
     margin-top: 20px;
 }
 
-#overview-section {
-    padding-top: calc(var(--navPad));
-}
-
 #budget-section, #earning-section, #expense-section {
     padding-top: calc(var(--navPad) + var(--smallPad));
 }
@@ -152,7 +148,7 @@ h4 {
 }
 
 #chart-snip-container {
-    padding-top: var(--lgPad);
+    padding-top: calc(var(--lgPad) + var(--navPad));
     display: flex;
     flex-direction: column;
     gap: var(--smallPad);

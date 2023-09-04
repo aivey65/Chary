@@ -10,6 +10,8 @@ ol li {
 #about {
     display: grid;
     grid-template-rows: .3fr .2fr 1fr .5fr .8fr .5fr;
+    padding-left: var(--mobilePad);
+    padding-right: var(--mobilePad);
 }
 
 #about-header {
