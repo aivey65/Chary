@@ -14,17 +14,14 @@ font-family: 'Kanit', sans-serif;
 Defining color values to make it easier to change later on 
 */
 :root {
-    --Background: #23060A;
-    --BAccent: #f6f04a;
+    --Background: #30040A;
     --Light: #f6d4d2;
-    --Dark: #100007;
-    --Navy: #2F2E41;
-    --Grey: #CCCCCC;
-    --MainD: #A82130;
-    --MainL: #CD5F6A;
-    --ContrastD: #30A821; /*#74A821, #21A899*/
-    --ContrastL: #6ACD5F; /*#A1CD5F, #5FCDC2*/
-    --ContrastDD: #065e10;
+    --Dark: #1E0206;
+    --Navy: #2C2440;
+    --Grey: #8E7c89;
+    --MainD: #AE1326;
+    --MainL: #CE6C75;
+    --ContrastL: #33EB7C; /*#A1CD5F, #5FCDC2*/
     --faded: rgb(0, 0, 0, .6);
 
     /* Number Variables */
