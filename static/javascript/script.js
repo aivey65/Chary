@@ -1,9 +1,9 @@
-const DATA_COLORS = ["#6acd5f", "#97d369", "#bad978", "#d7df8d", "#eee6a4", "#ffeebf", "#f7d3a2", "#efb68a", "#e69979", "#db7c6f", "#cd5f6a"];
-const COLORS_GREEN = "#6ACD5F";
-const COLORS_NAVY = "#2F2E41";
-const COLORS_RED = "#A82130";
-const COLORS_PINK = "#CD5F6A";
-const COLORS_DARK = "#100007";
+const DATA_COLORS = ["#ce6c75", "#e08677", "#eda27d", "#f6bf89", "#fcdd9c", "#fffab6", "#eaf6a0", "#cef38f", "#acf182", "#80ee7c", "#33eb7c"];
+const COLORS_GREEN = "#33EB7C";
+const COLORS_NAVY = "#2C2440";
+const COLORS_RED = "#AE1326";
+const COLORS_PINK = "#CE6C75";
+const COLORS_DARK = "#1E0206";
 
 // Date formatting
 function getDateFormattingOptions(long=true) {
@@ -71,6 +71,35 @@ function createAlert(message) {
     popupWrapper.append(popup);
 
     return popupWrapper
+}
+
+function createFiltersSection() {
+    const period1 = document.createElement("option");
+    period1.textContent = "Daily";
+    period1.value = "0";
+    const period2 = document.createElement("option");
+    period2.textContent = "Weekly";
+    period2.value = "1";
+    const period3 = document.createElement("option");
+    period3.textContent = "Monthly";
+    period3.value = "3";
+    period3.selected = true;
+    const period4 = document.createElement("option");
+    period4.textContent = "Yearly";
+    period4.value = "4";
+    const periodSelector = document.createElement("select");
+    periodSelector.id = "period-selector";
+    periodSelector.append(period1, period2, period3, period4);
+
+    const dateSelector = document.createElement("input");
+    dateSelector.id = "date-selector";
+    dateSelector.type = "date";
+
+    const form = document.createElement("form");
+    form.id = "filter-form";
+    form.append(periodSelector, dateSelector);
+
+    return form;
 }
 
 function closeMenu() {

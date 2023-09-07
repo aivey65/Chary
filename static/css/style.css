@@ -694,7 +694,7 @@ Creating the navigation bar depending on the size of the user's screen
         font-weight: 400;
     }
 
-    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img {
+    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img, .filter-img {
         width: 1.5rem;
         height: auto;
     }
@@ -932,7 +932,7 @@ Creating the navigation bar depending on the size of the user's screen
         font-weight: 400;
     }
 
-    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img {
+    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img, .filter-img {
         width: 1.7rem;
         height: auto;
     }

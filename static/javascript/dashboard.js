@@ -92,8 +92,23 @@ function loadBudgetTab() {
     addIcon.alt = "Add icon";
     addButton.append(addIcon);
 
+    const filterSection = createFiltersSection();
+    filterSection.style.display = "None";
+
+    const filterIcon = document.createElement("img");
+    filterIcon.addEventListener("click", () => {
+        if (filterSection.style.display == "none") {
+            filterSection.style.display = "block";
+        } else {
+            filterSection.style.display = "none";
+        }
+    });
+    filterIcon.src = "../static/images/FilterIcon.svg";
+    filterIcon.classList.add("filter-img", "icon");
+    filterIcon.alt = "Filter icon";
+
     const tabHead = document.createElement('div');
-    tabHead.append(header, addButton);
+    tabHead.append(header, addButton, filterIcon, filterSection);
     tabHead.id = 'tab-head';
 
     budgetContainer = generateBudgetsUI(userData.budgets.active, userData.currency);
@@ -123,8 +138,23 @@ function loadEarningTab() {
     addIcon.alt = "Add icon";
     addButton.append(addIcon);
 
+    const filterSection = createFiltersSection();
+    filterSection.style.display = "None";
+
+    const filterIcon = document.createElement("img");
+    filterIcon.addEventListener("click", () => {
+        if (filterSection.style.display == "none") {
+            filterSection.style.display = "block";
+        } else {
+            filterSection.style.display = "none";
+        }
+    });
+    filterIcon.src = "../static/images/FilterIcon.svg";
+    filterIcon.classList.add("filter-img", "icon");
+    filterIcon.alt = "Filter icon";
+
     const tabHead = document.createElement('div');
-    tabHead.append(header, addButton);
+    tabHead.append(header, addButton, filterIcon, filterSection);
     tabHead.id = 'tab-head';
 
     table = generateTableUI(1, userData.earnings, userData.currency);
@@ -159,8 +189,23 @@ function loadExpenseTab() {
     addIcon.alt = "Add icon";
     addButton.append(addIcon);
 
+    const filterSection = createFiltersSection();
+    filterSection.style.display = "None";
+
+    const filterIcon = document.createElement("img");
+    filterIcon.addEventListener("click", () => {
+        if (filterSection.style.display == "none") {
+            filterSection.style.display = "block";
+        } else {
+            filterSection.style.display = "none";
+        }
+    });
+    filterIcon.src = "../static/images/FilterIcon.svg";
+    filterIcon.classList.add("filter-img", "icon");
+    filterIcon.alt = "Filter icon";
+
     const tabHead = document.createElement('div');
-    tabHead.append(header, addButton);
+    tabHead.append(header, addButton, filterIcon, filterSection);
     tabHead.id = 'tab-head';
 
     const table = generateTableUI(0, userData.expenses.recent.expenses, userData.currency);
