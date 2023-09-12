@@ -699,7 +699,7 @@ function totalBudgetsAndAmounts() {
     actualSum = parseFloat(actualSum.toFixed(2));
 
     if (actualSum < totalSum) {
-        actualData.push({ budgetName: "Unused", amount: totalSum - actualSum, color: COLORS_NAVY });
+        actualData.push({ budgetName: "Unused", amount: parseFloat((totalSum - actualSum).toFixed(2)), color: COLORS_NAVY });
     }
 
     totalData.sort((a, b) => {

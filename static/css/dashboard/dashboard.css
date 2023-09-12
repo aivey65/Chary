@@ -91,9 +91,15 @@ h4 {
 }
 
 #tab-head {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    justify-items: end;
     align-items: center;
-    justify-content: start;
+}
+
+#tab-head #filter-form {
+    grid-column: 1/4;
+    justify-self: start;
 }
 
 #dashboard-main h1 {
