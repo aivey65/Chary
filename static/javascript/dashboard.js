@@ -98,7 +98,7 @@ function loadBudgetTab() {
     const filterIcon = document.createElement("img");
     filterIcon.addEventListener("click", () => {
         if (filterSection.style.display == "none") {
-            filterSection.style.display = "block";
+            filterSection.style.display = "flex";
         } else {
             filterSection.style.display = "none";
         }
@@ -107,8 +107,12 @@ function loadBudgetTab() {
     filterIcon.classList.add("filter-img", "icon");
     filterIcon.alt = "Filter icon";
 
+    const filterContainer = document.createElement("div");
+    filterContainer.id = "filter-container";
+    filterContainer.append(filterIcon, filterSection);
+
     const tabHead = document.createElement('div');
-    tabHead.append(header, addButton, filterIcon, filterSection);
+    tabHead.append(header, addButton, filterContainer);
     tabHead.id = 'tab-head';
 
     budgetContainer = generateBudgetsUI(userData.budgets.active, userData.currency);
@@ -153,8 +157,12 @@ function loadEarningTab() {
     filterIcon.classList.add("filter-img", "icon");
     filterIcon.alt = "Filter icon";
 
+    const filterContainer = document.createElement("div");
+    filterContainer.id = "filter-container";
+    filterContainer.append(filterIcon, filterSection);
+
     const tabHead = document.createElement('div');
-    tabHead.append(header, addButton, filterIcon, filterSection);
+    tabHead.append(header, addButton, filterContainer);
     tabHead.id = 'tab-head';
 
     table = generateTableUI(1, userData.earnings, userData.currency);
@@ -204,8 +212,12 @@ function loadExpenseTab() {
     filterIcon.classList.add("filter-img", "icon");
     filterIcon.alt = "Filter icon";
 
+    const filterContainer = document.createElement("div");
+    filterContainer.id = "filter-container";
+    filterContainer.append(filterIcon, filterSection);
+
     const tabHead = document.createElement('div');
-    tabHead.append(header, addButton, filterIcon, filterSection);
+    tabHead.append(header, addButton, filterContainer);
     tabHead.id = 'tab-head';
 
     const table = generateTableUI(0, userData.expenses.recent.expenses, userData.currency);
@@ -357,6 +369,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
             },
             options: {
                 maintainAspectRatio: false,
+                responsive: true,
                 tooltips: {
                     callbacks: {
                         label: function(tooltipItems, data) {
@@ -399,6 +412,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
             },
             options: {
                 maintainAspectRatio: false,
+                responsive: true,
                 tooltips: {
                     callbacks: {
                         label: function(tooltipItems, data) {
@@ -425,6 +439,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
         
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
+        returnDiv.classList.add('horizontal-container');
         returnDiv.append(totalChartContainer, actualChartContainer);
         return returnDiv;
     } else if (slideNum == 1) {
@@ -448,6 +463,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     class: "chart-title"
                 },
                 maintainAspectRatio: false,
+                responsive: true,
                 scales: {
                     yAxes: [{
                         ticks: {
@@ -469,11 +485,16 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 }
             }
         });
+        const fullchart1 = document.createElement("div");
+        fullchart1.classList.add("full-size-chart");
+        fullchart1.append(expenseChart);
+
         const expenseHeader = document.createElement("p");
         expenseHeader.textContent = "Expenses per Month";
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
-        returnDiv.append(expenseHeader, expenseChart);
+        returnDiv.classList.add('vertical-container');
+        returnDiv.append(expenseHeader, fullchart1);
         return returnDiv;
     } else if (slideNum == 2) {
         const earningChart = document.createElement('canvas');
@@ -517,11 +538,16 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 }
             }
         });
+        const fullchart2 = document.createElement("div");
+        fullchart2.classList.add("full-size-chart");
+        fullchart2.append(earningChart);
+
         earningHeader = document.createElement("p");
         earningHeader.textContent = "Earnings per Month";
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
-        returnDiv.append(earningHeader, earningChart);
+        returnDiv.classList.add('vertical-container');
+        returnDiv.append(earningHeader, fullchart2);
         return returnDiv;
     }
 }

@@ -42,6 +42,11 @@ function loginAction() {
     closeMenu()
 }
 
+function signupAction() {
+    window.location = '/signup';
+    closeMenu()
+}
+
 function dashboardAction() {
     window.location = '/dashboard';
     closeMenu()
@@ -75,31 +80,62 @@ function createAlert(message) {
 
 function createFiltersSection() {
     const period1 = document.createElement("option");
-    period1.textContent = "Daily";
+    period1.textContent = "1 Day";
     period1.value = "0";
     const period2 = document.createElement("option");
-    period2.textContent = "Weekly";
+    period2.textContent = "1 Week";
     period2.value = "1";
     const period3 = document.createElement("option");
-    period3.textContent = "Monthly";
+    period3.textContent = "1 Month";
     period3.value = "3";
     period3.selected = true;
     const period4 = document.createElement("option");
-    period4.textContent = "Yearly";
+    period4.textContent = "1 Year";
     period4.value = "4";
+
+    const dateSelector = document.createElement("input");
     const periodSelector = document.createElement("select");
     periodSelector.id = "period-selector";
     periodSelector.append(period1, period2, period3, period4);
+    periodSelector.addEventListener("change", () => {
+        dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value);
+    });
 
-    const dateSelector = document.createElement("input");
     dateSelector.id = "date-selector";
     dateSelector.type = "date";
+    dateSelector.value = configureFilterDate(new Date().toLocaleDateString("en-CA", { timeZone: 'UTC' }), periodSelector.value);
+    dateSelector.addEventListener("change", () => {
+        dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value);
+    });
 
     const form = document.createElement("form");
     form.id = "filter-form";
     form.append(periodSelector, dateSelector);
 
     return form;
+}
+
+function configureFilterDate(date, period) {
+    // Creating UTC dates
+    var tempDate = null;
+    if (date != "") {
+        var UTCDate = date.split('-');
+        UTCDate[1] = UTCDate[1] - 1;
+        tempDate = new Date(...UTCDate);
+    } else {
+        return date;
+    }
+    
+    if (period == 1 || period == 2) { // Weekly
+        tempDate = new Date(tempDate.setDate(tempDate.getDate() - tempDate.getDay()));
+        return tempDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+    } else if (period == 3) { // Monthly
+        tempDate = new Date(tempDate.getFullYear(), tempDate.getMonth(), 1);
+        return tempDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+    } else if (period == 4) { // Yearly
+        tempDate = new Date(tempDate.getFullYear(), 0, 1);
+        return  tempDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+    }
 }
 
 function closeMenu() {

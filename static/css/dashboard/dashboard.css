@@ -93,13 +93,29 @@ h4 {
 #tab-head {
     display: grid;
     grid-template-columns: auto auto 1fr;
-    justify-items: end;
     align-items: center;
 }
 
-#tab-head #filter-form {
+#filter-container {
+    grid-row: 2;
     grid-column: 1/4;
-    justify-self: start;
+    display: flex;
+    gap: var(--medPad);
+    background-color: var(--Dark);
+    padding: var(--mobilePad);
+}
+
+#filter-form {
+    gap: var(--medPad);
+}
+
+.filter-img {
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+}
+
+#period-selector {
+    min-width: 150px;
 }
 
 #dashboard-main h1 {
@@ -142,6 +158,14 @@ h4 {
     display: flex;
     justify-content: center;
     gap: var(--medPad);
+}
+
+.vertical-container {
+    flex-direction: column;
+}
+
+.horizontal-container {
+    flex-direction: row;
 }
 
 #limited-charts p {
@@ -202,12 +226,11 @@ h4 {
 #budget-snip-container {
     display: grid;
     grid-template-columns: 1fr .2fr;
-    grid-template-rows: .3fr 1fr .3fr;
+    grid-template-rows: .2fr 1fr .2fr;
     gap: var(--smallPad);
     width: 25%;
     min-width: 400px;
     min-height: 400px;
-    max-height: 20vh;
     justify-content: space-between;
     align-items: center;
 }
@@ -302,7 +325,7 @@ h4 {
     width: 65%;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: .2fr 1fr;
+    grid-template-rows: auto 1fr;
 }
 
 #earning-snip-container h3, #expense-snip-container h3 {

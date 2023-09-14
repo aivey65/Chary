@@ -188,6 +188,55 @@ a.normal-link:active {
 }
 
 /*
+*** Form styles
+*/
+input {
+    cursor: pointer;
+}
+
+input[type='text'], textarea {
+    background-color: var(--Light);
+    border-radius: 1em;
+    border: none;
+    padding: 1rem;
+
+}
+
+select, input[type='date'] {
+    background-color: var(--Light);
+    padding: .6rem;
+    border: none;
+}
+
+select {
+    border-radius: 1rem 1rem 0rem 0rem;
+    appearance: none;
+    background-image: url("../images/down-icon.svg");
+    background-repeat: no-repeat;
+    background-position: 90% 50%;
+    background-size: 1rem;
+}
+
+input[type='date'] {
+    border-radius: 1rem;
+}
+
+input[type='text'], input[type='date'] {
+    width: fit-content;
+}
+
+input[type='radio'] {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+.required-input::after {
+    content: " *";
+    color: var(--MainD);
+}
+
+/*
 *** More specific styles that still need to be reused ***
 */ 
 
@@ -354,13 +403,28 @@ table {
 }
 
 .half-size {
-    width: 45%;
+    width: 100%;
     height: 100%;
-    display: inline-block;
+    min-height: fit-content;
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+}
+
+.half-size-chart, .full-size-chart{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    overflow: hidden;
 }
 
 .half-size-chart {
-    height: 80%;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: min-content minmax(0, 1fr) min-content;
+}
+
+.full-size-chart {
+    grid-template-rows: min-content minmax(0, 3fr) min-content;
+    grid-template-columns: minmax(0, 3fr);
 }
 
 /*

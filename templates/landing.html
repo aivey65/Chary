@@ -44,8 +44,12 @@
                 </svg>
                 <h3 id="hero2-mobile">Keep track of your daily spendings with Chary. Visualise your expenses and make budgeting plans to achieve your money-saving goals</h3>
                 <div id="hero3">
-                    <button id="hero-login" onclick="loginAction()">Log In</button>
-                    <button class="cta-button" onclick="loginAction()">Get Started</button>
+                    {% if loggedIn %}
+                        <button class="cta-button" onclick="dashboardAction()">Dashboard</button>
+                    {% else %}
+                        <button id="hero-login" onclick="loginAction()">Log In</button>
+                        <button class="cta-button" onclick="signupAction()">Get Started</button>
+                    {% endif %}
                 </div>
                 <div id="hero-img">
                     <img id="hero-img-svg" src="../static/images/Chary_hero_crop.svg" alt="Woman holding credit card">
