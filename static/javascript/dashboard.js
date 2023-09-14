@@ -356,10 +356,6 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 }],
             },
             options: {
-                title: {
-                    display: true,
-                    text: ["Total Amount Budgeted", userData.currency + expectedSum],
-                },
                 maintainAspectRatio: false,
                 tooltips: {
                     callbacks: {
@@ -372,8 +368,17 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 }
             }
         });
+        const halfchart1 = document.createElement("div");
+        halfchart1.classList.add("half-size-chart");
+        halfchart1.append(totalChart);
+
+        const totalHeader = document.createElement("p");
+        totalHeader.textContent = "Total Amount Budgeted";
+        const totalnumber = document.createElement("p");
+        totalnumber.classList.add("chart-number");
+        totalnumber.textContent = userData.currency + expectedSum;
         const totalChartContainer = document.createElement("div");
-        totalChartContainer.append(totalChart);
+        totalChartContainer.append(totalHeader, totalnumber, halfchart1);
         totalChartContainer.classList.add("half-size");
 
         // Create an 'actual' chart to show the current amount spent of each budget
@@ -393,10 +398,6 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 }],
             },
             options: {
-                title: {
-                    display: true,
-                    text: ["Actual Amount Used", userData.currency + actualSum]
-                },
                 maintainAspectRatio: false,
                 tooltips: {
                     callbacks: {
@@ -409,8 +410,17 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 }
             }
         });  
+        const halfchart2 = document.createElement("div");
+        halfchart2.classList.add("half-size-chart");
+        halfchart2.append(actualChart);
+
+        const actualHeader = document.createElement("p");
+        actualHeader.textContent = "Actual Amount Budgeted";
+        const actualnumber = document.createElement("p");
+        actualnumber.classList.add("chart-number");
+        actualnumber.textContent = userData.currency + actualSum;
         const actualChartContainer = document.createElement("div");
-        actualChartContainer.append(actualChart);
+        actualChartContainer.append(actualHeader, actualnumber, halfchart2);
         actualChartContainer.classList.add("half-size");
         
         const returnDiv = document.createElement('div');
@@ -434,7 +444,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
             options: {
                 title: {
                     display: true,
-                    text: "Expenses per Month",
+                    text: "",
                     class: "chart-title"
                 },
                 maintainAspectRatio: false,
@@ -459,10 +469,11 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 }
             }
         });
-
+        const expenseHeader = document.createElement("p");
+        expenseHeader.textContent = "Expenses per Month";
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
-        returnDiv.append(expenseChart);
+        returnDiv.append(expenseHeader, expenseChart);
         return returnDiv;
     } else if (slideNum == 2) {
         const earningChart = document.createElement('canvas');
@@ -481,7 +492,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
             options: {
                 title: {
                     display: true,
-                    text: "Earnings per Month",
+                    text: "",
                     class: "chart-title"
                 },
                 maintainAspectRatio: false,
@@ -506,10 +517,11 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 }
             }
         });
-
+        earningHeader = document.createElement("p");
+        earningHeader.textContent = "Earnings per Month";
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
-        returnDiv.append(earningChart);
+        returnDiv.append(earningHeader, earningChart);
         return returnDiv;
     }
 }

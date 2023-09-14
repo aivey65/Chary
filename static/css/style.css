@@ -359,6 +359,10 @@ table {
     display: inline-block;
 }
 
+.half-size-chart {
+    height: 80%;
+}
+
 /*
 *** Annimations ***
 */ 
