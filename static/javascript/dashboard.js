@@ -148,7 +148,7 @@ function loadEarningTab() {
     const filterIcon = document.createElement("img");
     filterIcon.addEventListener("click", () => {
         if (filterSection.style.display == "none") {
-            filterSection.style.display = "block";
+            filterSection.style.display = "flex";
         } else {
             filterSection.style.display = "none";
         }
@@ -203,7 +203,7 @@ function loadExpenseTab() {
     const filterIcon = document.createElement("img");
     filterIcon.addEventListener("click", () => {
         if (filterSection.style.display == "none") {
-            filterSection.style.display = "block";
+            filterSection.style.display = "flex";
         } else {
             filterSection.style.display = "none";
         }
