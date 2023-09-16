@@ -52,6 +52,10 @@ body {
     width: 100%;
 }
 
+input, select {
+    font-family: 'Kanit', sans-serif;
+}
+
 h1 {
     font-weight: 600;
     color: var(--MainL);
@@ -204,7 +208,6 @@ input[type='text'], textarea {
 
 select, input[type='date'] {
     background-color: var(--Light);
-    padding: .6rem;
     border: none;
 }
 
@@ -222,7 +225,7 @@ input[type='date'] {
 }
 
 input[type='text'], input[type='date'] {
-    width: fit-content;
+    width: 120px;
 }
 
 input[type='radio'] {
@@ -673,7 +676,7 @@ Creating the navigation bar depending on the size of the user's screen
     }
 
     .legal-button a, span {
-        font-size: 1em;
+        font-size: .8em;
     }
 
     #chart-container {
@@ -683,6 +686,10 @@ Creating the navigation bar depending on the size of the user's screen
         height: 100%;
         min-height: 30vh;
         width: 100%;
+    }
+
+    select, input[type='date'] {
+        padding: .2rem .5rem .2rem .5rem;
     }
 
     thead {
@@ -940,6 +947,10 @@ Creating the navigation bar depending on the size of the user's screen
 
     .module {
         padding: var(--medPad);
+    }
+
+    select, input[type='date'] {
+        padding: .6rem;
     }
 
     table {
