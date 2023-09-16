@@ -723,10 +723,13 @@ function totalBudgetsAndAmounts() {
     for (const key of keys) {
         var current = budgetList[key];
 
-        totalData.push({ budgetName: current.name, amount: current.amount, color: colors[index % colorLength] });
+        var currName = current.name;
+        currName = currName.length > 15 ? currName.substring(0, 15) + '...' : currName;
+
+        totalData.push({ budgetName: currName, amount: current.amount, color: colors[index % colorLength] });
         totalSum += current.amount;
 
-        actualData.push({ budgetName: current.name, amount: current.usedAmount, color: colors[index % colorLength] });
+        actualData.push({ budgetName: currName, amount: current.usedAmount, color: colors[index % colorLength] });
         actualSum += current.usedAmount;
 
         index++;

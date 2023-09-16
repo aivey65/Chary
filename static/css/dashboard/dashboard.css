@@ -101,7 +101,9 @@ h4 {
     display: flex;
     gap: var(--medPad);
     background-color: var(--Dark);
-    padding: var(--mobilePad);
+    padding: var(--mobilePad) var(--lgPad);
+    margin-top: 10px;
+    border-radius: var(--lgPad);
 }
 
 #filter-form {
