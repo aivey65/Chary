@@ -364,7 +364,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     data: dataExpected.map(row => row.amount),
                     backgroundColor: dataExpected.map(row => row.color),
                     borderColor: COLORS_NAVY,
-                    borderWidth: 2.5,
+                    borderWidth: 1.5,
                 }],
             },
             options: {

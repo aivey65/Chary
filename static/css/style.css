@@ -263,7 +263,6 @@ button {
 
 .label {
     margin: 0px;
-    font-size: .85rem;
     color: var(--MainL);
     font-weight: 400;
 }
@@ -540,6 +539,14 @@ table {
     flex-direction: row;
     justify-content: center;
     grid-row: 3;
+}
+
+.vertical-container {
+    flex-direction: column;
+}
+
+.horizontal-container {
+    flex-direction: row;
 }
 
 /*

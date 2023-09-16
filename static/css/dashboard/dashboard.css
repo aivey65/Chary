@@ -161,14 +161,6 @@ h4 {
     gap: var(--medPad);
 }
 
-.vertical-container {
-    flex-direction: column;
-}
-
-.horizontal-container {
-    flex-direction: row;
-}
-
 #limited-charts p {
     margin: 0px;
     text-align: center;

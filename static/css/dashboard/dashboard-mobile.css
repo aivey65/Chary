@@ -327,7 +327,6 @@ h4 {
     grid-template-rows: auto 1fr;
     margin: var(--mobilePad);
     background-color: var(--Dark);
-    border: solid 1px var(--Navy);
     border-radius: var(--mobilePad);
     width: auto;
 }
@@ -516,7 +515,6 @@ h4 {
     margin: var(--mobilePad);
     padding: var(--mobilePad);
     background-color: var(--Dark);
-    border: solid 1px var(--Navy);
     border-collapse: separate;
     border-radius: var(--mobilePad);
     width: calc(100vw - (2 * var(--mobilePad)));

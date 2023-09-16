@@ -1,5 +1,6 @@
 const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"];
 const options = getDateFormattingOptions();
+var user_currency = null;
 
 function loadBudget(id) {
     fillProfilePics(); // Get the profile images on the page filled.
@@ -7,6 +8,7 @@ function loadBudget(id) {
     fetch('/data/budget-expenses?id=' + id).then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
         const expenses = responseData.expenses;
+        user_currency = responseData.currency;
 
         // Configure data for creating all charts
         const chartContainer = document.getElementById('details-chart-container');
@@ -68,6 +70,8 @@ function dashboardBudgetAction() {
 }
 
 function generateVariousCharts(items, slideNum, maxShow) {
+    // Chart.defaults.global.legend.display = false;
+
     if (slideNum == 0) {
         const donutChart = document.createElement('canvas');
         const data = items[0];
@@ -75,34 +79,36 @@ function generateVariousCharts(items, slideNum, maxShow) {
         new Chart(donutChart, {
             type: "doughnut",
             data: {
-                labels: data.labels,
                 datasets: [{
                     data: data.data,
                     backgroundColor: data.colors,
                     borderColor: COLORS_DARK,
                     borderWidth: 2.5,
                 }],
+                labels: data.labels,
             },
             options: {
-                title: {
-                    display: true,
-                    text: "Budget Amount Used",
-                    class: "chart-title"
-                },
                 maintainAspectRatio: false,
                 tooltips: {
                     callbacks: {
                         label: function(tooltipItems, data) {
-                            return userData.currency + tooltipItems.yLabel.toString();
+                            return data.labels[tooltipItems.index].toString() + ": " + user_currency + data.datasets[0].data[tooltipItems.index].toString();
                         }
                     }
                 }
             }
         });
 
+        const fullchart1 = document.createElement("div");
+        fullchart1.classList.add("full-size-chart");
+        fullchart1.append(donutChart);
+
+        const donutHeader = document.createElement("p");
+        donutHeader.textContent = "Budget Amount Used";
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
-        returnDiv.append(donutChart);
+        returnDiv.classList.add('vertical-container');
+        returnDiv.append(donutHeader, fullchart1);
         return returnDiv;
     } else if (slideNum == 1) {
         const lineChart = document.createElement('canvas');
@@ -141,7 +147,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 tooltips: {
                     callbacks: {
                         label: function(tooltipItems, data) {
-                            return userData.currency + tooltipItems.yLabel.toString();
+                            return user_currency + tooltipItems.yLabel.toString();
                         }
                     }
                 }
@@ -162,7 +168,6 @@ function allChartDataAsArray(budget, expenses) {
 }
 
 function budgetUsedAmount(budget) {
-    console.log(budget)
     // TODO: handle when a user is over budget with different colors??
     const colors = [COLORS_GREEN, COLORS_NAVY];
     const data = [parseFloat((budget.usedAmount).toFixed(2)), parseFloat((budget.amount - budget.usedAmount).toFixed(2))];
