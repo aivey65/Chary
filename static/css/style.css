@@ -817,11 +817,11 @@ Creating the navigation bar depending on the size of the user's screen
     }
 
     .shadow-left {
-        box-shadow: inset 8rem 0rem 2rem -8rem var(--MainL);
+        box-shadow: inset 8rem 0rem 2rem -8rem var(--Light);
     }
 
     .shadow-right {
-        box-shadow: inset -8rem 0rem 2rem -8rem var(--MainL);
+        box-shadow: inset -8rem 0rem 2rem -8rem var(--Light);
     }
 }
 

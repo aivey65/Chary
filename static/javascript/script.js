@@ -604,9 +604,9 @@ function generateTableUI(type, entityList, currency, limit=null) {
     // Configure some values based on table type
     var columns;
     if (type == 0) {
-        columns = ['Name', 'Expense Amount', 'Budget Category', 'Date', 'Recurring?', 'Edit']
+        columns = ['Name', 'Amount', 'Category', 'Date', 'Recurring?', 'Edit']
     } else {
-        columns = ['Name', 'Earning Amount', 'Date', 'Recurring?', 'Edit'];
+        columns = ['Name', 'Amount', 'Date', 'Recurring?', 'Edit'];
     }
 
     // Create table head row with column titles

@@ -70,7 +70,7 @@ function dashboardBudgetAction() {
 }
 
 function generateVariousCharts(items, slideNum, maxShow) {
-    // Chart.defaults.global.legend.display = false;
+    Chart.defaults.global.legend.display = false;
 
     if (slideNum == 0) {
         const donutChart = document.createElement('canvas');
