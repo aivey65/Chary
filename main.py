@@ -447,13 +447,45 @@ def getAllUserData():
 
 @app.route("/data/budgets")
 @login_is_required
-def getAllBudgetData():
-    return database.getAllActiveBudgets(session["email"])
+def getBudgetData():
+    try:
+        period = request.args.get("period")
+        targetDate = request.args.get("target")
+
+        if period and targetDate:
+            return database.getAllActiveBudgets(session["email"], period, targetDate)
+        else:
+            return database.getAllActiveBudgets(session["email"])
+    except Exception as e:
+        return custom_error(e)
 
 @app.route("/data/expenses")
 @login_is_required
-def getAllExpenseData():
-    return database.getAllExpenses(session["email"])
+def getExpenseData():
+    try:
+        period = request.args.get("period")
+        targetDate = request.args.get("target")
+
+        if period and targetDate:
+            startDate, endDate = database.getDatesFromPeriod(period, targetDate)
+            return database.getExpensesInRange(session["email"], startDate, endDate)
+
+    except Exception as e:
+        return custom_error(e)
+
+@app.route("/data/earnings")
+@login_is_required
+def getEarningData():
+    try:
+        period = request.args.get("period")
+        targetDate = request.args.get("target")
+
+        if period and targetDate:
+            startDate, endDate = database.getDatesFromPeriod(period, targetDate)
+            return database.getEarningsInRange(session["email"], startDate, endDate)
+
+    except Exception as e:
+        return custom_error(e)
 
 @app.route("/data/get-budget")
 @login_is_required

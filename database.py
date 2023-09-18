@@ -286,19 +286,7 @@ def getOccurancesWithinPeriod(startDate, endDate, targetStartDate, targetEndDate
 
 def getAllCurrent(email, period, targetDate):
     try:
-        targetDate = date.fromisoformat(targetDate)
-        startDate = None
-        endDate = None
-
-        if period == 0:
-            startDate = targetDate
-            endDate = targetDate
-        elif period == 1 or period == 2:
-            startDate, endDate = getCurrentWeek(targetDate)
-        elif period == 3:
-            startDate, endDate = getCurrentMonth(targetDate)
-        elif period == 4:
-            startDate, endDate = getCurrentYear(targetDate)
+        startDate, endDate = getDatesFromPeriod(period, targetDate)
 
         user = getUser(email)['data']
 
@@ -336,21 +324,29 @@ def getUser(email):
         print(e)
         return None
 
-def getAllActiveBudgets(email, targetDate=date.today()):
+def getAllActiveBudgets(email, period=3, targetDate=date.today()):
     """
     Gets all budgets active during a particular date
     
     """
-    budgetList = getUser(email)['data']['budgets']
-    activeBudgetsDict = {}
-    inactiveBudgetsDict = {}
+    budgets_list = None
+    budgetsDict = {}
     budgetCategories = []
 
-    for budgetID in budgetList:
-        if budgetID == "":
-            continue
+    if period == -1 or period == -2:
+        budgets_list = db.collection('budgets')\
+            .where(filter=FieldFilter('email', '==', email))\
+            .stream()
+    else:
+        budgets_list = db.collection('budgets')\
+            .where(filter=FieldFilter('email', '==', email))\
+            .where(filter=FieldFilter('budgetPeriod', '==', period))\
+            .stream()
 
-        budgetDoc = db.collection('budgets').document(budgetID).get().to_dict()
+    for budget in budgets_list:
+        budgetDoc = budget.to_dict()
+        budgetID = budget.id
+
         try:
             budgetDoc["endDate"] = date.fromisoformat(budgetDoc["endDate"]) if notNull(budgetDoc["endDate"]) else None
             budgetDoc["startDate"] = date.fromisoformat(budgetDoc['startDate']) if notNull(budgetDoc['startDate']) else None
@@ -362,21 +358,21 @@ def getAllActiveBudgets(email, targetDate=date.today()):
                 budgetDoc["endDate"]
             )
 
-            if start != None and end != None:
+            if start == None and end == None:
+                if period == -1: # 'Inactive' period
+                    budgetDoc['usedAmount'] = getBudgetBalance(budgetID, budgetDoc, targetDate)
+                    budgetsDict[budgetID] = budgetDoc
+            elif start != None and end != None:
                 budgetDoc['usedAmount'] = getBudgetBalance(budgetID, budgetDoc, targetDate)
-                activeBudgetsDict[budgetID] = budgetDoc
-                
-                budgetCategories.append(budgetDoc['name'])
-            else:
-                inactiveBudgetsDict[budgetID] = budgetDoc
+                budgetsDict[budgetID] = budgetDoc
+            
+            budgetCategories.append(budgetDoc['name'])
+
         except Exception as e:
             raise RuntimeError(e)
 
     toReturn = {
-        "data":{
-            "active": activeBudgetsDict,
-            "inactive": inactiveBudgetsDict
-        }, 
+        "data": budgetsDict,
         "categories":budgetCategories}
     return toReturn
 
@@ -591,6 +587,26 @@ def getMostRecentExpenses(email, lim=10):
     # Get a list of budget categories
     budgetCategories = getBudgetCategories(email)
     return {"expenses":expensesDict, "categories":budgetCategories}
+
+def getDatesFromPeriod(period, targetDate):
+    try:
+        targetDate = date.fromisoformat(targetDate)
+        startDate = None
+        endDate = None
+
+        if period == 0:
+            startDate = targetDate
+            endDate = targetDate
+        elif period == 1 or period == 2:
+            startDate, endDate = getCurrentWeek(targetDate)
+        elif period == 3:
+            startDate, endDate = getCurrentMonth(targetDate)
+        elif period == 4:
+            startDate, endDate = getCurrentYear(targetDate)
+
+        return startDate, endDate
+    except Exception as e:
+        raise RuntimeError(e)
 
 def getExpensesInRange(email, startDate, endDate):
     # Include if 

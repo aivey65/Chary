@@ -78,7 +78,13 @@ function createAlert(message) {
     return popupWrapper
 }
 
-function createFiltersSection() {
+function createFiltersSection(type) {
+    const period00 = document.createElement("option");
+    period00.textContent = "All Active";
+    period00.value = "-2";
+    const period0 = document.createElement("option");
+    period0.textContent = "All Inactive";
+    period0.value = "-1";
     const period1 = document.createElement("option");
     period1.textContent = "Day";
     period1.value = "0";
@@ -97,9 +103,15 @@ function createFiltersSection() {
     const periodSelector = document.createElement("select");
     periodSelector.id = "period-selector";
     periodSelector.title = "Select the duration of the time period you want to view"
-    periodSelector.append(period1, period2, period3, period4);
+    if (type == 'budgets') {
+        periodSelector.append(period00, period0, period1, period2, period3, period4);
+    } else {
+        periodSelector.append(period1, period2, period3, period4);
+    }
+    periodSelector.append(period0, period1, period2, period3, period4);
     periodSelector.addEventListener("change", () => {
         dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value);
+        updateData(type, periodSelector.value, dateSelector.value);
     });
 
     dateSelector.id = "date-selector";
@@ -108,6 +120,7 @@ function createFiltersSection() {
     dateSelector.value = configureFilterDate(new Date().toLocaleDateString("en-CA", { timeZone: 'UTC' }), periodSelector.value);
     dateSelector.addEventListener("change", () => {
         dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value);
+        updateData(type, periodSelector.value, dateSelector.value);
     });
 
     const form = document.createElement("form");

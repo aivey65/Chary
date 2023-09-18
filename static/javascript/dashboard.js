@@ -39,10 +39,24 @@ async function loadDashboard(refresh="false", tab="overview") {
 async function updateUserData() {
     const targetDate = new Date().toLocaleDateString("en-CA", {timeZone:"UTC"})
 
-    const response = await fetch('/data/all-current?period=4&target=' + targetDate).then(response => response.json()).then((responseData) => {
+    const response = await fetch('/data/all-current?period=3&target=' + targetDate).then(response => response.json()).then((responseData) => {
         userData = responseData.data;
     });
     return response;
+}
+
+function updateData(type, period, date) {
+    fetch('/data/' + type + '?period=' + period + '&target=' + date).then(response => response.json()).then((responseData) => {
+        console.log(responseData)
+        
+        if (type == 'budgets') {
+            loadBudgetTab(responseData.data)
+        } else if (type == 'expenses') {
+            loadExpenseTab(responseData.expenses)
+        } else if (type == 'earnings') {
+            loadEarningTab(responseData.earnings)
+        }
+    });
 }
 
 function loadOverviewTab() {
@@ -57,7 +71,7 @@ function loadOverviewTab() {
     chartPanel.classList.add('module');
     overviewTab.append(chartPanel);
 
-    const budgetPanel = generateOverviewBudgets(userData.budgets.active)
+    const budgetPanel = generateOverviewBudgets(userData.budgets)
     budgetPanel.classList.add('module');
     overviewTab.append(budgetPanel);
 
@@ -78,7 +92,7 @@ function loadOverviewTab() {
     changeActiveDot(0, "overview-chart-dots");
 }
 
-function loadBudgetTab() {
+function loadBudgetTab(budgets=userData.budgets) {
     const header = document.createElement('h1');
     header.id = 'tab-header';    
     header.textContent = "Budgets";
@@ -92,15 +106,18 @@ function loadBudgetTab() {
     addIcon.alt = "Add icon";
     addButton.append(addIcon);
 
-    const filterSection = createFiltersSection();
-    filterSection.style.display = "None";
+    const filterSection = createFiltersSection('budgets');
+    filterSection.style.display = "flex";
 
     const filterIcon = document.createElement("img");
+    filterIcon.title = "Hide";
     filterIcon.addEventListener("click", () => {
         if (filterSection.style.display == "none") {
             filterSection.style.display = "flex";
+            filterIcon.title = "Hide";
         } else {
             filterSection.style.display = "none";
+            filterIcon.title = "Show";
         }
     });
     filterIcon.src = "../static/images/FilterIcon.svg";
@@ -115,7 +132,7 @@ function loadBudgetTab() {
     tabHead.append(header, addButton, filterContainer);
     tabHead.id = 'tab-head';
 
-    budgetContainer = generateBudgetsUI(userData.budgets.active, userData.currency);
+    budgetContainer = generateBudgetsUI(budgets, userData.currency);
 
     const budgetTab = document.createElement('div');
     budgetTab.id = 'budget-section';
@@ -128,7 +145,7 @@ function loadBudgetTab() {
     changeActiveTab(document.getElementById('budget-tab'));
 }
 
-function loadEarningTab() {
+function loadEarningTab(earnings=userData.earnings) {
     const header = document.createElement('h1');
     header.id = 'tab-header';
     header.textContent = "Earnings";
@@ -142,15 +159,18 @@ function loadEarningTab() {
     addIcon.alt = "Add icon";
     addButton.append(addIcon);
 
-    const filterSection = createFiltersSection();
-    filterSection.style.display = "None";
+    const filterSection = createFiltersSection('earnings');
+    filterSection.style.display = "flex";
 
     const filterIcon = document.createElement("img");
+    filterIcon.title = "Hide";
     filterIcon.addEventListener("click", () => {
         if (filterSection.style.display == "none") {
             filterSection.style.display = "flex";
+            filterIcon.title = "Hide";
         } else {
             filterSection.style.display = "none";
+            filterIcon.title = "Show";
         }
     });
     filterIcon.src = "../static/images/FilterIcon.svg";
@@ -165,7 +185,7 @@ function loadEarningTab() {
     tabHead.append(header, addButton, filterContainer);
     tabHead.id = 'tab-head';
 
-    table = generateTableUI(1, userData.earnings, userData.currency);
+    table = generateTableUI(1, earnings, userData.currency);
 
     const earningContainer = document.createElement('div');
     earningContainer.id = 'earning-container';
@@ -183,7 +203,7 @@ function loadEarningTab() {
     changeActiveTab(document.getElementById('earning-tab'));
 }
 
-function loadExpenseTab() {
+function loadExpenseTab(expenses=userData.expenses) {
     const header = document.createElement('h1');
     header.id = 'tab-header';
     header.textContent = "Expenses";
@@ -197,15 +217,18 @@ function loadExpenseTab() {
     addIcon.alt = "Add icon";
     addButton.append(addIcon);
 
-    const filterSection = createFiltersSection();
-    filterSection.style.display = "None";
+    const filterSection = createFiltersSection('expenses');
+    filterSection.style.display = "flex";
 
     const filterIcon = document.createElement("img");
+    filterIcon.title = "Hide";
     filterIcon.addEventListener("click", () => {
         if (filterSection.style.display == "none") {
             filterSection.style.display = "flex";
+            filterIcon.title = "Hide";
         } else {
             filterSection.style.display = "none";
+            filterIcon.title = "Show";
         }
     });
     filterIcon.src = "../static/images/FilterIcon.svg";
@@ -220,7 +243,7 @@ function loadExpenseTab() {
     tabHead.append(header, addButton, filterContainer);
     tabHead.id = 'tab-head';
 
-    const table = generateTableUI(0, userData.expenses.recent.expenses, userData.currency);
+    const table = generateTableUI(0, expenses.recent.expenses, userData.currency);
 
     const expenseContainer = document.createElement('div');
     expenseContainer.id = 'expense-container';
@@ -709,7 +732,7 @@ function allChartDataAsArray() {
 }
 
 function totalBudgetsAndAmounts() {
-    const budgetList = userData.budgets.active;
+    const budgetList = userData.budgets;
     const keys = Object.keys(budgetList);
     const colors = DATA_COLORS.sort(() => Math.random() - 0.5);
     const colorLength = colors.length;
