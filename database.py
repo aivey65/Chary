@@ -294,15 +294,11 @@ def getAllCurrent(email, period, targetDate):
         budgetsDict = budgetData["data"]
         budgetCategories = budgetData["categories"]
 
-        RecentExpensesDict = getMostRecentExpenses(email)
         expenseDict = getExpensesInRange(email, startDate, endDate)
         earningDict = getEarningsInRange(email, startDate, endDate)
 
         user['budgets'] = budgetsDict
-        user['expenses'] = {
-            "recent": RecentExpensesDict,
-            "all": expenseDict
-        }
+        user['expenses'] = expenseDict
         user['earnings'] = earningDict
         user['budgetCategories'] = budgetCategories
         return {"data":user}
@@ -321,7 +317,6 @@ def getUser(email):
             userDict["joinDate"] = date.fromisoformat(userDict["joinDate"]) if notNull(userDict["joinDate"]) else None
             return {"data":userDict}
     except Exception as e:
-        print(e)
         return None
 
 def getAllActiveBudgets(email, period=3, targetDate=date.today()):
@@ -332,6 +327,9 @@ def getAllActiveBudgets(email, period=3, targetDate=date.today()):
     budgets_list = None
     budgetsDict = {}
     budgetCategories = []
+
+    if (isinstance(targetDate, str)):
+        targetDate = date.fromisoformat(targetDate)
 
     if period == -1 or period == -2:
         budgets_list = db.collection('budgets')\
@@ -360,9 +358,9 @@ def getAllActiveBudgets(email, period=3, targetDate=date.today()):
 
             if start == None and end == None:
                 if period == -1: # 'Inactive' period
-                    budgetDoc['usedAmount'] = getBudgetBalance(budgetID, budgetDoc, targetDate)
+                    budgetDoc['usedAmount'] = 0
                     budgetsDict[budgetID] = budgetDoc
-            elif start != None and end != None:
+            elif start != None and end != None and period != -1:
                 budgetDoc['usedAmount'] = getBudgetBalance(budgetID, budgetDoc, targetDate)
                 budgetsDict[budgetID] = budgetDoc
             
@@ -422,7 +420,7 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
 
             # Check for valid start and end dates
             if (startDate == None or endDate == None):
-                raise RuntimeError("This budget was not active during this date.")
+                return {"budget": budgetDoc, "expenses": [], "currency": userData["currency"]}
 
             # Run a query for expenses with the same email, budget category
             expenseList = db.collection('expenses')\
@@ -491,7 +489,7 @@ def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
 
             # Check for valid start and end dates
             if (startDate == None or endDate == None):
-                raise Exception("This budget was not active during this date.")
+                return 0
 
             # Run a query for expenses with the same email, budget category
             expenseList = db.collection('expenses')\

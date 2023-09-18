@@ -4,10 +4,12 @@ const COLORS_NAVY = "#2C2440";
 const COLORS_RED = "#AE1326";
 const COLORS_PINK = "#CE6C75";
 const COLORS_DARK = "#1E0206";
+const COLORS_LIGHT = "#f6d4d2";
+const COLORS_GREY = "#8E7c89";
 
 // Date formatting
 function getDateFormattingOptions(long=true) {
-    return { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
+    return { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' };
 }
 
 function getEmptyMonthMap() {
@@ -108,7 +110,6 @@ function createFiltersSection(type) {
     } else {
         periodSelector.append(period1, period2, period3, period4);
     }
-    periodSelector.append(period0, period1, period2, period3, period4);
     periodSelector.addEventListener("change", () => {
         dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value);
         updateData(type, periodSelector.value, dateSelector.value);
@@ -141,7 +142,9 @@ function configureFilterDate(date, period) {
         return date;
     }
     
-    if (period == 1 || period == 2) { // Weekly
+    if (period == 0) {
+        return tempDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+    } else if (period == 1 || period == 2) { // Weekly
         tempDate = new Date(tempDate.setDate(tempDate.getDate() - tempDate.getDay()));
         return tempDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
     } else if (period == 3) { // Monthly
@@ -150,6 +153,9 @@ function configureFilterDate(date, period) {
     } else if (period == 4) { // Yearly
         tempDate = new Date(tempDate.getFullYear(), 0, 1);
         return  tempDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+    } else if (period == -1 || period == -2) {
+        tempDate = new Date();
+        return tempDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
     }
 }
 
@@ -522,7 +528,7 @@ function generateBudgetsUI(budgets, currency) {
         optionsImg.classList.add('options-img', 'options');
         optionsImg.title = "Options";
 
-        var recur_img = null;
+        var recur_img = document.createElement('img');
         if (budgets[key].recurring) {
             recur_img = document.createElement('img');
             recur_img.src = 'static/images/recurIcon.svg';

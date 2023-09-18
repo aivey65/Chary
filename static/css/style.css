@@ -14,7 +14,7 @@ font-family: 'Kanit', sans-serif;
 Defining color values to make it easier to change later on 
 */
 :root {
-    --Background: #30040A;
+    --Background: #270308;
     --Light: #f6d4d2;
     --Dark: #1E0206;
     --Navy: #2C2440;

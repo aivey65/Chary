@@ -175,8 +175,6 @@ def chary_auth():
             # Hash the provided password and compare it to the hash in the database
             givenPassPepper = hmac.new(b64encode(os.getenv("SECRET_PEPPER").encode("utf-8")), b64encode(givenPassword.encode("utf-8")), hashlib.sha256).digest()
             givenPassHash = bcrypt.hashpw(b64encode(givenPassPepper), salt)
-            print(givenPassHash)
-            print(hashedPassword)
 
             if (givenPassHash == hashedPassword):
                 session["email"] = givenEmail
@@ -196,7 +194,6 @@ def chary_auth():
                 "message": 'This email was used to sign up via Google Sign In. In order to log in, please click the "Sign in with Google" button.'
             }
     except Exception as e:
-        print(e)
         return {
                 "status": 400,
                 "message": str(e) + "."
@@ -453,7 +450,7 @@ def getBudgetData():
         targetDate = request.args.get("target")
 
         if period and targetDate:
-            return database.getAllActiveBudgets(session["email"], period, targetDate)
+            return database.getAllActiveBudgets(session["email"], int(period), str(targetDate))
         else:
             return database.getAllActiveBudgets(session["email"])
     except Exception as e:
@@ -467,7 +464,7 @@ def getExpenseData():
         targetDate = request.args.get("target")
 
         if period and targetDate:
-            startDate, endDate = database.getDatesFromPeriod(period, targetDate)
+            startDate, endDate = database.getDatesFromPeriod(int(period), str(targetDate))
             return database.getExpensesInRange(session["email"], startDate, endDate)
 
     except Exception as e:
@@ -481,7 +478,7 @@ def getEarningData():
         targetDate = request.args.get("target")
 
         if period and targetDate:
-            startDate, endDate = database.getDatesFromPeriod(period, targetDate)
+            startDate, endDate = database.getDatesFromPeriod(int(period), str(targetDate))
             return database.getEarningsInRange(session["email"], startDate, endDate)
 
     except Exception as e:

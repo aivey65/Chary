@@ -46,16 +46,19 @@ async function updateUserData() {
 }
 
 function updateData(type, period, date) {
-    fetch('/data/' + type + '?period=' + period + '&target=' + date).then(response => response.json()).then((responseData) => {
-        console.log(responseData)
-        
+    fetch('/data/' + type + '?period=' + period + '&target=' + date).then(response => response.json()).then((responseData) => {        
         if (type == 'budgets') {
-            loadBudgetTab(responseData.data)
+            budgetContainer = document.getElementById("budget-container");
+            budgetContainer.innerHTML = "";
+            budgetContainer.append(generateBudgetsUI(responseData.data, userData.currency));
         } else if (type == 'expenses') {
-            loadExpenseTab(responseData.expenses)
+            expenseContainer = document.getElementById("expense-container");
+            expenseContainer.innerHTML = "";
+            expenseContainer.append(generateTableUI(0, responseData.expenses, userData.currency));
         } else if (type == 'earnings') {
-            loadEarningTab(responseData.earnings)
-        }
+            earningContainer = document.getElementById("earning-container");
+            earningContainer.innerHTML = "";
+            earningContainer.append(generateTableUI(1, responseData.earnings, userData.currency));        }
     });
 }
 
@@ -204,6 +207,7 @@ function loadEarningTab(earnings=userData.earnings) {
 }
 
 function loadExpenseTab(expenses=userData.expenses) {
+    console.log(expenses)
     const header = document.createElement('h1');
     header.id = 'tab-header';
     header.textContent = "Expenses";
@@ -243,7 +247,7 @@ function loadExpenseTab(expenses=userData.expenses) {
     tabHead.append(header, addButton, filterContainer);
     tabHead.id = 'tab-head';
 
-    const table = generateTableUI(0, expenses.recent.expenses, userData.currency);
+    const table = generateTableUI(0, expenses.expenses, userData.currency);
 
     const expenseContainer = document.createElement('div');
     expenseContainer.id = 'expense-container';
@@ -293,7 +297,6 @@ function addHorizontalScrollShadow() {
     sideScrollShadow(parent, child);
     
     child.addEventListener('scroll', () => {
-        console.log("scroll detected")
         sideScrollShadow(parent, child);
     });
 }
@@ -452,7 +455,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
         halfchart2.append(actualChart);
 
         const actualHeader = document.createElement("p");
-        actualHeader.textContent = "Actual Amount Budgeted";
+        actualHeader.textContent = "Actual Amount Used";
         const actualnumber = document.createElement("p");
         actualnumber.classList.add("chart-number");
         actualnumber.textContent = userData.currency + actualSum;
@@ -488,12 +491,28 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 maintainAspectRatio: false,
                 responsive: true,
                 scales: {
-                    yAxes: [{
+                    xAxes: [{
+                        gridLines: {
+                            color: COLORS_NAVY,
+                        },
                         ticks: {
+                            fontColor: COLORS_GREY
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            color: COLORS_NAVY,
+                        },
+                        ticks: {
+                            fontColor: COLORS_GREY,
                             beginAtZero: true,
-                            maxTicksLimit: 5
+                            maxTicksLimit: 5,
+                            callback: function(value, index, values) {
+                                return formatNumber(value);
+                            }
                         },
                         scaleLabel: {
+                            fontColor: COLORS_GREY,
                             display: true,
                             labelString: "Amount (" + userData.currency + ")"
                         }
@@ -541,12 +560,28 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 },
                 maintainAspectRatio: false,
                 scales: {
-                    yAxes: [{
+                    xAxes: [{
+                        gridLines: {
+                            color: COLORS_NAVY
+                        },
                         ticks: {
+                            fontColor: COLORS_GREY
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            color: COLORS_NAVY
+                        },
+                        ticks: {
+                            fontColor: COLORS_GREY,
                             beginAtZero: true,
-                            maxTicksLimit: 5
+                            maxTicksLimit: 5,
+                            callback: function(value, index, values) {
+                                return formatNumber(value);
+                            }
                         },
                         scaleLabel: {
+                            fontColor: COLORS_GREY,
                             display: true,
                             labelString: "Amount (" + userData.currency + ")"
                         }
@@ -692,7 +727,7 @@ function generateOverviewExpenses() {
     addIcon.alt = "Add icon";
     addButton.append(addIcon);
 
-    const expenseTable = generateTableUI(0, userData.expenses.recent.expenses, userData.currency, 5);
+    const expenseTable = generateTableUI(0, userData.expenses.expenses, userData.currency, 5);
 
     overviewExpenseContainer.append(overviewHeader, addButton, expenseTable);
     return overviewExpenseContainer;
@@ -777,7 +812,7 @@ function totalBudgetsAndAmounts() {
 }
 
 function expensesPerMonth(currentYear) {
-    const expenseList = userData.expenses.all.expenses;
+    const expenseList = userData.expenses.expenses;
 
     const keys = Object.keys(expenseList);
     const data = getEmptyMonthMap();
