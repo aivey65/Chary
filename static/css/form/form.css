@@ -4,6 +4,7 @@
 }
 
 #acd-content {
+    margin-top: var(--medPad);
     display: grid;
     grid-template-columns: .5fr 1fr .5fr;
     grid-template-rows: auto auto 1fr;

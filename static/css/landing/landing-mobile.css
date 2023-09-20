@@ -1,4 +1,8 @@
 /* Landing hero styles */
+h3 {
+    font-size: 1.1rem;
+    font-weight: 300;
+}
 
 #landing-hero {
     padding-top: 70px;
@@ -78,8 +82,8 @@
     color:var(--Light);
     font-size: 3rem;
     padding: 10px;
-    width:150px;
-    height:150px;
+    width:100px;
+    height:100px;
     margin-right: 20px;
     border-radius: 50%;
     text-align: center;

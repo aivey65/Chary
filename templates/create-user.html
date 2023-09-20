@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel='shortcut icon' sizes='256x256' href='../static/images/CharyLogoSmall.svg'>
+
+        <!-- Google Font imports -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,600;1,100;1,200;1,300;1,600&family=Pacifico&display=swap" rel="stylesheet">
+
+        <!-- CSS Stylesheets -->
+        <link rel='stylesheet' href='../static/css/style.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/form/form.css'>
+        <link rel='stylesheet' media='screen and (max-width:767px)' href='../static/css/form/form-mobile.css'>
+
+        <!-- JavaScript links -->
+        <script src='../static/javascript/form.js'></script>
+        <script src='../static/javascript/script.js'></script>
+
+        <Title>Chary | New User Creation</Title>
+    </head>
+
+    <body onload="formLoad(true)">
+        <div id="header-container">
+            <header>
+                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()" alt='Chary logo'>
+                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()" alt="toggle menu button">
+
+                <nav id="website-nav">{{nav | safe}}</nav>
+            </header>
+        </div>
+
+        <div class="content non-header" id="acd-content">
+            <div id="alert-section"></div>
+            <button id="back-button" onclick="back()" value="Back">⟨ Cancel</button>
+            <h2>New User</h2>
+            <form action="javascript:submitBudgetForm('create')">
+                <div id="name-div">
+                    <label class="required-input" for="name">Title</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <div id="description-div">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4" cols="50"></textarea>
+                </div>
+
+                <div id="amount-div">
+                    <label class="required-input" for="amount">Amount</label>
+                    <input type="text" id="amount" name="amount" required>
+                </div>
+
+                <div id="start-div" class="row8">
+                    <label class="required-input" for="start">Date Initialized</label>
+                    <input type="date" id="start" name="start" required>
+                </div>
+
+                <!-- Budget Period Inputs -->
+                <p id="period-label" class="row4">
+                    Choose how long your budget period will be:<span class="required-input"></span> 
+                    <br>
+                    <i>Note: Budgets can only start on the first date of a chosen time period.</i>
+                </p><br>
+                <div id="period-div" class="row5">                    
+                    <input type="radio" id="daily" name="radio" value="0" checked="checked" required>
+                    <label for='daily' class="budget-period label-daily">One Day</label>
+    
+                    <input type="radio" id="weekly" name="radio" value="1" required>
+                    <label for='weekly' class="budget-period label-weekly">One Week</label>
+
+                    <input type="radio" id="monthly" name="radio" value="3" required>
+                    <label for='monthly' class="budget-period label-monthly">One Month</label>
+                    
+                    <input type="radio" id="yearly" name="radio" value="4" required>
+                    <label for='yearly' class="budget-period label-yearly">One Year</label>  
+                </div>
+
+                <!-- Recurring Inputs -->
+                <p id="recurring-label" class="required-input row6"> Is this a recurring budget?</p><br>
+                <div id="recurring-div" class="row7">    
+                    <input type="radio" id="recurring-true" name="recurring" value="True">
+                    <label for='recurring-true' class="label-recurring-true label-recurring">Yes</label>
+    
+                    <input type="radio" id="recurring-false" name="recurring" value="False">
+                    <label for='recurring-false' class="label-recurring-false label-recurring">No</label>
+                </div>
+
+                <div id="end-div" class="recurring-items row8">
+                    <label for="end">End Date</label>
+                    <input type="date" id="end" name="end" value="">
+                </div>
+
+                <button id="submit-entity-button" class="submit-button cta-button" type="submit" value="Submit">Submit</button>
+            </form>
+        </div>
+
+        <div class="footer">
+            <div class='contact-methods'> 
+                <div class='contact-icon' title="Asha's Github">
+                    <a  target="_blank" rel="noopener noreferrer" href='https://github.com/aivey65' alt="Github logo">
+                        <img src="../static/images/GitHub-Mark-Light-64px.png" alt="Github logo">
+                    </a>
+                </div> 
+                <div class='contact-icon' title="Asha's LinkedIn">
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.linkedin.com/in/ashaiv/' alt="LinkedIn logo">
+                        <img src="../static/images/LI-In-Bug.png" alt="LinkedIn logo">
+                    </a>
+                </div>
+                <div class='contact-icon' title="Asha's personal portfolio website">
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.ashaiv.com' alt="Logo for Asha's personal portfolio website">
+                        <img src="../static/images/AshaIV-logo-light.svg" alt="Logo for Asha's personal portfolio website">
+                    </a>
+                </div>
+            </div> 
+            <div id="legal">
+                <div class="legal-button">
+                    <a href="/privacy">Privacy Policy</a>
+                </div>
+                <span>|</span>
+                <div class="legal-button">
+                    <a href="/terms_of_service">Terms of Service</a>
+                </div>
+                <span>|</span>
+                <div class="legal-button">
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+            <div class="btt-icon" onclick="bttAction()">
+                <img class="icon" src="../static/images/CharyLogoSmall.svg" alt="Simplified version of the Chary logo. Scrolls to top of page when clicked.">            
+            </div>
+        </div>
+    </body>
+</html>
