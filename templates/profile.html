@@ -32,21 +32,35 @@
         </div>
 
         <div id="page-content" class="content non-header">
-            <div id="profile-main">
-                <img id='profile-image' class='profile-icon' src="../static/images/profileImages/undraw_blank.svg" alt="Profile image"/>
-                <h2 id="user-name"><div class="placeholder placeholder-small"></div></h2>
-                <div id="date-container">
-                    <p class="label">Date Joined:</p>
-                    <div class="placeholder placeholder-small"></div>
-                    <p id="user-join-date"></p>
+            <div id="dashboard-left">
+                <div id="dashboard-tabs">
+                    <ul>
+                        <li onclick="loadOverviewTab()" id="overview-tab" class="dashTab">Overview</li>
+                        <li onclick="loadBudgetTab()" id="budget-tab" class="dashTab">Budgets</li>
+                        <li onclick="loadEarningTab()" id="earning-tab" class="dashTab">Earnings</li>
+                        <li onclick="loadExpenseTab()" id="expense-tab" class="dashTab">Expenses</li>
+                        <li id="profile-tab" class="dashTab active">Profile</li>
+                    </ul>
                 </div>
+            </div>
+            <div id="profile-main">
+                <div id="profile-hero">
+                    <div id="color-block"></div>
+                    <img id='profile-image' class='profile-icon' src="../static/images/profileImages/undraw_blank.svg" alt="Profile image"/>
+                </div>
+                
+                <div id="user-date">
+                    <h2 id="user-name"><div class="placeholder placeholder-small"></div></h2>
+                    <p id="user-join-date"><div class="placeholder placeholder-small"></div></p>
+                </div>
+                
                 <div id="email-container">
-                    <p class="label">Email:</p>
+                    <p class="label">Email</p>
                     <div class="placeholder placeholder-small"></div>
                     <p id="user-email"></p>
                 </div>
                 <div id="currency-container">
-                    <p class="label">Currency:</p>
+                    <p class="label">Currency</p>
                     <div class="placeholder placeholder-small"></div>
                     <p id="user-currency"></p>
                 </div>

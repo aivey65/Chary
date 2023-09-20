@@ -482,6 +482,7 @@ def getEarningData():
             return database.getEarningsInRange(session["email"], startDate, endDate)
 
     except Exception as e:
+        print(e)
         return custom_error(e)
 
 @app.route("/data/get-budget")

@@ -429,6 +429,16 @@ table {
     grid-template-columns: minmax(0, 3fr);
 }
 
+.profile-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 10px 25px 10px 25px;
+    white-space: nowrap;
+    background-color: var(--Light);
+    border-radius: 50%;
+    border: solid 2px var(--Grey);
+}
+
 /*
 *** Annimations ***
 */ 
@@ -889,16 +899,6 @@ Creating the navigation bar depending on the size of the user's screen
         padding: 0px;
     }
 
-    .profile-icon {
-        width: 2.5rem;
-        height: 2.5rem;
-        margin: 10px 25px 10px 25px;
-        white-space: nowrap;
-        background-color: var(--Light);
-        border-radius: 50%;
-        border: solid 2px var(--faded);
-    }
-
     #profile-options {
         position: absolute;
         right: 15px;
@@ -949,7 +949,8 @@ Creating the navigation bar depending on the size of the user's screen
     /* Non-nav desktop */
 
     .non-header {
-        padding: var(--DesktopPadBody);
+        padding-right: var(--DesktopPadBody);
+        padding-bottom: var(--DesktopPadBody);
     }
 
     .module {

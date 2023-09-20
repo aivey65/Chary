@@ -32,6 +32,7 @@ async function loadDashboard(refresh="false", tab="overview") {
             loadEarningTab();
         }
     }
+    history.replaceState(null, "", "/dashboard");
 }
 
 // Refresh boolean should be set to true when there is already user data saved, but it
@@ -58,7 +59,7 @@ function updateData(type, period, date) {
         } else if (type == 'earnings') {
             earningContainer = document.getElementById("earning-container");
             earningContainer.innerHTML = "";
-            earningContainer.append(generateTableUI(1, responseData.earnings, userData.currency));        }
+            earningContainer.append(generateTableUI(1, responseData, userData.currency));        }
     });
 }
 
@@ -207,7 +208,6 @@ function loadEarningTab(earnings=userData.earnings) {
 }
 
 function loadExpenseTab(expenses=userData.expenses) {
-    console.log(expenses)
     const header = document.createElement('h1');
     header.id = 'tab-header';
     header.textContent = "Expenses";

@@ -148,7 +148,7 @@ h4 {
 }
 
 #earning-container, #expense-container {
-    margin-top: 20px;
+    margin-top: var(--mobilePad);
 }
 
 #budget-section, #earning-section, #expense-section {
@@ -162,7 +162,7 @@ h4 {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    gap: .5rem;
+    gap: var(--mobilePad);
 }
 
 .snip-containers {
@@ -219,13 +219,11 @@ h4 {
 }
 
 #budget-snip-container {
+    margin-top: var(--mobilePad);
     display: grid;
     grid-template-columns: 1fr .2fr;
-    grid-template-rows: .3fr 1fr .3fr;
+    grid-template-rows: .1fr .55fr .1fr;
     gap: var(--smallPad);
-    min-height: 370px;
-    height: 60vh;
-    max-height: 450px;
     width: 100%;
     justify-content: space-between;
     align-items: center;
@@ -255,7 +253,7 @@ h4 {
     overflow: hidden;
     display: flex;
     width: 100%;
-    height: 100%;
+    min-height: 200px;
     justify-content: center;
     position: relative;
 }

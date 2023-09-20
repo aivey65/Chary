@@ -316,14 +316,17 @@ window.addEventListener('scroll', () => {
 
 function sideScrollShadow(parent, child) {
     if (child.scrollWidth > parent.scrollWidth) { // There is overflow
-        if (child.scrollLeft == 0) {
+        if (child.scrollLeft != 0 && (child.scrollLeft + parent.scrollWidth != child.scrollWidth)) {
+            parent.classList.add("shadow-right");
+            parent.classList.add("shadow-left");
+        } else if (child.scrollLeft == 0) {
             parent.classList.add("shadow-right");
             parent.classList.remove("shadow-left");
         } else if (child.scrollLeft + parent.scrollWidth == child.scrollWidth) {
             parent.classList.add("shadow-left");
             parent.classList.remove("shadow-right");
         } else { // Is scrolled somewhere in the middle
-            parent.classList.add("shadow-right");
+            parent.classList.add("shadow-right"); 
             parent.classList.add("shadow-left");
         }
     } else {

@@ -1,0 +1,179 @@
+#page-content {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    margin-bottom: var(--lgPad);
+}
+
+/*
+*** General Styles for All Tabs in Dashboard ***
+*/
+
+h2 {
+    font-size:1.5em;
+}
+
+h4 {
+    font-size: .8em;
+}
+
+#dashboard-content {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    margin-bottom: var(--lgPad);
+    width: 100%;
+    min-height: 90vh;
+}
+
+/*
+*** Styles for Tabs Section of Dashboard ***
+*/
+#dashboard-left {
+    width: 100%;
+    overflow-y: hidden;
+    height: fit-content;
+    transition: .4s ease-in-out;
+    position: fixed;
+    z-index: +6;
+}
+
+#dashboard-left ::-webkit-scrollbar {
+    height: 10px;
+    width: 0px;
+    scrollbar-width: 100%;
+    scrollbar-base-color: var(--Dark);
+    -ms-overflow-style: none;
+}
+
+#dashboard-left ::-webkit-scrollbar-corner {
+    height: 0px;
+    scrollbar-width: 0%;
+    scrollbar-base-color: transparent;
+    -ms-overflow-style: none;
+    display: none;
+}
+
+#dashboard-left ::-webkit-scrollbar-thumb {
+    background-color: #00000000;
+    transition: background-color 2s;
+    -webkit-transition: background-color 2s;
+    -moz-transition: background-color 2s;
+}
+
+#dashboard-left:hover ::-webkit-scrollbar {
+    background-color: var(--Dark);
+    -ms-overflow-style: auto;
+    display: block;
+}
+
+#dashboard-left:hover ::-webkit-scrollbar-thumb {
+    height: 2px;
+    border-radius: var(--mobilePad);
+    background-color: #5b575789;
+}
+
+#dashboard-tabs {
+    border-bottom: solid 1px var(--Navy);
+    background-color: var(--Dark);
+    transition: .4s ease-in-out;
+    padding-top: 4.8rem;
+}
+
+#dashboard-tabs ul {
+    margin: 0rem;
+    padding: 0rem;
+    gap: var(--smallPad);
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow: scroll;
+}
+
+#dashboard-tabs li {
+    padding: 0.8rem;
+}
+
+#dashboard-profile {
+    display: none;
+}
+
+#budget-container {
+    display: flex;
+    flex-direction: row;
+    overflow-x: hidden;
+}
+
+.dashTab {
+    cursor: pointer;
+}
+
+.active {
+    border-bottom: solid 3px var(--MainD);
+}
+
+/* More general styles */
+
+#profile-main {
+    grid-column: 2;
+    display: grid;
+    width: 100%;
+    padding-left: var(--mobilePad);
+    padding-right: var(--mobilePad);
+    padding-top: var(--navPad);
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 2fr .1fr .1fr .1fr;
+    gap: var(--mobilePad);
+}
+
+#user-email, #user-join-date, #user-currency {
+    margin: 0px;
+}
+
+#profile-hero {
+    grid-column: 1/3;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr .5fr;
+}
+
+#color-block {
+    grid-column: 1/3;
+    grid-row: 1;
+}
+
+#profile-image {
+    grid-column: 1/3;
+    grid-row: 1/3;
+    width: 8rem;
+    height: 8rem;
+    align-self: center;
+    justify-self: center;
+}
+
+#user-date {
+    grid-row: 2;
+    grid-column: 1/3;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#user-date h2 {
+    margin: 0px;
+}
+
+#email-container {
+    grid-row: 3;
+    grid-column: 1;
+}
+
+#currency-container {
+    grid-row: 4;
+    grid-column: 1;
+}
+
+#currency-container, #date-container, #email-container {
+    display: flex;
+    flex-direction: column;
+}
