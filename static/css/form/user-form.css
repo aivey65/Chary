@@ -1,12 +1,12 @@
 .content {
     color: var(--Light);
-    width: min-content;
+    width: fit-content;
 }
 
 #acd-content {
     margin-top: var(--medPad);
     display: grid;
-    grid-template-columns: .5fr 1fr .5fr;
+    grid-template-columns: 15% 70% 15%;
     grid-template-rows: auto auto 1fr;
     gap: 0px var(--medPad);
 }
@@ -56,7 +56,11 @@ label, p {
 }
 
 #name {
-    width: 40%;
+    width: 15rem;
+}
+
+#currency {
+    width: 5rem;
 }
 
 .color-red {
@@ -135,8 +139,9 @@ label, p {
 #color-div, #image-div {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: flex-start;
     gap: var(--smallPad);
 }
 

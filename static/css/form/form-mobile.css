@@ -13,6 +13,13 @@ form {
     width: 100%;
 }
 
+#alert-section h4 {
+    font-weight: 300;
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+    color: var(--MainL);
+}
+
 label, p {
     font-size: 1rem;
     font-weight: 200;

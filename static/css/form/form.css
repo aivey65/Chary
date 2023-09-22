@@ -1,12 +1,12 @@
 .content {
     color: var(--Light);
-    width: min-content;
+    width: fit-content;
 }
 
 #acd-content {
     margin-top: var(--medPad);
     display: grid;
-    grid-template-columns: .5fr 1fr .5fr;
+    grid-template-columns: 15% 70% 15%;
     grid-template-rows: auto auto 1fr;
     gap: 0px var(--medPad);
 }

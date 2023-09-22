@@ -1,0 +1,146 @@
+.content {
+    color: var(--Light);
+    width: 100%;
+    padding: var(--mobilePad);
+}
+
+#alert-section h4 {
+    font-weight: 300;
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+    color: var(--MainL);
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: .5fr 1fr .2fr .2fr .5fr;
+    gap: 0px var(--mobilePad);
+    margin: auto;
+    width: 100%;
+}
+
+label, p {
+    font-size: 1rem;
+    font-weight: 200;
+    margin-bottom: .2rem;
+}
+
+#name {
+    width: 15rem;
+}
+
+#currency {
+    width: 5rem;
+}
+
+.color-red {
+    background-color: var(--red);
+}
+
+.color-blue {
+    background-color: var(--blue);
+}
+
+.color-green {
+    background-color: var(--green);
+}
+
+.color-yellow {
+    background-color: var(--yellow);
+}
+
+.color-orange {
+    background-color: var(--orange);
+
+}
+
+.color-purple {
+    background-color: var(--purple);
+}
+
+.label-profile-img {
+    cursor: pointer;
+    background-color: var(--Light);
+    border: 5px solid transparent;
+    border-radius: 50%;
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+}
+
+.color-label {
+    cursor: pointer;
+    padding: 1em;
+    border: 5px solid transparent;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    height: 4rem;
+    width: 4rem;
+}
+
+#red:checked ~ .color-red,
+#orange:checked ~ .color-orange,
+#purple:checked ~ .color-purple,
+#blue:checked ~ .color-blue,
+#green:checked ~ .color-green,
+#yellow:checked ~ .color-yellow,
+#dog:checked ~ .label-dog,
+#cat:checked ~ .label-cat,
+#person1:checked ~ .label-person1,
+#person2:checked ~ .label-person2,
+#person3:checked ~ .label-person3,
+#person4:checked ~ .label-person4 {
+    border-color: var(--Navy);
+    background-image: url("../../images/check-icon.svg");
+    background-size: 3rem;
+    background-repeat: no-repeat;
+    background-position: top left;
+}
+
+#name-div {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--smallPad);
+}
+
+#color-div, #image-div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--smallPad);
+}
+
+#submit-entity-button {
+    grid-row: 9;
+    grid-column: 1;
+}
+
+#delete-entity-button {
+    grid-row: 9;
+    grid-column: 2;
+}
+
+.row2 {
+    grid-row: 2;
+}
+
+.row3 {
+    grid-row: 3;
+}
+
+.row4 {
+    grid-row: 4;
+}
+
+.row5 {
+    grid-row: 5;
+}
+
+.row6 {
+    grid-row: 6;
+}
