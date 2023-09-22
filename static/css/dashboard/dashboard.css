@@ -364,6 +364,31 @@ h4 {
     cursor: pointer;
 }
 
+#recur-icon-div {
+    align-self: start;
+    justify-self: start;
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.recur-flag {
+    color: var(--Light);
+    height: 1.7rem;
+    width: auto;
+    content: "";
+    position: absolute;
+    transform: scaleX(0);
+    transform-box: fill-box;
+    transform-origin: 25%;
+    transition: transform .2s ease-out;
+}
+
+.budget-info:hover .recur-flag{
+    transform: scaleX(1);
+}
+
 .svg-div {
     height: 0px;
     grid-row: 3;
@@ -371,11 +396,9 @@ h4 {
 }
 
 .recur-img {
-    grid-column: 1;
-    grid-row: 1;
     align-self: start;
-    justify-self: start;
     vertical-align: middle;
+    z-index: +1;
 }
 
 .options-div {

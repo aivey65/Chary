@@ -531,13 +531,24 @@ function generateBudgetsUI(budgets, currency) {
         optionsImg.classList.add('options-img', 'options');
         optionsImg.title = "Options";
 
-        var recur_img = document.createElement('img');
+        const recur_div = document.createElement("div");
         if (budgets[key].recurring) {
-            recur_img = document.createElement('img');
+            const period = PERIODS[budgets[key].budgetPeriod];
+            recur_div.title = "This budget recurs " + period.toLocaleLowerCase() + ".";
+
+            const recur_img = document.createElement('img');
             recur_img.src = 'static/images/recurIcon.svg';
             recur_img.classList.add('recur-img');
-            const period = PERIODS[budgets[key].budgetPeriod].toLocaleLowerCase();
-            recur_img.title = "This budget recurs " + period + ".";
+            recur_img.alt = "recur icon";
+            
+            const recur_flag = document.createElement('img');
+            recur_flag.src = 'static/images/recur-label.svg';
+            recur_flag.textContent = period;
+            recur_flag.classList.add('recur-flag');
+            recur_flag.alt = "flag for recur icon";
+
+            recur_div.append(recur_img, recur_flag)
+            recur_div.id = "recur-icon-div";
         }
         
         const budget_name = document.createElement('h2');
@@ -604,7 +615,7 @@ function generateBudgetsUI(budgets, currency) {
         budget_options.classList.add('options-div', 'options');
         budget_options.append(optionsImg, optionsPanel);
 
-        budgetPanel.append(budget_options, recur_img, budget_name, svgDiv, budget_used, budget_slash, budget_amount);
+        budgetPanel.append(budget_options, recur_div, budget_name, svgDiv, budget_used, budget_slash, budget_amount);
         budgetContainer.append(budgetPanel);
     }
 
