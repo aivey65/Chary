@@ -24,6 +24,13 @@ Defining color values to make it easier to change later on
     --ContrastL: #33EB7C; /*#A1CD5F, #5FCDC2*/
     --faded: rgb(0, 0, 0, .6);
 
+    --red: #AE1326;
+    --blue: #34E1EB;
+    --green: #33EB7C;
+    --yellow: #E8EB34;
+    --purple: #C16BCF;
+    --orange: #EB8F34;
+
     /* Number Variables */
     --mobilePad: 15px;
     --smallPad: 20px;

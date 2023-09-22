@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel='shortcut icon' sizes='256x256' href='../static/images/CharyLogoSmall.svg'>
+
+        <!-- Google Font imports -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,600;1,100;1,200;1,300;1,600&family=Pacifico&display=swap" rel="stylesheet">
+
+        <!-- CSS Stylesheets -->
+        <link rel='stylesheet' href='../static/css/style.css'>
+        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/form/user-form.css'>
+        <link rel='stylesheet' media='screen and (max-width:767px)' href='../static/css/form/user-form-mobile.css'>
+
+        <!-- JavaScript links -->
+        <script src='../static/javascript/form.js'></script>
+        <script src='../static/javascript/script.js'></script>
+
+        <Title>Chary | Update Profile</Title>
+    </head>
+
+    <body onload="userFormLoad()">
+        <div id="header-container">
+            <header>
+                <img id='large-logo' src="../static/images/CharyLogo.svg" onclick="homeAction()" alt='Chary logo'>
+                <img id='toggle-icon' class="hamburg icon" src="../static/images/hamburger-icon.svg" onclick="toggleMenu()" alt="toggle menu button">
+
+                <nav id="website-nav">{{nav | safe}}</nav>
+            </header>
+        </div>
+
+        <div class="content non-header" id="acd-content">
+            <div id="alert-section"></div>
+            <button id="back-button" onclick="back()" value="Back">⟨ Cancel</button>
+            <h2>Update Profile</h2>
+            <form action="javascript:submitBudgetForm('create')">
+                <div id="name-div">
+                    <label class="required-input" for="name">Username</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <div id="name-div">
+                    <label class="required-input" for="currency">Currency Symbol</label>
+                    <input type="text" id="currency" name="currency" value="$" required>
+                </div>
+
+                <!-- Profile Color Inputs -->
+                <p id="color-label" class="row3">
+                    Choose a color:<span class="required-input"></span> 
+                </p><br>
+                <div id="color-div" class="row4">                    
+                    <input type="radio" id="red" name="color-radio" value="0" checked="checked" required>
+                    <label for='red' class="color-red color-label"></label>
+    
+                    <input type="radio" id="blue" name="color-radio" value="1" required>
+                    <label for='blue' class="color-blue color-label"></label>
+
+                    <input type="radio" id="green" name="color-radio" value="3" required>
+                    <label for='green' class="color-green color-label"></label>
+                    
+                    <input type="radio" id="yellow" name="color-radio" value="4" required>
+                    <label for='yellow' class="color-yellow color-label"></label>
+                    
+                    <input type="radio" id="orange" name="color-radio" value="5" required>
+                    <label for='orange' class="color-orange color-label"></label>
+
+                    <input type="radio" id="purple" name="color-radio" value="6" required>
+                    <label for='purple' class="color-purple color-label"></label>
+                </div>
+
+                <!-- Profile Image Inputs -->
+                <p id="image-label" class="row5">
+                    Choose a profile image:<span class="required-input"></span> 
+                </p><br>
+                <div id="image-div" class="row6">                    
+                    <input type="radio" id="dog" name="image-radio" value="0" checked="checked" required>
+                    <label for='dog' class="label-dog label-profile-img">
+                        <img src="../static/images/profileImages/undraw_dog.svg"/>
+                    </label>
+    
+                    <input type="radio" id="cat" name="image-radio" value="5" required>
+                    <label for='cat' class="label-cat label-profile-img">
+                        <img src="../static/images/profileImages/undraw_cat.svg"/>
+                    </label>
+
+                    <input type="radio" id="person1" name="image-radio" value="1" required>
+                    <label for='person1' class="label-person1 label-profile-img">
+                        <img src="../static/images/profileImages/undraw_person1.svg"/>
+                    </label>
+                    
+                    <input type="radio" id="person2" name="image-radio" value="2" required>
+                    <label for='person2' class="label-person2 label-profile-img">
+                        <img src="../static/images/profileImages/undraw_person2.svg"/>
+                    </label>
+
+                    <input type="radio" id="person3" name="image-radio" value="3" required>
+                    <label for='person3' class="label-person3 label-profile-img">
+                        <img src="../static/images/profileImages/undraw_person3.svg"/>
+                    </label>
+
+                    <input type="radio" id="person4" name="image-radio" value="4" required>
+                    <label for='person4' class="label-person4 label-profile-img">
+                        <img src="../static/images/profileImages/undraw_person4.svg"/>
+                    </label>
+                </div>
+
+                <button id="submit-entity-button" class="submit-button cta-button" type="submit" value="Submit">Submit</button>
+            </form>
+        </div>
+
+        <div class="footer">
+            <div class='contact-methods'> 
+                <div class='contact-icon' title="Asha's Github">
+                    <a  target="_blank" rel="noopener noreferrer" href='https://github.com/aivey65' alt="Github logo">
+                        <img src="../static/images/GitHub-Mark-Light-64px.png" alt="Github logo">
+                    </a>
+                </div> 
+                <div class='contact-icon' title="Asha's LinkedIn">
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.linkedin.com/in/ashaiv/' alt="LinkedIn logo">
+                        <img src="../static/images/LI-In-Bug.png" alt="LinkedIn logo">
+                    </a>
+                </div>
+                <div class='contact-icon' title="Asha's personal portfolio website">
+                    <a target="_blank" rel="noopener noreferrer" href='https://www.ashaiv.com' alt="Logo for Asha's personal portfolio website">
+                        <img src="../static/images/AshaIV-logo-light.svg" alt="Logo for Asha's personal portfolio website">
+                    </a>
+                </div>
+            </div> 
+            <div id="legal">
+                <div class="legal-button">
+                    <a href="/privacy">Privacy Policy</a>
+                </div>
+                <span>|</span>
+                <div class="legal-button">
+                    <a href="/terms_of_service">Terms of Service</a>
+                </div>
+                <span>|</span>
+                <div class="legal-button">
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+            <div class="btt-icon" onclick="bttAction()">
+                <img class="icon" src="../static/images/CharyLogoSmall.svg" alt="Simplified version of the Chary logo. Scrolls to top of page when clicked.">            
+            </div>
+        </div>
+    </body>
+</html>

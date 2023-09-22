@@ -152,7 +152,7 @@ def google_auth():
             'token': credentials.token,
             'refresh_token': credentials.refresh_token
         }
-        return redirect("/dashboard")
+        return redirect("/enter")
     else:
         abort(403)
 
@@ -286,6 +286,14 @@ def createUserGoogle():
 #######################################
 # Pages that need authenticated login #
 #######################################
+@app.route("/enter")
+@login_is_required
+def redirectUserEnter():
+    user = database.getUser(session["email"])
+    if user["profileCreation"] == False:
+        return redirect("/dashboard")
+    else:
+        return redirect("/form/update-user")
 
 @app.route("/dashboard")
 @login_is_required
