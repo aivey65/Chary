@@ -1,4 +1,8 @@
 /* Landing hero styles */
+
+#landing-hero {
+    padding-left: var(--DesktopPadBody);
+}
 #hero-text {
     display: grid;
     grid-template-columns: 530px 1fr;

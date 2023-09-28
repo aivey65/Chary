@@ -208,7 +208,6 @@ def createUserChary():
     image = ""
     color = ""
     currency = ""
-    balance = 0
     tutorialFinished = False
     profileCreation = False
     google = False
@@ -226,7 +225,6 @@ def createUserChary():
             image,
             color,
             currency, 
-            balance,
             tutorialFinished, 
             profileCreation,
             google 
@@ -254,7 +252,6 @@ def createUserGoogle():
     image = ""
     color = ""
     currency = ""
-    balance = 0
     tutorialFinished = False
     profileCreation = False
     google = True
@@ -268,7 +265,6 @@ def createUserGoogle():
             image,
             color,
             currency, 
-            balance,
             tutorialFinished, 
             profileCreation,
             google 
@@ -290,10 +286,10 @@ def createUserGoogle():
 @login_is_required
 def redirectUserEnter():
     user = database.getUser(session["email"])
-    if user["profileCreation"] == False:
+    if user["data"]["profileCreation"] == True:
         return redirect("/dashboard")
     else:
-        return redirect("/form/update-user")
+        return redirect("/form/create-user")
 
 @app.route("/dashboard")
 @login_is_required
@@ -347,7 +343,6 @@ def renderCreateExpense():
 @login_is_required
 def renderUpdateUser():
     try: 
-        # This database method checks to make sure that the user owns the expense they are trying to update
         databaseInfo = database.getUser(session["email"])
         # TODO: Autofill with current user data
 
@@ -629,18 +624,16 @@ def createEarning():
 @login_is_required
 def updateUser():
     username = request.json["username"]
-    image = request.json["profile-image"]
-    color = request.json["profile-color"]
+    image = request.json["profileImage"]
+    color = request.json["profileColor"]
     currency = request.json["currency"]
-    balance = request.json["balance"]
     try:
         database.updateUser(
             session["email"], 
             username, 
             image, 
             color,
-            currency,
-            balance
+            currency
         )
         return {
             "status": 201,

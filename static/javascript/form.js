@@ -1,5 +1,6 @@
 // Patterns for testing currency symbols and numbers
-ScRe = /[\$\xA2-\xA5\u058F\u060B\u09F2\u09F3\u09FB\u0AF1\u0BF9\u0E3F\u17DB\u20A0-\u20BD\uA838\uFDFC\uFE69\uFF04\uFFE0\uFFE1\uFFE5\uFFE6]/;
+ScReCurrency = /[\$\xA2-\xA5\u058F\u060B\u09F2\u09F3\u09FB\u0AF1\u0BF9\u0E3F\u17DB\u20A0-\u20BD\uA838\uFDFC\uFE69\uFF04\uFFE0\uFFE1\uFFE5\uFFE6]/;
+ScReName = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/
 numbers = /^\d*\.?\d+$/;
 
 function userFormLoad() {
@@ -40,7 +41,11 @@ function updateAlertSection(message, add=false) {
 }
 
 function checkCurrency(currency) {
-    return ScRe.test(currency);
+    return ScReCurrency.test(currency);
+}
+
+function checkUsername(username) {
+    return ScReName.test(username);
 }
 
 function checkAmount(amount) {
@@ -139,6 +144,48 @@ function configureRecurOptions() {
 /////////////////////////////////////////
 // Create/Update form submit functions //
 /////////////////////////////////////////
+function submitUserForm() {
+    const username = document.getElementById("name");
+    const currency = document.getElementById("currency");
+    alertSection.innerHTML = "";
+
+    if(!checkCurrency(currency.value)) {
+        message = "- The currency you entered is invalid. Make sure you are entering a recognized currency symbol.";
+        updateAlertSection(message);
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        return;
+    }
+
+    if(!checkAmount(budgetAmount.value)) {
+        message = "- The budget amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
+        updateAlertSection(message);
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        return;
+    }
+
+    fetch('/data/update-user', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            username: username.value,
+            profileImage: document.querySelector("input[name='image-radio']:checked").value,
+            profileColor: document.querySelector("input[name='color-radio']:checked").value,
+            currency: currency.value,
+        })
+    }).then((response) => response.json()).then((responseData) => {
+        if (responseData.status != 201) {
+            message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again."
+            updateAlertSection(message);
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            return
+        } else {
+            window.location = "/dashboard?refresh=true&tab=budgets"
+        }
+    })
+}
+
 function submitBudgetForm() {
     const budgetAmount = document.getElementById('amount');
     const alertSection = document.getElementById('alert-section');
@@ -147,7 +194,7 @@ function submitBudgetForm() {
     if(!checkAmount(budgetAmount.value)) {
         message = "- The budget amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
         updateAlertSection(message);
-        window.scrollTo(0, 0);
+        window.scrollTo({top: 0, behavior: 'smooth'});
         return;
     }
 
@@ -173,7 +220,7 @@ function submitBudgetForm() {
             if (responseData.status != 201) {
                 message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again."
                 updateAlertSection(message);
-                window.scrollTo(0, 0);
+                window.scrollTo({top: 0, behavior: 'smooth'});
                 return
             } else {
                 window.location = "/dashboard?refresh=true&tab=budgets"
@@ -198,7 +245,7 @@ function submitBudgetForm() {
             if (responseData.status != 201) {
                 message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again."
                 updateAlertSection(message);
-                window.scrollTo(0, 0);
+                window.scrollTo({top: 0, behavior: 'smooth'});
                 return
             } else {
                 window.location = "/dashboard?refresh=true&tab=budgets"
@@ -215,7 +262,7 @@ function submitExpenseForm() {
     if(!checkAmount(expenseAmount.value)) {
         message = "- The expense amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45)."
         updateAlertSection(message);
-        window.scrollTo(0, 0);
+        window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
     const expenseId = document.getElementById('id');
@@ -241,7 +288,7 @@ function submitExpenseForm() {
             if (responseData.status != 201) {
                 message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again."
                 updateAlertSection(message);
-                window.scrollTo(0, 0);
+                window.scrollTo({top: 0, behavior: 'smooth'});
                 return
             } else {
                 window.location = "/dashboard?refresh=true&tab=expenses"
@@ -267,7 +314,7 @@ function submitExpenseForm() {
             if (responseData.status != 201) {
                 message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again."
                 updateAlertSection(message);
-                window.scrollTo(0, 0);
+                window.scrollTo({top: 0, behavior: 'smooth'});
                 return
             } else {
                 window.location = "/dashboard?refresh=true&tab=expenses"
@@ -284,7 +331,7 @@ function submitEarningForm() {
     if(!checkAmount(earningAmount.value)) {
         message = "- The earning amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45)."
         updateAlertSection(message);
-        window.scrollY(0);
+        window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
     const earningId = document.getElementById('id');
@@ -310,7 +357,7 @@ function submitEarningForm() {
             if (responseData.status != 201) {
                 message = "- Error: " + String(responseData.message) + ". Please revise your earning and try again."
                 updateAlertSection(message);
-                window.scrollTo(0, 0);
+                window.scrollTo({top: 0, behavior: 'smooth'});
                 return
             } else {
                 window.location = "/dashboard?refresh=true&tab=earnings"
@@ -337,7 +384,7 @@ function submitEarningForm() {
             if (responseData.status != 201) {
                 message = "- Error: " + String(responseData.message) + " Please revise your earning and try again."
                 updateAlertSection(message);
-                window.scrollTo(0, 0);
+                window.scrollTo({top: 0, behavior: 'smooth'});
                 return
             } else {
                 window.location = "/dashboard?refresh=true&tab=earnings"

@@ -33,8 +33,7 @@
 
         <div class="content non-header" id="acd-content">
             <div id="alert-section"></div>
-            <button id="back-button" onclick="back()" value="Back">⟨ Cancel</button>
-            <h2>Update Profile</h2>
+            <h2>Create Profile</h2>
             <form action="javascript:submitUserForm()" method="post">
                 <div id="name-div">
                     <label class="required-input" for="name">Username</label>
@@ -51,7 +50,7 @@
                     Choose a color:<span class="required-input"></span> 
                 </p><br>
                 <div id="color-div" class="row4">                    
-                    <input type="radio" id="red" name="color-radio" value="0" checked="checked" required>
+                    <input type="radio" id="red" name="color-radio" value="0" required>
                     <label for='red' class="color-red color-label"></label>
     
                     <input type="radio" id="blue" name="color-radio" value="1" required>
@@ -75,7 +74,7 @@
                     Choose a profile image:<span class="required-input"></span> 
                 </p><br>
                 <div id="image-div" class="row6">                    
-                    <input type="radio" id="dog" name="image-radio" value="0" checked="checked" required>
+                    <input type="radio" id="dog" name="image-radio" value="0" required>
                     <label for='dog' class="label-dog label-profile-img">
                         <img src="../static/images/profileImages/undraw_dog.svg"/>
                     </label>
@@ -107,6 +106,7 @@
                 </div>
 
                 <button id="submit-entity-button" class="submit-button cta-button" type="submit" value="Submit">Submit</button>
+                <button onclick="dashboardAction()" value="Skip">Skip</button>
             </form>
         </div>
 

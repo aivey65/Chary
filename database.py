@@ -40,7 +40,7 @@ def getCurrentYear(currentDate=date.today()):
 ####################
 # Create functions #
 ####################
-def createUser(email, username, password, salt, image, color, currency, balance, tutorialFinished, profileCreation, google):
+def createUser(email, username, password, salt, image, color, currency, tutorialFinished, profileCreation, google):
     newUser = {
         'email': str(email),
         'username': str(username),
@@ -49,7 +49,6 @@ def createUser(email, username, password, salt, image, color, currency, balance,
         'profileImage': "undraw_blank",
         'profileColor': str(color),
         'currency': str(currency),
-        'balance': float(balance),
         'tutorialFinished': bool(tutorialFinished),
         'profileCreation': bool(profileCreation),
         'budgets': [], 
@@ -133,10 +132,6 @@ def createExpense(email, name, category, startDate, endDate="", amount=0, descri
     except Exception as e:
         emergencyDeleteExpense(expense_ref.id)
         raise e
-    
-    
-    # TODO: Update the user's wallet balance as well.
-
 
 def createEarning(email, name, startDate, endDate="", amount=0, description="", recurPeriod=0, recurring=False):
     earning_ref = None
@@ -168,8 +163,6 @@ def createEarning(email, name, startDate, endDate="", amount=0, description="", 
         emergencyDeleteEarning(earning_ref.id)
         raise e
     
-    # TODO: Update the user's wallet balance.
-
 ####################
 # Getter functions #
 ####################
@@ -795,7 +788,7 @@ def getEarning(earningId, userEmail):
 ####################
 # Setter functions #
 ####################
-def updateUser(email, username, image, color, currency, balance):
+def updateUser(email, username, image, color, currency):
     user = db.collection('users').where(filter=FieldFilter('email', '==', email)).stream()
 
     # Should only run once, since there should only be one user per email
@@ -810,7 +803,6 @@ def updateUser(email, username, image, color, currency, balance):
             'profileImage': str(image),
             'profileColor': str(color),
             'currency': str(currency),
-            'balance': float(balance)
         })
 
 def updateUserReferenceIds(email, operation, refType, id):

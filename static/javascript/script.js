@@ -437,11 +437,10 @@ function changeActiveDot(slideNum, uniqueClass) {
 /////////////////////////////////
 /* Creates and displays UI for the user information panal
  * 
- * @param balance (int): Number value for user's balance
  * @param username (string): User's username
  * @param img (string): link to user's profile image
  */
-function generateProfileUI(balance, username, email, color, img, currency) {
+function generateProfileUI(username, email, color, img, currency) {
     const user_img = document.createElement('img');
     user_img.src = "../static/images/profileImages/" + img + ".svg";
     user_img.id = "user-thumbnail";
@@ -456,25 +455,13 @@ function generateProfileUI(balance, username, email, color, img, currency) {
     user_email.id = "user-email";
     user_email.textContent = "Email: " + String(email);
 
-    const wallet_icon = document.createElement('img');
-    wallet_icon.src = "../static/images/WalletIcon.svg";
-    wallet_icon.id = "wallet-icon";
-    wallet_icon.alt = "Icon of a wallet."
-    wallet_icon.title = "Current Projected Balance"
-    wallet_icon.classList.add('wallet-img');
-
-    const user_balance = document.createElement('p');
-    user_balance.id = "user-balance";
-    user_balance.title = "Current Projected Balance"
-    user_balance.textContent = String(currency) + String(balance);
-
     const user_currency = document.createElement('p');
     user_currency.id = "user-currency";
     user_currency.textContent = "Currency: " + String(currency);
 
     const profileContainer = document.createElement('div');
     profileContainer.id = "user-info-container";
-    profileContainer.append(user_img, wallet_icon, user_balance, user_name, user_email, user_currency);
+    profileContainer.append(user_img, user_name, user_email, user_currency);
 
     return profileContainer;
 }

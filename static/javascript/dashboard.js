@@ -335,7 +335,7 @@ function generateOverviewProfile() {
     overviewHeader.classList.add('module-header');
     overviewProfileContainer.append(overviewHeader);
     
-    const profileComponents = generateProfileUI(userData.balance, userData.username, userData.email, userData.profileColor, userData.profileImage, userData.currency);
+    const profileComponents = generateProfileUI(userData.username, userData.email, userData.profileColor, userData.profileImage, userData.currency);
     overviewProfileContainer.append(profileComponents);
 
     return overviewProfileContainer;
