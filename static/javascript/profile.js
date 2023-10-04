@@ -30,3 +30,7 @@ function loadExpenseTab() {
 function loadEarningTab () {
     window.location.href = "/dashboard?refresh=false&tab=earnings";
 }
+
+function goToProfileForm() {
+    window.location.href = "/form/update-user";
+}

@@ -803,6 +803,7 @@ def updateUser(email, username, image, color, currency):
             'profileImage': str(image),
             'profileColor': str(color),
             'currency': str(currency),
+            'profileCreation': True
         })
 
 def updateUserReferenceIds(email, operation, refType, id):

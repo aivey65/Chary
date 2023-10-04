@@ -1,7 +1,11 @@
 // Patterns for testing currency symbols and numbers
-ScReCurrency = /[\$\xA2-\xA5\u058F\u060B\u09F2\u09F3\u09FB\u0AF1\u0BF9\u0E3F\u17DB\u20A0-\u20BD\uA838\uFDFC\uFE69\uFF04\uFFE0\uFFE1\uFFE5\uFFE6]/;
-ScReName = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/
-numbers = /^\d*\.?\d+$/;
+const ScReCurrency = /[\$\xA2-\xA5\u058F\u060B\u09F2\u09F3\u09FB\u0AF1\u0BF9\u0E3F\u17DB\u20A0-\u20BD\uA838\uFDFC\uFE69\uFF04\uFFE0\uFFE1\uFFE5\uFFE6]/;
+const ScReName = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
+const numbers = /^\d*\.?\d+$/;
+
+// Specific value arrays
+const colorList = ["#AE1326", "#34E1EB", "#33EB7C", "#E8EB34", "#EB8F34", "#C16BCF"];
+const imageList = ["undraw_dog", "undraw_person1", "undraw_person2", "undraw_person3", "undraw_person4", "undraw_cat"];
 
 function userFormLoad() {
     fillProfilePics();
@@ -50,6 +54,11 @@ function checkUsername(username) {
 
 function checkAmount(amount) {
     return numbers.test(amount);
+}
+
+function checkNumber(entity) {
+    entity = Number(entity)
+    return (entity >= 0 && entity <= 6)
 }
 
 function configureDateInput() {
@@ -145,19 +154,29 @@ function configureRecurOptions() {
 // Create/Update form submit functions //
 /////////////////////////////////////////
 function submitUserForm() {
-    const username = document.getElementById("name");
-    const currency = document.getElementById("currency");
+    const username = document.getElementById("name").value;
+    const currency = document.getElementById("currency").value;
+    const image = document.querySelector("input[name='image-radio']:checked").value;
+    const color = document.querySelector("input[name='color-radio']:checked").value;
+    var alertSection = document.getElementById("alert-section");
     alertSection.innerHTML = "";
 
-    if(!checkCurrency(currency.value)) {
+    if(!checkCurrency(currency)) {
         message = "- The currency you entered is invalid. Make sure you are entering a recognized currency symbol.";
         updateAlertSection(message);
         window.scrollTo({top: 0, behavior: 'smooth'});
         return;
     }
 
-    if(!checkAmount(budgetAmount.value)) {
-        message = "- The budget amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
+    if(!checkUsername(username)) {
+        message = "- This username contains invalid characters. Use only letters and numbers.";
+        updateAlertSection(message);
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        return;
+    }
+
+    if (!checkNumber(image) || !checkNumber(color)) {
+        message = "- Something went wrong when submitting this form. Please try again.";
         updateAlertSection(message);
         window.scrollTo({top: 0, behavior: 'smooth'});
         return;
@@ -169,19 +188,19 @@ function submitUserForm() {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            username: username.value,
-            profileImage: document.querySelector("input[name='image-radio']:checked").value,
-            profileColor: document.querySelector("input[name='color-radio']:checked").value,
-            currency: currency.value,
+            username: username,
+            profileImage: imageList[image],
+            profileColor: colorList[color],
+            currency: currency,
         })
     }).then((response) => response.json()).then((responseData) => {
         if (responseData.status != 201) {
-            message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again."
+            message = "- Error: " + String(responseData.message) + ". Please try again later.";
             updateAlertSection(message);
             window.scrollTo({top: 0, behavior: 'smooth'});
-            return
+            return;
         } else {
-            window.location = "/dashboard?refresh=true&tab=budgets"
+            window.location = "/dashboard?refresh=true";
         }
     })
 }
@@ -218,12 +237,12 @@ function submitBudgetForm() {
             })
         }).then((response) => response.json()).then((responseData) => {
             if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again."
+                message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return
             } else {
-                window.location = "/dashboard?refresh=true&tab=budgets"
+                window.location = "/dashboard?refresh=true&tab=budgets";
             }
         })
     } else {
@@ -243,12 +262,12 @@ function submitBudgetForm() {
             })
         }).then((response) => response.json()).then((responseData) => {
             if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again."
+                message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return
             } else {
-                window.location = "/dashboard?refresh=true&tab=budgets"
+                window.location = "/dashboard?refresh=true&tab=budgets";
             }
         })
     }
@@ -260,7 +279,7 @@ function submitExpenseForm() {
     alertSection.innerHTML = "";
 
     if(!checkAmount(expenseAmount.value)) {
-        message = "- The expense amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45)."
+        message = "- The expense amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
         updateAlertSection(message);
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
@@ -286,12 +305,12 @@ function submitExpenseForm() {
             })
         }).then((response) => response.json()).then((responseData) => {
             if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again."
+                message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return
             } else {
-                window.location = "/dashboard?refresh=true&tab=expenses"
+                window.location = "/dashboard?refresh=true&tab=expenses";
             }
         });
     } else {
@@ -312,12 +331,12 @@ function submitExpenseForm() {
             })
         }).then((response) => response.json()).then((responseData) => {
             if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again."
+                message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return
             } else {
-                window.location = "/dashboard?refresh=true&tab=expenses"
+                window.location = "/dashboard?refresh=true&tab=expenses";
             }
         });
     }
@@ -329,7 +348,7 @@ function submitEarningForm() {
     alertSection.innerHTML = "";
 
     if(!checkAmount(earningAmount.value)) {
-        message = "- The earning amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45)."
+        message = "- The earning amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
         updateAlertSection(message);
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
@@ -355,12 +374,12 @@ function submitEarningForm() {
             })
         }).then((response) => response.json()).then((responseData) => {
             if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + ". Please revise your earning and try again."
+                message = "- Error: " + String(responseData.message) + ". Please revise your earning and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return
             } else {
-                window.location = "/dashboard?refresh=true&tab=earnings"
+                window.location = "/dashboard?refresh=true&tab=earnings";
             }
         });
     } else {
@@ -382,12 +401,12 @@ function submitEarningForm() {
         }).then(response => response.json()).then((responseData) => {
             console.log(responseData)
             if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + " Please revise your earning and try again."
+                message = "- Error: " + String(responseData.message) + " Please revise your earning and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return
             } else {
-                window.location = "/dashboard?refresh=true&tab=earnings"
+                window.location = "/dashboard?refresh=true&tab=earnings";
             }
         });
     }

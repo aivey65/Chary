@@ -640,6 +640,7 @@ def updateUser():
             "message": "Update successful!"
         }
     except Exception as e:
+        print(e)
         return {
             "status": 400,
             "message": str(e)

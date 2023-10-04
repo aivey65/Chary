@@ -43,7 +43,8 @@
 
 form {
     display: grid;
-    grid-template-columns: 1fr;
+    align-items: center;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: .5fr 1fr .2fr .2fr .5fr;
     gap: 0px var(--medPad);
     margin: auto;
@@ -111,6 +112,10 @@ label, p {
     width: 4rem;
 }
 
+#image-label {
+    width: max-content;
+}
+
 #red:checked ~ .color-red,
 #orange:checked ~ .color-orange,
 #purple:checked ~ .color-purple,
@@ -130,13 +135,15 @@ label, p {
     background-position: top left;
 }
 
-#name-div {
+#name-div, #currency-div {
+    grid-column: 1/3;
     display: flex;
     flex-direction: column;
     margin-top: var(--smallPad);
 }
 
 #color-div, #image-div {
+    grid-column: 1/3;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -146,12 +153,16 @@ label, p {
 }
 
 #submit-entity-button {
-    grid-row: 9;
     grid-column: 1;
 }
 
+#skip-button {
+    height: min-content;
+    grid-column: 2;
+    justify-self: end;
+}
+
 #delete-entity-button {
-    grid-row: 9;
     grid-column: 2;
 }
 
