@@ -88,7 +88,6 @@ def renderedNav():
             <ul>
                 <li><a href='/'>Home</a></li>
                 <li><a href='/about'>About</a></li>
-                <li class='nav-nolink'>|</li>
                 <li><a href='/dashboard'>Dashboard</a></li>
                 <div>
                     <img id='nav-profile-icon' class='profile-icon' src='../static/images/profileImages/undraw_blank.svg' alt='Profile image button that opens profile options'/>

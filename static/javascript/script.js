@@ -84,6 +84,9 @@ function createFiltersSection(type) {
     const period00 = document.createElement("option");
     period00.textContent = "All Active";
     period00.value = "-2";
+    if (type == 'budgets') {
+        period00.selected = true;
+    }
     const period0 = document.createElement("option");
     period0.textContent = "All Inactive";
     period0.value = "-1";
@@ -96,7 +99,9 @@ function createFiltersSection(type) {
     const period3 = document.createElement("option");
     period3.textContent = "Month";
     period3.value = "3";
-    period3.selected = true;
+    if (type != 'budgets') {
+        period3.selected = true;
+    }
     const period4 = document.createElement("option");
     period4.textContent = "Year";
     period4.value = "4";
@@ -530,11 +535,14 @@ function generateBudgetsUI(budgets, currency) {
             
             const recur_flag = document.createElement('img');
             recur_flag.src = 'static/images/recur-label.svg';
-            recur_flag.textContent = period;
             recur_flag.classList.add('recur-flag');
             recur_flag.alt = "flag for recur icon";
 
-            recur_div.append(recur_img, recur_flag)
+            const recur_text = document.createElement('p');
+            recur_text.classList.add('recur-text');
+            recur_text.textContent = "  " + period;
+
+            recur_div.append(recur_img, recur_flag, recur_text);
             recur_div.id = "recur-icon-div";
         }
         

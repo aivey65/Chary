@@ -283,7 +283,7 @@ def getAllCurrent(email, period, targetDate):
 
         user = getUser(email)['data']
 
-        budgetData = getAllActiveBudgets(email)
+        budgetData = getAllActiveBudgets(email, -2)
         budgetsDict = budgetData["data"]
         budgetCategories = budgetData["categories"]
 
