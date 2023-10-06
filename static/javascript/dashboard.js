@@ -373,7 +373,7 @@ function generateOverviewBudgets(budgets) {
 }
 
 function generateVariousCharts(items, slideNum, maxShow) {
-    Chart.defaults.global.legend.display = false;
+    Chart.defaults.plugins.legend.display = false;
 
     if (slideNum == 0) {
         // First create a 'total' chart to show the expected budget amounts
@@ -389,8 +389,8 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     label: "Total Budget Amount",
                     data: dataExpected.map(row => row.amount),
                     backgroundColor: dataExpected.map(row => row.color),
-                    borderColor: COLORS_NAVY,
-                    borderWidth: 2.5,
+                    borderWidth: 0,
+                    offset: 10,
                 }],
             },
             options: {
@@ -432,11 +432,11 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 datasets: [{
                     data: dataActual.map(row => row.amount),
                     backgroundColor: dataActual.map(row => row.color),
-                    borderColor: COLORS_NAVY,
-                    borderWidth: 2.5,
+                    borderWidth: 0,
+                    offset: 10,
                 }],
             },
-            options: {
+            options: {                 
                 maintainAspectRatio: false,
                 responsive: true,
                 tooltips: {
@@ -491,32 +491,39 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 maintainAspectRatio: false,
                 responsive: true,
                 scales: {
-                    xAxes: [{
-                        gridLines: {
-                            color: COLORS_NAVY,
+                    x: {
+                        display: true,
+                        grid: {
+                            drawTicks: true,
+                            color: COLORS_NAVY
                         },
                         ticks: {
-                            fontColor: COLORS_GREY
+                            color: COLORS_GREY
                         }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            color: COLORS_NAVY,
+                    },
+                    y: {
+                        display: true,
+                        grid: {
+                            drawTicks: true,
+                            color: COLORS_NAVY
                         },
                         ticks: {
-                            fontColor: COLORS_GREY,
+                            color: COLORS_GREY,
                             beginAtZero: true,
                             maxTicksLimit: 5,
                             callback: function(value, index, values) {
                                 return formatNumber(value);
                             }
                         },
-                        scaleLabel: {
-                            fontColor: COLORS_GREY,
+                        title: {
+                            color: COLORS_GREY,
+                            font: {
+                                size: 15,
+                            },
                             display: true,
-                            labelString: "Amount (" + userData.currency + ")"
+                            text: "Amount (" + userData.currency + ")"
                         }
-                    }]
+                    }
                 },
                 tooltips: {
                     callbacks: {
@@ -560,32 +567,38 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 },
                 maintainAspectRatio: false,
                 scales: {
-                    xAxes: [{
-                        gridLines: {
+                    x: {
+                        display: true,
+                        grid: {
+                            drawTicks: true,
                             color: COLORS_NAVY
                         },
                         ticks: {
-                            fontColor: COLORS_GREY
+                            color: COLORS_GREY
                         }
-                    }],
-                    yAxes: [{
-                        gridLines: {
+                    },
+                    y: {
+                        display: true,
+                        grid: {
+                            drawTicks: true,
                             color: COLORS_NAVY
                         },
                         ticks: {
-                            fontColor: COLORS_GREY,
+                            color: COLORS_GREY,
                             beginAtZero: true,
                             maxTicksLimit: 5,
                             callback: function(value, index, values) {
                                 return formatNumber(value);
                             }
                         },
-                        scaleLabel: {
-                            fontColor: COLORS_GREY,
-                            display: true,
-                            labelString: "Amount (" + userData.currency + ")"
+                        title: {
+                            color: COLORS_GREY,
+                            font: {
+                                size: 15,
+                            },                            display: true,
+                            text: "Amount (" + userData.currency + ")"
                         }
-                    }]
+                    }
                 },
                 tooltips: {
                     callbacks: {
