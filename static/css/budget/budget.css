@@ -62,6 +62,7 @@
 
 #budget-basic p {
     margin: 0px;
+    white-space: pre-wrap;
 }
 
 #details-head {

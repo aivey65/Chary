@@ -711,18 +711,20 @@ function generateTableUI(type, entityList, currency, limit=null) {
             const desLabel = document.createElement("h4");
             desLabel.textContent = "Description";
             const desText = document.createElement("p");
-            desText.textContent = current.description || "None";
+            desText.textContent = String(current.description) || "None";
             const description = document.createElement('div');
             description.append(desLabel, desText);
 
-            const recurPeriod = document.createElement('div');
-            const recurStartDate = document.createElement('div');
-            const recurEndDate = document.createElement('div');
+            const expanseDiv = document.createElement('div'); // Div to contain all the expanse info
+            expanseDiv.classList.add("expanse-div");          // Check to see if we need to make recur sections.
+            expanseDiv.append(description);
+
             if (current.recurring) {
                 const recLabel = document.createElement("h4");
                 recLabel.textContent = "Recurring Period"
                 const recText = document.createElement("p");
                 recText.textContent = "This " + TYPES[type] + " recurs " + PERIODS[current.recurPeriod].toLocaleLowerCase();
+                const recurPeriod = document.createElement('div');
                 recurPeriod.append(recLabel, recText);
 
                 const recStartLabel = document.createElement("h4");
@@ -734,6 +736,7 @@ function generateTableUI(type, entityList, currency, limit=null) {
                 } else {
                     recStart.textContent = "None";
                 }
+                const recurStartDate = document.createElement('div');
                 recurStartDate.append(recStartLabel, recStart);
 
                 const recEndLabel = document.createElement("h4");
@@ -745,12 +748,12 @@ function generateTableUI(type, entityList, currency, limit=null) {
                 } else {
                     recEnd.textContent = "None";
                 }
+                const recurEndDate = document.createElement('div');
                 recurEndDate.append(recEndLabel, recEnd);
-            }
 
-            const expanseDiv = document.createElement('div');
-            expanseDiv.classList.add("expanse-div");
-            expanseDiv.append(description, recurPeriod, recurStartDate, recurEndDate);
+                // Add recur sections to the expanse div
+                expanseDiv.append(recurPeriod, recurStartDate, recurEndDate);
+            }
 
             const expanseTD = document.createElement('td');
             expanseTD.colSpan = headRow.cells.length;

@@ -386,7 +386,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
             data: {
                 labels: dataExpected.map(row => row.budgetName),
                 datasets: [{
-                    label: "Total Budget Amount",
+                    label: "Budgeted Amount",
                     data: dataExpected.map(row => row.amount),
                     backgroundColor: dataExpected.map(row => row.color),
                     borderWidth: 2,
@@ -396,11 +396,14 @@ function generateVariousCharts(items, slideNum, maxShow) {
             options: {
                 maintainAspectRatio: false,
                 responsive: true,
-                tooltips: {
-                    callback: function(tooltipItems, data) {
-                        let dataArray = data.datasets[0].data;
-                        let textArray = data.labels;
-                        return textArray[tooltipItems.index] + ": " + userData.currency + dataArray[tooltipItems.index];
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let dataObject = context.dataset;
+                                return dataObject.label + ": " + userData.currency + dataObject.data[context.dataIndex];
+                            }
+                        }
                     }
                 }
             }
@@ -428,6 +431,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
             data: {
                 labels: dataActual.map(row => row.budgetName),
                 datasets: [{
+                    label: "Amount Used",
                     data: dataActual.map(row => row.amount),
                     backgroundColor: dataActual.map(row => row.color),
                     borderWidth: 2,
@@ -437,12 +441,13 @@ function generateVariousCharts(items, slideNum, maxShow) {
             options: {                 
                 maintainAspectRatio: false,
                 responsive: true,
-                tooltips: {
-                    callbacks: {
-                        title: function(tooltipItems, data) {
-                            let dataArray = data.datasets[0].data;
-                            let textArray = data.labels;
-                            return textArray[tooltipItems.index] + ": " + userData.currency + dataArray[tooltipItems.index];
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let dataObject = context.dataset;
+                                return dataObject.label + ": " + userData.currency + dataObject.data[context.dataIndex];
+                            }
                         }
                     }
                 }
@@ -475,7 +480,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
             data: {
                 labels: data.labels,
                 datasets: [{
-                    label: "Amount (" + userData.currency + ")",
+                    label: "Spent",
                     data: data.values,
                     backgroundColor: COLORS_GREEN,
                 }],
@@ -523,10 +528,13 @@ function generateVariousCharts(items, slideNum, maxShow) {
                         }
                     }
                 },
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItems, data) {
-                            return userData.currency + tooltipItems.yLabel.toString();
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let dataObject = context.dataset;
+                                return dataObject.label + ": " + userData.currency + dataObject.data[context.dataIndex];
+                            }
                         }
                     }
                 }
@@ -552,7 +560,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
             data: {
                 labels: data.labels,
                 datasets: [{
-                    label: "Amount (" + userData.currency + ")",
+                    label: "Earned",
                     data: data.values,
                     backgroundColor: COLORS_GREEN,
                 }],
@@ -593,15 +601,19 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             color: COLORS_GREY,
                             font: {
                                 size: 15,
-                            },                            display: true,
+                            },                            
+                            display: true,
                             text: "Amount (" + userData.currency + ")"
                         }
                     }
                 },
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItems, data) {
-                            return userData.currency + tooltipItems.yLabel.toString();
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let dataObject = context.dataset;
+                                return dataObject.label + ": " + userData.currency + dataObject.data[context.dataIndex];
+                            }
                         }
                     }
                 }

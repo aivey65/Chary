@@ -1004,7 +1004,7 @@ Creating the navigation bar depending on the size of the user's screen
     .expanse-div {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: 1fr auto;
         gap: var(--smallPad);
     }
 
@@ -1017,6 +1017,7 @@ Creating the navigation bar depending on the size of the user's screen
     .expanse-div p {
         margin: 0px;
         text-align: left;
+        white-space: pre-wrap;
     }
 
     .expanse-div h4 {

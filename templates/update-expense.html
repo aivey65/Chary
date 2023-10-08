@@ -40,7 +40,7 @@
 
                 <div id="name-div">
                     <label class="required-input" for="name">Title</label>
-                    <input type="text" id="name" name="name" value={{name}} required>
+                    <input type="text" id="name" name="name" value="{{name}}" required>
                 </div>
 
                 <div id="amount-div">
@@ -53,9 +53,9 @@
                     <select id="category" name="category" required>
                         {% for option in allCategories %}
                             {% if option == category %}
-                                <option value={{option}} selected="selected">{{option}}</option>
+                                <option value="{{option}}" selected="selected">{{option}}</option>
                             {% else %}
-                                <option value={{option}}>{{option}}</option>
+                                <option value="{{option}}">{{option}}</option>
                             {% endif %} 
                         {% endfor %}
                     </select>
