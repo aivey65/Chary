@@ -58,7 +58,7 @@ function checkAmount(amount) {
 
 function checkNumber(entity) {
     entity = Number(entity)
-    return (entity >= 0 && entity <= 6)
+    return (entity >= 0 && entity <= 5)
 }
 
 function configureDateInput() {
@@ -188,10 +188,10 @@ function submitUserForm() {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            username: username,
-            profileImage: imageList[image],
-            profileColor: colorList[color],
-            currency: currency,
+            "username": username,
+            "profileImage": imageList[image],
+            "profileColor": colorList[color],
+            "currency": currency,
         })
     }).then((response) => response.json()).then((responseData) => {
         if (responseData.status != 201) {
@@ -200,7 +200,7 @@ function submitUserForm() {
             window.scrollTo({top: 0, behavior: 'smooth'});
             return;
         } else {
-            window.location = "/dashboard?refresh=true";
+            window.location = "/dashboard?refresh=true&tab=overview";
         }
     })
 }
@@ -399,7 +399,6 @@ function submitEarningForm() {
 
             })
         }).then(response => response.json()).then((responseData) => {
-            console.log(responseData)
             if (responseData.status != 201) {
                 message = "- Error: " + String(responseData.message) + " Please revise your earning and try again.";
                 updateAlertSection(message);

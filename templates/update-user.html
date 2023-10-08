@@ -38,35 +38,59 @@
             <form action="javascript:submitUserForm()" method="post">
                 <div id="name-div">
                     <label class="required-input" for="name">Username</label>
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="name" value={{username}} required>
                 </div>
 
                 <div id="currency-div">
                     <label class="required-input" for="currency">Currency Symbol</label>
-                    <input type="text" id="currency" name="currency" value="$" required>
+                    <input type="text" id="currency" name="currency" value={{currency}} required>
                 </div>
 
                 <!-- Profile Color Inputs -->
                 <p id="color-label" class="row3">
                     Choose a color:<span class="required-input"></span> 
                 </p><br>
-                <div id="color-div" class="row4">                    
-                    <input type="radio" id="red" name="color-radio" value="0" checked="checked" required>
+                <div id="color-div" class="row4">  
+                    {% if color == "#AE1326" %}
+                        <input type="radio" id="red" name="color-radio" value="0" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="red" name="color-radio" value="0" required>
+                    {% endif %}                  
                     <label for='red' class="color-red color-label"></label>
     
-                    <input type="radio" id="blue" name="color-radio" value="1" required>
+                    {% if color == "#34E1EB" %}
+                        <input type="radio" id="blue" name="color-radio" value="1" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="blue" name="color-radio" value="1" required>
+                    {% endif %}  
                     <label for='blue' class="color-blue color-label"></label>
 
-                    <input type="radio" id="green" name="color-radio" value="3" required>
+                    {% if color == "#33EB7C" %}
+                        <input type="radio" id="green" name="color-radio" value="2" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="green" name="color-radio" value="2" required>
+                    {% endif %}  
                     <label for='green' class="color-green color-label"></label>
                     
-                    <input type="radio" id="yellow" name="color-radio" value="4" required>
+                    {% if color == "#E8EB34" %}
+                        <input type="radio" id="yellow" name="color-radio" value="3" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="yellow" name="color-radio" value="3" required>
+                    {% endif %}  
                     <label for='yellow' class="color-yellow color-label"></label>
                     
-                    <input type="radio" id="orange" name="color-radio" value="5" required>
+                    {% if color == "#EB8F34" %}
+                        <input type="radio" id="orange" name="color-radio" value="4" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="orange" name="color-radio" value="4" required>
+                    {% endif %}  
                     <label for='orange' class="color-orange color-label"></label>
 
-                    <input type="radio" id="purple" name="color-radio" value="6" required>
+                    {% if color == "#C16BCF" %}
+                        <input type="radio" id="purple" name="color-radio" value="5" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="purple" name="color-radio" value="5" required>
+                    {% endif %}  
                     <label for='purple' class="color-purple color-label"></label>
                 </div>
 
@@ -75,32 +99,56 @@
                     Choose a profile image:<span class="required-input"></span> 
                 </p><br>
                 <div id="image-div" class="row6">                    
-                    <input type="radio" id="dog" name="image-radio" value="0" checked="checked" required>
+                    {% if image == "undraw_dog" %}
+                        <input type="radio" id="dog" name="image-radio" value="0" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="dog" name="image-radio" value="0" required>
+                    {% endif %}   
                     <label for='dog' class="label-dog label-profile-img">
                         <img src="../static/images/profileImages/undraw_dog.svg"/>
                     </label>
     
-                    <input type="radio" id="cat" name="image-radio" value="5" required>
+                    {% if image == "undraw_cat" %}
+                        <input type="radio" id="cat" name="image-radio" value="5" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="cat" name="image-radio" value="5" required>
+                    {% endif %}
                     <label for='cat' class="label-cat label-profile-img">
                         <img src="../static/images/profileImages/undraw_cat.svg"/>
                     </label>
 
-                    <input type="radio" id="person1" name="image-radio" value="1" required>
+                    {% if image == "undraw_person1" %}
+                        <input type="radio" id="person1" name="image-radio" value="1" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="person1" name="image-radio" value="1" required>
+                    {% endif %}
                     <label for='person1' class="label-person1 label-profile-img">
                         <img src="../static/images/profileImages/undraw_person1.svg"/>
                     </label>
                     
-                    <input type="radio" id="person2" name="image-radio" value="2" required>
+                    {% if image == "undraw_person2" %}
+                        <input type="radio" id="person2" name="image-radio" value="2" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="person2" name="image-radio" value="2" required>
+                    {% endif %}
                     <label for='person2' class="label-person2 label-profile-img">
                         <img src="../static/images/profileImages/undraw_person2.svg"/>
                     </label>
 
-                    <input type="radio" id="person3" name="image-radio" value="3" required>
+                    {% if image == "undraw_person3" %}
+                        <input type="radio" id="person3" name="image-radio" value="3" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="person3" name="image-radio" value="3" required>
+                    {% endif %}
                     <label for='person3' class="label-person3 label-profile-img">
                         <img src="../static/images/profileImages/undraw_person3.svg"/>
                     </label>
 
-                    <input type="radio" id="person4" name="image-radio" value="4" required>
+                    {% if image == "undraw_person4" %}
+                        <input type="radio" id="person4" name="image-radio" value="4" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="person4" name="image-radio" value="4" required>
+                    {% endif %}
                     <label for='person4' class="label-person4 label-profile-img">
                         <img src="../static/images/profileImages/undraw_person4.svg"/>
                     </label>

@@ -789,7 +789,7 @@ def getEarning(earningId, userEmail):
 # Setter functions #
 ####################
 def updateUser(email, username, image, color, currency):
-    user = db.collection('users').where(filter=FieldFilter('email', '==', email)).stream()
+    user = list(db.collection('users').where(filter=FieldFilter('email', '==', email)).stream())
 
     # Should only run once, since there should only be one user per email
     if len(list(user)) == 0:
@@ -797,8 +797,7 @@ def updateUser(email, username, image, color, currency):
     elif len(list(user)) > 1:
         raise RuntimeError("Duplicate user found! Update failed.")
     else:
-        user_ref = user[0]
-        user_ref.update({
+        user[0].reference.update({
             'username': str(username),
             'profileImage': str(image),
             'profileColor': str(color),

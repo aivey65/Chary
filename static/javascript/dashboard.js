@@ -389,20 +389,18 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     label: "Total Budget Amount",
                     data: dataExpected.map(row => row.amount),
                     backgroundColor: dataExpected.map(row => row.color),
-                    borderWidth: 0,
-                    offset: 10,
+                    borderWidth: 2,
+                    borderColor: COLORS_DARK
                 }],
             },
             options: {
                 maintainAspectRatio: false,
                 responsive: true,
                 tooltips: {
-                    callbacks: {
-                        label: function(tooltipItems, data) {
-                            let dataArray = data.datasets[0].data;
-                            let textArray = data.labels;
-                            return textArray[tooltipItems.index] + ": " + userData.currency + dataArray[tooltipItems.index];
-                        }
+                    callback: function(tooltipItems, data) {
+                        let dataArray = data.datasets[0].data;
+                        let textArray = data.labels;
+                        return textArray[tooltipItems.index] + ": " + userData.currency + dataArray[tooltipItems.index];
                     }
                 }
             }
@@ -432,8 +430,8 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 datasets: [{
                     data: dataActual.map(row => row.amount),
                     backgroundColor: dataActual.map(row => row.color),
-                    borderWidth: 0,
-                    offset: 10,
+                    borderWidth: 2,
+                    borderColor: COLORS_DARK
                 }],
             },
             options: {                 
@@ -441,7 +439,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 responsive: true,
                 tooltips: {
                     callbacks: {
-                        label: function(tooltipItems, data) {
+                        title: function(tooltipItems, data) {
                             let dataArray = data.datasets[0].data;
                             let textArray = data.labels;
                             return textArray[tooltipItems.index] + ": " + userData.currency + dataArray[tooltipItems.index];
