@@ -5,6 +5,7 @@
     gap: var(--smallPad);
     padding-top: var(--smallPad);
     padding-bottom: var(--lgPad);
+    padding-left: var(--DesktopPadBody);
 }
 
 #budget-main {
@@ -53,9 +54,9 @@
 
 #budget-basic {
     display: grid;
-    grid-template-rows: .2fr .1fr 1fr .2fr;
-    grid-template-columns: 0.5fr 0.5fr 1fr;
-    align-items: center;
+    grid-template-rows: .2fr .1fr 1fr;
+    grid-template-columns: 0.5fr 0.5fr 1fr auto;
+    align-items: start;
     justify-items: left;
     width: 100%;
 }
@@ -87,8 +88,8 @@
 }
 
 #details-edit {
-    grid-row: 4;
-    grid-column: 3;
+    grid-row: 3;
+    grid-column: 4;
     align-self: end;
     justify-self: end;
 }
@@ -113,9 +114,10 @@
 }
 
 #details-amount {
-    grid-row: 3;
+    grid-row: 2/4;
     grid-column: 3;
     justify-self: center;
+    align-self: center;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
@@ -145,13 +147,13 @@
 }
 
 #details-chart-container {
-    grid-row: 1/4;
+    overflow: hidden;
+    grid-row: 2/4;
     grid-column: 3;
     height: 100%;
     width: 100%;
     min-height: 30vh;
     justify-self: center;
-    margin-top: var(--lgPad);
 }
 
 #chart-container {
@@ -159,13 +161,12 @@
 }
 
 #limited-charts {
-    height: 100%;
     min-height: 250px;
     min-width: 250px;
-    width: 100%;
+    position:absolute;
     display: flex;
     justify-content: center;
-    gap: var(--medPad);
+    gap: var(--smallPad);
 }
 
 #limited-charts p {

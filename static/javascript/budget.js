@@ -10,15 +10,18 @@ function loadBudget(id) {
         const expenses = responseData.expenses;
         user_currency = responseData.currency;
 
-        // Configure data for creating all charts
-        const chartContainer = document.getElementById('details-chart-container');
-        chartContainer.innerHTML = "";
-
         const chartData = allChartDataAsArray(budget, expenses);
         const currentChart = generateVariousCharts(chartData, 0, 1);
-        chartContainer.append(currentChart);
+        const limitedChartsContainer = document.createElement("div");
+        limitedChartsContainer.append(currentChart);
+        limitedChartsContainer.classList.add("limited-charts-container");
+
+        // Create a container for limited charts to switch around
+        const chartContainer = document.getElementById('details-chart-container');
+        chartContainer.innerHTML = "";
+        chartContainer.append(limitedChartsContainer);
         
-        const dotCarousel = carouselButtons(chartData, "details-chart-dots", "details-chart-container", 1, generateVariousCharts);
+        const dotCarousel = carouselButtons(chartData, "details-chart-dots", "limited-charts-container", 1, generateVariousCharts);
         chartContainer.append(dotCarousel);
         
         document.getElementById('details-name').textContent = budget.name;
@@ -62,6 +65,9 @@ function loadBudget(id) {
 
         // Hide placeholders
         hidePlaceholders();
+
+        // Activate Carousel dots
+        changeActiveDot(0, "details-chart-dots");
     });
 }
 
@@ -70,7 +76,7 @@ function dashboardBudgetAction() {
 }
 
 function generateVariousCharts(items, slideNum, maxShow) {
-    Chart.defaults.global.legend.display = false;
+    Chart.defaults.plugins.legend.display = false;
 
     if (slideNum == 0) {
         const donutChart = document.createElement('canvas');
@@ -89,10 +95,14 @@ function generateVariousCharts(items, slideNum, maxShow) {
             },
             options: {
                 maintainAspectRatio: false,
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItems, data) {
-                            return data.labels[tooltipItems.index].toString() + ": " + user_currency + data.datasets[0].data[tooltipItems.index].toString();
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let dataObject = context.dataset;
+                                return dataObject.label + ": " + user_currency + dataObject.data[context.dataIndex];
+                            }
                         }
                     }
                 }
@@ -133,16 +143,39 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 },
                 maintainAspectRatio: false,
                 scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            maxTicksLimit: 5
+                    x: {
+                        display: true,
+                        grid: {
+                            drawTicks: true,
+                            color: COLORS_NAVY
                         },
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Amount (" + userData.currency + ")"
+                        ticks: {
+                            color: COLORS_GREY
                         }
-                    }]
+                    },
+                    y: {
+                        display: true,
+                        grid: {
+                            drawTicks: true,
+                            color: COLORS_NAVY
+                        },
+                        ticks: {
+                            color: COLORS_GREY,
+                            beginAtZero: true,
+                            maxTicksLimit: 5,
+                            callback: function(value, index, values) {
+                                return formatNumber(value);
+                            }
+                        },
+                        title: {
+                            color: COLORS_GREY,
+                            font: {
+                                size: 15,
+                            },
+                            display: true,
+                            text: "Amount (" + user_currency + ")"
+                        }
+                    }
                 },
                 tooltips: {
                     callbacks: {
