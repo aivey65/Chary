@@ -411,6 +411,58 @@ function submitEarningForm() {
     }
 }
 
+/////////////////////////////////////
+// Confirm update method functions //
+/////////////////////////////////////
+function confirmUpdateMethod(entityType) {
+    const popupHeader = document.createElement("h3");
+    popupHeader.id = "popup-header";
+    popupHeader.textContent = "Update Method";
+
+    const popupText = document.createElement("p");
+    popupText.id = "popup-text";
+    popupText.textContent = "How would you like to update occurances of this " + String(entityType).toLowerCase() + "? This action cannot be undone.";
+
+    const popupOption1 = createImageRadioOption("all", "../static/images/UpdateAllGraphic.svg");
+    const popupOption2 = createImageRadioOption("one", "../static/images/UpdateOneGraphic.svg");
+    const popupOption3 = createImageRadioOption("future", "../static/images/UpdateFuture.svg");
+
+    const popupForm = document.createElement("form");
+    popupForm.method = "post";
+    popupForm.action = "javascript:submit" + String(entityType) + "Form()";
+    popupForm.append(...popupOption1, ...popupOption2, ...popupOption3, popupSubmit, popupCancel);
+
+    const popup = document.createElement("div");
+    popup.id = "popup";
+    popup.append(popupHeader, popupText, popupForm);
+
+    const popupWrapper = document.createElement("div");
+    popupWrapper.id = "popup-wrapper";
+    popupWrapper.append(popup);
+}
+
+function createImageRadioOption(name, imgUrl) {
+    // First, create the input.
+    const popupOption = document.createElement("input");
+    popupOption.type = "radio";
+    popupOption.name = name;
+    popupOption.id = name;
+    popupOption.value = name;
+    popupOption.required = true;
+
+    // Create the label that will contain a given image
+    const optionLabel = document.createElement("label");
+    optionLabel.for = name;
+    optionLabel.classList.add(name + "-label", "label-update-method");
+
+    const optionImg = document.createElement("img");
+    optionImg.src = imgUrl;
+
+    optionLabel.append(optionImg);
+
+    return popupOption, optionLabel
+}
+
 //////////////////////////////////
 // Delete item submit functions //
 //////////////////////////////////

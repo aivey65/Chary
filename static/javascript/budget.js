@@ -97,7 +97,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     center: {
                         text: data.data[0] + "\n／\n" + data.data[1],
                         color: COLORS_LIGHT,
-                        minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+                        minFontSize: 15, // Default is 20 (in px), set to false and text will not wrap.
                         lineHeight: 25 // Default is 25 (in px), used for when text wraps
                     }
                 },
