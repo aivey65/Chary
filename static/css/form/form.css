@@ -28,9 +28,14 @@
     grid-column: 2;
 }
 
-#acd-content form {
+.acd-form {
     grid-row: 3;
     grid-column: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: .5fr 1fr .2fr .2fr .5fr .5fr .2fr .1fr .2fr;
+    gap: 0px var(--medPad);
+    margin: auto;
 }
 
 #alert-section h4 {
@@ -39,14 +44,6 @@
     font-size: 1.2rem;
     line-height: 1.5rem;
     color: var(--MainD);
-}
-
-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: .5fr 1fr .2fr .2fr .5fr .5fr .2fr .1fr .2fr;
-    gap: 0px var(--medPad);
-    margin: auto;
 }
 
 label, p {
@@ -61,7 +58,10 @@ label, p {
 #weekly:checked ~ .label-weekly,
 #biweekly:checked ~ .label-biweekly,
 #monthly:checked ~ .label-monthly,
-#yearly:checked ~ .label-yearly {
+#yearly:checked ~ .label-yearly,
+#all:checked ~ .all-label,
+#one:checked ~ .one-label,
+#future:checked ~ .future-label {
     background-color: var(--MainD);
     border-color: var(--MainD);
 }
@@ -73,6 +73,20 @@ label, p {
     padding: 1em;
     border: 2px solid var(--Light);
     border-radius: 1em;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    height: 70%;
+    min-width: 5rem;
+}
+
+.label-update-method {
+    cursor: pointer;
+    background-color: var(--Light);
+    color: var(--Light);
+    border: 4px solid var(--Light);
+    border-radius: 1.3em;
     display: flex;
     align-items: center;
     text-align: center;
@@ -162,4 +176,38 @@ label, p {
 
 .row8 {
     grid-row: 8;
+}
+
+/* Styles for the update method form */
+#popup {
+    width: 60%;
+}
+
+.update-method {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr auto;
+    gap: var(--smallPad);
+    justify-items: center;
+}
+
+#option-div-collection {
+    grid-column: 1/3;
+    grid-row: 1;
+    display: flex;
+    flex-direction: row;
+    gap: var(--lgPad);
+    align-items: center;
+}
+
+.option-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--smallPad);
+}
+
+.option-img {
+    width: 100%;
+    height: auto;
 }

@@ -3,12 +3,19 @@ const ScReCurrency = /[\$\xA2-\xA5\u058F\u060B\u09F2\u09F3\u09FB\u0AF1\u0BF9\u0E
 const ScReName = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
 const numbers = /^\d*\.?\d+$/;
 
+// Flags
+var possibleIndependantChange = false;
+
 // Specific value arrays
 const colorList = ["#AE1326", "#34E1EB", "#33EB7C", "#E8EB34", "#EB8F34", "#C16BCF"];
 const imageList = ["undraw_dog", "undraw_person1", "undraw_person2", "undraw_person3", "undraw_person4", "undraw_cat"];
 
 function userFormLoad() {
     fillProfilePics();
+}
+
+function independantChange() {
+    possibleIndependantChange = true;
 }
 
 function formLoad(configureDate=false) {
@@ -205,7 +212,7 @@ function submitUserForm() {
     })
 }
 
-function submitBudgetForm() {
+function submitBudgetForm(method) {
     const budgetAmount = document.getElementById('amount');
     const alertSection = document.getElementById('alert-section');
     alertSection.innerHTML = "";
@@ -273,7 +280,7 @@ function submitBudgetForm() {
     }
 }
 
-function submitExpenseForm() {
+function submitExpenseForm(method) {
     const expenseAmount = document.getElementById('amount');
     const alertSection = document.getElementById('alert-section');
     alertSection.innerHTML = "";
@@ -342,7 +349,7 @@ function submitExpenseForm() {
     }
 }
 
-function submitEarningForm() {
+function submitEarningForm(method) {
     const earningAmount = document.getElementById('amount');
     const alertSection = document.getElementById('alert-section');
     alertSection.innerHTML = "";
@@ -417,50 +424,80 @@ function submitEarningForm() {
 function confirmUpdateMethod(entityType) {
     const popupHeader = document.createElement("h3");
     popupHeader.id = "popup-header";
-    popupHeader.textContent = "Update Method";
+    popupHeader.textContent = "How would you like to update occurances?";
 
     const popupText = document.createElement("p");
     popupText.id = "popup-text";
-    popupText.textContent = "How would you like to update occurances of this " + String(entityType).toLowerCase() + "? This action cannot be undone.";
+    popupText.textContent = "NOTE: This action cannot be undone.";
 
-    const popupOption1 = createImageRadioOption("all", "../static/images/UpdateAllGraphic.svg");
-    const popupOption2 = createImageRadioOption("one", "../static/images/UpdateOneGraphic.svg");
-    const popupOption3 = createImageRadioOption("future", "../static/images/UpdateFuture.svg");
+    const popupOption1 = createImageRadioOption("all", "../static/images/UpdateAllGraphic.svg", "All Occurances");
+    const popupOption2 = createImageRadioOption("one", "../static/images/UpdateOneGraphic.svg", "One Occurance");
+    const popupOption3 = createImageRadioOption("future", "../static/images/UpdateFuture.svg", "Future Occurances");
+    const popupOptions = document.createElement("div");
+    popupOptions.id = "option-div-collection";
+    popupOptions.append(popupOption1, popupOption2, popupOption3);
+
+    const popupSubmit = document.createElement("button");
+    popupSubmit.type = "submit";
+    popupSubmit.textContent = "Submit";
+    popupSubmit.classList.add("cta-button");
+
+    const popupCancel = document.createElement("button");
+    popupCancel.textContent = "Cancel"
+    popupCancel.onclick = function() {
+        popupWrapper.remove();
+    }
 
     const popupForm = document.createElement("form");
+    popupForm.classList.add("update-method");
     popupForm.method = "post";
-    popupForm.action = "javascript:submit" + String(entityType) + "Form()";
-    popupForm.append(...popupOption1, ...popupOption2, ...popupOption3, popupSubmit, popupCancel);
+    popupForm.action = "javascript:submit" + String(entityType) + "Form(" + document.querySelector("input[name='radio']:checked").value + ")";
+    popupForm.append(popupOptions, popupSubmit, popupCancel);
 
     const popup = document.createElement("div");
     popup.id = "popup";
-    popup.append(popupHeader, popupText, popupForm);
+    popup.append(popupHeader, popupForm, popupText);
 
     const popupWrapper = document.createElement("div");
     popupWrapper.id = "popup-wrapper";
     popupWrapper.append(popup);
+    popupWrapper.addEventListener("click", (e) => {
+        if (e.target == popupWrapper) {
+            popupWrapper.remove();
+        }
+    });
+
+    document.getElementById("acd-content").append(popupWrapper);
 }
 
-function createImageRadioOption(name, imgUrl) {
+function createImageRadioOption(id, imgUrl, text) {
     // First, create the input.
     const popupOption = document.createElement("input");
     popupOption.type = "radio";
-    popupOption.name = name;
-    popupOption.id = name;
-    popupOption.value = name;
+    popupOption.name = "radio";
+    popupOption.id = id;
+    popupOption.value = id;
     popupOption.required = true;
 
     // Create the label that will contain a given image
     const optionLabel = document.createElement("label");
-    optionLabel.for = name;
-    optionLabel.classList.add(name + "-label", "label-update-method");
+    optionLabel.htmlFor = id;
+    optionLabel.classList.add(id + "-label", "label-update-method");
 
     const optionImg = document.createElement("img");
     optionImg.src = imgUrl;
+    optionImg.classList.add("option-img");
 
     optionLabel.append(optionImg);
 
-    return popupOption, optionLabel
+    const description = document.createElement("p");
+    description.textContent = text;
+
+    const optionDiv = document.createElement("div");
+    optionDiv.classList.add("option-div");
+    optionDiv.append(description, popupOption, optionLabel);
+
+    return optionDiv;
 }
 
 //////////////////////////////////

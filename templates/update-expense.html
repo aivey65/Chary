@@ -35,22 +35,22 @@
             <div id="alert-section"></div>
             <button id="back-button" onclick="back()" type="button" value="Back">⟨ Cancel</button>
             <h2>Update Expense</h2>
-            <form action="javascript:submitExpenseForm()" method="post">
+            <form class="acd-form" action="javascript:confirmUpdateMethod('Expense')" method="post">
                 <input type="hidden" id="id" name="id" value={{id}} />
 
                 <div id="name-div">
                     <label class="required-input" for="name">Title</label>
-                    <input type="text" id="name" name="name" value="{{name}}" required>
+                    <input type="text" id="name" name="name" value="{{name}}" onchange="independantChange()" required>
                 </div>
 
                 <div id="amount-div">
                     <label class="required-input" for="amount">Amount</label>
-                    <input type="text" id="amount" name="amount" value={{amount}} required>
+                    <input type="text" id="amount" name="amount" value={{amount}} onchange="independantChange()" required>
                 </div>
 
                 <div id="category-div">
                     <label class="required-input" for="category">Budget Category</label>
-                    <select id="category" name="category" required>
+                    <select id="category" name="category" onchange="independantChange()" required>
                         {% for option in allCategories %}
                             {% if option == category %}
                                 <option value="{{option}}" selected="selected">{{option}}</option>
@@ -63,7 +63,7 @@
 
                 <div id="description-div">
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" rows="4" cols="50">{{description}}</textarea>
+                    <textarea id="description" name="description" rows="4" cols="50" onchange="independantChange()">{{description}}</textarea>
                 </div>
 
                 <div id="start-div">
