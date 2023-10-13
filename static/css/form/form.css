@@ -86,7 +86,7 @@ label, p {
     background-color: var(--Light);
     color: var(--Light);
     border: 4px solid var(--Light);
-    border-radius: 1.3em;
+    border-radius: 2em;
     display: flex;
     align-items: center;
     text-align: center;
@@ -180,7 +180,7 @@ label, p {
 
 /* Styles for the update method form */
 #popup {
-    width: 60%;
+    width: 80%;
 }
 
 .update-method {
@@ -188,7 +188,12 @@ label, p {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr auto;
     gap: var(--smallPad);
-    justify-items: center;
+    margin-top: var(--smallPad);
+    margin-bottom: var(--smallPad);
+}
+
+.update-method .cta-button {
+    justify-self: end;
 }
 
 #option-div-collection {
