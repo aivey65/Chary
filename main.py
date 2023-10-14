@@ -306,7 +306,19 @@ def renderDashboard():
 @app.route("/expand-budget")
 @login_is_required
 def renderBudget():
-    return render_template('budget.html', id=request.args.get('id'), nav=renderedNav())
+    startDate = request.args.get('date')
+    endDate = None
+    period = request.args.get('period')
+    if (period == 0):
+        endDate = startDate
+    elif (period == 1 or period == 2): # Weekly or biweekly
+        startDate, endDate = database.getCurrentWeek(startDate)
+    elif (period == 3):
+        startDate, endDate = database.getCurrentMonth(startDate)
+    elif (period == 4):
+        startDate, endDate = database.getCurrentYear(startDate)
+    
+    return render_template('budget.html', id=request.args.get('id'), curStartDate=startDate, curEndDate=endDate, nav=renderedNav())
 
 @app.route("/profile")
 @login_is_required
@@ -360,6 +372,7 @@ def renderUpdateUser():
 def renderUpdateBudget():
     try: 
         budgetId = request.args.get("id")
+        curDate = request.args.get("date")
 
         # This database method checks to make sure that the user owns the budget they are trying to update
         budgetInfo = database.getBudget(budgetId, session["email"])
@@ -367,6 +380,7 @@ def renderUpdateBudget():
         return render_template(
             'update-budget.html', 
             id=budgetId,
+            currentDate=curDate,
             name=budgetInfo["name"],
             description=budgetInfo["description"],
             amount=budgetInfo["amount"],
@@ -384,6 +398,7 @@ def renderUpdateBudget():
 def renderUpdateExpense():
     try:
         expenseId = request.args.get("id")
+        curDate = request.args.get("id")
 
         # This database method checks to make sure that the user owns the expense they are trying to update
         databaseInfo = database.getExpense(expenseId, session["email"])
@@ -393,6 +408,7 @@ def renderUpdateExpense():
         return render_template(
             'update-expense.html', 
             id=expenseId,
+            currentDate=curDate,
             name=expenseInfo["name"], 
             description=expenseInfo["description"], 
             amount=expenseInfo["amount"],
@@ -412,6 +428,7 @@ def renderUpdateExpense():
 def renderUpdateEarning():
     try: 
         earningId = request.args.get("id")
+        curDate = request.args.get("date")
 
         # This database method checks to make sure that the user owns the expense they are trying to update
         earningInfo = database.getEarning(earningId, session["email"])
@@ -419,6 +436,7 @@ def renderUpdateEarning():
         return render_template(
             'update-earning.html', 
             id=earningId,
+            currentDate = curDate,
             name=earningInfo["name"],
             description=earningInfo["description"],
             amount=earningInfo["amount"],

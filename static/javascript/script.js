@@ -512,9 +512,13 @@ function generateBudgetsUI(budgets, currency) {
     for (const key in budgets) {
         const budgetPanel = document.createElement('div');
         budgetPanel.classList.add('budget-info');
+        // Add meta data about the start date and period
+        budgetPanel.dataset.currentDate = budgets[key].startDate;
+        budgetPanel.dataset.period = budgets[key].budgetPeriod;
+        // Use metadata in event listeners
         budgetPanel.addEventListener('click', function(e) {
             if (!e.target.classList.contains('options')) {
-                window.location = "/expand-budget?id=" + key;
+                window.location = "/expand-budget?id=" + key + "&date=" + budgetPanel.dataset.currentDate + "&period=" + budgetPanel.dataset.period;
             }
         })
 
@@ -582,7 +586,7 @@ function generateBudgetsUI(budgets, currency) {
         const budget_update = document.createElement('div');
         budget_update.classList.add('budget-edit', 'options');
         budget_update.addEventListener('click', function() {
-            window.location = "/form/update-budget?id=" + key;
+            window.location = "/form/update-budget?id=" + key + "&date=" + budgetPanel.dataset.currentDate;
         })
         budget_update.append(budget_update_img, budget_update_text);
 
@@ -595,7 +599,7 @@ function generateBudgetsUI(budgets, currency) {
         const budget_more = document.createElement('div');
         budget_more.classList.add('budget-more', 'options');
         budget_more.addEventListener('click', function() {
-            window.location = "/expand-budget?id=" + key;
+            window.location = "/expand-budget?id=" + key + "&date=" + budgetPanel.dataset.currentDate + "&period=" + budgetPanel.dataset.period;
         })
         budget_more.append(budget_more_img, budget_more_text)
 

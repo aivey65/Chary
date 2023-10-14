@@ -349,6 +349,10 @@ function submitExpenseForm(method) {
     }
 }
 
+/*
+ * @param method: String
+ *      - "all", "one", or "future", depending on how the user is choosing to update certain fields.
+*/
 function submitEarningForm(method) {
     const earningAmount = document.getElementById('amount');
     const alertSection = document.getElementById('alert-section');
@@ -363,32 +367,37 @@ function submitEarningForm(method) {
     const earningId = document.getElementById('id');
 
     if (earningId) {
-        fetch('/data/update-earning', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                id: earningId.value,
-                name: document.getElementById("name").value,
-                description: document.getElementById("description").value,
-                amount: document.getElementById("amount").value,
-                radio: document.querySelector("input[name='radio']:checked").value,
-                start: document.getElementById("start").value,
-                end: document.getElementById("end").value,
-                recurring: document.querySelector("input[name='recurring']:checked").value,
-
-            })
-        }).then((response) => response.json()).then((responseData) => {
-            if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + ". Please revise your earning and try again.";
-                updateAlertSection(message);
-                window.scrollTo({top: 0, behavior: 'smooth'});
-                return
-            } else {
-                window.location = "/dashboard?refresh=true&tab=earnings";
-            }
-        });
+        if (method == "all") {
+            fetch('/data/update-earning', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: earningId.value,
+                    name: document.getElementById("name").value,
+                    description: document.getElementById("description").value,
+                    amount: document.getElementById("amount").value,
+                    radio: document.querySelector("input[name='radio']:checked").value,
+                    start: document.getElementById("start").value,
+                    end: document.getElementById("end").value,
+                    recurring: document.querySelector("input[name='recurring']:checked").value,
+    
+                })
+            }).then((response) => response.json()).then((responseData) => {
+                if (responseData.status != 201) {
+                    message = "- Error: " + String(responseData.message) + ". Please revise your earning and try again.";
+                    updateAlertSection(message);
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                    return
+                } else {
+                    window.location = "/dashboard?refresh=true&tab=earnings";
+                }
+            });
+        }
+        else if (method == "one") {
+            
+        }      
     } else {
         fetch('/data/create-earning', {
             method: "POST",
@@ -422,6 +431,16 @@ function submitEarningForm(method) {
 // Confirm update method functions //
 /////////////////////////////////////
 function confirmUpdateMethod(entityType) {
+    if (!possibleIndependantChange) {
+        if(entityType == "Budget") {
+            submitBudgetForm("all");
+        } else if (entityType == "Expense") {
+            submitExpenseForm("all");
+        } else if (entityType == "Earning") {
+            submitEarningForm("all");
+        }
+    }
+
     const popupHeader = document.createElement("h3");
     popupHeader.id = "popup-header";
     popupHeader.textContent = "How would you like to update occurances?";
