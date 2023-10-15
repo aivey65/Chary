@@ -51,7 +51,11 @@ function updateData(type, period, date) {
         if (type == 'budgets') {
             budgetContainer = document.getElementById("budget-container");
             budgetContainer.innerHTML = "";
-            budgetContainer.append(generateBudgetsUI(responseData.data, userData.currency));
+            if (period == -1) {
+                budgetContainer.append(generateBudgetsUI(responseData.data, userData.currency, new Date(date), true));
+            } else {
+                budgetContainer.append(generateBudgetsUI(responseData.data, userData.currency, new Date(date), false));
+            }
         } else if (type == 'expenses') {
             expenseContainer = document.getElementById("expense-container");
             expenseContainer.innerHTML = "";

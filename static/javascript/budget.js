@@ -24,6 +24,8 @@ function loadBudget(id) {
         const dotCarousel = carouselButtons(chartData, "details-chart-dots", "limited-charts-container", 1, generateVariousCharts);
         chartContainer.append(dotCarousel);
         
+        document.getElementById('details-name').textContent = budget.name;
+
         if (budget.description == "") {
             document.getElementById('details-description').textContent = "None";
         }

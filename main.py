@@ -306,19 +306,12 @@ def renderDashboard():
 @app.route("/expand-budget")
 @login_is_required
 def renderBudget():
-    startDate = request.args.get('date')
-    endDate = None
+    currentDate = request.args.get('date')
     period = request.args.get('period')
-    if (period == 0):
-        endDate = startDate
-    elif (period == 1 or period == 2): # Weekly or biweekly
-        startDate, endDate = database.getCurrentWeek(startDate)
-    elif (period == 3):
-        startDate, endDate = database.getCurrentMonth(startDate)
-    elif (period == 4):
-        startDate, endDate = database.getCurrentYear(startDate)
+
+    startDate, endDate = database.getCurrentStartEnd(currentDate, period)
     
-    return render_template('budget.html', id=request.args.get('id'), curStartDate=startDate, curEndDate=endDate, nav=renderedNav())
+    return render_template('budget.html', id=request.args.get('id'), currentStartDate=startDate, currentEndDate=endDate, nav=renderedNav())
 
 @app.route("/profile")
 @login_is_required
@@ -380,7 +373,7 @@ def renderUpdateBudget():
         return render_template(
             'update-budget.html', 
             id=budgetId,
-            currentDate=curDate,
+            currentStartDate=curDate,
             name=budgetInfo["name"],
             description=budgetInfo["description"],
             amount=budgetInfo["amount"],
@@ -398,7 +391,7 @@ def renderUpdateBudget():
 def renderUpdateExpense():
     try:
         expenseId = request.args.get("id")
-        curDate = request.args.get("id")
+        currentDate = request.args.get("date")
 
         # This database method checks to make sure that the user owns the expense they are trying to update
         databaseInfo = database.getExpense(expenseId, session["email"])
@@ -408,7 +401,7 @@ def renderUpdateExpense():
         return render_template(
             'update-expense.html', 
             id=expenseId,
-            currentDate=curDate,
+            currentDate=currentDate,           
             name=expenseInfo["name"], 
             description=expenseInfo["description"], 
             amount=expenseInfo["amount"],
@@ -428,7 +421,7 @@ def renderUpdateExpense():
 def renderUpdateEarning():
     try: 
         earningId = request.args.get("id")
-        curDate = request.args.get("date")
+        currentDate = request.args.get("date")
 
         # This database method checks to make sure that the user owns the expense they are trying to update
         earningInfo = database.getEarning(earningId, session["email"])
@@ -436,7 +429,7 @@ def renderUpdateEarning():
         return render_template(
             'update-earning.html', 
             id=earningId,
-            currentDate = curDate,
+            currentDate=currentDate,
             name=earningInfo["name"],
             description=earningInfo["description"],
             amount=earningInfo["amount"],
@@ -676,20 +669,24 @@ def updateUser():
 def updateBudget():
     json_request = request.json
     id = json_request["id"]
+    method = json_request["method"]
     name = json_request["name"] if bool(json_request["name"]) else ""
     description = json_request["description"] if bool(json_request["description"]) else ""
     amount = json_request["amount"] if bool(json_request["amount"]) else ""
     budgetPeriod = json_request["radio"] if bool(json_request["radio"]) else 0
     startDate = json_request["start"] if bool(json_request["start"]) else ""
     endDate = json_request["end"] if bool(json_request["end"]) else ""
+    currentDate = json_request["current"] if bool(json_request["end"]) else ""
     recurring = True if json_request["recurring"] == 'True' else False
     try:
         database.updateBudget(
             session["email"], 
             id,
+            method,
             name,
             startDate,
             endDate, 
+            currentDate,
             amount,
             description, 
             budgetPeriod, 
@@ -710,6 +707,7 @@ def updateBudget():
 def updateExpense():
     json_request = request.json
     id = json_request["id"]
+    method = json_request["method"]
     name = json_request["name"] if bool(json_request["name"]) else ""
     amount = json_request["amount"] if bool(json_request["amount"]) else ""
     category = json_request["category"] if bool(json_request["category"]) else ""
@@ -717,16 +715,19 @@ def updateExpense():
     recurPeriod = json_request["radio"] if bool(json_request["radio"]) else ""
     startDate = json_request["start"] if bool(json_request["start"]) else ""
     endDate = json_request["end"] if bool(json_request["end"]) else ""
+    currentDate = json_request["current"] if bool(json_request["end"]) else ""
     recurring = True if json_request["recurring"] == 'True' else False
     
     try:
         database.updateExpense(
             session["email"], 
             id, 
+            method,
             name,
             category, 
             startDate,
             endDate,
+            currentDate,
             amount, 
             description, 
             recurPeriod, 
@@ -747,21 +748,25 @@ def updateExpense():
 def updateEarning():
     json_request = request.json
     id = json_request["id"]
+    method = json_request["method"]
     name = json_request["name"] if bool(json_request["name"]) else ""
     amount = json_request["amount"] if bool(json_request["amount"]) else ""
     description = json_request["description"] if bool(json_request["description"]) else ""
     recurPeriod = json_request["radio"] if bool(json_request["radio"]) else ""
     startDate = json_request["start"] if bool(json_request["start"]) else ""
     endDate = json_request["end"] if bool(json_request["end"]) else ""
+    currentDate = json_request["current"] if bool(json_request["end"]) else ""
     recurring = True if json_request["recurring"] == 'True' else False
     
     try:
         database.updateEarning(
             session["email"], 
             id, 
+            method,
             name, 
             startDate,
             endDate,
+            currentDate,
             amount,
             description, 
             recurPeriod, 

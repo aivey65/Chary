@@ -505,20 +505,19 @@ function generateCurveProgress(fillAmount, totalAmount, width='200', height='120
  *      stored in the database.
  * @param currency (string): A single character representing the user's currency symbol
  */
-function generateBudgetsUI(budgets, currency) {
+function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=false) {
     budgetContainer = document.createElement('div');
     budgetContainer.id = 'budget-container';
     
     for (const key in budgets) {
+        // Meta data
+        const formatDateString = viewingDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+
         const budgetPanel = document.createElement('div');
         budgetPanel.classList.add('budget-info');
-        // Add meta data about the start date and period
-        budgetPanel.dataset.currentDate = budgets[key].startDate;
-        budgetPanel.dataset.period = budgets[key].budgetPeriod;
-        // Use metadata in event listeners
         budgetPanel.addEventListener('click', function(e) {
             if (!e.target.classList.contains('options')) {
-                window.location = "/expand-budget?id=" + key + "&date=" + budgetPanel.dataset.currentDate + "&period=" + budgetPanel.dataset.period;
+                window.location = "/expand-budget?id=" + key + "&date=" + formatDateString + "&inactive=" + inactive;
             }
         })
 
@@ -586,7 +585,7 @@ function generateBudgetsUI(budgets, currency) {
         const budget_update = document.createElement('div');
         budget_update.classList.add('budget-edit', 'options');
         budget_update.addEventListener('click', function() {
-            window.location = "/form/update-budget?id=" + key + "&date=" + budgetPanel.dataset.currentDate;
+            window.location = "/form/update-budget?id=" + key + "&date=" + formatDateString + "&inactive=" + inactive;
         })
         budget_update.append(budget_update_img, budget_update_text);
 
@@ -599,7 +598,7 @@ function generateBudgetsUI(budgets, currency) {
         const budget_more = document.createElement('div');
         budget_more.classList.add('budget-more', 'options');
         budget_more.addEventListener('click', function() {
-            window.location = "/expand-budget?id=" + key + "&date=" + budgetPanel.dataset.currentDate + "&period=" + budgetPanel.dataset.period;
+            window.location = "/expand-budget?id=" + key + "&date=" + formatDateString + "&inactive=" + inactive;
         })
         budget_more.append(budget_more_img, budget_more_text)
 
@@ -686,6 +685,13 @@ function generateTableUI(type, entityList, currency, limit=null) {
                 recur.append(recur_img);
             }
 
+            const date = document.createElement('td');
+            const formatDate =  new Date(rawDate);
+            const formatDateString = formatDate.toLocaleDateString('en-us', getDateFormattingOptions());
+            date.dataset.startDate = formatDate;
+            date.classList.add('start-date');
+            date.textContent = formatDateString;
+
             const update = document.createElement('td');
             update.classList.add('td-update');
             const update_img = document.createElement('img');
@@ -693,15 +699,9 @@ function generateTableUI(type, entityList, currency, limit=null) {
             update_img.classList.add("update-img");
             update_img.title = "Update";
             update.addEventListener('click', function() {
-                window.location = "/form/update-" + TYPES[type] + "?id=" + key;
+                window.location = "/form/update-" + TYPES[type] + "?id=" + key + "&date=" + formatDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
             })
             update.append(update_img);
-
-            const date = document.createElement('td');
-            const formatDate =  new Date(rawDate);
-            date.dataset.startDate = formatDate;
-            date.classList.add('start-date');
-            date.textContent = formatDate.toLocaleDateString('en-us', getDateFormattingOptions());
 
             const row1 = document.createElement('tr');
             row1.classList.add('main-row');
