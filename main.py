@@ -669,14 +669,14 @@ def updateUser():
 def updateBudget():
     json_request = request.json
     id = json_request["id"]
-    method = json_request["method"]
+    method = json_request["method"] if bool(json_request["method"]) else ""
     name = json_request["name"] if bool(json_request["name"]) else ""
     description = json_request["description"] if bool(json_request["description"]) else ""
     amount = json_request["amount"] if bool(json_request["amount"]) else ""
     budgetPeriod = json_request["radio"] if bool(json_request["radio"]) else 0
     startDate = json_request["start"] if bool(json_request["start"]) else ""
     endDate = json_request["end"] if bool(json_request["end"]) else ""
-    currentDate = json_request["current"] if bool(json_request["end"]) else ""
+    currentDate = json_request["current"] if bool(json_request["current"]) else ""
     recurring = True if json_request["recurring"] == 'True' else False
     try:
         database.updateBudget(
@@ -707,7 +707,7 @@ def updateBudget():
 def updateExpense():
     json_request = request.json
     id = json_request["id"]
-    method = json_request["method"]
+    method = json_request["method"] if bool(json_request["method"]) else ""
     name = json_request["name"] if bool(json_request["name"]) else ""
     amount = json_request["amount"] if bool(json_request["amount"]) else ""
     category = json_request["category"] if bool(json_request["category"]) else ""
@@ -715,7 +715,7 @@ def updateExpense():
     recurPeriod = json_request["radio"] if bool(json_request["radio"]) else ""
     startDate = json_request["start"] if bool(json_request["start"]) else ""
     endDate = json_request["end"] if bool(json_request["end"]) else ""
-    currentDate = json_request["current"] if bool(json_request["end"]) else ""
+    currentDate = json_request["current"] if bool(json_request["current"]) else ""
     recurring = True if json_request["recurring"] == 'True' else False
     
     try:
@@ -748,14 +748,14 @@ def updateExpense():
 def updateEarning():
     json_request = request.json
     id = json_request["id"]
-    method = json_request["method"]
+    method = json_request["method"] if bool(json_request["method"]) else ""
     name = json_request["name"] if bool(json_request["name"]) else ""
     amount = json_request["amount"] if bool(json_request["amount"]) else ""
     description = json_request["description"] if bool(json_request["description"]) else ""
     recurPeriod = json_request["radio"] if bool(json_request["radio"]) else ""
     startDate = json_request["start"] if bool(json_request["start"]) else ""
     endDate = json_request["end"] if bool(json_request["end"]) else ""
-    currentDate = json_request["current"] if bool(json_request["end"]) else ""
+    currentDate = json_request["current"] if bool(json_request["current"]) else ""
     recurring = True if json_request["recurring"] == 'True' else False
     
     try:

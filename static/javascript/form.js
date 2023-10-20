@@ -217,8 +217,6 @@ function submitUserForm() {
 }
 
 function submitBudgetForm(method=null) {
-    document.getElementById('popup-wrapper').remove();
-
     const budgetAmount = document.getElementById('amount');
     const alertSection = document.getElementById('alert-section');
     alertSection.innerHTML = "";
@@ -289,8 +287,6 @@ function submitBudgetForm(method=null) {
 }
 
 function submitExpenseForm(method=null) {
-    document.getElementById('popup-wrapper').remove();
-
     const expenseAmount = document.getElementById('amount');
     const alertSection = document.getElementById('alert-section');
     alertSection.innerHTML = "";
@@ -299,11 +295,13 @@ function submitExpenseForm(method=null) {
         message = "- The expense amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
         updateAlertSection(message);
         window.scrollTo({top: 0, behavior: 'smooth'});
+        return;
     }
 
     const expenseId = document.getElementById('id');
 
     if (expenseId) {
+        console.log(currentStartDate)
         fetch('/data/update-expense', {
             method: "POST",
             headers: {
@@ -366,8 +364,6 @@ function submitExpenseForm(method=null) {
  *      - "all", "one", or "future", depending on how the user is choosing to update certain fields.
 */
 function submitEarningForm(method=null) {
-    document.getElementById('popup-wrapper').remove();
-
     const earningAmount = document.getElementById('amount');
     const alertSection = document.getElementById('alert-section');
     alertSection.innerHTML = "";
@@ -376,11 +372,13 @@ function submitEarningForm(method=null) {
         message = "- The earning amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
         updateAlertSection(message);
         window.scrollTo({top: 0, behavior: 'smooth'});
+        return;
     }
 
     const earningId = document.getElementById('id');
 
     if (earningId) {
+        console.log(currentStartDate)
         fetch('/data/update-earning', {
             method: "POST",
             headers: {
@@ -404,7 +402,7 @@ function submitEarningForm(method=null) {
                 message = "- Error: " + String(responseData.message) + ". Please revise your earning and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
-                return
+                return;
             } else {
                 window.location = "/dashboard?refresh=true&tab=earnings";
             }
@@ -442,69 +440,82 @@ function submitEarningForm(method=null) {
 // Confirm update method functions //
 /////////////////////////////////////
 function confirmUpdateMethod(entityType) {
-    if (!possibleIndependantChange) {
-        if(entityType == "Budget") {
-            submitBudgetForm("all");
-        } else if (entityType == "Expense") {
-            submitExpenseForm("all");
-        } else if (entityType == "Earning") {
-            submitEarningForm("all");
-        }
-    }
+    const recurringCheck = document.querySelector("input[name='recurring']:checked").value;
 
-    const popupHeader = document.createElement("h3");
-    popupHeader.id = "popup-header";
-    popupHeader.textContent = "How would you like to update occurances?";
+    if (!possibleIndependantChange || recurringCheck == "False") {
+        callSubmit(String(entityType), "all");
+    } else {
+        const popupHeader = document.createElement("h3");
+        popupHeader.id = "popup-header";
+        popupHeader.textContent = "How would you like to update occurances?";
 
-    const popupText = document.createElement("p");
-    popupText.id = "popup-text";
-    popupText.textContent = "NOTE: This action cannot be undone.";
+        const popupText = document.createElement("p");
+        popupText.id = "popup-text";
+        popupText.textContent = "NOTE: This action cannot be undone.";
 
-    const popupOption1 = createImageRadioOption("all", "../static/images/UpdateAllGraphic.svg", "All Occurances");
-    const popupOption2 = createImageRadioOption("one", "../static/images/UpdateOneGraphic.svg", "One Occurance");
-    const popupOption3 = createImageRadioOption("future", "../static/images/UpdateFuture.svg", "Future Occurances");
-    const popupOptions = document.createElement("div");
-    popupOptions.id = "option-div-collection";
-    popupOptions.append(popupOption1, popupOption2, popupOption3);
+        const popupOption1 = createImageRadioOption("all", "../static/images/UpdateAllGraphic.svg", "All Occurances");
+        const popupOption2 = createImageRadioOption("one", "../static/images/UpdateOneGraphic.svg", "One Occurance");
+        const popupOption3 = createImageRadioOption("future", "../static/images/UpdateFuture.svg", "Future Occurances");
+        const popupOptions = document.createElement("div");
+        popupOptions.id = "option-div-collection";
+        popupOptions.append(popupOption1, popupOption2, popupOption3);
 
-    const popupSubmit = document.createElement("button");
-    popupSubmit.type = "submit";
-    popupSubmit.textContent = "Submit";
-    popupSubmit.classList.add("cta-button");
-
-    const popupCancel = document.createElement("button");
-    popupCancel.textContent = "Cancel"
-    popupCancel.onclick = function() {
-        popupWrapper.remove();
-    }
-
-    const popupForm = document.createElement("form");
-    popupForm.classList.add("update-method");
-    popupForm.method = "post";
-    popupForm.action = "javascript:submit" + String(entityType) + "Form(" + document.querySelector("input[name='radio']:checked").value + ")";
-    popupForm.append(popupOptions, popupSubmit, popupCancel);
-
-    const popup = document.createElement("div");
-    popup.id = "popup";
-    popup.append(popupHeader, popupForm, popupText);
-
-    const popupWrapper = document.createElement("div");
-    popupWrapper.id = "popup-wrapper";
-    popupWrapper.append(popup);
-    popupWrapper.addEventListener("click", (e) => {
-        if (e.target == popupWrapper) {
+        const popupSubmit = document.createElement("button");
+        popupSubmit.type = "submit";
+        popupSubmit.textContent = "Submit";
+        popupSubmit.classList.add("cta-button");
+        popupSubmit.onsubmit = function() {
             popupWrapper.remove();
         }
-    });
 
-    document.getElementById("acd-content").append(popupWrapper);
+        const popupCancel = document.createElement("button");
+        popupCancel.textContent = "Cancel"
+        popupCancel.onclick = function() {
+            popupWrapper.remove();
+        }
+
+        const popupForm = document.createElement("form");
+        popupForm.classList.add("update-method");
+        popupForm.method = "post";
+        popupForm.append(popupOptions, popupSubmit, popupCancel);
+
+        const popup = document.createElement("div");
+        popup.id = "popup";
+        popup.append(popupHeader, popupForm, popupText);
+
+        const popupWrapper = document.createElement("div");
+        popupWrapper.id = "popup-wrapper";
+        popupWrapper.append(popup);
+        popupWrapper.addEventListener("click", (e) => {
+            if (e.target == popupWrapper) {
+                popupWrapper.remove();
+            }
+        });
+
+        document.getElementById("acd-content").append(popupWrapper);
+        popupForm.action = "javascript:callSubmit('" + String(entityType) + "')";
+    }
+}
+
+function callSubmit(entityType, method=null) {
+    if (method == null) {
+        method = document.querySelector("input[name='method-radio']:checked").value;
+    }
+
+    if(entityType == "Budget") {
+        submitBudgetForm(method);
+    } else if (entityType == "Expense") {
+        submitExpenseForm(method);
+    } else if (entityType == "Earning") {
+        submitEarningForm(method);
+    }
 }
 
 function createImageRadioOption(id, imgUrl, text) {
     // First, create the input.
     const popupOption = document.createElement("input");
     popupOption.type = "radio";
-    popupOption.name = "radio";
+    popupOption.name = "method-radio";
     popupOption.id = id;
     popupOption.value = id;
     popupOption.required = true;
@@ -535,7 +546,7 @@ function createImageRadioOption(id, imgUrl, text) {
 //////////////////////////////////
 function confirmDelete(entityType) {
     var typeString;
-    if (entityType == "user") {
+    if (String(entityType) == "user") {
         typeString = "account";
     } else {
         typeString = String(entityType);
@@ -588,8 +599,8 @@ function budgetDeleteOptions() {
 function finalizeDelete(entityType) {
     const idToDelete = document.getElementById("id").value;
 
-    console.log('/data/delete-' + entityType);
-    fetch('/data/delete-' + entityType, {
+    console.log('/data/delete-' + String(entityType));
+    fetch('/data/delete-' + String(entityType), {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -604,10 +615,10 @@ function finalizeDelete(entityType) {
             window.scrollTo(0, 0);
             return
         } else {
-            if (entityType == "user") {
+            if (String(entityType) == "user") {
                 window.location = "/";
             } else {
-                window.location = "/dashboard?refresh=true&tab=" + entityType + "s";
+                window.location = "/dashboard?refresh=true&tab=" + String(entityType) + "s";
             }
         }
     })

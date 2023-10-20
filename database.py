@@ -876,7 +876,28 @@ def updateUserReferenceIds(email, operation, refType, id):
     else:
         raise RuntimeError("Update reference failed, invalid parameters!")
 
+
 def updateBudget(email, id, method, name, startDate, endDate="", currentDate=date.today(), amount=0, description="", recurPeriod=3, recurring=True):
+    """
+    When updating budgets, some things need to be kept consistant ALWAYS
+        - Name
+        - Recurring
+        - RecurPeriod
+    These need to be controlled based on update method, and changed to the new, user-provided one:
+        - One
+            startDate to currentDate - 1 day
+            currentDate to currentDate + 1 period
+            currentDate + 1 Period + 1 day to endDate
+        - All
+            startDate to endDate
+        - Future
+            startDate to currentDate - 1 day
+            currentDate to endDate
+    These values can change between instances:
+        - amount
+        - description
+    """
+    currentDate = date.fromisoformat(currentDate)
     budgetList = getUser(email)['data']['budgets']
 
     # Check to make sure that the id passed in corresponds to an item in the user's database
@@ -930,30 +951,34 @@ def updateBudget(email, id, method, name, startDate, endDate="", currentDate=dat
                 })
             elif (method == "one"):
                 # Create a new budget for the one changing instance
-                newStart = currentDate
-                newEnd = currentDate + getTimeDelta(recurPeriod)
-                createBudget(email, name, newStart, newEnd, amount, description, False, recurPeriod)
+                newStart = currentDate.isoformat()
+                newEnd = currentDate + getTimeDelta(int(recurPeriod))
+                createBudget(email, name, newStart, newEnd.isoformat(), amount, description, recurring, recurPeriod)
 
                 # Create a new budget for the future instance, matching the past instance in everything but start/end dates
                 futureStart = newEnd + getTimeDelta(0)
-                createBudget(email, name, futureStart, oldEnd, oldAmount, oldDesc, oldRecurring, oldPeriod)
+                createBudget(email, name, futureStart.isoformat(), oldEnd, oldAmount, oldDesc, oldRecurring, oldPeriod)
 
                 # Update original budget to have an end date right before the newStart date
-                pastEnd = newStart - getTimeDelta(0)
+                pastEnd = currentDate - getTimeDelta(0)
                 budget_ref.update({
-                    'endDate': str(pastEnd),
-                    'name': str(name)
+                    'startDate': str(startDate),
+                    'endDate': str(pastEnd.isoformat()),
+                    'name': str(name),
+                    'budgetPeriod': int(recurPeriod),
                 })
             elif (method == "future"):
                 # Create a new budget for the current/future instance
-                newStart = currentDate
+                newStart = currentDate.isoformat()
                 createBudget(email, name, newStart, endDate, amount, description, recurring, recurPeriod)
 
                 # Update the original budget to have an end date right before the newStart date
-                pastEnd = newStart - getTimeDelta(0)
+                pastEnd = currentDate - getTimeDelta(0)
                 budget_ref.update({
-                    'endDate': str(pastEnd),
-                    'name': str(name)
+                    'startDate': str(startDate),
+                    'endDate': str(pastEnd.isoformat()),
+                    'name': str(name),
+                    'budgetPeriod': int(recurPeriod),
                 })
             else:
                 raise RuntimeError("Invalid update method provided. Update canceled.")
@@ -963,6 +988,27 @@ def updateBudget(email, id, method, name, startDate, endDate="", currentDate=dat
         raise RuntimeError("Verification failed, update canceled.")
 
 def updateExpense(email, id, method, name, category, startDate, endDate="", currentDate=date.today(), amount=0, description="", recurPeriod=0, recurring=False):
+    """
+    When updating expenses, some things need to be kept consistant ALWAYS
+        - recurring
+        - recurPeriod
+    These need to be controlled based on update method, and changed to the new, user-provided one:
+        - One
+            startDate to currentDate - 1 day
+            currentDate to currentDate + 1 period
+            currentDate + 1 Period + 1 day to endDate
+        - All
+            startDate to endDate
+        - Future
+            startDate to currentDate - 1 day
+            currentDate to endDate
+    These values can change between instances:
+        - name
+        - amount
+        - description
+        - budgetCategory
+    """
+    currentDate = date.fromisoformat(currentDate)
     expenseList = getUser(email)['data']['expenses']
 
     # Check to make sure that the id passed in corresponds to an item in the user's database
@@ -972,16 +1018,16 @@ def updateExpense(email, id, method, name, category, startDate, endDate="", curr
                 endDate = (date.fromisoformat(startDate) + getTimeDelta(int(recurPeriod)) - timedelta(days=1))
                 if (isinstance(endDate, date)):
                     endDate = endDate.isoformat()
-
+            print("Starting the updating process")
             expense_ref = db.collection('expenses').document(id)
             expenseDoc = expense_ref.get().to_dict()
             oldName = expenseDoc["name"]
-            oldEnd = expenseDoc["endDate"]
             oldCategory = expenseDoc["budgetCategory"]
             oldAmount = expenseDoc["amount"]
             oldDesc = expenseDoc["description"]
-            oldPeriod = expenseDoc["recurPeriod"]
             oldRecurring = expenseDoc["recurring"]
+            print("old name to check retrievale", oldName)
+            print("method", method)
 
             if (recurring == False or method == "all"):
                 expense_ref.update({
@@ -995,36 +1041,66 @@ def updateExpense(email, id, method, name, category, startDate, endDate="", curr
                     'recurring': bool(recurring)
                 })
             elif (method == "one"):
+                print("we should be here first")
                 # Create a new expense for the one changing instance
-                newStart = currentDate
-                newEnd = currentDate + getTimeDelta(recurPeriod)
-                createExpense(email, name, category, newStart, newEnd, amount, description, recurPeriod, False)
+                newStart = currentDate.isoformat()
+                newEnd = currentDate + getTimeDelta(int(recurPeriod))
+                print("new start", newStart)
+                print("new end", newEnd)
+                createExpense(email, name, category, newStart, newEnd.isoformat(), amount, description, recurPeriod, recurring)
 
                 # Create a new expense for the future instance, matching the past instance in everything but start dates
                 futureStart = newEnd + getTimeDelta(0)
-                createExpense(email, oldName, oldCategory, futureStart, oldEnd, oldAmount, oldDesc, oldPeriod, oldRecurring)
+                print("future start", futureStart)
+                createExpense(email, oldName, oldCategory, futureStart.isoformat(), endDate, oldAmount, oldDesc, recurPeriod, oldRecurring)
 
                 # Update original expense to have an end date right before the newStart date
-                pastEnd = newStart - getTimeDelta(0)
+                pastEnd = currentDate - getTimeDelta(0)
+                print("past end", pastEnd)
                 expense_ref.update({
-                    'endDate': str(pastEnd),
+                    'startDate': str(startDate),
+                    'endDate': str(pastEnd.isoformat()),
+                    'recurPeriod': int(recurPeriod)
                 })
             elif (method == "future"):
                 # Create a new expense for the current/future instance
-                newStart = currentDate
+                newStart = currentDate.isoformat()
                 createExpense(email, name, category, newStart, endDate, amount, description, recurPeriod, recurring)
 
                 # Update the original expense to have an end date right before the newStart date
-                pastEnd = newStart - getTimeDelta(0)
+                pastEnd = currentDate - getTimeDelta(0)
                 expense_ref.update({
-                    'endDate': str(pastEnd),
+                    'startDate': str(startDate),
+                    'endDate': str(pastEnd.isoformat()),
+                    'recurPeriod': int(recurPeriod)
                 })
         except Exception as e:
+            print(e)
             raise RuntimeError(e)
     else:
         raise RuntimeError("Verification failed, update canceled.")
 
 def updateEarning(email, id, method, name, startDate, endDate="", currentDate=date.today(), amount=0, description="", recurPeriod=0, recurring=False):
+    """
+    When updating earnings, some things need to be kept consistant ALWAYS
+        - recurring
+        - recurPeriod
+    These need to be controlled based on update method, and changed to the new, user-provided one:
+        - One
+            startDate to currentDate - 1 day
+            currentDate to currentDate + 1 period
+            currentDate + 1 Period + 1 day to endDate
+        - All
+            startDate to endDate
+        - Future
+            startDate to currentDate - 1 day
+            currentDate to endDate
+    These values can change between instances:
+        - name
+        - amount
+        - description
+    """
+    currentDate = date.fromisoformat(currentDate)
     earningList = getUser(email)['data']['earnings']
 
     # Check to make sure that the id passed in corresponds to an item in the user's database
@@ -1036,12 +1112,10 @@ def updateEarning(email, id, method, name, startDate, endDate="", currentDate=da
                     endDate = endDate.isoformat()
 
             earning_ref = db.collection('earnings').document(id)
-            earningDoc = earning_ref.get.to_dict()
+            earningDoc = earning_ref.get().to_dict()
             oldName = earningDoc["name"]
-            oldEnd = earningDoc["endDate"]
             oldAmount = earningDoc["amount"]
             oldDesc = earningDoc["description"]
-            oldPeriod = earningDoc["recurPeriod"]
             oldRecurring = earningDoc["recurring"]
 
             if (recurring == False or method == "all"):
@@ -1056,28 +1130,32 @@ def updateEarning(email, id, method, name, startDate, endDate="", currentDate=da
                 })
             elif (method == "one"):
                 # Create a new earning for the one changing instance
-                newStart = currentDate
-                newEnd = currentDate + getTimeDelta(recurPeriod)
-                createEarning(email, name, newStart, newEnd, amount, description, recurPeriod, False)
+                newStart = currentDate.isoformat()
+                newEnd = currentDate + getTimeDelta(int(recurPeriod))
+                createEarning(email, name, newStart, newEnd.isoformat(), amount, description, recurPeriod, recurring)
 
                 # Create a new earning for the future instance, matching the past instance in everything but start dates
                 futureStart = newEnd + getTimeDelta(0)
-                createEarning(email, oldName, futureStart, oldEnd, oldAmount, oldDesc, oldPeriod, oldRecurring)
+                createEarning(email, oldName, futureStart.isoformat(), endDate, oldAmount, oldDesc, recurPeriod, oldRecurring)
 
                 # Update original earning to have an end date right before the newStart date
-                pastEnd = newStart - getTimeDelta(0)
+                pastEnd = currentDate - getTimeDelta(0)
                 earning_ref.update({
-                    'endDate': str(pastEnd),
+                    'startDate': str(startDate),
+                    'endDate': str(pastEnd.isoformat()),
+                    'recurPeriod': int(recurPeriod)
                 })
             elif (method == "future"):
                 # Create a new earning for the current/future instance
-                newStart = currentDate
+                newStart = currentDate.isoformat()
                 createEarning(email, name, newStart, endDate, amount, description, recurPeriod, recurring)
 
                 # Update the original earning to have an end date right before the newStart date
-                pastEnd = newStart - getTimeDelta(0)
+                pastEnd = currentDate - getTimeDelta(0)
                 earning_ref.update({
-                    'endDate': str(pastEnd),
+                    'startDate': str(startDate),
+                    'endDate': str(pastEnd.isoformat()),
+                    'recurPeriod': int(recurPeriod)
                 })
         except Exception as e:
             raise RuntimeError(e)

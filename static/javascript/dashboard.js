@@ -40,7 +40,7 @@ async function loadDashboard(refresh="false", tab="overview") {
 async function updateUserData() {
     const targetDate = new Date().toLocaleDateString("en-CA", {timeZone:"UTC"})
 
-    const response = await fetch('/data/all-current?period=3&target=' + targetDate).then(response => response.json()).then((responseData) => {
+    const response = await fetch('/data/all-current?period=4&target=' + targetDate).then(response => response.json()).then((responseData) => {
         userData = responseData.data;
     });
     return response;
@@ -855,7 +855,7 @@ function expensesPerMonth(currentYear) {
 
             if (curDate <= todayDate) {
                 const curMonth = curDate.getMonth();
-                data.values[curMonth] = data.values[curMonth] + amount;
+                data.values[curMonth] = parseFloat((data.values[curMonth] + amount).toFixed(2));
             }
         }
     }
@@ -880,7 +880,7 @@ function earningsPerMonth() {
 
             if (curDate <= todayDate) {
                 const curMonth = curDate.getMonth();
-                data.values[curMonth] = data.values[curMonth] + amount;
+                data.values[curMonth] = parseFloat((data.values[curMonth] + amount).toFixed(2));
             }
         }
     }
