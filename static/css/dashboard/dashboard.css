@@ -222,7 +222,7 @@ h4 {
     gap: var(--smallPad);
     width: 25%;
     min-width: 400px;
-    min-height: 400px;
+    min-height: 430px;
     justify-content: space-between;
     align-items: center;
 }
@@ -259,17 +259,28 @@ h4 {
     position: absolute;
 }
 
+#limited-budgets {
+    display: flex;
+    flex-direction: column;
+    gap: var(--smallPad);
+}
+
 .budget-snippet {
     display: grid;
-    grid-template-columns: .3fr 1fr .3fr .3fr;
+    grid-template-columns: .3fr 1fr .4fr auto;
     gap: .8rem;
     align-items: center;
     margin-top: 1rem;
+    cursor: pointer;
 }
 
 .budget-snippet .recur-img {
     grid-column: 1;
     align-self: center;
+}
+
+.budget-snippet .more-img {
+    justify-self: end;
 }
 
 .snip-budget-main {

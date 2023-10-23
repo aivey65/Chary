@@ -365,24 +365,39 @@ def renderUpdateUser():
 def renderUpdateBudget():
     try: 
         budgetId = request.args.get("id")
-        curDate = request.args.get("date")
+        duplicate = request.args.get("duplicate")
 
         # This database method checks to make sure that the user owns the budget they are trying to update
         budgetInfo = database.getBudget(budgetId, session["email"])
 
-        return render_template(
-            'update-budget.html', 
-            id=budgetId,
-            currentStartDate=curDate,
-            name=budgetInfo["name"],
-            description=budgetInfo["description"],
-            amount=budgetInfo["amount"],
-            startDate=budgetInfo["startDate"],
-            recurPeriod=budgetInfo["budgetPeriod"],
-            recurring=budgetInfo["recurring"],
-            endDate=budgetInfo["endDate"], 
-            nav=renderedNav()
-        )
+        if duplicate == "True":
+            return render_template(
+                'duplicate-budget.html', 
+                name=budgetInfo["name"],
+                description=budgetInfo["description"],
+                amount=budgetInfo["amount"],
+                startDate=budgetInfo["startDate"],
+                recurPeriod=budgetInfo["budgetPeriod"],
+                recurring=budgetInfo["recurring"],
+                endDate=budgetInfo["endDate"], 
+                nav=renderedNav()
+            )
+        else:
+            currentDate = request.args.get("date")
+
+            return render_template(
+                'update-budget.html', 
+                id=budgetId,
+                currentStartDate=currentDate,
+                name=budgetInfo["name"],
+                description=budgetInfo["description"],
+                amount=budgetInfo["amount"],
+                startDate=budgetInfo["startDate"],
+                recurPeriod=budgetInfo["budgetPeriod"],
+                recurring=budgetInfo["recurring"],
+                endDate=budgetInfo["endDate"], 
+                nav=renderedNav()
+            )
     except Exception as e:
         return custom_error(e)
     
@@ -391,28 +406,45 @@ def renderUpdateBudget():
 def renderUpdateExpense():
     try:
         expenseId = request.args.get("id")
-        currentDate = request.args.get("date")
+        duplicate = request.args.get("duplicate")
 
         # This database method checks to make sure that the user owns the expense they are trying to update
         databaseInfo = database.getExpense(expenseId, session["email"])
         expenseInfo = databaseInfo["data"]
         categoryInfo = databaseInfo["budgetCategories"]
 
-        return render_template(
-            'update-expense.html', 
-            id=expenseId,
-            currentDate=currentDate,           
-            name=expenseInfo["name"], 
-            description=expenseInfo["description"], 
-            amount=expenseInfo["amount"],
-            startDate=expenseInfo["startDate"],
-            recurPeriod=expenseInfo["recurPeriod"], 
-            recurring=expenseInfo["recurring"],
-            category=expenseInfo["budgetCategory"],
-            allCategories=categoryInfo,
-            endDate=expenseInfo["endDate"], 
-            nav=renderedNav()
-        )
+        if duplicate == "True":
+            return render_template(
+                'duplicate-expense.html', 
+                name=expenseInfo["name"], 
+                description=expenseInfo["description"], 
+                amount=expenseInfo["amount"],
+                startDate=expenseInfo["startDate"],
+                recurPeriod=expenseInfo["recurPeriod"], 
+                recurring=expenseInfo["recurring"],
+                category=expenseInfo["budgetCategory"],
+                allCategories=categoryInfo,
+                endDate=expenseInfo["endDate"], 
+                nav=renderedNav()
+            )        
+        else:
+            currentDate = request.args.get("date")
+
+            return render_template(
+                'update-expense.html', 
+                id=expenseId,
+                currentDate=currentDate,           
+                name=expenseInfo["name"], 
+                description=expenseInfo["description"], 
+                amount=expenseInfo["amount"],
+                startDate=expenseInfo["startDate"],
+                recurPeriod=expenseInfo["recurPeriod"], 
+                recurring=expenseInfo["recurring"],
+                category=expenseInfo["budgetCategory"],
+                allCategories=categoryInfo,
+                endDate=expenseInfo["endDate"], 
+                nav=renderedNav()
+            )
     except Exception as e:
         return custom_error(e)
         
@@ -421,24 +453,39 @@ def renderUpdateExpense():
 def renderUpdateEarning():
     try: 
         earningId = request.args.get("id")
-        currentDate = request.args.get("date")
+        duplicate = request.args.get("duplicate")
 
         # This database method checks to make sure that the user owns the expense they are trying to update
         earningInfo = database.getEarning(earningId, session["email"])
 
-        return render_template(
-            'update-earning.html', 
-            id=earningId,
-            currentDate=currentDate,
-            name=earningInfo["name"],
-            description=earningInfo["description"],
-            amount=earningInfo["amount"],
-            startDate=earningInfo["startDate"],
-            recurPeriod=earningInfo["recurPeriod"],
-            recurring=earningInfo["recurring"],
-            endDate=earningInfo["endDate"], 
-            nav=renderedNav()
-        )
+        if duplicate == "True":
+                return render_template(
+                'duplicate-earning.html', 
+                name=earningInfo["name"],
+                description=earningInfo["description"],
+                amount=earningInfo["amount"],
+                startDate=earningInfo["startDate"],
+                recurPeriod=earningInfo["recurPeriod"],
+                recurring=earningInfo["recurring"],
+                endDate=earningInfo["endDate"], 
+                nav=renderedNav()
+            )
+        else:
+            currentDate = request.args.get("date")
+
+            return render_template(
+                'update-earning.html', 
+                id=earningId,
+                currentDate=currentDate,
+                name=earningInfo["name"],
+                description=earningInfo["description"],
+                amount=earningInfo["amount"],
+                startDate=earningInfo["startDate"],
+                recurPeriod=earningInfo["recurPeriod"],
+                recurring=earningInfo["recurring"],
+                endDate=earningInfo["endDate"], 
+                nav=renderedNav()
+            )
     except Exception as e:
         return custom_error(e)
     

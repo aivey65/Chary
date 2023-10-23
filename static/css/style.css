@@ -791,7 +791,7 @@ Creating the navigation bar depending on the size of the user's screen
         font-weight: 400;
     }
 
-    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img, .filter-img {
+    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img, .filter-img, .copy-img {
         width: 1.5rem;
         height: auto;
     }
@@ -986,6 +986,13 @@ Creating the navigation bar depending on the size of the user's screen
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    .action-div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--smallPad)
+    }
     
     tbody:hover {
         cursor: pointer;
@@ -1025,7 +1032,7 @@ Creating the navigation bar depending on the size of the user's screen
         font-weight: 400;
     }
 
-    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img, .filter-img {
+    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img, .filter-img, .copy-img {
         width: 1.7rem;
         height: auto;
     }

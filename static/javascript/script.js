@@ -585,9 +585,23 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
         const budget_update = document.createElement('div');
         budget_update.classList.add('budget-edit', 'options');
         budget_update.addEventListener('click', function() {
-            window.location = "/form/update-budget?id=" + key + "&date=" + formatDateString + "&inactive=" + inactive;
+            window.location = "/form/update-budget?id=" + key + "&duplicate=False&date=" + formatDateString + "&inactive=" + inactive;
         })
         budget_update.append(budget_update_img, budget_update_text);
+
+        const budget_copy_img = document.createElement('img');
+        budget_copy_img.src = "static/images/DuplicateIcon.svg";
+        budget_copy_img.classList.add('copy-img', 'options');
+        
+        const budget_copy_text = document.createElement('h4');
+        budget_copy_text.textContent = "Duplicate";
+        budget_copy_text.classList.add('options');
+        const budget_copy = document.createElement('div');
+        budget_copy.classList.add('budget-copy', 'options');
+        budget_copy.addEventListener('click', function() {
+            window.location = "/form/update-budget?id=" + key + "&duplicate=True&inactive=" + inactive;
+        })
+        budget_copy.append(budget_copy_img, budget_copy_text);
 
         const budget_more_img = document.createElement('img');
         budget_more_img.src = "static/images/MoreButtonsmall.svg";
@@ -635,9 +649,9 @@ function generateTableUI(type, entityList, currency, limit=null) {
     // Configure some values based on table type
     var columns;
     if (type == 0) {
-        columns = ['Name', 'Amount', 'Category', 'Date', 'Recurring?', 'Edit']
+        columns = ['Name', 'Amount', 'Category', 'Date', 'Recurring?', 'Actions']
     } else {
-        columns = ['Name', 'Amount', 'Date', 'Recurring?', 'Edit'];
+        columns = ['Name', 'Amount', 'Date', 'Recurring?', 'Actions'];
     }
 
     // Create table head row with column titles
@@ -692,23 +706,36 @@ function generateTableUI(type, entityList, currency, limit=null) {
             date.classList.add('start-date');
             date.textContent = formatDateString;
 
-            const update = document.createElement('td');
-            update.classList.add('td-update');
+            const copy_img = document.createElement('img');
+            copy_img.src = "static/images/DuplicateIcon.svg";
+            copy_img.classList.add("copy-img");
+            copy_img.title = "Duplicate";
+            copy_img.addEventListener('click', function() {
+                window.location = "/form/update-" + TYPES[type] + "?id=" + key + "&duplicate=True";
+            })
+
             const update_img = document.createElement('img');
-            update_img.src = "static/images/EditButtonSM.svg"
+            update_img.src = "static/images/EditButtonSM.svg";
             update_img.classList.add("update-img");
             update_img.title = "Update";
-            update.addEventListener('click', function() {
-                window.location = "/form/update-" + TYPES[type] + "?id=" + key + "&date=" + formatDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+            update_img.addEventListener('click', function() {
+                window.location = "/form/update-" + TYPES[type] + "?id=" + key + "&duplicate=False&date=" + formatDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
             })
-            update.append(update_img);
+
+            const actionDiv = document.createElement('div');
+            actionDiv.classList.add('action-div');
+            actionDiv.append(copy_img, update_img);
+
+            const actions = document.createElement('td');
+            actions.classList.add('td-update');
+            actions.append(actionDiv);
 
             const row1 = document.createElement('tr');
             row1.classList.add('main-row');
             if (type == 0) {
-                row1.append(name, amount, expense_category, date, recur, update);
+                row1.append(name, amount, expense_category, date, recur, actions);
             } else {
-                row1.append(name, amount, date, recur, update);
+                row1.append(name, amount, date, recur, actions);
             }
 
             // Expand row
@@ -727,7 +754,7 @@ function generateTableUI(type, entityList, currency, limit=null) {
                 const recLabel = document.createElement("h4");
                 recLabel.textContent = "Recurring Period"
                 const recText = document.createElement("p");
-                recText.textContent = "This " + TYPES[type] + " recurs " + PERIODS[current.recurPeriod].toLocaleLowerCase();
+                recText.textContent = PERIODS[current.recurPeriod];
                 const recurPeriod = document.createElement('div');
                 recurPeriod.append(recLabel, recText);
 

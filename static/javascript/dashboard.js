@@ -646,15 +646,14 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
 
     for (var index = 0; index < keys.length; index++) {
         if (index >= start && index < start + maxShow) {
+            const formatDateString = (new Date()).toLocaleDateString("en-CA", { timeZone: 'UTC' });
             const key = keys[index]
             const budget = budgetList[key];
 
             const budgetSnippet = document.createElement('div');
             budgetSnippet.classList.add('budget-snippet');
-            budgetSnippet.addEventListener('click', function(e) {
-                if (!e.target.classList.contains('snip-edit')) {
-                    window.location = "/expand-budget?id=" + key;
-                }
+            budgetSnippet.addEventListener('click', function() {
+                window.location = "/expand-budget?id=" + key + "&date=" + formatDateString + "&inactive=False";
             })
 
             var recur_img = null;
@@ -670,12 +669,12 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
             budget_used.classList.add('snip-budget-used');
             budget_used.textContent = (budget.usedAmount / budget.amount * 100).toFixed(1) + "% used";
 
-            const budget_edit = document.createElement('img');
-            budget_edit.src = "static/images/EditButtonSM.svg";
-            budget_edit.title = "Edit";
-            budget_edit.classList.add('snip-edit');
-            budget_edit.addEventListener('click', function() {
-                window.location = "/form/update-budget?id=" + key;
+            const budget_more = document.createElement('img');
+            budget_more.src = "static/images/MoreButtonsmall.svg";
+            budget_more.title = "See More";
+            budget_more.classList.add("more-img");
+            budget_more.addEventListener('click', function() {
+                window.location = "/expand-budget?id=" + key + "&date=" + formatDateString + "&inactive=" + inactive;
             })
 
             // Progess SVG
@@ -727,7 +726,7 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
 
             // End progress svg
 
-            budgetSnippet.append(recur_img, budget_main, budget_used, budget_edit);
+            budgetSnippet.append(recur_img, budget_main, budget_used, budget_more);
             
             budgetContainer.append(budgetSnippet)
         }

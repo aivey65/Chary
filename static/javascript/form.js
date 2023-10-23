@@ -21,7 +21,7 @@ function independantChange() {
     possibleIndependantChange = true;
 }
 
-function formLoad(startDate, configureDate=false) {
+function formLoad(startDate=null, configureDate=false) {
     fillProfilePics();
     currentStartDate = startDate;
 

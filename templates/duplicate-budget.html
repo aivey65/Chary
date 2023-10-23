@@ -18,7 +18,7 @@
         <script src='../static/javascript/form.js'></script>
         <script src='../static/javascript/script.js'></script>
 
-        <Title>Chary | Create Budget</Title>
+        <Title>Chary | Copy Budget</Title>
     </head>
 
     <body onload="formLoad(null, true)">
@@ -33,27 +33,27 @@
 
         <div class="content non-header" id="acd-content">
             <div id="alert-section"></div>
-            <button id="back-button" onclick="back()" value="Back">⟨ Cancel</button>
+            <button id="back-button" onclick="back()" type="button" value="Back">⟨ Cancel</button>
             <h2>Create Budget</h2>
             <form class="acd-form" action="javascript:submitBudgetForm()" method="post">
                 <div id="name-div">
                     <label class="required-input" for="name">Title</label>
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="name" value="{{name}}" required>
                 </div>
 
                 <div id="description-div">
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" rows="4" cols="50"></textarea>
+                    <textarea id="description" name="description" rows="4" cols="50">{{description}}</textarea>
                 </div>
 
                 <div id="amount-div">
                     <label class="required-input" for="amount">Amount</label>
-                    <input type="text" id="amount" name="amount" required>
+                    <input type="text" id="amount" name="amount" value={{amount}} required>
                 </div>
 
                 <div id="start-div" class="row8">
                     <label class="required-input" for="start">Date Initialized</label>
-                    <input type="date" id="start" name="start" required>
+                    <input type="date" id="start" name="start" value={{startDate}} required>
                 </div>
 
                 <!-- Budget Period Inputs -->
@@ -61,37 +61,61 @@
                     Choose how long your budget period will be:<span class="required-input"></span> 
                     <br>
                     <i>Note: Budgets can only start on the first date of a chosen time period.</i>
-                </p><br>
-                <div id="period-div" class="row5">                    
-                    <input type="radio" id="daily" name="radio" value="0" checked="checked" required>
+                </p><br>                
+                <div id="period-div" class="row5">    
+                    {% if recurPeriod == 0 %}
+                        <input type="radio" id="daily" name="radio" value="0" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="daily" name="radio" value="0" required>
+                    {% endif %} 
                     <label for='daily' class="budget-period label-daily">One Day</label>
-    
-                    <input type="radio" id="weekly" name="radio" value="1" required>
-                    <label for='weekly' class="budget-period label-weekly">One Week</label>
-
-                    <input type="radio" id="monthly" name="radio" value="3" required>
-                    <label for='monthly' class="budget-period label-monthly">One Month</label>
                     
-                    <input type="radio" id="yearly" name="radio" value="4" required>
-                    <label for='yearly' class="budget-period label-yearly">One Year</label>  
+                    {% if recurPeriod == 1 %}
+                        <input type="radio" id="weekly" name="radio" value="1" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="weekly" name="radio" value="1" required>
+                    {% endif %} 
+                    <label for='weekly' class="budget-period label-weekly">One Week</label>
+    
+                    {% if recurPeriod == 3 %}
+                        <input type="radio" id="monthly" name="radio" value="3" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="monthly" name="radio" value="3" required>
+                    {% endif %} 
+                    <label for='monthly' class="budget-period label-monthly">One Month</label>
+    
+                    {% if recurPeriod == 4 %}
+                        <input type="radio" id="yearly" name="radio" value="4" checked="checked" required>
+                    {% else %}
+                        <input type="radio" id="yearly" name="radio" value="4" required>
+                    {% endif %}
+                    <label for='yearly' class="budget-period label-yearly">One Year</label>
                 </div>
 
                 <!-- Recurring Inputs -->
                 <p id="recurring-label" class="required-input row6"> Is this a recurring budget?</p><br>
-                <div id="recurring-div" class="row7">    
-                    <input type="radio" id="recurring-true" name="recurring" value="True">
-                    <label for='recurring-true' class="label-recurring-true label-recurring">Yes</label>
+                <div id="recurring-div" class="row7">                    
+                    {% if recurring %}
+                        <input type="radio" id="recurring-true" name="recurring" value="True" checked="checked">
+                    {% else %}
+                        <input type="radio" id="recurring-true" name="recurring" value="True">
+                    {% endif %}
+                    <label for='recurring-true' class="label-recurring label-recurring-true">Yes</label>
     
-                    <input type="radio" id="recurring-false" name="recurring" value="False">
-                    <label for='recurring-false' class="label-recurring-false label-recurring">No</label>
+                    {% if recurring %}
+                        <input type="radio" id="recurring-false" name="recurring" value="False">
+                    {% else %}
+                        <input type="radio" id="recurring-false" name="recurring" value="False" checked="checked">
+                    {% endif %} 
+                    <label for='recurring-false' class="label-recurring label-recurring-false">No</label>
                 </div>
 
                 <div id="end-div" class="recurring-items row8">
                     <label for="end">End Date</label>
-                    <input type="date" id="end" name="end" value="">
+                    <input type="date" id="end" name="end" value={{endDate}}>
                 </div>
 
-                <button id="submit-entity-button" class="submit-button cta-button" type="submit" value="Submit">Submit</button>
+                <button id="submit-entity-button" class="cta-button submit-button" type="submit" value="Submit">Submit</button>         
             </form>
         </div>
 
