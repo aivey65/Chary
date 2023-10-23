@@ -171,10 +171,15 @@ h4 {
     color: var(--Grey);
 }
 
+#profile-snip-container {
+    cursor: pointer;
+}
+
 #user-info-container {
     display: grid;
     gap: 1rem;
     grid-template-rows: auto auto auto auto auto;
+    grid-template-columns: 1fr auto;
 }
 
 #user-info-container p {
@@ -189,30 +194,25 @@ h4 {
     grid-column: 1/3;
 }
 
-#wallet-icon {
-    grid-row: 2;
-    justify-self: end;
-}
-
-#user-balance {
-    grid-row: 2;
-    justify-self: start;
-}
-
 #user-name {
-    grid-row: 3;
+    grid-row: 2;
     grid-column: 1/3;
     font-size: 1.3rem;
 }
 
 #user-email {
-    grid-row: 4;
+    grid-row: 3;
     grid-column: 1/3;
 }
 
 #user-currency {
-    grid-row: 5;
-    grid-column: 1/3;
+    grid-row: 4;
+    grid-column: 1;
+}
+
+#user-info-container .edit-img {
+    grid-row: 4;
+    grid-column: 2;
 }
 
 #budget-snip-container {
@@ -464,6 +464,10 @@ h4 {
 .budget-more:hover {
     background-color: var(--faded);
     border-radius: 0px 0px 10px 10px;
+}
+
+.budget-copy:hover {
+    background-color: var(--faded);
 }
 
 .budget-edit:hover {

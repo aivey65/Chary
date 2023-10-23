@@ -333,6 +333,9 @@ function generateOverviewProfile() {
     const overviewProfileContainer = document.createElement('div');
     overviewProfileContainer.id = 'profile-snip-container';
     overviewProfileContainer.classList.add('snip-containers');
+    overviewProfileContainer.addEventListener('click', function() {
+        window.location.href = "/profile";
+    })
 
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Profile";
@@ -674,7 +677,7 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
             budget_more.title = "See More";
             budget_more.classList.add("more-img");
             budget_more.addEventListener('click', function() {
-                window.location = "/expand-budget?id=" + key + "&date=" + formatDateString + "&inactive=" + inactive;
+                window.location.href = "/expand-budget?id=" + key + "&date=" + formatDateString + "&inactive=" + inactive;
             })
 
             // Progess SVG

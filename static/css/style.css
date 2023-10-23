@@ -738,8 +738,15 @@ Creating the navigation bar depending on the size of the user's screen
     
     .main-row td {
         color:var(--Light);
-        font-weight: 200;
         text-align: left;
+    }
+
+    .action-div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--smallPad)
     }
     
     tbody:hover {
@@ -782,16 +789,17 @@ Creating the navigation bar depending on the size of the user's screen
 
     .expanse-div p {
         margin: 0px;
+        font-size: .8rem;
     }
 
     .expanse-div h4 {
         margin: 0px;
-        font-size: .85rem;
+        font-size: .8rem;
         color: var(--MainL);
         font-weight: 400;
     }
 
-    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img, .filter-img, .copy-img {
+    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img, .filter-img, .copy-img, .edit-img {
         width: 1.5rem;
         height: auto;
     }
@@ -991,6 +999,7 @@ Creating the navigation bar depending on the size of the user's screen
         display: flex;
         flex-direction: row;
         align-items: center;
+        justify-content: center;
         gap: var(--smallPad)
     }
     
@@ -1032,7 +1041,7 @@ Creating the navigation bar depending on the size of the user's screen
         font-weight: 400;
     }
 
-    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img, .filter-img, .copy-img {
+    .recur-img, .options-img, .more-img, .update-img, .snip-edit, .wallet-img, .filter-img, .copy-img, .edit-img {
         width: 1.7rem;
         height: auto;
     }

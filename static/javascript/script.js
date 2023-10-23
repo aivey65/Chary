@@ -456,17 +456,34 @@ function generateProfileUI(username, email, color, img, currency) {
     user_name.id = "user-name";
     user_name.textContent = username;
 
+    const email_label = document.createElement('p');
+    email_label.textContent = "Email";
+    email_label.classList.add('label');
     const user_email = document.createElement('p');
-    user_email.id = "user-email";
-    user_email.textContent = "Email: " + String(email);
+    user_email.textContent = String(email);
+    const email_container = document.createElement('div');
+    email_container.id = "user-email";
+    email_container.append(email_label, user_email);
 
+    const currency_label = document.createElement('p');
+    currency_label.textContent = "Currency";
+    currency_label.classList.add('label');
     const user_currency = document.createElement('p');
-    user_currency.id = "user-currency";
-    user_currency.textContent = "Currency: " + String(currency);
+    user_currency.textContent = String(currency);
+    const currency_container = document.createElement('div');
+    currency_container.id = "user-currency";
+    currency_container.append(currency_label, user_currency);
+
+    const edit_button = document.createElement('img');
+    edit_button.src = "../static/images/EditButtonSM.svg";
+    edit_button.classList.add('edit-img');
+    edit_button.addEventListener('click', function() {
+        window.location.href = "/form/update-user";
+    })
 
     const profileContainer = document.createElement('div');
     profileContainer.id = "user-info-container";
-    profileContainer.append(user_img, user_name, user_email, user_currency);
+    profileContainer.append(user_img, user_name, email_container, currency_container, edit_button);
 
     return profileContainer;
 }

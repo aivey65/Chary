@@ -355,12 +355,14 @@ h4 {
     font-size: 1em;
     grid-column: 2;
     grid-row: 1;
+    font-weight: 300;
 }
 
 .start-date {
     grid-column: 2;
     grid-row: 2;
     font-size: .8em;
+    font-weight: 200;
 }
 
 .td-category {
@@ -368,16 +370,19 @@ h4 {
     grid-row: 3;
     font-size: .8em;
     font-style: italic;
+    font-weight: 200;
 }
 
 .td-amount {
     grid-column: 3;
     grid-row: 1;
+    text-align: center !important;
+    font-weight: 200;
 }
 
 .td-update {
     grid-column: 3;
-    grid-row: 3;
+    grid-row: 2/4;
 }
 
 /*
