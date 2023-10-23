@@ -619,7 +619,7 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
         const optionsPanel = document.createElement('div');
         optionsPanel.classList.add('options-panel', 'options');
         optionsPanel.style.display = "none";
-        optionsPanel.append(budget_update, budget_more);
+        optionsPanel.append(budget_update, budget_copy, budget_more);
         optionsImg.addEventListener('click', (event) => {
             optionsToggle(event.target, optionsPanel);
         }, false);

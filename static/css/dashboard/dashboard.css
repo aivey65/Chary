@@ -448,13 +448,13 @@ h4 {
     z-index: 2;
 }
 
-.budget-more, .budget-edit {
+.budget-more, .budget-edit, .budget-copy {
     display: grid;
     grid-template-columns: auto 1fr;
     padding: var(--smallPad);
 }
 
-.budget-more h4, .budget-edit h4 {
+.budget-more h4, .budget-edit h4, .budget-copy h4 {
     color: var(--Light);
     font-size: 1rem;
     font-weight: 200;
