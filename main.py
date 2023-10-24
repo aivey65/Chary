@@ -848,8 +848,10 @@ def deleteUser():
 @login_is_required
 def deleteBudget():
     budgetId = request.json["id"]
+    method = request.json["method"]
+    currentDate = request.json["current"]
     try:
-        database.deleteBudget(session["email"], budgetId)
+        database.deleteBudget(session["email"], budgetId, method, currentDate)
         return {
             "status": 200,
             "message": "Delete successful!"
@@ -861,8 +863,10 @@ def deleteBudget():
 @login_is_required
 def deleteExpense():
     expenseId = request.json["id"]
+    method = request.json["method"]
+    currentDate = request.json["current"]
     try:
-        database.deleteExpense(session["email"], expenseId)
+        database.deleteExpense(session["email"], expenseId, method, currentDate)
         return {
             "status": 200,
             "message": "Delete successful!"
@@ -874,8 +878,10 @@ def deleteExpense():
 @login_is_required
 def deleteEarning():
     earningId = request.json["id"]
+    method = request.json["method"]
+    currentDate = request.json["current"]
     try:
-        database.deleteEarning(session["email"], earningId)
+        database.deleteEarning(session["email"], earningId, method, currentDate)
         return {
             "status": 200,
             "message": "Delete successful!"

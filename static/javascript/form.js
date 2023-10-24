@@ -439,15 +439,23 @@ function submitEarningForm(method=null) {
 /////////////////////////////////////
 // Confirm update method functions //
 /////////////////////////////////////
-function confirmUpdateMethod(entityType) {
+function confirmUpdateMethod(entityType, isDelete=false) {
+    // Create the confirmation message depending on if the user is updating or deleting
+    var confirmationMessage = "";
+    if (isDelete) {
+        confirmationMessage = "Do you want to delete other occurances?";
+    } else {
+        confirmationMessage = "How would you like to update occurances?";
+    }
+    
+    // If the user is updating (not deleting) and there has been no independant change made, or if the entity is not recurring, the update can happen without update methods.
     const recurringCheck = document.querySelector("input[name='recurring']:checked").value;
-
-    if (!possibleIndependantChange || recurringCheck == "False") {
+    if (!isDelete && (!possibleIndependantChange || recurringCheck == "False")) { // It is an update request, and there is no independant change or it is not recurring
         callSubmit(String(entityType), "all");
     } else {
         const popupHeader = document.createElement("h3");
         popupHeader.id = "popup-header";
-        popupHeader.textContent = "How would you like to update occurances?";
+        popupHeader.textContent = confirmationMessage;
 
         const popupText = document.createElement("p");
         popupText.id = "popup-text";
@@ -493,7 +501,12 @@ function confirmUpdateMethod(entityType) {
         });
 
         document.getElementById("acd-content").append(popupWrapper);
-        popupForm.action = "javascript:callSubmit('" + String(entityType) + "')";
+
+        if (isDelete) {
+            popupForm.action = "javascript:finalizeDelete('" + String(entityType) + "')";
+        } else {
+            popupForm.action = "javascript:callSubmit('" + String(entityType) + "')";
+        }
     }
 }
 
@@ -596,17 +609,27 @@ function budgetDeleteOptions() {
     finalizeDelete("budget")
 }
 
-function finalizeDelete(entityType) {
-    const idToDelete = document.getElementById("id").value;
+function finalizeDelete(entityType, method=null) {
+    if (method == null) {
+        method = document.querySelector("input[name='method-radio']:checked").value;
+    }
 
-    console.log('/data/delete-' + String(entityType));
+    var idToDelete = document.getElementById("id");
+    if (idToDelete) {
+        idToDelete = idToDelete.value;
+    } else {
+        idToDelete = "";
+    }
+
     fetch('/data/delete-' + String(entityType), {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            id: idToDelete
+            id: idToDelete,
+            method: method,
+            current: currentStartDate,
         })
     }).then(response => response.json()).then((responseData) => {
         if (responseData.status != 200) {

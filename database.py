@@ -98,7 +98,6 @@ def createUser(email, username, password, salt, image, color, currency, tutorial
         db.collection('users').add(newUser)
 
 def createBudget(email, name, startDate, endDate="", amount=0, description="", recurring=True, budgetPeriod=3):
-    budget_ref = None
     try :
         # Make sure budget names are unique
         currentBudgets = getAllActiveBudgets(email, budgetPeriod, startDate)['categories']
@@ -125,16 +124,8 @@ def createBudget(email, name, startDate, endDate="", amount=0, description="", r
         create_datetime, budget_ref = db.collection('budgets').add(newBudget)
     except Exception as e:
         raise e
-    
-    try:
-        # Add the newly created budgetId to the list of budgets in the user document
-        updateUserReferenceIds(email, 0, 'budgets', budget_ref.id)
-    except Exception as e:
-        emergencyDeleteBudget(budget_ref.id)
-        raise e
 
 def createExpense(email, name, category, startDate, endDate="", amount=0, description="", recurPeriod=0, recurring=False):
-    expense_ref = None
     try :
         if (recurring==False):
             endDate = (date.fromisoformat(startDate) + getTimeDelta(int(recurPeriod)) - timedelta(days=1))
@@ -156,16 +147,8 @@ def createExpense(email, name, category, startDate, endDate="", amount=0, descri
         create_datetime, expense_ref = db.collection('expenses').add(newExpense)
     except Exception as e:
         raise e
-        
-    try:
-        # Add the newly created expenseID to the list of expenses in the user document
-        updateUserReferenceIds(email, 0, 'expenses', expense_ref.id)
-    except Exception as e:
-        emergencyDeleteExpense(expense_ref.id)
-        raise e
 
 def createEarning(email, name, startDate, endDate="", amount=0, description="", recurPeriod=0, recurring=False):
-    earning_ref = None
     try :
         if (recurring==False):
             endDate = (date.fromisoformat(startDate) + getTimeDelta(int(recurPeriod)) - timedelta(days=1))
@@ -185,13 +168,6 @@ def createEarning(email, name, startDate, endDate="", amount=0, description="", 
 
         create_datetime, earning_ref = db.collection('earnings').add(newEarning)
     except Exception as e:
-        raise e
-    
-    try:
-        # Add the newly created earningID to the list of earnings in the user document
-        updateUserReferenceIds(email, 0, 'earnings', earning_ref.id)
-    except Exception as e:
-        emergencyDeleteEarning(earning_ref.id)
         raise e
     
 ####################
@@ -339,6 +315,7 @@ def getUser(email):
             userDict = doc.to_dict()
             # Update ISO format dates into date objects 
             userDict["joinDate"] = date.fromisoformat(userDict["joinDate"]) if notNull(userDict["joinDate"]) else None
+            userDict["id"] = doc.reference.id
             return {"data":userDict}
     except Exception as e:
         return None
@@ -400,13 +377,12 @@ def getAllActiveBudgets(email, period=3, targetDate=date.today()):
 
 # Get a list of budget categories associated with a given user
 def getBudgetCategories(email):
-    user = getUser(email)['data']
-    budgetList = user['budgets']
+    budgetList = db.collection('budgets').where(filter=FieldFilter('email', '==', email))
     budgetCategories = []
 
-    for budgetID in budgetList:
-        budget = db.collection('budgets').document(budgetID).get().to_dict()
-        budgetCategories.append(budget["name"])
+    for budget in budgetList:
+        budgetDoc = budget.to_dict()
+        budgetCategories.append(budgetDoc["name"])
 
     return budgetCategories
 
@@ -422,58 +398,52 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
         The target date to include in the current budget period
         (default) is today's date
     """
-    userData = getUser(email)['data']
-    budgetList = userData['budgets']
+    try:
+        userData = getUser(email)['data']
+        budgetDoc = getBudget(id, email, targetDate)
+        
+        # "getBudget" already converts the budget's date from ISO format to Date object, so we do not need to change it here
+        # Getting the budget category and the start and end dates for just this current period.
+        budgetCategory = budgetDoc["name"]
+        startDate, endDate = getSinglePeriod(
+            budgetDoc["startDate"],
+            budgetDoc["budgetPeriod"],
+            targetDate, 
+            budgetDoc["endDate"]
+        )
 
-    # Make sure that the budget belongs to the user
-    if (id not in budgetList):
-        raise Exception("User does not have access to this information.")
-    else:
-        try:
-            budgetDoc = getBudget(id, email, targetDate)
-            
-            # "getBudget" already converts the budget's date from ISO format to Date object, so we do not need to change it here
-            # Getting the budget category and the start and end dates for just this current period.
-            budgetCategory = budgetDoc["name"]
-            startDate, endDate = getSinglePeriod(
-                budgetDoc["startDate"],
-                budgetDoc["budgetPeriod"],
-                targetDate, 
-                budgetDoc["endDate"]
+        # Check for valid start and end dates
+        if (startDate == None or endDate == None):
+            return {"budget": budgetDoc, "expenses": [], "currency": userData["currency"]}
+
+        # Run a query for expenses with the same email, budget category
+        expenseList = db.collection('expenses')\
+            .where(filter=FieldFilter('email', '==', email))\
+            .where(filter=FieldFilter('budgetCategory', '==', budgetCategory))\
+            .stream()
+        
+        returnList = []
+        # Filter for expenses in the same budget period
+        for expense in expenseList:
+            expenseDoc = expense.to_dict()
+
+            expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
+            expenseDoc["startDate"] = date.fromisoformat(expenseDoc['startDate']) if notNull(expenseDoc['startDate']) else None
+
+            occurances, dates = getOccurancesWithinPeriod(
+                startDate, 
+                endDate, 
+                expenseDoc['startDate'], 
+                expenseDoc["endDate"], 
+                expenseDoc['recurPeriod']
             )
 
-            # Check for valid start and end dates
-            if (startDate == None or endDate == None):
-                return {"budget": budgetDoc, "expenses": [], "currency": userData["currency"]}
-
-            # Run a query for expenses with the same email, budget category
-            expenseList = db.collection('expenses')\
-                .where(filter=FieldFilter('email', '==', email))\
-                .where(filter=FieldFilter('budgetCategory', '==', budgetCategory))\
-                .stream()
-            
-            returnList = []
-            # Filter for expenses in the same budget period
-            for expense in expenseList:
-                expenseDoc = expense.to_dict()
-
-                expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
-                expenseDoc["startDate"] = date.fromisoformat(expenseDoc['startDate']) if notNull(expenseDoc['startDate']) else None
-
-                occurances, dates = getOccurancesWithinPeriod(
-                    startDate, 
-                    endDate, 
-                    expenseDoc['startDate'], 
-                    expenseDoc["endDate"], 
-                    expenseDoc['recurPeriod']
-                )
-
-                if occurances > 0:
-                    returnList.append({"data": expenseDoc, "dates": dates})
-            return {"budget": budgetDoc, "expenses": returnList, "currency": userData["currency"]}
-        
-        except Exception as e:
-            raise RuntimeError(e)
+            if occurances > 0:
+                returnList.append({"data": expenseDoc, "dates": dates})
+        return {"budget": budgetDoc, "expenses": returnList, "currency": userData["currency"]}
+    
+    except Exception as e:
+        raise RuntimeError(e)
 
 def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
     """
@@ -487,62 +457,60 @@ def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
         The target date to include in the current budget period
         (default) is today's date
     """
-    email = budgetDoc['email']
-    userData = getUser(email)['data']
-    budgetList = userData['budgets']
+    try:
+        checkBudget = db.collection('budgets').document(id).get().to_dict()
+        email = budgetDoc["email"]
 
-    # Make sure that the budget belongs to the user
-    if (id not in budgetList):
-        raise Exception("User does not have access to this information.")
-    else:
-        try:
-            # Get the active dates and period for the budget
-            if not isinstance(budgetDoc["startDate"], date):
-                budgetDoc["startDate"] = date.fromisoformat(budgetDoc["startDate"]) if notNull(budgetDoc["startDate"]) else None
-            if not isinstance(budgetDoc["endDate"], date):
-                budgetDoc["endDate"] = date.fromisoformat(budgetDoc["endDate"]) if notNull(budgetDoc["endDate"]) else None
+        if (checkBudget["email"] != email):
+            raise RuntimeError("Information does not match what is in the database!")
+        
+        # Get the active dates and period for the budget
+        if not isinstance(budgetDoc["startDate"], date):
+            budgetDoc["startDate"] = date.fromisoformat(budgetDoc["startDate"]) if notNull(budgetDoc["startDate"]) else None
+        if not isinstance(budgetDoc["endDate"], date):
+            budgetDoc["endDate"] = date.fromisoformat(budgetDoc["endDate"]) if notNull(budgetDoc["endDate"]) else None
 
-            # Getting the budget category and the start and end dates for just this current period.
-            budgetCategory = budgetDoc["name"]
-            startDate, endDate = getSinglePeriod(
-                budgetDoc["startDate"],
-                budgetDoc["budgetPeriod"],
-                targetDate, 
-                budgetDoc["endDate"]
+        # Getting the budget category and the start and end dates for just this current period.
+        budgetCategory = budgetDoc["name"]
+        startDate, endDate = getSinglePeriod(
+            budgetDoc["startDate"],
+            budgetDoc["budgetPeriod"],
+            targetDate, 
+            budgetDoc["endDate"]
+        )
+
+        # Check for valid start and end dates
+        if (startDate == None or endDate == None):
+            return 0
+
+        # Run a query for expenses with the same email, budget category
+        expenseList = db.collection('expenses')\
+            .where(filter=FieldFilter('email', '==', email))\
+            .where(filter=FieldFilter('budgetCategory', '==', budgetCategory))\
+            .stream()
+        usedAmount = 0
+
+        # Filter for expenses in the same budget period
+        for expense in expenseList:
+            expenseDoc = expense.to_dict()
+            
+            expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
+            expenseDoc['startDate'] = date.fromisoformat(expenseDoc['startDate']) if notNull(expenseDoc['startDate']) else None
+            
+            occurances, dates = getOccurancesWithinPeriod(
+                startDate, 
+                endDate, 
+                expenseDoc['startDate'], 
+                expenseDoc["endDate"], 
+                expenseDoc['recurPeriod']
             )
-
-            # Check for valid start and end dates
-            if (startDate == None or endDate == None):
-                return 0
-
-            # Run a query for expenses with the same email, budget category
-            expenseList = db.collection('expenses')\
-                .where(filter=FieldFilter('email', '==', email))\
-                .where(filter=FieldFilter('budgetCategory', '==', budgetCategory))\
-                .stream()
-            usedAmount = 0
-
-            # Filter for expenses in the same budget period
-            for expense in expenseList:
-                expenseDoc = expense.to_dict()
+            
+            usedAmount = usedAmount + (float(expenseDoc['amount']) * occurances)
                 
-                expenseDoc["endDate"] = date.fromisoformat(expenseDoc["endDate"]) if notNull(expenseDoc["endDate"]) else None
-                expenseDoc['startDate'] = date.fromisoformat(expenseDoc['startDate']) if notNull(expenseDoc['startDate']) else None
-                
-                occurances, dates = getOccurancesWithinPeriod(
-                    startDate, 
-                    endDate, 
-                    expenseDoc['startDate'], 
-                    expenseDoc["endDate"], 
-                    expenseDoc['recurPeriod']
-                )
-                
-                usedAmount = usedAmount + (float(expenseDoc['amount']) * occurances)
-                    
-            return usedAmount
+        return usedAmount
 
-        except Exception as e:
-            raise RuntimeError(e)
+    except Exception as e:
+        raise RuntimeError(e)
 
 ### Get subset ###
 def getMostRecentExpenses(email, lim=10):
@@ -769,11 +737,11 @@ def getExpense(expenseId, userEmail):
     if (expenseId == "" or userEmail == ""):
         raise RuntimeError("No expense ID or email provided.")
     
-    user = getUser(userEmail)['data']
-    if (expenseId not in user['expenses']):
+    expenseDoc = db.collection('expenses').document(expenseId).get().to_dict()
+
+    if (expenseDoc["email"] != userEmail):
         raise RuntimeError("User email does not match expense!")
     
-    expenseDoc = db.collection('expenses').document(expenseId).get().to_dict()
     budgetCategories = getBudgetCategories(userEmail)
 
     # Update ISO format dates into date objects 
@@ -786,12 +754,10 @@ def getBudget(budgetId, userEmail, targetDate=date.today()):
     if (budgetId == "" or userEmail == ""):
         raise RuntimeError("No budget ID or email provided.")
     
-    user = getUser(userEmail)['data']
-    if (budgetId not in user['budgets']):
-        raise RuntimeError("User email does not match budget!")
-    
     budgetDoc = db.collection('budgets').document(budgetId).get().to_dict()
-    
+
+    if (budgetDoc["email"] != userEmail):
+        raise RuntimeError("User email does not match budget!")
 
     # Update ISO format dates into date objects 
     budgetDoc["startDate"] = date.fromisoformat(budgetDoc["startDate"]) if notNull(budgetDoc["startDate"]) else None
@@ -804,12 +770,11 @@ def getEarning(earningId, userEmail):
     if (earningId == "" or userEmail == ""):
         raise RuntimeError("No earning ID or email provided.")
     
-    user = getUser(userEmail)['data']
-    if (earningId not in user['earnings']):
-        raise RuntimeError("User email does not match earning!")
-    
     earningDoc = db.collection('earnings').document(earningId).get().to_dict()
 
+    if (earningDoc["email"] != userEmail):
+        raise RuntimeError("User email does not match earning!")
+    
     # Update ISO format dates into date objects 
     earningDoc["startDate"] = date.fromisoformat(earningDoc["startDate"]) if notNull(earningDoc["startDate"]) else None
     earningDoc["endDate"] = date.fromisoformat(earningDoc["endDate"]) if notNull(earningDoc["endDate"]) else None
@@ -836,47 +801,6 @@ def updateUser(email, username, image, color, currency):
             'profileCreation': True
         })
 
-def updateUserReferenceIds(email, operation, refType, id):
-    """
-    'UpdateReferenceId' is for adding or removing reference IDs in a user's database entry.
-    When a budget, earning, etc. is deleted, the reference to that entity must also be
-    deleted from the list in the user's database.
-
-    Parameters
-    ------------
-        email: string
-            The email of the user that owns this new item
-        operation: int
-            Whether to add(0) or remove(1) the given id
-        refType: string
-            The type of entity the id refers to. Only accepts ["budgets", "earnings", "expenses", "goals"]
-        id: string
-            The ID generated by Firestore to be added or removed from the user.
-    """
-    if (email != None) and (operation == 1 or operation == 0) and (refType == 'budgets' or refType == 'expenses' or refType == 'earnings' or refType == 'goals'):
-        user = list(db.collection('users').where(filter=FieldFilter('email', '==', email)).stream())
-
-        # Should only run once, since there should only be one user per email
-        if len(user) == 0:
-            raise RuntimeError("Can't find user! Update failed.")
-        elif len(user) > 1:
-            raise RuntimeError("Duplicate user found! Update failed.")
-        else:
-            user_ref = db.collection('users').document(user[0].id)
-
-            if operation == 1: # Remove operation
-                user_ref.update({
-                    refType: firestore.ArrayRemove([id])
-                })
-            else: # Add operation
-                
-                user_ref.update({
-                    refType: firestore.ArrayUnion([id])
-                })
-    else:
-        raise RuntimeError("Update reference failed, invalid parameters!")
-
-
 def updateBudget(email, id, method, name, startDate, endDate="", currentDate=date.today(), amount=0, description="", recurPeriod=3, recurring=True):
     """
     When updating budgets, some things need to be kept consistant ALWAYS
@@ -897,95 +821,93 @@ def updateBudget(email, id, method, name, startDate, endDate="", currentDate=dat
         - amount
         - description
     """
-    currentDate = date.fromisoformat(currentDate)
-    budgetList = getUser(email)['data']['budgets']
+    try:
+        budget_ref = db.collection('budgets').document(id)
+        budgetDoc = budget_ref.get().to_dict()
 
-    # Check to make sure that the id passed in corresponds to an item in the user's database
-    if id in budgetList:
-        try:
-            if (recurring==False):
-                endDate = (date.fromisoformat(startDate) + getTimeDelta(int(recurPeriod)) - timedelta(days=1))
-                if (isinstance(endDate, date)):
-                    endDate = endDate.isoformat()
+        if (budgetDoc["email"] != email):
+            raise RuntimeError("Verification failed, update canceled.")
+        
+        if (recurring==False):
+            endDate = (date.fromisoformat(startDate) + getTimeDelta(int(recurPeriod)) - timedelta(days=1))
+            if (isinstance(endDate, date)):
+                endDate = endDate.isoformat()
 
-            budget_ref = db.collection('budgets').document(id)
-            budgetDoc = budget_ref.get().to_dict()
-            oldName = budgetDoc["name"]
-            oldEnd = budgetDoc["endDate"]
-            oldAmount = budgetDoc["amount"]
-            oldDesc = budgetDoc["description"]
-            oldPeriod = budgetDoc["budgetPeriod"]
-            oldRecurring = budgetDoc["recurring"]
+        currentDate = date.fromisoformat(currentDate)
+        oldName = budgetDoc["name"]
+        oldEnd = budgetDoc["endDate"]
+        oldAmount = budgetDoc["amount"]
+        oldDesc = budgetDoc["description"]
+        oldPeriod = budgetDoc["budgetPeriod"]
+        oldRecurring = budgetDoc["recurring"]
 
-            # If the name is changing, update other budgets with the same name and the budget category in expenses to match
-            if (oldName != name):
-                expenseList = db.collection('expenses')\
-                    .where(filter=FieldFilter('email', '==', email))\
-                    .where(filter=FieldFilter('budgetCategory', '==', oldName))\
-                    .stream()
-                
-                for expense in expenseList:
-                    expense.reference.update({
-                        'budgetCategory': str(name)
-                    })
-
-                budgetList = db.collection('budgets')\
-                    .where(filter=FieldFilter('email', '==', email))\
-                    .where(filter=FieldFilter('name', '==', oldName))\
-                    .stream()
-                
-                for budget in budgetList:
-                    budget.reference.update({
-                        'name': str(name)
-                    })
-
-            if (recurring == False or method == "all"):
-                budget_ref.update({
-                    'name': str(name),
-                    'startDate': str(startDate),
-                    'endDate': str(endDate),
-                    'amount': float(amount),
-                    'description': str(description),
-                    'budgetPeriod': int(recurPeriod),
-                    'recurring': bool(recurring)
+        # If the name is changing, update other budgets with the same name and the budget category in expenses to match
+        if (oldName != name):
+            expenseList = db.collection('expenses')\
+                .where(filter=FieldFilter('email', '==', email))\
+                .where(filter=FieldFilter('budgetCategory', '==', oldName))\
+                .stream()
+            
+            for expense in expenseList:
+                expense.reference.update({
+                    'budgetCategory': str(name)
                 })
-            elif (method == "one"):
-                # Create a new budget for the one changing instance
-                newStart = currentDate.isoformat()
-                newEnd = currentDate + getTimeDelta(int(recurPeriod))
-                createBudget(email, name, newStart, newEnd.isoformat(), amount, description, recurring, recurPeriod)
 
-                # Create a new budget for the future instance, matching the past instance in everything but start/end dates
-                futureStart = newEnd + getTimeDelta(0)
-                createBudget(email, name, futureStart.isoformat(), oldEnd, oldAmount, oldDesc, oldRecurring, oldPeriod)
-
-                # Update original budget to have an end date right before the newStart date
-                pastEnd = currentDate - getTimeDelta(0)
-                budget_ref.update({
-                    'startDate': str(startDate),
-                    'endDate': str(pastEnd.isoformat()),
-                    'name': str(name),
-                    'budgetPeriod': int(recurPeriod),
+            budgetList = db.collection('budgets')\
+                .where(filter=FieldFilter('email', '==', email))\
+                .where(filter=FieldFilter('name', '==', oldName))\
+                .stream()
+            
+            for budget in budgetList:
+                budget.reference.update({
+                    'name': str(name)
                 })
-            elif (method == "future"):
-                # Create a new budget for the current/future instance
-                newStart = currentDate.isoformat()
-                createBudget(email, name, newStart, endDate, amount, description, recurring, recurPeriod)
 
-                # Update the original budget to have an end date right before the newStart date
-                pastEnd = currentDate - getTimeDelta(0)
-                budget_ref.update({
-                    'startDate': str(startDate),
-                    'endDate': str(pastEnd.isoformat()),
-                    'name': str(name),
-                    'budgetPeriod': int(recurPeriod),
-                })
-            else:
-                raise RuntimeError("Invalid update method provided. Update canceled.")
-        except Exception as e:
-            raise RuntimeError(e)
-    else:
-        raise RuntimeError("Verification failed, update canceled.")
+        if (recurring == False or method == "all"):
+            budget_ref.update({
+                'name': str(name),
+                'startDate': str(startDate),
+                'endDate': str(endDate),
+                'amount': float(amount),
+                'description': str(description),
+                'budgetPeriod': int(recurPeriod),
+                'recurring': bool(recurring)
+            })
+        elif (method == "one"):
+            # Create a new budget for the one changing instance
+            newStart = currentDate.isoformat()
+            newEnd = currentDate + getTimeDelta(int(recurPeriod))
+            createBudget(email, name, newStart, newEnd.isoformat(), amount, description, recurring, recurPeriod)
+
+            # Create a new budget for the future instance, matching the past instance in everything but start/end dates
+            futureStart = newEnd + getTimeDelta(0)
+            createBudget(email, name, futureStart.isoformat(), oldEnd, oldAmount, oldDesc, oldRecurring, oldPeriod)
+
+            # Update original budget to have an end date right before the newStart date
+            pastEnd = currentDate - getTimeDelta(0)
+            budget_ref.update({
+                'startDate': str(startDate),
+                'endDate': str(pastEnd.isoformat()),
+                'name': str(name),
+                'budgetPeriod': int(recurPeriod),
+            })
+        elif (method == "future"):
+            # Create a new budget for the current/future instance
+            newStart = currentDate.isoformat()
+            createBudget(email, name, newStart, endDate, amount, description, recurring, recurPeriod)
+
+            # Update the original budget to have an end date right before the newStart date
+            pastEnd = currentDate - getTimeDelta(0)
+            budget_ref.update({
+                'startDate': str(startDate),
+                'endDate': str(pastEnd.isoformat()),
+                'name': str(name),
+                'budgetPeriod': int(recurPeriod),
+            })
+        else:
+            raise RuntimeError("Invalid update method provided. Update canceled.")
+    except Exception as e:
+        raise RuntimeError(e)
 
 def updateExpense(email, id, method, name, category, startDate, endDate="", currentDate=date.today(), amount=0, description="", recurPeriod=0, recurring=False):
     """
@@ -1008,77 +930,67 @@ def updateExpense(email, id, method, name, category, startDate, endDate="", curr
         - description
         - budgetCategory
     """
-    currentDate = date.fromisoformat(currentDate)
-    expenseList = getUser(email)['data']['expenses']
+    try:
+        expense_ref = db.collection('expenses').document(id)
+        expenseDoc = expense_ref.get().to_dict()
 
-    # Check to make sure that the id passed in corresponds to an item in the user's database
-    if id in expenseList:
-        try:
-            if (recurring==False):
-                endDate = (date.fromisoformat(startDate) + getTimeDelta(int(recurPeriod)) - timedelta(days=1))
-                if (isinstance(endDate, date)):
-                    endDate = endDate.isoformat()
-            print("Starting the updating process")
-            expense_ref = db.collection('expenses').document(id)
-            expenseDoc = expense_ref.get().to_dict()
-            oldName = expenseDoc["name"]
-            oldCategory = expenseDoc["budgetCategory"]
-            oldAmount = expenseDoc["amount"]
-            oldDesc = expenseDoc["description"]
-            oldRecurring = expenseDoc["recurring"]
-            print("old name to check retrievale", oldName)
-            print("method", method)
+        if (expenseDoc["email"] != email):
+            raise RuntimeError("Verification failed, update canceled.")
 
-            if (recurring == False or method == "all"):
-                expense_ref.update({
-                    'name': str(name),
-                    'startDate': str(startDate),
-                    'endDate': str(endDate),
-                    'amount': float(amount),
-                    'budgetCategory': str(category),
-                    'description': str(description),
-                    'recurPeriod': int(recurPeriod),
-                    'recurring': bool(recurring)
-                })
-            elif (method == "one"):
-                print("we should be here first")
-                # Create a new expense for the one changing instance
-                newStart = currentDate.isoformat()
-                newEnd = currentDate + getTimeDelta(int(recurPeriod))
-                print("new start", newStart)
-                print("new end", newEnd)
-                createExpense(email, name, category, newStart, newEnd.isoformat(), amount, description, recurPeriod, recurring)
+        if (recurring==False):
+            endDate = (date.fromisoformat(startDate) + getTimeDelta(int(recurPeriod)) - timedelta(days=1))
+            if (isinstance(endDate, date)):
+                endDate = endDate.isoformat()
+    
+        currentDate = date.fromisoformat(currentDate)
+        oldName = expenseDoc["name"]
+        oldCategory = expenseDoc["budgetCategory"]
+        oldAmount = expenseDoc["amount"]
+        oldDesc = expenseDoc["description"]
+        oldRecurring = expenseDoc["recurring"]
 
-                # Create a new expense for the future instance, matching the past instance in everything but start dates
-                futureStart = newEnd + getTimeDelta(0)
-                print("future start", futureStart)
-                createExpense(email, oldName, oldCategory, futureStart.isoformat(), endDate, oldAmount, oldDesc, recurPeriod, oldRecurring)
+        if (recurring == False or method == "all"):
+            expense_ref.update({
+                'name': str(name),
+                'startDate': str(startDate),
+                'endDate': str(endDate),
+                'amount': float(amount),
+                'budgetCategory': str(category),
+                'description': str(description),
+                'recurPeriod': int(recurPeriod),
+                'recurring': bool(recurring)
+            })
+        elif (method == "one"):
+            # Create a new expense for the one changing instance
+            newStart = currentDate.isoformat()
+            newEnd = currentDate + getTimeDelta(int(recurPeriod))
+            createExpense(email, name, category, newStart, newEnd.isoformat(), amount, description, recurPeriod, recurring)
 
-                # Update original expense to have an end date right before the newStart date
-                pastEnd = currentDate - getTimeDelta(0)
-                print("past end", pastEnd)
-                expense_ref.update({
-                    'startDate': str(startDate),
-                    'endDate': str(pastEnd.isoformat()),
-                    'recurPeriod': int(recurPeriod)
-                })
-            elif (method == "future"):
-                # Create a new expense for the current/future instance
-                newStart = currentDate.isoformat()
-                createExpense(email, name, category, newStart, endDate, amount, description, recurPeriod, recurring)
+            # Create a new expense for the future instance, matching the past instance in everything but start dates
+            futureStart = newEnd + getTimeDelta(0)
+            createExpense(email, oldName, oldCategory, futureStart.isoformat(), endDate, oldAmount, oldDesc, recurPeriod, oldRecurring)
 
-                # Update the original expense to have an end date right before the newStart date
-                pastEnd = currentDate - getTimeDelta(0)
-                expense_ref.update({
-                    'startDate': str(startDate),
-                    'endDate': str(pastEnd.isoformat()),
-                    'recurPeriod': int(recurPeriod)
-                })
-        except Exception as e:
-            print(e)
-            raise RuntimeError(e)
-    else:
-        raise RuntimeError("Verification failed, update canceled.")
+            # Update original expense to have an end date right before the newStart date
+            pastEnd = currentDate - getTimeDelta(0)
+            expense_ref.update({
+                'startDate': str(startDate),
+                'endDate': str(pastEnd.isoformat()),
+                'recurPeriod': int(recurPeriod)
+            })
+        elif (method == "future"):
+            # Create a new expense for the current/future instance
+            newStart = currentDate.isoformat()
+            createExpense(email, name, category, newStart, endDate, amount, description, recurPeriod, recurring)
+
+            # Update the original expense to have an end date right before the newStart date
+            pastEnd = currentDate - getTimeDelta(0)
+            expense_ref.update({
+                'startDate': str(startDate),
+                'endDate': str(pastEnd.isoformat()),
+                'recurPeriod': int(recurPeriod)
+            })
+    except Exception as e:
+        raise RuntimeError(e)
 
 def updateEarning(email, id, method, name, startDate, endDate="", currentDate=date.today(), amount=0, description="", recurPeriod=0, recurring=False):
     """
@@ -1100,67 +1012,65 @@ def updateEarning(email, id, method, name, startDate, endDate="", currentDate=da
         - amount
         - description
     """
-    currentDate = date.fromisoformat(currentDate)
-    earningList = getUser(email)['data']['earnings']
+    try:
+        earning_ref = db.collection('earnings').document(id)
+        earningDoc = earning_ref.get().to_dict()
 
-    # Check to make sure that the id passed in corresponds to an item in the user's database
-    if id in earningList:
-        try:
-            if (recurring==False):
-                endDate = (date.fromisoformat(startDate) + getTimeDelta(int(recurPeriod)) - timedelta(days=1))
-                if (isinstance(endDate, date)):
-                    endDate = endDate.isoformat()
+        if (earningDoc["email"] != email):
+            raise RuntimeError("Verification failed, update canceled.")
+        
+        if (recurring==False):
+            endDate = (date.fromisoformat(startDate) + getTimeDelta(int(recurPeriod)) - timedelta(days=1))
+            if (isinstance(endDate, date)):
+                endDate = endDate.isoformat()
 
-            earning_ref = db.collection('earnings').document(id)
-            earningDoc = earning_ref.get().to_dict()
-            oldName = earningDoc["name"]
-            oldAmount = earningDoc["amount"]
-            oldDesc = earningDoc["description"]
-            oldRecurring = earningDoc["recurring"]
+        currentDate = date.fromisoformat(currentDate)
+        oldName = earningDoc["name"]
+        oldAmount = earningDoc["amount"]
+        oldDesc = earningDoc["description"]
+        oldRecurring = earningDoc["recurring"]
 
-            if (recurring == False or method == "all"):
-                earning_ref.update({
-                    'name': str(name),
-                    'startDate': str(startDate),
-                    'endDate': str(endDate),
-                    'amount': float(amount),
-                    'description': str(description),
-                    'recurPeriod': int(recurPeriod),
-                    'recurring': bool(recurring)
-                })
-            elif (method == "one"):
-                # Create a new earning for the one changing instance
-                newStart = currentDate.isoformat()
-                newEnd = currentDate + getTimeDelta(int(recurPeriod))
-                createEarning(email, name, newStart, newEnd.isoformat(), amount, description, recurPeriod, recurring)
+        if (recurring == False or method == "all"):
+            earning_ref.update({
+                'name': str(name),
+                'startDate': str(startDate),
+                'endDate': str(endDate),
+                'amount': float(amount),
+                'description': str(description),
+                'recurPeriod': int(recurPeriod),
+                'recurring': bool(recurring)
+            })
+        elif (method == "one"):
+            # Create a new earning for the one changing instance
+            newStart = currentDate.isoformat()
+            newEnd = currentDate + getTimeDelta(int(recurPeriod))
+            createEarning(email, name, newStart, newEnd.isoformat(), amount, description, recurPeriod, recurring)
 
-                # Create a new earning for the future instance, matching the past instance in everything but start dates
-                futureStart = newEnd + getTimeDelta(0)
-                createEarning(email, oldName, futureStart.isoformat(), endDate, oldAmount, oldDesc, recurPeriod, oldRecurring)
+            # Create a new earning for the future instance, matching the past instance in everything but start dates
+            futureStart = newEnd + getTimeDelta(0)
+            createEarning(email, oldName, futureStart.isoformat(), endDate, oldAmount, oldDesc, recurPeriod, oldRecurring)
 
-                # Update original earning to have an end date right before the newStart date
-                pastEnd = currentDate - getTimeDelta(0)
-                earning_ref.update({
-                    'startDate': str(startDate),
-                    'endDate': str(pastEnd.isoformat()),
-                    'recurPeriod': int(recurPeriod)
-                })
-            elif (method == "future"):
-                # Create a new earning for the current/future instance
-                newStart = currentDate.isoformat()
-                createEarning(email, name, newStart, endDate, amount, description, recurPeriod, recurring)
+            # Update original earning to have an end date right before the newStart date
+            pastEnd = currentDate - getTimeDelta(0)
+            earning_ref.update({
+                'startDate': str(startDate),
+                'endDate': str(pastEnd.isoformat()),
+                'recurPeriod': int(recurPeriod)
+            })
+        elif (method == "future"):
+            # Create a new earning for the current/future instance
+            newStart = currentDate.isoformat()
+            createEarning(email, name, newStart, endDate, amount, description, recurPeriod, recurring)
 
-                # Update the original earning to have an end date right before the newStart date
-                pastEnd = currentDate - getTimeDelta(0)
-                earning_ref.update({
-                    'startDate': str(startDate),
-                    'endDate': str(pastEnd.isoformat()),
-                    'recurPeriod': int(recurPeriod)
-                })
-        except Exception as e:
-            raise RuntimeError(e)
-    else:
-        raise RuntimeError("Verification failed, update canceled.")
+            # Update the original earning to have an end date right before the newStart date
+            pastEnd = currentDate - getTimeDelta(0)
+            earning_ref.update({
+                'startDate': str(startDate),
+                'endDate': str(pastEnd.isoformat()),
+                'recurPeriod': int(recurPeriod)
+            })
+    except Exception as e:
+        raise RuntimeError(e)
 
 ####################
 # Delete functions #
@@ -1173,88 +1083,143 @@ def deleteUser(email):
     - Deletes user entry from database after all their budgets etc. are gone.
     """
     userData = getUser(email)['data']
-    expenseList = userData['expenses']
-    budgetList = userData['budgets']
-    earningList = userData['earnings']
-
+    budgetList = db.collection('budgets').where(filter=FieldFilter('email', '==', email)).stream()
+    expenseList = db.collection('expenses').where(filter=FieldFilter('email', '==', email)).stream()
+    earningList = db.collection('earnings').where(filter=FieldFilter('email', '==', email)).stream()
+    print(userData['id'])
     for budget in budgetList:
-        db.collection('budgets').document(budget).delete()
+        budget.reference.delete()
 
     for expense in expenseList:
-        db.collection('expenses').document(expense).delete()
+        expense.reference.delete()
 
     for earning in earningList:
-        db.collection('earnings').document(earning).delete()
+        earning.reference.delete()
 
-    db.collection('users').document(id).delete()
+    db.collection('users').document(userData['id']).delete()
 
-def deleteBudget(email, id, method=0, newBudget=None):
+def deleteBudget(email, id, method, currentDate=date.today()):
     """
+    Delete the specified budget.
+
     Parameters
     -------------
         email: string
             The email of the user that owns this budget
         id: string
             The db-generated ID for the budget being deleted
-        method: int
-            The method of handling expenses:
-            0 - Make all expenses associated with the budget into 'budgetless' expenses
-            1 - Migrate all expenses to a specified budget
-            2 - Delete all expenses associated with this budget
+        method: string
+            "all", "one", or "future
     """
-    # First check to make sure the user owns the budget they want to delete
-    userData = getUser(email)['data']
-    budgetList = userData['budgets']
-    if id not in budgetList:
-        raise RuntimeError("User does not have access to this data!")
-
     try:
         budget_ref = db.collection('budgets').document(id)
         budgetDoc = budget_ref.get().to_dict()
+
+        # First check to make sure the user owns the budget they want to delete
+        if budgetDoc["email"] != email:
+            raise RuntimeError("User does not have access to this data!")
+
         budgetName = budgetDoc["name"]
+        recurPeriod = budgetDoc["budgetPeriod"]
+        endDate = budgetDoc["endDate"]
+        amount = budgetDoc["amount"]
+        description = budgetDoc["description"]
+        recurring = budgetDoc["recurring"]
 
-        # Let user choose what to do with expenses associated with the budget they want to delete
-        # - Delete all expenses
-        # - Migrate all expenses to a specified budget
-        # - Make all expenses budgetless
-        # - (Post-MVP) Allow users to manually selct/deselect expenses and migrate in bulk
-        expenseList = userData['expenses']
+        if (recurring == False or method == "all"):
+            budget_ref.delete() 
+        elif (method == "one"):
+            # Update original budget to have an end date right before the excludeStart date
+            pastEnd = currentDate - getTimeDelta(0)
+            budget_ref.update({
+                'endDate': str(pastEnd.isoformat()),
+            })
 
-        for expense in expenseList:
-            expense_ref = db.collection('expenses').document(expense)
-            expenseDoc = expense_ref.get().to_dict()
-
-            if (expenseDoc["budgetCategory"] == budgetName):
-                expense_ref.update({"budgetCategory": ""})
-
-        budget_ref.delete() 
-        updateUserReferenceIds(email, 1, 'budgets', id)
+            # Create a new budget for the future instance, matching the past instance in everything but start date
+            futureStart = currentDate + getTimeDelta(int(recurPeriod))
+            createBudget(email, budgetName, futureStart.isoformat(), endDate, amount, description, recurring, recurPeriod)  
+        elif (method == "future"):
+            # Update original budget to have an end date right before the excludeStart date
+            pastEnd = currentDate - getTimeDelta(0)
+            budget_ref.update({
+                'endDate': str(pastEnd.isoformat()),
+            })
     except Exception as e:
         raise RuntimeError(e)
 
-def deleteExpense(email, id):
-    # First check to make sure the user owns the expense they want to delete
-    expenseList = getUser(email)['data']['expenses']
-    if id not in expenseList:
-        raise RuntimeError("User does not have access to this data!")
-    
+def deleteExpense(email, id, method, currentDate=date.today()):
     try:
         expense_ref = db.collection('expenses').document(id)
-        expense_ref.delete()
-        updateUserReferenceIds(email, 1, 'expenses', id)
+        expenseDoc = expense_ref.get().to_dict()
+
+        # First check to make sure the user owns the expense they want to delete
+        if expenseDoc["email"] != email:
+            raise RuntimeError("User does not have access to this data!")
+
+        # Data from current budget in order to create new ones as needed
+        name = expenseDoc["name"]
+        budgetCategory = expenseDoc["budgetCategory"]
+        recurPeriod = expenseDoc["recurPeriod"]
+        endDate = expenseDoc["endDate"]
+        amount = expenseDoc["amount"]
+        description = expenseDoc["description"]
+        recurring = expenseDoc["recurring"]
+
+        if (recurring == False or method == "all"):
+            expense_ref.delete() 
+        elif (method == "one"):
+            # Update original expense to have an end date right before the excludeStart date
+            pastEnd = currentDate - getTimeDelta(0)
+            expense_ref.update({
+                'endDate': str(pastEnd.isoformat()),
+            })
+
+            # Create a new expense for the future instance, matching the past instance in everything but start date
+            futureStart = currentDate + getTimeDelta(int(recurPeriod))
+            createExpense(email, name, budgetCategory, futureStart.isoformat(), endDate, amount, description, recurPeriod, recurring)  
+        elif (method == "future"):
+            # Update original expense to have an end date right before the excludeStart date
+            pastEnd = currentDate - getTimeDelta(0)
+            expense_ref.update({
+                'endDate': str(pastEnd.isoformat()),
+            })
     except Exception as e:
         raise e
 
-def deleteEarning(email, id):
-    # First check to make sure the user owns the expense they want to delete
-    earningList = getUser(email)['data']['earnings']
-    if id not in earningList:
-        raise RuntimeError("User does not have access to this data!")
-    
+def deleteEarning(email, id, method, currentDate=date.today()):
     try:
         earning_ref = db.collection('earnings').document(id)
-        earning_ref.delete()
-        updateUserReferenceIds(email, 1, 'earnings', id)
+        earningDoc = earning_ref.get().to_dict()
+
+        # First check to make sure the user owns the earning they want to delete
+        if earningDoc["email"] != email:
+            raise RuntimeError("User does not have access to this data!")
+        
+        name = earningDoc["name"]
+        recurPeriod = earningDoc["recurPeriod"]
+        endDate = earningDoc["endDate"]
+        amount = earningDoc["amount"]
+        description = earningDoc["description"]
+        recurring = earningDoc["recurring"]
+
+        if (recurring == False or method == "all"):
+            earning_ref.delete() 
+        elif (method == "one"):
+            # Update original earning to have an end date right before the excludeStart date
+            pastEnd = currentDate - getTimeDelta(0)
+            earning_ref.update({
+                'endDate': str(pastEnd.isoformat()),
+            })
+
+            # Create a new earning for the future instance, matching the past instance in everything but start date
+            futureStart = currentDate + getTimeDelta(int(recurPeriod))
+            createExpense(email, name, futureStart.isoformat(), endDate, amount, description, recurPeriod, recurring)  
+        elif (method == "future"):
+            # Update original earning to have an end date right before the excludeStart date
+            pastEnd = currentDate - getTimeDelta(0)
+            earning_ref.update({
+                'endDate': str(pastEnd.isoformat()),
+            })
     except Exception as e:
         raise e
 
