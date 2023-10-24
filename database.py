@@ -912,7 +912,7 @@ def updateBudget(email, id, method, name, startDate, endDate="", currentDate=dat
         elif (method == "one"):
             # Create a new budget for the one changing instance
             newStart = currentDate.isoformat()
-            newEnd = currentDate + getTimeDelta(int(recurPeriod))
+            newEnd = currentDate + getTimeDelta(int(recurPeriod)) - getTimeDelta(0)
             createBudget(email, name, newStart, newEnd.isoformat(), amount, description, recurring, recurPeriod)
 
             # Create a new budget for the future instance, matching the past instance in everything but start/end dates
@@ -999,7 +999,7 @@ def updateExpense(email, id, method, name, category, startDate, endDate="", curr
         elif (method == "one"):
             # Create a new expense for the one changing instance
             newStart = currentDate.isoformat()
-            newEnd = currentDate + getTimeDelta(int(recurPeriod))
+            newEnd = currentDate + getTimeDelta(int(recurPeriod)) - getTimeDelta(0)
             createExpense(email, name, category, newStart, newEnd.isoformat(), amount, description, recurPeriod, recurring)
 
             # Create a new expense for the future instance, matching the past instance in everything but start dates
@@ -1079,7 +1079,7 @@ def updateEarning(email, id, method, name, startDate, endDate="", currentDate=da
         elif (method == "one"):
             # Create a new earning for the one changing instance
             newStart = currentDate.isoformat()
-            newEnd = currentDate + getTimeDelta(int(recurPeriod))
+            newEnd = currentDate + getTimeDelta(int(recurPeriod)) - getTimeDelta(0)
             createEarning(email, name, newStart, newEnd.isoformat(), amount, description, recurPeriod, recurring)
 
             # Create a new earning for the future instance, matching the past instance in everything but start dates

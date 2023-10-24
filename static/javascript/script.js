@@ -844,7 +844,7 @@ function generateTableUI(type, entityList, currency, dateType, limit=null) {
                 table.append(sortedElements[index])
             }
         } else {
-            table.append(...sortByStartDate(Array.prototype.slice.call(unsortedRows.children)), ascendingOrder);
+            table.append(...sortByStartDate(Array.prototype.slice.call(unsortedRows.children), ascendingOrder));
         }
     } else {
         const emptybody = document.createElement('tbody');
