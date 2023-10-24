@@ -59,7 +59,7 @@ function loadBudget(id) {
         }
 
         // Create 'expenses' section
-        document.getElementById('expense-container').append(generateTableUI(0, expenses, responseData.currency));
+        document.getElementById('expense-container').append(generateTableUI(0, expenses, responseData.currency, 0));
 
         // Hide placeholders
         hidePlaceholders();

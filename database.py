@@ -439,7 +439,19 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
             )
 
             if occurances > 0:
-                returnList.append({"data": expenseDoc, "dates": dates})
+                    passedDates = []
+                    upcomingDates = []
+                    for singleDate in dates:
+                        if singleDate <= targetDate:
+                            passedDates.append(singleDate)
+                        else:
+                            upcomingDates.append(singleDate)
+
+                    returnList.append({
+                        "data": expenseDoc,
+                        "passedDates": passedDates,
+                        "upcomingDates":upcomingDates   
+                    })
         return {"budget": budgetDoc, "expenses": returnList, "currency": userData["currency"]}
     
     except Exception as e:
