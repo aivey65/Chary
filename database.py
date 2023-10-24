@@ -315,10 +315,10 @@ def getUser(email):
             userDict = doc.to_dict()
             # Update ISO format dates into date objects 
             userDict["joinDate"] = date.fromisoformat(userDict["joinDate"]) if notNull(userDict["joinDate"]) else None
-            userDict["id"] = doc.reference.id
+            userDict["id"] = doc.id
             return {"data":userDict}
     except Exception as e:
-        return None
+        raise RuntimeError(str(e))
 
 def getAllActiveBudgets(email, period=3, targetDate=date.today()):
     """
@@ -377,7 +377,7 @@ def getAllActiveBudgets(email, period=3, targetDate=date.today()):
 
 # Get a list of budget categories associated with a given user
 def getBudgetCategories(email):
-    budgetList = db.collection('budgets').where(filter=FieldFilter('email', '==', email))
+    budgetList = db.collection('budgets').where(filter=FieldFilter('email', '==', email)).stream()
     budgetCategories = []
 
     for budget in budgetList:
@@ -598,7 +598,7 @@ def getDatesFromPeriod(period, targetDate):
     except Exception as e:
         raise RuntimeError(e)
 
-def getExpensesInRange(email, startDate, endDate):
+def getExpensesInRange(email, startDate, endDate, currentDate=date.today()):
     # Include if 
     # - StartDate is less than or equal to the range end date
     # AND
@@ -637,9 +637,18 @@ def getExpensesInRange(email, startDate, endDate):
                 )
 
                 if occurances > 0:
+                    passedDates = []
+                    upcomingDates = []
+                    for singleDate in dates:
+                        if singleDate <= currentDate:
+                            passedDates.append(singleDate)
+                        else:
+                            upcomingDates.append(singleDate)
+
                     expensesDict[expense.id] = {
                         "data": expenseDoc,
-                        "dates": dates
+                        "passedDates": passedDates,
+                        "upcomingDates":upcomingDates   
                     }
     else:
         for expense in list2:
@@ -658,9 +667,18 @@ def getExpensesInRange(email, startDate, endDate):
                 )
 
                 if occurances > 0:
+                    passedDates = []
+                    upcomingDates = []
+                    for singleDate in dates:
+                        if singleDate <= currentDate:
+                            passedDates.append(singleDate)
+                        else:
+                            upcomingDates.append(singleDate)
+
                     expensesDict[expense.id] = {
                         "data": expenseDoc,
-                        "dates": dates
+                        "passedDates": passedDates,
+                        "upcomingDates":upcomingDates   
                     }
 
     # Get a list of budget categories
@@ -668,7 +686,7 @@ def getExpensesInRange(email, startDate, endDate):
 
     return {"expenses":expensesDict, "categories":budgetCategories}
 
-def getEarningsInRange(email, startDate, endDate):
+def getEarningsInRange(email, startDate, endDate, currentDate=date.today()):
     filter_1 = FieldFilter("startDate", "<=", endDate.isoformat()) 
     list1 = list(db.collection('earnings')\
         .where(filter=FieldFilter('email', '==', email))\
@@ -703,9 +721,18 @@ def getEarningsInRange(email, startDate, endDate):
                 )
 
                 if occurances > 0:
+                    passedDates = []
+                    upcomingDates = []
+                    for singleDate in dates:
+                        if singleDate <= currentDate:
+                            passedDates.append(singleDate)
+                        else:
+                            upcomingDates.append(singleDate)
+
                     earningsDict[earning.id] = {
                         "data": earningDoc,
-                        "dates": dates
+                        "passedDates": passedDates,
+                        "upcomingDates":upcomingDates
                     }
     else:
         for earning in list2:
@@ -724,9 +751,18 @@ def getEarningsInRange(email, startDate, endDate):
                 )
 
                 if occurances > 0:
+                    passedDates = []
+                    upcomingDates = []
+                    for singleDate in dates:
+                        if singleDate <= currentDate:
+                            passedDates.append(singleDate)
+                        else:
+                            upcomingDates.append(singleDate)
+
                     earningsDict[earning.id] = {
                         "data": earningDoc,
-                        "dates": dates
+                        "passedDates": passedDates,
+                        "upcomingDates":upcomingDates
                     }
 
     return earningsDict
@@ -1086,7 +1122,6 @@ def deleteUser(email):
     budgetList = db.collection('budgets').where(filter=FieldFilter('email', '==', email)).stream()
     expenseList = db.collection('expenses').where(filter=FieldFilter('email', '==', email)).stream()
     earningList = db.collection('earnings').where(filter=FieldFilter('email', '==', email)).stream()
-    print(userData['id'])
     for budget in budgetList:
         budget.reference.delete()
 

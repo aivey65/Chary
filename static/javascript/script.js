@@ -659,8 +659,12 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
  *      - 1 : Earning
  * @param entityList (List): List of a user's expenses or earnings
  * @param currency (string): A single character representing the user's currency symbol
+ * @param dateType (int): Type of date to include from an expense or earning: passed dates or upcomming dates
+ *      - 0 : Passed (Date in the past or the current day)
+ *      - 1 : Upcoming (Dates starting the day after the current day and has not happened yet)
+ * @param limit (int): Number of rows to include in the final table
  */
-function generateTableUI(type, entityList, currency, limit=null) {
+function generateTableUI(type, entityList, currency, dateType, limit=null) {
     const TYPES = ['expense', 'earning'];
         
     // Configure some values based on table type
@@ -685,8 +689,15 @@ function generateTableUI(type, entityList, currency, limit=null) {
     table.append(tableHead);
 
     const unsortedRows = document.createElement('div');
+    var ascendingOrder = false;
     for (const key in entityList) {
-        dates = entityList[key].dates;
+        var dates;
+        if (dateType == 0) {
+            dates = entityList[key].passedDates
+        } else {
+            dates = entityList[key].upcomingDates
+            ascendingOrder = true;
+        }
         dates.forEach(rawDate => {
             const current = entityList[key].data;
 
@@ -827,13 +838,13 @@ function generateTableUI(type, entityList, currency, limit=null) {
 
     if (unsortedRows.children.length > 0) {
         if (limit) {
-            const sortedElements = sortByStartDate(Array.prototype.slice.call(unsortedRows.children));
+            const sortedElements = sortByStartDate(Array.prototype.slice.call(unsortedRows.children), ascendingOrder);
             const sortedLength = sortedElements.length;
             for (var index = 0; index < limit && index < sortedLength; index++) {
                 table.append(sortedElements[index])
             }
         } else {
-            table.append(...sortByStartDate(Array.prototype.slice.call(unsortedRows.children)));
+            table.append(...sortByStartDate(Array.prototype.slice.call(unsortedRows.children)), ascendingOrder);
         }
     } else {
         const emptybody = document.createElement('tbody');

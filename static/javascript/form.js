@@ -450,7 +450,9 @@ function confirmUpdateMethod(entityType, isDelete=false) {
     
     // If the user is updating (not deleting) and there has been no independant change made, or if the entity is not recurring, the update can happen without update methods.
     const recurringCheck = document.querySelector("input[name='recurring']:checked").value;
-    if (!isDelete && (!possibleIndependantChange || recurringCheck == "False")) { // It is an update request, and there is no independant change or it is not recurring
+    if (isDelete && recurringCheck == "False") { // If the user is deleting, and it is not recurring, show normal delete warning
+        confirmDelete(entityType);
+    } else if (!isDelete && (!possibleIndependantChange || recurringCheck == "False")) { // If the user is updating, but there isn't an independant change or recurring is false
         callSubmit(String(entityType), "all");
     } else {
         const popupHeader = document.createElement("h3");
@@ -597,16 +599,12 @@ function confirmDelete(entityType) {
     deleteButton.style.marginLeft = "var(--smallPad)";
     deleteButton.onclick = function() {
         popup.remove();
-        finalizeDelete(entityType);
+        finalizeDelete(entityType, "all");
     }
     deleteButton.classList.add("delete-button");
     popup.firstChild.append(deleteButton);
 
     document.getElementById("acd-content").append(popup);
-}
-
-function budgetDeleteOptions() {
-    finalizeDelete("budget")
 }
 
 function finalizeDelete(entityType, method=null) {

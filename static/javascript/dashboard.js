@@ -59,11 +59,12 @@ function updateData(type, period, date) {
         } else if (type == 'expenses') {
             expenseContainer = document.getElementById("expense-container");
             expenseContainer.innerHTML = "";
-            expenseContainer.append(generateTableUI(0, responseData.expenses, userData.currency));
+            expenseContainer.append(generateTableUI(0, responseData.expenses, userData.currency, 0));
         } else if (type == 'earnings') {
             earningContainer = document.getElementById("earning-container");
             earningContainer.innerHTML = "";
-            earningContainer.append(generateTableUI(1, responseData, userData.currency));        }
+            earningContainer.append(generateTableUI(1, responseData, userData.currency, 0));        
+        }
     });
 }
 
@@ -193,7 +194,7 @@ function loadEarningTab(earnings=userData.earnings) {
     tabHead.append(header, addButton, filterContainer);
     tabHead.id = 'tab-head';
 
-    table = generateTableUI(1, earnings, userData.currency);
+    table = generateTableUI(1, earnings, userData.currency, 0);
 
     const earningContainer = document.createElement('div');
     earningContainer.id = 'earning-container';
@@ -251,7 +252,7 @@ function loadExpenseTab(expenses=userData.expenses) {
     tabHead.append(header, addButton, filterContainer);
     tabHead.id = 'tab-head';
 
-    const table = generateTableUI(0, expenses.expenses, userData.currency);
+    const table = generateTableUI(0, expenses.expenses, userData.currency, 0);
 
     const expenseContainer = document.createElement('div');
     expenseContainer.id = 'expense-container';
@@ -756,7 +757,7 @@ function generateOverviewExpenses() {
     addIcon.alt = "Add icon";
     addButton.append(addIcon);
 
-    const expenseTable = generateTableUI(0, userData.expenses.expenses, userData.currency, 5);
+    const expenseTable = generateTableUI(0, userData.expenses.expenses, userData.currency, 0, 5);
 
     overviewExpenseContainer.append(overviewHeader, addButton, expenseTable);
     return overviewExpenseContainer;
@@ -780,7 +781,7 @@ function generateOverviewEarnings() {
     addIcon.alt = "Add icon";
     addButton.append(addIcon);
 
-    const earningTable = generateTableUI(1, userData.earnings, userData.currency, 5);
+    const earningTable = generateTableUI(1, userData.earnings, userData.currency, 0, 5);
 
     overviewEarningContainer.append(overviewHeader, addButton, earningTable);
     return overviewEarningContainer;
@@ -848,7 +849,7 @@ function expensesPerMonth(currentYear) {
 
     for (const key of keys) {
         const amount = expenseList[key].data.amount
-        const dates = expenseList[key].dates
+        const dates = expenseList[key].passedDates
         
         for (const date of dates) {
             const localDate = new Date(date);
@@ -873,7 +874,7 @@ function earningsPerMonth() {
 
     for (const key of keys) {
         const amount = earningList[key].data.amount
-        const dates = earningList[key].dates
+        const dates = earningList[key].passedDates
         
         for (const date of dates) {
             const localDate = new Date(date);

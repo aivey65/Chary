@@ -501,6 +501,7 @@ def getAllCurrent():
         targetDate = request.args.get("target")
         return database.getAllCurrent(session["email"], int(period), str(targetDate))
     except Exception as e:
+        print(e)
         return custom_error(e)
 
 @app.route("/data/user")
