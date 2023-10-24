@@ -173,12 +173,15 @@ h4 {
 
 #profile-snip-container {
     cursor: pointer;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    align-items: center;
 }
 
 #user-info-container {
     display: grid;
     gap: 1rem;
-    grid-template-rows: auto auto auto auto auto;
+    grid-template-rows: auto auto auto auto;
     grid-template-columns: 1fr auto;
 }
 

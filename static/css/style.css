@@ -107,26 +107,22 @@ a {
 }
 
 a.normal-link {
-    color: var(--ContrastL);
     font-size: 1rem;
 }
 
 a.normal-link:link {
-    color: var(--ContrastL);
-    border-bottom: solid 2px var(--ContrastL);
+    color: var(--Light);
+    border-bottom: solid 2px var(--Light);
 }
 
 a.normal-link:visited {
-    color: var(--ContrastD);
-    border-bottom: solid 2px var(--ContrastDD);
+    color: var(--Grey);
+    border-bottom: solid 2px var(--Grey);
+    font-weight: 300;
 }
 
 a.normal-link:hover {
-    color: var(--MainD);
-}
-
-a.normal-link:active {
-    color: var(--ContrastDD);
+    color: var(--ContrastL);
 }
 
 /*
@@ -430,8 +426,9 @@ table {
 }
 
 .full-size-chart {
-    grid-template-rows: min-content minmax(0, 3fr) min-content;
+    grid-template-rows: minmax(0, 3fr);
     grid-template-columns: minmax(0, 3fr);
+    height: 100%;
 }
 
 .profile-icon {

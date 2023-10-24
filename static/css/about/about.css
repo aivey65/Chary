@@ -11,6 +11,7 @@ ol li {
     display: grid;
     grid-template-rows: .2fr .2fr .5fr .9fr .5fr;
     grid-template-columns: 1fr 1fr;
+    padding-left: var(--DesktopPadBody);
 }
 
 #about-header {

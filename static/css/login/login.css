@@ -54,8 +54,8 @@ body {
 #login-card {
     grid-column: 2;
     display: grid;
-    grid-template-rows: auto 1fr auto auto;
-    justify-content: center;
+    grid-template-rows: auto 1fr auto auto auto;
+    justify-items: center;
 }
 
 #login-card hr {
@@ -110,4 +110,8 @@ body {
 #image-card {
     grid-column: 1;
     padding: var(--medPad);
+}
+
+#login-link {
+    margin-top: var(--smallPad);
 }
