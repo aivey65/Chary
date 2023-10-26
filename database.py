@@ -287,7 +287,6 @@ def getOccurancesWithinPeriod(startDate, endDate, targetStartDate, targetEndDate
 def getAllCurrent(email, period, targetDate):
     try:
         startDate, endDate = getDatesFromPeriod(period, targetDate)
-
         user = getUser(email)['data']
 
         budgetData = getAllActiveBudgets(email, -2)
@@ -439,7 +438,21 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
             )
 
             if occurances > 0:
-                returnList.append({"data": expenseDoc, "dates": dates})
+                    passedDates = []
+                    upcomingDates = []
+                    for singleDate in dates:
+                        if singleDate <= date.today():
+                            passedDates.append(singleDate)
+                        else:
+                            upcomingDates.append(singleDate)
+
+                    returnList[expense.id] = {
+                        "data": expenseDoc,
+                        "passedDates": passedDates,
+                        "upcomingDates":upcomingDates,
+                        "allDates": dates
+                    }
+
         return {"budget": budgetDoc, "expenses": returnList, "currency": userData["currency"]}
     
     except Exception as e:
@@ -569,10 +582,20 @@ def getMostRecentExpenses(email, lim=10):
         )
     
         if occurances > 0:
-            expensesDict[expense.id] = {
-                "data": expenseDoc,
-                "dates": dates
-            }
+                    passedDates = []
+                    upcomingDates = []
+                    for singleDate in dates:
+                        if singleDate <= date.today():
+                            passedDates.append(singleDate)
+                        else:
+                            upcomingDates.append(singleDate)
+
+                    expensesDict[expense.id] = {
+                        "data": expenseDoc,
+                        "passedDates": passedDates,
+                        "upcomingDates":upcomingDates,
+                        "allDates": dates
+                    }
 
     # Get a list of budget categories
     budgetCategories = getBudgetCategories(email)
@@ -648,7 +671,8 @@ def getExpensesInRange(email, startDate, endDate, currentDate=date.today()):
                     expensesDict[expense.id] = {
                         "data": expenseDoc,
                         "passedDates": passedDates,
-                        "upcomingDates":upcomingDates   
+                        "upcomingDates":upcomingDates,
+                        "allDates": dates 
                     }
     else:
         for expense in list2:
@@ -678,7 +702,8 @@ def getExpensesInRange(email, startDate, endDate, currentDate=date.today()):
                     expensesDict[expense.id] = {
                         "data": expenseDoc,
                         "passedDates": passedDates,
-                        "upcomingDates":upcomingDates   
+                        "upcomingDates":upcomingDates,
+                        "allDates": dates  
                     }
 
     # Get a list of budget categories
@@ -732,7 +757,8 @@ def getEarningsInRange(email, startDate, endDate, currentDate=date.today()):
                     earningsDict[earning.id] = {
                         "data": earningDoc,
                         "passedDates": passedDates,
-                        "upcomingDates":upcomingDates
+                        "upcomingDates":upcomingDates,
+                        "allDates": dates
                     }
     else:
         for earning in list2:
@@ -762,7 +788,8 @@ def getEarningsInRange(email, startDate, endDate, currentDate=date.today()):
                     earningsDict[earning.id] = {
                         "data": earningDoc,
                         "passedDates": passedDates,
-                        "upcomingDates":upcomingDates
+                        "upcomingDates":upcomingDates,
+                        "allDates": dates
                     }
 
     return earningsDict

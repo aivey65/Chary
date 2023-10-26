@@ -106,7 +106,8 @@ h4 {
 }
 
 #filter-form {
-    gap: var(--medPad);
+    gap: var(--mobilePad) var(--medPad);
+    flex-wrap: wrap;
 }
 
 .filter-img {
@@ -116,6 +117,10 @@ h4 {
 
 #period-selector {
     min-width: 150px;
+}
+
+#upcoming-selector {
+    min-width: 175px;
 }
 
 #dashboard-main h1 {
