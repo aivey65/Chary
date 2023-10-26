@@ -203,6 +203,11 @@ function generateVariousCharts(items, slideNum, maxShow) {
     }
 }
 
+function updateQuickStat(summary, message) {
+    const quickStat = document.getElementById('quick-stat');
+    quickStat.innerText = summary;
+}
+
 function allChartDataAsArray(budget, expenses) {
     var toReturn = [];
     toReturn.push(budgetUsedAmount(budget), budgetUsePerPeriod(budget.period, expenses));
@@ -210,12 +215,35 @@ function allChartDataAsArray(budget, expenses) {
 }
 
 function budgetUsedAmount(budget) {
-    // TODO: handle when a user is over budget with different colors??
-    const colors = [COLORS_GREEN, COLORS_NAVY];
-    const data = [parseFloat((budget.usedAmount).toFixed(2)), parseFloat((budget.amount - budget.usedAmount).toFixed(2))];
-    const labels = ["Amount Used", "Amount Left"]
+    const availableAmount = budget.amount;
+    const currentUsedAmount = budget.usedAmount;
+    const totalUsedAmount = budget.totalUsedAmount;
 
-    return { "data": data, "colors": colors, "labels": labels };
+    if (totalUsedAmount > availableAmount) { // The user has overspent in their budget
+        if (currentUsedAmount <= availableAmount) {
+            updateQuickStat(
+                "You are currently under budget, but an upcoming expense will put you over.", 
+                "Keep this in mind while making plans and consider making some changes to your upcoming expenses."
+            )
+        }
+        const colors = [COLORS_RED];
+        const labels = ["Amount Used"]
+        const data = [
+            parseFloat((totalUsedAmount).toFixed(2)), 
+        ];
+
+        return { "data": data, "colors": colors, "labels": labels };
+    } else {
+        const colors = [COLORS_GREEN, COLORS_GREY, COLORS_NAVY];
+        const labels = ["Amount Used", "Upcoming Expenses", "Amount Left"]
+        const data = [
+            parseFloat((currentUsedAmount).toFixed(2)), 
+            parseFloat((totalUsedAmount - currentUsedAmount).toFixed(2)), 
+            parseFloat((availableAmount - currentUsedAmount).toFixed(2))
+        ];
+
+        return { "data": data, "colors": colors, "labels": labels };
+    }
 }
 
 function budgetUsePerPeriod(period, expenses) {
