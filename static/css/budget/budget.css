@@ -88,7 +88,7 @@
 }
 
 #details-edit {
-    grid-row: 3;
+    grid-row: 4;
     grid-column: 4;
     align-self: end;
     justify-self: end;
@@ -197,3 +197,8 @@
 /*
 *** Styles for facts info section ***
 */
+
+#stat-container {
+    grid-row: 4;
+    grid-column: 3;
+}

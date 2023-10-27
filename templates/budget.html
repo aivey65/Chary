@@ -54,6 +54,7 @@
                         </div>
                     </div>
                     <div id="stat-container">
+                        <h3 id="stat-summary"></h3>
                         <p id="quick-stat"></p>
                     </div>
                     <div id="description">
@@ -78,7 +79,7 @@
 
                 <div id="budget-expenses" class="main-container module">
                     <h3 class="module-header">Expenses in this Budget</h3>
-                    <button id="add-expense-button" class="add-icon"><img src="../static/images/PlusIcon.svg" alt="Add icon"></button>
+                    <button id="add-expense-button" onclick="createExpenseLink()" class="add-icon"><img src="../static/images/PlusIcon.svg" alt="Add icon"></button>
                     <div id="expense-container"></div>
                 </div>
             </div>

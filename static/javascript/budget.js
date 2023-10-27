@@ -73,6 +73,10 @@ function dashboardBudgetAction() {
     window.location.assign("/dashboard?refresh=false&tab=budgets");
 }
 
+function createExpenseLink() {
+    window.location.href = "/form/create-expense";
+}
+
 function generateVariousCharts(items, slideNum, maxShow) {
     Chart.defaults.plugins.legend.display = false;
 
@@ -97,7 +101,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
             options: {
                 elements: {
                     center: {
-                        text: data.data[0] + "\n／\n" + data.data[1],
+                        text: user_currency + data.dataText[0] + "\n／\n" + user_currency + data.dataText[1],
                         color: COLORS_LIGHT,
                         minFontSize: 15, // Default is 20 (in px), set to false and text will not wrap.
                         lineHeight: 25 // Default is 25 (in px), used for when text wraps
@@ -204,8 +208,10 @@ function generateVariousCharts(items, slideNum, maxShow) {
 }
 
 function updateQuickStat(summary, message) {
+    const statSummary = document.getElementById('stat-summary');
+    statSummary.innerText = summary;
     const quickStat = document.getElementById('quick-stat');
-    quickStat.innerText = summary;
+    quickStat.innerText = message;
 }
 
 function allChartDataAsArray(budget, expenses) {
@@ -215,34 +221,50 @@ function allChartDataAsArray(budget, expenses) {
 }
 
 function budgetUsedAmount(budget) {
-    const availableAmount = budget.amount;
-    const currentUsedAmount = budget.usedAmount;
-    const totalUsedAmount = budget.totalUsedAmount;
+    const availableAmount = parseFloat((budget.amount).toFixed(2));
+    const currentUsedAmount = parseFloat((budget.usedAmount).toFixed(2));
+    const totalUsedAmount = parseFloat((budget.totalUsedAmount).toFixed(2));
 
     if (totalUsedAmount > availableAmount) { // The user has overspent in their budget
         if (currentUsedAmount <= availableAmount) {
             updateQuickStat(
-                "You are currently under budget, but an upcoming expense will put you over.", 
+                "You are currently within budget, but an upcoming expense will put you over " + user_currency + String(totalUsedAmount - availableAmount) + ".", 
                 "Keep this in mind while making plans and consider making some changes to your upcoming expenses."
+            )
+        } else {
+            updateQuickStat(
+                "You are over budget by " + String(user_currency) + String(totalUsedAmount - availableAmount) + "!",
+                "That's okay! It happens. Try to take some time to figure out where you may have overspent and think about adjusting your expenses for next month."
             )
         }
         const colors = [COLORS_RED];
         const labels = ["Amount Used"]
         const data = [
-            parseFloat((totalUsedAmount).toFixed(2)), 
+            totalUsedAmount, 
         ];
 
-        return { "data": data, "colors": colors, "labels": labels };
+        return { "data": data, "colors": colors, "labels": labels, "dataText": [String(data[0]), String(availableAmount)] };
     } else {
+        if (totalUsedAmount == availableAmount) {
+            updateQuickStat(
+                "You are just within budget!",
+                "In fact, you spent exactly your budget! Be carefule; spend anything more, and you will be over budget."
+            )
+        } else {
+            updateQuickStat(
+                "You are within your budget! Nice Job!",
+                "You have " + String(user_currency) + String(parseFloat((availableAmount - totalUsedAmount).toFixed(2))) + " left in this budget. Don't forget to take into account your upcoming expenses."
+            )
+        }
         const colors = [COLORS_GREEN, COLORS_GREY, COLORS_NAVY];
         const labels = ["Amount Used", "Upcoming Expenses", "Amount Left"]
         const data = [
-            parseFloat((currentUsedAmount).toFixed(2)), 
-            parseFloat((totalUsedAmount - currentUsedAmount).toFixed(2)), 
-            parseFloat((availableAmount - currentUsedAmount).toFixed(2))
+            currentUsedAmount, 
+            parseFloat((totalUsedAmount - currentUsedAmount).toFixed(2)), //How much is upcoming
+            parseFloat((availableAmount - totalUsedAmount).toFixed(2)) // How much is remaining after upcoming expenses
         ];
 
-        return { "data": data, "colors": colors, "labels": labels };
+        return { "data": data, "colors": colors, "labels": labels, "dataText": [totalUsedAmount, availableAmount]};
     }
 }
 
