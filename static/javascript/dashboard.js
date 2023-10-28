@@ -410,7 +410,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     label: "Budgeted Amount",
                     data: dataExpected.map(row => row.amount),
                     backgroundColor: dataExpected.map(row => row.color),
-                    borderWidth: 2,
+                    borderWidth: 1,
                     borderColor: COLORS_DARK
                 }],
             },
@@ -455,7 +455,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     label: "Amount Used",
                     data: dataActual.map(row => row.amount),
                     backgroundColor: dataActual.map(row => row.color),
-                    borderWidth: 2,
+                    borderWidth: 1,
                     borderColor: COLORS_DARK
                 }],
             },

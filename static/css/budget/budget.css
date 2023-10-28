@@ -54,7 +54,7 @@
 
 #budget-basic {
     display: grid;
-    grid-template-rows: .2fr .1fr 1fr;
+    grid-template-rows: .2fr auto .5fr auto 1fr;
     grid-template-columns: 0.5fr 0.5fr 1fr auto;
     align-items: start;
     justify-items: left;
@@ -88,7 +88,7 @@
 }
 
 #details-edit {
-    grid-row: 4;
+    grid-row: 5;
     grid-column: 4;
     align-self: end;
     justify-self: end;
@@ -146,9 +146,27 @@
     grid-column: 2;
 }
 
+#viewing-date-container {
+    grid-row: 1;
+    grid-column: 3;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    justify-self: center;
+    align-self: end;
+    gap:var(--mobilePad);
+}
+
+#viewing-dates {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap:var(--medPad);
+}
+
 #details-chart-container {
     overflow: hidden;
-    grid-row: 2/4;
+    grid-row: 2/6;
     grid-column: 3;
     height: 100%;
     width: 100%;
@@ -197,8 +215,20 @@
 /*
 *** Styles for facts info section ***
 */
+#budget-break {
+    grid-column: 1/3;
+    grid-row: 4;
+    background-color: var(--Grey);
+    height: 2px;
+    width: 100%;
+    border-radius: 1px;
+}
 
 #stat-container {
-    grid-row: 4;
-    grid-column: 3;
+    grid-row: 5;
+    grid-column: 1/3;
+}
+
+#stat-summary {
+    margin-top: 0px;
 }

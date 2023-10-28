@@ -202,15 +202,7 @@ function configureFilterUpcoming(date, period, previous) {
         return date;
     }
 
-    var endDate = null;
-    if (period == 1 || period == 2) { // Weekly
-        endDate = startDate;
-        endDate = new Date(endDate.setDate(startDate.getDate() + (6 - startDate.getDay())));
-    } else if (period == 3) { // Monthly
-        endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
-    } else if (period == 4) {
-        endDate = new Date(startDate.getFullYear(), 11, 31);
-    }
+    var endDate = calculateEndDate(startDate, period);
 
     todayDate = new Date();
     if (endDate < todayDate) { // The viewing period ends before today's date, so there are no upcoming things to show.
@@ -220,6 +212,21 @@ function configureFilterUpcoming(date, period, previous) {
     } else { // If today's date is in the viewing period, the setting should stay on what the user had before.
         return previous;
     }
+}
+
+function calculateEndDate(startDate, period) {
+    var endDate;
+    
+    if (period == 1 || period == 2) { // Weekly
+        endDate = startDate;
+        endDate = new Date(endDate.setDate(startDate.getDate() + (6 - startDate.getDay())));
+    } else if (period == 3) { // Monthly
+        endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+    } else if (period == 4) {
+        endDate = new Date(startDate.getFullYear(), 11, 31);
+    }
+
+    return endDate;
 }
 
 function closeMenu() {

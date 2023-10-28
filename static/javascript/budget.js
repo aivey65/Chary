@@ -2,13 +2,14 @@ const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"];
 const options = getDateFormattingOptions();
 var user_currency = null;
 
-function loadBudget(id) {
+function loadBudget(id, startDate, endDate) {
     fillProfilePics(); // Get the profile images on the page filled.
 
     fetch('/data/budget-expenses?id=' + id).then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
         const expenses = responseData.expenses;
         user_currency = responseData.currency;
+        configureViewDates(startDate, budget.budgetPeriod);
 
         const chartData = allChartDataAsArray(budget, expenses);
         const currentChart = generateVariousCharts(chartData, 0, 1);
@@ -55,7 +56,7 @@ function loadBudget(id) {
             document.getElementById('recur-img').src = 'static/images/recurIcon.svg';
 
             const period = PERIODS[budget.budgetPeriod].toLocaleLowerCase();
-            document.getElementById('recur-description').textContent = "This budget recurs " + period;
+            document.getElementById('recur-description').textContent = "Recurs " + period;
         }
 
         // Create 'expenses' section
@@ -207,6 +208,31 @@ function generateVariousCharts(items, slideNum, maxShow) {
     }
 }
 
+function configureViewDates(startDate, period) {
+    const startDateInput = document.getElementById("viewing-start-date");
+    const endDate = document.getElementById("viewing-end-date");
+
+    var startDate = configureFilterDate(startDate, period);
+    startDateInput.value = startDate;
+
+    // Creating UTC date from the given start date
+    if (startDate != "") {
+        var UTCDate = startDate.split('-');
+        UTCDate[1] = UTCDate[1] - 1;
+        startDate = new Date(...UTCDate);
+    }
+
+    var endDateValue = endDate.innerText;
+    if (endDateValue != "") {
+        var UTCDate = endDateValue.split('-');
+        UTCDate[1] = UTCDate[1] - 1;
+        endDateValue = new Date(...UTCDate);
+    }
+
+    endDate.innerText = calculateEndDate(startDate, period).toLocaleDateString({ timeZone: 'UTC' });;
+    console.log(endDate.innerText)
+}
+
 function updateQuickStat(summary, message) {
     const statSummary = document.getElementById('stat-summary');
     statSummary.innerText = summary;
@@ -248,7 +274,7 @@ function budgetUsedAmount(budget) {
         if (totalUsedAmount == availableAmount) {
             updateQuickStat(
                 "You are just within budget!",
-                "In fact, you spent exactly your budget! Be carefule; spend anything more, and you will be over budget."
+                "In fact, you spent exactly your budget! Be careful; spend anything more, and you will be over budget."
             )
         } else {
             updateQuickStat(
