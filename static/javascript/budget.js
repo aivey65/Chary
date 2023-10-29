@@ -10,6 +10,9 @@ function loadBudget(id, startDate, endDate) {
         const expenses = responseData.expenses;
         user_currency = responseData.currency;
         configureViewDates(startDate, budget.budgetPeriod);
+        document.getElementById('viewing-start-date').addEventListener('onchange', (e) => {
+            configureViewDates(e.target.value, budget.budgetPeriod);
+        })
 
         const chartData = allChartDataAsArray(budget, expenses);
         const currentChart = generateVariousCharts(chartData, 0, 1);
@@ -230,7 +233,6 @@ function configureViewDates(startDate, period) {
     }
 
     endDate.innerText = calculateEndDate(startDate, period).toLocaleDateString({ timeZone: 'UTC' });;
-    console.log(endDate.innerText)
 }
 
 function updateQuickStat(summary, message) {
