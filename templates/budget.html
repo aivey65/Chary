@@ -53,7 +53,22 @@
                             <span id="recur-description"></span>
                         </div>
                     </div>
-                    
+                    <div id="viewing-date-container">
+                        <p class="label">Viewing Dates</p>
+                        <div id="viewing-dates">
+                            <form id="start-date-form">
+                                <input id="viewing-start-date" type="date" title="Current Viewing Date">
+                            </form>
+                            <p>to</p>
+                            <p id="viewing-end-date"></p>
+                            <div class="placeholder placeholder-p"></div>
+                        </div>
+                    </div>
+                    <div id="stat-container">
+                        <h3 id="stat-summary"></h3>
+                        <p id="quick-stat"></p>
+                        <div class="placeholder placeholder-p"></div>
+                    </div>
                     <div id="description">
                         <p class="label">Description</p>
                         <p id="details-description"></p>
@@ -71,12 +86,13 @@
                         <p id="details-date-end"></p>
                         <div class="placeholder placeholder-p"></div>
                     </div>
+                    <div id="budget-break"></div>
                     <img id="details-edit" class="update-img icon" src="../static/images/EditButtonSM.svg" alt="Edit icon"/>
                 </div>
 
                 <div id="budget-expenses" class="main-container module">
                     <h3 class="module-header">Expenses in this Budget</h3>
-                    <button id="add-expense-button" class="add-icon"><img src="../static/images/PlusIcon.svg" alt="Add icon"></button>
+                    <button id="add-expense-button" onclick="createExpenseLink()" class="add-icon"><img src="../static/images/PlusIcon.svg" alt="Add icon"></button>
                     <div id="expense-container"></div>
                 </div>
             </div>

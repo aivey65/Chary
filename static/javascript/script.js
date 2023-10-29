@@ -55,7 +55,7 @@ function dashboardAction() {
 }
 
 function formatNumber(number) {
-    const numberFormatter = Intl.NumberFormat("en", { notation: "compact" });
+    const numberFormatter = Intl.NumberFormat("en", { maximumFractionDigits: 2, notation: "compact" });
     return numberFormatter.format(number);
 }
 
@@ -99,17 +99,19 @@ function createFiltersSection(type) {
     const period3 = document.createElement("option");
     period3.textContent = "Month";
     period3.value = "3";
-    if (type != 'budgets') {
-        period3.selected = true;
-    }
     const period4 = document.createElement("option");
     period4.textContent = "Year";
     period4.value = "4";
+    if (type != 'budgets') {
+        period4.selected = true;
+    }
 
-    const dateSelector = document.createElement("input");
+    const dateSelector = document.createElement("input"); // Placed up here so that the value can be changed by the periodSelector
     const periodSelector = document.createElement("select");
+    const upcomingSelector = document.createElement("select"); // Placed up here so that the value can be changed by the dateSelector
+
     periodSelector.id = "period-selector";
-    periodSelector.title = "Select the duration of the time period you want to view"
+    periodSelector.title = "Select the duration of the time period you want to view";
     if (type == 'budgets') {
         periodSelector.append(period00, period0, period1, period2, period3, period4);
     } else {
@@ -117,7 +119,8 @@ function createFiltersSection(type) {
     }
     periodSelector.addEventListener("change", () => {
         dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value);
-        updateData(type, periodSelector.value, dateSelector.value);
+        upcomingSelector.value = configureFilterUpcoming(dateSelector.value, periodSelector.value, upcomingSelector.value);
+        updateData(type, periodSelector.value, dateSelector.value, upcomingSelector.value);
     });
 
     dateSelector.id = "date-selector";
@@ -126,13 +129,37 @@ function createFiltersSection(type) {
     dateSelector.value = configureFilterDate(new Date().toLocaleDateString("en-CA", { timeZone: 'UTC' }), periodSelector.value);
     dateSelector.addEventListener("change", () => {
         dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value);
-        updateData(type, periodSelector.value, dateSelector.value);
+        upcomingSelector.value = configureFilterUpcoming(dateSelector.value, periodSelector.value, upcomingSelector.value)
+        updateData(type, periodSelector.value, dateSelector.value, upcomingSelector.value);
     });
 
     const form = document.createElement("form");
     form.id = "filter-form";
     form.append(periodSelector, dateSelector);
 
+    // For expenses and earnings, a user might want to toggle view of upcoming occurances
+    if (type != "budgets") {
+        const upcoming1 = document.createElement("option");
+        upcoming1.textContent = "Hide Upcoming";
+        upcoming1.value = "0";
+        const upcoming2 = document.createElement("option");
+        upcoming2.textContent = "Show Upcoming Only";
+        upcoming2.value = "1";
+        const upcoming3 = document.createElement("option");
+        upcoming3.textContent = "Show All";
+        upcoming3.value = "2";
+
+        upcomingSelector.id = "upcoming-selector";
+        upcomingSelector.title = "Select whether to show or hide upcoming occurances";
+        upcomingSelector.value = "0";
+        upcomingSelector.append(upcoming1, upcoming2, upcoming3);
+        upcomingSelector.addEventListener("change", () => {
+            updateData(type, periodSelector.value, dateSelector.value, upcomingSelector.value);
+        })
+
+        form.append(upcomingSelector);
+    }
+    
     return form;
 }
 
@@ -162,6 +189,44 @@ function configureFilterDate(date, period) {
         tempDate = new Date();
         return tempDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
     }
+}
+
+function configureFilterUpcoming(date, period, previous) {
+    // Creating UTC date from the given start date
+    var startDate = null;
+    if (date != "") {
+        var UTCDate = date.split('-');
+        UTCDate[1] = UTCDate[1] - 1;
+        startDate = new Date(...UTCDate);
+    } else {
+        return date;
+    }
+
+    var endDate = calculateEndDate(startDate, period);
+
+    todayDate = new Date();
+    if (endDate < todayDate) { // The viewing period ends before today's date, so there are no upcoming things to show.
+        return 0;
+    } else if (startDate > todayDate) { // The viewing period starts after today's date, so there are no "past" items.
+        return 2;
+    } else { // If today's date is in the viewing period, the setting should stay on what the user had before.
+        return previous;
+    }
+}
+
+function calculateEndDate(startDate, period) {
+    var endDate;
+    
+    if (period == 1 || period == 2) { // Weekly
+        endDate = startDate;
+        endDate = new Date(endDate.setDate(startDate.getDate() + (6 - startDate.getDay())));
+    } else if (period == 3) { // Monthly
+        endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+    } else if (period == 4) {
+        endDate = new Date(startDate.getFullYear(), 11, 31);
+    }
+
+    return endDate;
 }
 
 function closeMenu() {
@@ -662,6 +727,7 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
  * @param dateType (int): Type of date to include from an expense or earning: passed dates or upcomming dates
  *      - 0 : Passed (Date in the past or the current day)
  *      - 1 : Upcoming (Dates starting the day after the current day and has not happened yet)
+ *      - 2 : Both Passed and upcoming
  * @param limit (int): Number of rows to include in the final table
  */
 function generateTableUI(type, entityList, currency, dateType, limit=null) {
@@ -693,10 +759,12 @@ function generateTableUI(type, entityList, currency, dateType, limit=null) {
     for (const key in entityList) {
         var dates;
         if (dateType == 0) {
-            dates = entityList[key].passedDates
-        } else {
-            dates = entityList[key].upcomingDates
+            dates = entityList[key].passedDates;
+        } else if (dateType == 1) {
+            dates = entityList[key].upcomingDates;
             ascendingOrder = true;
+        } else {
+            dates = (entityList[key].passedDates).concat(entityList[key].upcomingDates);
         }
         dates.forEach(rawDate => {
             const current = entityList[key].data;

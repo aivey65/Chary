@@ -2,13 +2,17 @@ const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"];
 const options = getDateFormattingOptions();
 var user_currency = null;
 
-function loadBudget(id) {
+function loadBudget(id, startDate, endDate) {
     fillProfilePics(); // Get the profile images on the page filled.
 
     fetch('/data/budget-expenses?id=' + id).then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
         const expenses = responseData.expenses;
         user_currency = responseData.currency;
+        configureViewDates(startDate, budget.budgetPeriod);
+        document.getElementById('viewing-start-date').addEventListener('onchange', (e) => {
+            configureViewDates(e.target.value, budget.budgetPeriod);
+        })
 
         const chartData = allChartDataAsArray(budget, expenses);
         const currentChart = generateVariousCharts(chartData, 0, 1);
@@ -55,7 +59,7 @@ function loadBudget(id) {
             document.getElementById('recur-img').src = 'static/images/recurIcon.svg';
 
             const period = PERIODS[budget.budgetPeriod].toLocaleLowerCase();
-            document.getElementById('recur-description').textContent = "This budget recurs " + period;
+            document.getElementById('recur-description').textContent = "Recurs " + period;
         }
 
         // Create 'expenses' section
@@ -71,6 +75,10 @@ function loadBudget(id) {
 
 function dashboardBudgetAction() {
     window.location.assign("/dashboard?refresh=false&tab=budgets");
+}
+
+function createExpenseLink() {
+    window.location.href = "/form/create-expense";
 }
 
 function generateVariousCharts(items, slideNum, maxShow) {
@@ -97,7 +105,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
             options: {
                 elements: {
                     center: {
-                        text: data.data[0] + "\n／\n" + data.data[1],
+                        text: user_currency + data.dataText[0] + "\n／\n" + user_currency + data.dataText[1],
                         color: COLORS_LIGHT,
                         minFontSize: 15, // Default is 20 (in px), set to false and text will not wrap.
                         lineHeight: 25 // Default is 25 (in px), used for when text wraps
@@ -203,6 +211,37 @@ function generateVariousCharts(items, slideNum, maxShow) {
     }
 }
 
+function configureViewDates(startDate, period) {
+    const startDateInput = document.getElementById("viewing-start-date");
+    const endDate = document.getElementById("viewing-end-date");
+
+    var startDate = configureFilterDate(startDate, period);
+    startDateInput.value = startDate;
+
+    // Creating UTC date from the given start date
+    if (startDate != "") {
+        var UTCDate = startDate.split('-');
+        UTCDate[1] = UTCDate[1] - 1;
+        startDate = new Date(...UTCDate);
+    }
+
+    var endDateValue = endDate.innerText;
+    if (endDateValue != "") {
+        var UTCDate = endDateValue.split('-');
+        UTCDate[1] = UTCDate[1] - 1;
+        endDateValue = new Date(...UTCDate);
+    }
+
+    endDate.innerText = calculateEndDate(startDate, period).toLocaleDateString({ timeZone: 'UTC' });;
+}
+
+function updateQuickStat(summary, message) {
+    const statSummary = document.getElementById('stat-summary');
+    statSummary.innerText = summary;
+    const quickStat = document.getElementById('quick-stat');
+    quickStat.innerText = message;
+}
+
 function allChartDataAsArray(budget, expenses) {
     var toReturn = [];
     toReturn.push(budgetUsedAmount(budget), budgetUsePerPeriod(budget.period, expenses));
@@ -210,12 +249,51 @@ function allChartDataAsArray(budget, expenses) {
 }
 
 function budgetUsedAmount(budget) {
-    // TODO: handle when a user is over budget with different colors??
-    const colors = [COLORS_GREEN, COLORS_NAVY];
-    const data = [parseFloat((budget.usedAmount).toFixed(2)), parseFloat((budget.amount - budget.usedAmount).toFixed(2))];
-    const labels = ["Amount Used", "Amount Left"]
+    const availableAmount = parseFloat((budget.amount).toFixed(2));
+    const currentUsedAmount = parseFloat((budget.usedAmount).toFixed(2));
+    const totalUsedAmount = parseFloat((budget.totalUsedAmount).toFixed(2));
 
-    return { "data": data, "colors": colors, "labels": labels };
+    if (totalUsedAmount > availableAmount) { // The user has overspent in their budget
+        if (currentUsedAmount <= availableAmount) {
+            updateQuickStat(
+                "You are currently within budget, but an upcoming expense will put you over " + user_currency + String(totalUsedAmount - availableAmount) + ".", 
+                "Keep this in mind while making plans and consider making some changes to your upcoming expenses."
+            )
+        } else {
+            updateQuickStat(
+                "You are over budget by " + String(user_currency) + String(totalUsedAmount - availableAmount) + "!",
+                "That's okay! It happens. Try to take some time to figure out where you may have overspent and think about adjusting your expenses for next month."
+            )
+        }
+        const colors = [COLORS_RED];
+        const labels = ["Amount Used"]
+        const data = [
+            totalUsedAmount, 
+        ];
+
+        return { "data": data, "colors": colors, "labels": labels, "dataText": [String(data[0]), String(availableAmount)] };
+    } else {
+        if (totalUsedAmount == availableAmount) {
+            updateQuickStat(
+                "You are just within budget!",
+                "In fact, you spent exactly your budget! Be careful; spend anything more, and you will be over budget."
+            )
+        } else {
+            updateQuickStat(
+                "You are within your budget! Nice Job!",
+                "You have " + String(user_currency) + String(parseFloat((availableAmount - totalUsedAmount).toFixed(2))) + " left in this budget. Don't forget to take into account your upcoming expenses."
+            )
+        }
+        const colors = [COLORS_GREEN, COLORS_GREY, COLORS_NAVY];
+        const labels = ["Amount Used", "Upcoming Expenses", "Amount Left"]
+        const data = [
+            currentUsedAmount, 
+            parseFloat((totalUsedAmount - currentUsedAmount).toFixed(2)), //How much is upcoming
+            parseFloat((availableAmount - totalUsedAmount).toFixed(2)) // How much is remaining after upcoming expenses
+        ];
+
+        return { "data": data, "colors": colors, "labels": labels, "dataText": [totalUsedAmount, availableAmount]};
+    }
 }
 
 function budgetUsePerPeriod(period, expenses) {

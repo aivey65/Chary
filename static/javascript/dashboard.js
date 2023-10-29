@@ -46,8 +46,20 @@ async function updateUserData() {
     return response;
 }
 
-function updateData(type, period, date) {
-    fetch('/data/' + type + '?period=' + period + '&target=' + date).then(response => response.json()).then((responseData) => {        
+function updateData(type, period, date, upcoming) {
+    const currentYear = (new Date()).getFullYear();
+    if (type != 'budgets' && period == 4 && date.split('-')[0] == String(currentYear)) {
+        if (type == 'expenses') {
+            expenseContainer = document.getElementById("expense-container");
+            expenseContainer.innerHTML = "";
+            expenseContainer.append(generateTableUI(0, userData.expenses.expenses, userData.currency, upcoming));
+        } else if (type == 'earnings') {
+            earningContainer = document.getElementById("earning-container");
+            earningContainer.innerHTML = "";
+            earningContainer.append(generateTableUI(1, userData.earnings, userData.currency, upcoming));        
+        }
+    } else {
+        fetch('/data/' + type + '?period=' + period + '&target=' + date).then(response => response.json()).then((responseData) => {        
         if (type == 'budgets') {
             budgetContainer = document.getElementById("budget-container");
             budgetContainer.innerHTML = "";
@@ -59,13 +71,14 @@ function updateData(type, period, date) {
         } else if (type == 'expenses') {
             expenseContainer = document.getElementById("expense-container");
             expenseContainer.innerHTML = "";
-            expenseContainer.append(generateTableUI(0, responseData.expenses, userData.currency, 0));
+            expenseContainer.append(generateTableUI(0, responseData.expenses, userData.currency, upcoming));
         } else if (type == 'earnings') {
             earningContainer = document.getElementById("earning-container");
             earningContainer.innerHTML = "";
-            earningContainer.append(generateTableUI(1, responseData, userData.currency, 0));        
+            earningContainer.append(generateTableUI(1, responseData, userData.currency, upcoming));        
         }
     });
+    }
 }
 
 function loadOverviewTab() {
@@ -397,7 +410,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     label: "Budgeted Amount",
                     data: dataExpected.map(row => row.amount),
                     backgroundColor: dataExpected.map(row => row.color),
-                    borderWidth: 2,
+                    borderWidth: 1,
                     borderColor: COLORS_DARK
                 }],
             },
@@ -442,7 +455,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     label: "Amount Used",
                     data: dataActual.map(row => row.amount),
                     backgroundColor: dataActual.map(row => row.color),
-                    borderWidth: 2,
+                    borderWidth: 1,
                     borderColor: COLORS_DARK
                 }],
             },
