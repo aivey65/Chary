@@ -128,7 +128,7 @@ function createFiltersSection(type) {
     dateSelector.title = "Select the start date for the time period you want to view"
     dateSelector.value = configureFilterDate(new Date().toLocaleDateString("en-CA", { timeZone: 'UTC' }), periodSelector.value);
     dateSelector.addEventListener("change", () => {
-        dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value);
+        dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value, true);
         upcomingSelector.value = configureFilterUpcoming(dateSelector.value, periodSelector.value, upcomingSelector.value)
         updateData(type, periodSelector.value, dateSelector.value, upcomingSelector.value);
     });
@@ -163,7 +163,13 @@ function createFiltersSection(type) {
     return form;
 }
 
-function configureFilterDate(date, period) {
+function configureFilterDate(date, period, changePeriod=false) {
+    // When the period is 'All Active', but the date was changed first, change the period to 'monthly' as a placeholder.
+    if (changePeriod) {
+        period = 3;
+        document.getElementById('period-selector').value = 3;
+    }
+
     // Creating UTC dates
     var tempDate = null;
     if (date != "") {
