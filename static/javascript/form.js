@@ -301,7 +301,6 @@ function submitExpenseForm(method=null) {
     const expenseId = document.getElementById('id');
 
     if (expenseId) {
-        console.log(currentStartDate)
         fetch('/data/update-expense', {
             method: "POST",
             headers: {
@@ -378,7 +377,6 @@ function submitEarningForm(method=null) {
     const earningId = document.getElementById('id');
 
     if (earningId) {
-        console.log(currentStartDate)
         fetch('/data/update-earning', {
             method: "POST",
             headers: {
