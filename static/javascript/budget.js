@@ -10,8 +10,9 @@ function loadBudget(id, startDate, endDate) {
         const expenses = responseData.expenses;
         user_currency = responseData.currency;
         configureViewDates(startDate, budget.budgetPeriod);
-        document.getElementById('viewing-start-date').addEventListener('onchange', (e) => {
+        document.getElementById('viewing-start-date').addEventListener('change', (e) => {
             configureViewDates(e.target.value, budget.budgetPeriod);
+            changeBudgetDates(id, e.target.value);
         })
 
         const chartData = allChartDataAsArray(budget, expenses);
@@ -73,6 +74,27 @@ function loadBudget(id, startDate, endDate) {
     });
 }
 
+function changeBudgetDates(id, startDate) {
+    fetch('/data/budget-expenses?id=' + id + '&date=' + startDate).then(response => response.json()).then((responseData) => {
+        const budget = responseData.budget;
+        const expenses = responseData.expenses;
+
+        const chartData = allChartDataAsArray(budget, expenses);
+        const currentChart = generateVariousCharts(chartData, 0, 1);
+        const limitedChartsContainer = document.getElementById("limited-charts-container");
+        limitedChartsContainer.innerHTML = "";
+        limitedChartsContainer.append(currentChart);
+
+        // Get the container for limited charts and carousel dots
+        const chartContainer = document.getElementById('details-chart-container');
+        chartContainer.innerHTML = "";
+        chartContainer.append(limitedChartsContainer);
+        
+        const dotCarousel = carouselButtons(chartData, "details-chart-dots", "limited-charts-container", 1, generateVariousCharts);
+        chartContainer.append(dotCarousel);
+    });
+}
+
 function dashboardBudgetAction() {
     window.location.assign("/dashboard?refresh=false&tab=budgets");
 }
@@ -107,7 +129,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     center: {
                         text: user_currency + data.dataText[0] + "\n／\n" + user_currency + data.dataText[1],
                         color: COLORS_LIGHT,
-                        minFontSize: 15, // Default is 20 (in px), set to false and text will not wrap.
+                        minFontSize: 14, // Default is 20 (in px), set to false and text will not wrap.
                         lineHeight: 25 // Default is 25 (in px), used for when text wraps
                     }
                 },
