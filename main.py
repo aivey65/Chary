@@ -566,12 +566,12 @@ def getBudgetExpenses():
     try:
         budgetId = request.args.get("id")
         date = request.args.get("date")
-        fullYear = True if request.args.get("fullYear") == "True" else False
+        fullExpenses = True if request.args.get("fullExpenses") == "True" else False
 
         if date == None:
             return database.getBudgetAndExpenses(session["email"], budgetId)
         else:
-            return database.getBudgetAndExpenses(session["email"], budgetId, date, fullYear)
+            return database.getBudgetAndExpenses(session["email"], budgetId, date, fullExpenses)
     except Exception as e:
         return custom_error(e)
     

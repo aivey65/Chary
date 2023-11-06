@@ -20,7 +20,7 @@ function getEmptyMonthMap() {
     
     const monthMap = {
         "labels": [
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug","Sept", "Oct", "Nov", "Dec"
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
         ],
         "values": monthValues
     }

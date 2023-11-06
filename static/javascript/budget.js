@@ -1,18 +1,19 @@
 const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"];
 const options = getDateFormattingOptions();
 var user_currency = null;
-var yearExpenseDict = null;
+var fullExpenseDict = null;
 var viewYear = null;
 
 function loadBudget(id, startDate, endDate) {
     fillProfilePics(); // Get the profile images on the page filled.
     viewYear = startDate.split("-")[2];
 
-    fetch('/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullYear=True').then(response => response.json()).then((responseData) => {
+    fetch('/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullExpenses=True').then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
         const expenses = responseData.expenses;
         user_currency = responseData.currency;
-        yearExpenseDict = responseData.yearExpenses;
+        fullExpenseDict = responseData.fullExpenses;
+        console.log(responseData)
 
         configureViewDates(startDate, budget.budgetPeriod);
         document.getElementById('viewing-start-date').addEventListener('change', (e) => {
@@ -95,21 +96,22 @@ function changeBudgetDates(id, startDate) {
     var newYear = startDate.split("-")[2];
 
     var fetchRequest = "";
-    var fullYear = false;
+    var fullExpenses = false;
 
     if (newYear != viewYear) {
         viewYear = newYear;
-        fullYear = true;
-        fetchRequest = '/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullYear=True';
+        fullExpenses = true;
+        fetchRequest = '/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullExpenses=True';
     } else {
-        fetchRequest = '/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullYear=False';
+        fetchRequest = '/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullExpenses=False';
     }
 
     fetch(fetchRequest).then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
         const expenses = responseData.expenses;
-        if (fullYear) {
-            yearExpenseDict = responseData.yearExpenses;
+        console.log(responseData)
+        if (fullExpenses) {
+            fullExpenseDict = responseData.fullExpenses;
         }
 
         const chartData = allChartDataAsArray(budget, expenses);
@@ -373,7 +375,9 @@ function budgetUsedAmount(budget) {
     }
 }
 
-function budgetUsePerPeriod(period, expenses) {
+function budgetUsePerPeriod(period) {
+    const keys = Object.keys(fullExpenseDict);
+
     if (period == 0) { // Daily
         // Should show 7 days for a full week
 
@@ -386,6 +390,24 @@ function budgetUsePerPeriod(period, expenses) {
         // Should show past 5 years
         
     }
+    const data = getEmptyMonthMap();
+
+    for (const key of keys) {
+        const amount = earningList[key].data.amount
+        const dates = earningList[key].passedDates
+        
+        for (const date of dates) {
+            const localDate = new Date(date);
+            var curDate = new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
+            const todayDate = new Date().setHours(0,0,0,0);
+
+            if (curDate <= todayDate) {
+                const curMonth = curDate.getMonth();
+                data.values[curMonth] = parseFloat((data.values[curMonth] + amount).toFixed(2));
+            }
+        }
+    }
+
     return [
         { year: 2010, count: 10 },
         { year: 2011, count: 20 },

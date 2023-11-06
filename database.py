@@ -53,6 +53,36 @@ def getCurrentStartEnd(currentDate, period):
         return date.isoformat(start), date.isoformat(end)
     else:
         return None, None
+    
+def getFullExpenseDates(targetDate, period):
+    """
+    Parameters
+    -----------
+    targetDate: Date object
+        Date represents the target date to include in the start and end dates
+    period: int
+        [0, 1, 2, 3, 4] corresponding to the recurring period of the expense
+
+    """
+    if (not isinstance(targetDate, date)):
+        targetDate = date.fromisoformat(targetDate)
+
+    if (period == None or period == 0): # Daily, get full week
+        start, end = getCurrentWeek(targetDate)
+        return start, end
+    elif (period == 1 or period == 2): # Weekly or biweekly, get 4 weeks
+        start, end = getCurrentWeek(targetDate)
+        start = start - timedelta(weeks=4)
+        return start, end
+    elif (period == 3): # Monthly, get full year
+        start, end = getCurrentYear(targetDate)
+        return start, end
+    elif (period == 4): # Yearly, get past 4 years
+        start, end = getCurrentYear(targetDate)
+        start = start - relativedelta(years=4)
+        return start, end
+    else:
+        return None, None 
 
 def calculateNextDate(start, period):
     timeDelta = getTimeDelta(period)
@@ -254,7 +284,7 @@ def getOccurancesWithinPeriod(startDate, endDate, targetStartDate, targetEndDate
     startDate: Date object
         Date represents the starting date for the time period we are searching, inclusive
     endDate: Date object
-        Date represents the day after the last date for the time period we are searching, i.e. exclusive
+        Date represents the last day for the time period, inclusive
     targetStartDate: Date object
         The start date of the target entity to count occurances for
     targetEndDate: Date object
@@ -405,7 +435,7 @@ def getBudgetCategories(email):
 
     return budgetCategories
 
-def getBudgetAndExpenses(email, id, targetDate=date.today(), getFullYear=False):
+def getBudgetAndExpenses(email, id, targetDate=date.today(), getFullExpenseData=False):
     """
     Parameters
     ------------
@@ -445,7 +475,7 @@ def getBudgetAndExpenses(email, id, targetDate=date.today(), getFullYear=False):
             .stream()
         
         expenseDict = {}
-        yearExpenseDict = {}
+        fullExpenseDict = {}
         # Filter for expenses in the same budget period
         for expense in expenseList:
             expenseDoc = expense.to_dict()
@@ -454,29 +484,30 @@ def getBudgetAndExpenses(email, id, targetDate=date.today(), getFullYear=False):
             expenseDoc["startDate"] = date.fromisoformat(expenseDoc['startDate']) if notNull(expenseDoc['startDate']) else None
 
             # If we need to get chart data for the whole year, we will populate another dictionary
-            if (getFullYear and expenseDoc['recurPeriod'] != 4):
-                yearOccurances, yearDates = getOccurancesWithinPeriod(
-                    startDate, 
-                    endDate, 
+            if (getFullExpenseData):
+                fullStart, fullEnd = getFullExpenseDates(targetDate, budgetDoc["budgetPeriod"])
+                fullOccurances, fullDates = getOccurancesWithinPeriod(
+                    fullStart, 
+                    fullEnd, 
                     expenseDoc['startDate'], 
                     expenseDoc['endDate'], 
-                    4
+                    expenseDoc['recurPeriod']
                 )
 
-                if yearOccurances > 0:
+                if fullOccurances > 0:
                     passedDates = []
                     upcomingDates = []
-                    for singleDate in yearDates:                    
+                    for singleDate in fullDates:                    
                         if singleDate <= date.today():
                             passedDates.append(singleDate)
                         else:
                             upcomingDates.append(singleDate)
 
-                    yearExpenseDict[expense.id] = {
+                    fullExpenseDict[expense.id] = {
                         "data": expenseDoc,
                         "passedDates": passedDates,
                         "upcomingDates":upcomingDates,
-                        "allDates": yearDates
+                        "allDates": fullDates
                     }
 
             occurances, dates = getOccurancesWithinPeriod(
@@ -503,15 +534,7 @@ def getBudgetAndExpenses(email, id, targetDate=date.today(), getFullYear=False):
                     "allDates": dates
                 }
 
-                if (getFullYear and expenseDoc['recurPeriod'] == 4):
-                    yearExpenseDict[expense.id] = {
-                        "data": expenseDoc,
-                        "passedDates": passedDates,
-                        "upcomingDates":upcomingDates,
-                        "allDates": dates
-                    }
-
-        return {"budget": budgetDoc, "expenses": expenseDict, "yearExpenses": yearExpenseDict, "currency": userData["currency"]}
+        return {"budget": budgetDoc, "expenses": expenseDict, "fullExpenses": fullExpenseDict, "currency": userData["currency"]}
     except Exception as e:
         raise RuntimeError(e)
 
