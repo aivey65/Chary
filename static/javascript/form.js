@@ -23,6 +23,30 @@ function independantChange() {
     formChange();
 }
 
+function recurChange(originalValue) {
+    formChange(); // Any change made needs to change the 'formchange' flag so that we know the form has been updated.
+
+    // Check to see if the recurring setting has been changed by the user from 'recurring' to 'not recurring'.
+    // A user making a mistake here means they could potentially delete data they don't mean to.
+    const currentValue = document.querySelector("input[name='recurring']:checked").value;
+    
+    if (currentValue != originalValue && originalValue == "True") { // User changes from recurring to not recurring
+        var recurChangeAlert = createAlert("Changing from 'recurring' to 'not recurring' will result in any and all occurances derived from the same event to be permanently deleted, leaving only one occurance. Duplicated events will not be affected. If you would like to end the occurances on a particular date, I suggest updating the end date instead.");
+    
+        // Create option buttons for the popup
+        const confirmButton = document.createElement("button");
+        confirmButton.textContent = "I Understand";
+        confirmButton.type = "button";
+        confirmButton.style.display = "inline";
+        confirmButton.onclick = function() {
+            recurChangeAlert.remove();
+        }
+        recurChangeAlert.firstChild.append(confirmButton);
+    
+        document.getElementById("acd-content").append(recurChangeAlert);
+    }
+}
+
 function formChange() {
     formChangeFlag = true;
 }

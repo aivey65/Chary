@@ -51,6 +51,10 @@
     color: var(--MainL);
 }
 
+#popup-text {
+    margin-bottom: 1rem;
+}
+
 label, p {
     font-size: 1rem;
     font-weight: 200;
