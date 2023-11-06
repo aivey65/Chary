@@ -7,7 +7,7 @@
     margin-top: var(--medPad);
     display: grid;
     grid-template-columns: 15% 70% 15%;
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto auto auto 1fr;
     gap: 0px var(--medPad);
 }
 
@@ -28,8 +28,13 @@
     grid-column: 2;
 }
 
-.acd-form {
+#acd-content #current-date-view {
     grid-row: 3;
+    grid-column: 2/4;
+}
+
+.acd-form {
+    grid-row: 4;
     grid-column: 2;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -43,7 +48,7 @@
     font-weight: 400;
     font-size: 1.2rem;
     line-height: 1.5rem;
-    color: var(--MainD);
+    color: var(--MainL);
 }
 
 label, p {
@@ -66,27 +71,13 @@ label, p {
     border-color: var(--MainD);
 }
 
-.label-recurring, .budget-period, .expense-period, .earning-period {
+.label-recurring, .budget-period, .expense-period, .earning-period, .label-update-method {
     cursor: pointer;
     background-color: var(--Background);
     color: var(--Light);
     padding: 1em;
     border: 2px solid var(--Light);
     border-radius: 1em;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    height: 70%;
-    min-width: 5rem;
-}
-
-.label-update-method {
-    cursor: pointer;
-    background-color: var(--Light);
-    color: var(--Light);
-    border: 4px solid var(--Light);
-    border-radius: 2em;
     display: flex;
     align-items: center;
     text-align: center;

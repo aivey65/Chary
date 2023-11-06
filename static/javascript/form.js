@@ -4,7 +4,8 @@ const ScReName = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
 const numbers = /^\d*\.?\d+$/;
 
 // Flags
-var possibleIndependantChange = false;
+var independantChangeFlag = false;
+var formChangeFlag = false;
 
 // Meta Data
 currentStartDate = null;
@@ -18,12 +19,25 @@ function userFormLoad() {
 }
 
 function independantChange() {
-    possibleIndependantChange = true;
+    independantChangeFlag = true;
+    formChange();
+}
+
+function formChange() {
+    formChangeFlag = true;
 }
 
 function formLoad(startDate=null, configureDate=false) {
     fillProfilePics();
     currentStartDate = startDate;
+
+    if (currentStartDate != null && currentStartDate != "") {
+        var UTCDate = currentStartDate.split('-');
+        UTCDate[1] = UTCDate[1] - 1;
+        currentDate = new Date(...UTCDate);
+
+        document.getElementById('current-date-view').innerText = "Currently viewing date: " + currentDate.toLocaleDateString('en-us', getDateFormattingOptions());
+    }
 
     if (configureDate) {
         const dateInputs = document.querySelectorAll('input[type="date"]'); // The date input needs to be adjusted when the date changes
@@ -438,6 +452,12 @@ function submitEarningForm(method=null) {
 // Confirm update method functions //
 /////////////////////////////////////
 function confirmUpdateMethod(entityType, isDelete=false) {
+    // If no changes have been made to the form, don't submit!
+    if (formChangeFlag == false && !isDelete) {
+        back();
+        return;
+    }
+
     // Create the confirmation message depending on if the user is updating or deleting
     var confirmationMessage = "";
     if (isDelete) {
@@ -450,7 +470,7 @@ function confirmUpdateMethod(entityType, isDelete=false) {
     const recurringCheck = document.querySelector("input[name='recurring']:checked").value;
     if (isDelete && recurringCheck == "False") { // If the user is deleting, and it is not recurring, show normal delete warning
         confirmDelete(entityType);
-    } else if (!isDelete && (!possibleIndependantChange || recurringCheck == "False")) { // If the user is updating, but there isn't an independant change or recurring is false
+    } else if (!isDelete && (!independantChangeFlag || recurringCheck == "False")) { // If the user is updating, but there isn't an independant change or recurring is false
         callSubmit(String(entityType), "all");
     } else {
         const popupHeader = document.createElement("h3");
@@ -461,9 +481,9 @@ function confirmUpdateMethod(entityType, isDelete=false) {
         popupText.id = "popup-text";
         popupText.textContent = "NOTE: This action cannot be undone.";
 
-        const popupOption1 = createImageRadioOption("all", "../static/images/UpdateAllGraphic.svg", "All Occurances");
-        const popupOption2 = createImageRadioOption("one", "../static/images/UpdateOneGraphic.svg", "One Occurance");
-        const popupOption3 = createImageRadioOption("future", "../static/images/UpdateFuture.svg", "Future Occurances");
+        const popupOption1 = createTextRadioOption("all", "All Occurances");
+        const popupOption2 = createTextRadioOption("one", "One Occurance");
+        const popupOption3 = createTextRadioOption("future", "Future Occurances");
         const popupOptions = document.createElement("div");
         popupOptions.id = "option-div-collection";
         popupOptions.append(popupOption1, popupOption2, popupOption3);
@@ -522,6 +542,28 @@ function callSubmit(entityType, method=null) {
     } else if (entityType == "Earning") {
         submitEarningForm(method);
     }
+}
+
+function createTextRadioOption(id, text) {
+    // First, create the input.
+    const popupOption = document.createElement("input");
+    popupOption.type = "radio";
+    popupOption.name = "method-radio";
+    popupOption.id = id;
+    popupOption.value = id;
+    popupOption.required = true;
+
+    // Create the label that will contain a given image
+    const optionLabel = document.createElement("label");
+    optionLabel.htmlFor = id;
+    optionLabel.classList.add(id + "-label", "label-update-method");
+    optionLabel.textContent = text;
+
+    const optionDiv = document.createElement("div");
+    optionDiv.classList.add("option-div");
+    optionDiv.append(popupOption, optionLabel);
+
+    return optionDiv;
 }
 
 function createImageRadioOption(id, imgUrl, text) {

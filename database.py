@@ -1149,6 +1149,8 @@ def updateExpense(email, id, method, name, category, startDate, endDate="", curr
             # Create a new expense for the one changing instance
             newStart = currentDate.isoformat()
             newEnd = currentDate + getTimeDelta(int(recurPeriod)) - getTimeDelta(0)
+            print("new start", newStart)
+            print("newEnd", newEnd)
             createExpense(email, name, category, newStart, newEnd.isoformat(), amount, description, recurPeriod, recurring, oldOriginal)
 
             # Create a new expense for the future instance, matching the past instance in everything but start dates
@@ -1416,6 +1418,9 @@ def deleteExpense(email, id, method, currentDate=date.today()):
         # First check to make sure the user owns the expense they want to delete
         if expenseDoc["email"] != email:
             raise RuntimeError("User does not have access to this data!")
+        
+        if (not isinstance(currentDate, date)):
+            currentDate = date.fromisoformat(currentDate)
 
         # Data from current budget in order to create new ones as needed
         name = expenseDoc["name"]
