@@ -931,6 +931,7 @@ function generateTableUI(type, entityList, currency, dateType, limit=null) {
         emptyRow.append(emptyCol);
         emptybody.append(emptyRow);
 
+        table.classList.add('empty-table');
         table.append(emptybody);
     }
 

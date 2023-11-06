@@ -418,6 +418,9 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
         (default) is today's date
     """
     try:
+        if (not isinstance(targetDate, date)):
+            targetDate = date.fromisoformat(targetDate)
+    
         userData = getUser(email)['data']
         budgetDoc = getBudget(id, email, targetDate)
         
@@ -453,14 +456,14 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
                 startDate, 
                 endDate, 
                 expenseDoc['startDate'], 
-                expenseDoc["endDate"], 
+                expenseDoc['endDate'], 
                 expenseDoc['recurPeriod']
             )
 
             if occurances > 0:
                 passedDates = []
                 upcomingDates = []
-                for singleDate in dates:
+                for singleDate in dates:                    
                     if singleDate <= date.today():
                         passedDates.append(singleDate)
                     else:
@@ -474,7 +477,6 @@ def getBudgetAndExpenses(email, id, targetDate=date.today()):
                 }
 
         return {"budget": budgetDoc, "expenses": expenseDict, "currency": userData["currency"]}
-    
     except Exception as e:
         raise RuntimeError(e)
 

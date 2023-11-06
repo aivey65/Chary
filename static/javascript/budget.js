@@ -5,7 +5,7 @@ var user_currency = null;
 function loadBudget(id, startDate, endDate) {
     fillProfilePics(); // Get the profile images on the page filled.
 
-    fetch('/data/budget-expenses?id=' + id).then(response => response.json()).then((responseData) => {
+    fetch('/data/budget-expenses?id=' + id + '&date=' + startDate).then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
         const expenses = responseData.expenses;
         user_currency = responseData.currency;
@@ -66,6 +66,18 @@ function loadBudget(id, startDate, endDate) {
         // Create 'expenses' section
         document.getElementById('expense-container').append(generateTableUI(0, expenses, responseData.currency, 0));
 
+        // Check to see if an 'upcoming expenses' section is needed
+        upcomingTable = generateTableUI(0, expenses, responseData.currency, 1)
+        if (!upcomingTable.classList.contains('empty-table')) {
+            document.getElementById('upcoming-expenses').style.display = "grid";
+
+            const upcomingExpenses = document.getElementById('upcoming-expense-container');
+            upcomingExpenses.innerHTML = "";
+            upcomingExpenses.append(upcomingTable);        
+        } else {
+            document.getElementById('upcoming-expenses').style.display = "none";
+        }
+
         // Hide placeholders
         hidePlaceholders();
 
@@ -92,6 +104,23 @@ function changeBudgetDates(id, startDate) {
         
         const dotCarousel = carouselButtons(chartData, "details-chart-dots", "limited-charts-container", 1, generateVariousCharts);
         chartContainer.append(dotCarousel);
+
+        // Update the expenses section
+        const expensesSection = document.getElementById('expense-container');
+        expensesSection.innerHTML = "";
+        expensesSection.append(generateTableUI(0, expenses, responseData.currency, 0));
+
+        // Check to see if an 'upcoming expenses' section is needed
+        upcomingTable = generateTableUI(0, expenses, responseData.currency, 1)
+        if (!upcomingTable.classList.contains('empty-table')) {
+            document.getElementById('upcoming-expenses').style.display = "grid";
+
+            const upcomingExpenses = document.getElementById('upcoming-expense-container');
+            upcomingExpenses.innerHTML = "";
+            upcomingExpenses.append(upcomingTable);        
+        } else {
+            document.getElementById('upcoming-expenses').style.display = "none";
+        }
     });
 }
 
@@ -275,15 +304,17 @@ function budgetUsedAmount(budget) {
     const currentUsedAmount = parseFloat((budget.usedAmount).toFixed(2));
     const totalUsedAmount = parseFloat((budget.totalUsedAmount).toFixed(2));
 
+    const amountRemaining = parseFloat((Math.abs(availableAmount - totalUsedAmount)).toFixed(2))
+
     if (totalUsedAmount > availableAmount) { // The user has overspent in their budget
         if (currentUsedAmount <= availableAmount) {
             updateQuickStat(
-                "You are currently within budget, but an upcoming expense will put you over " + user_currency + String(totalUsedAmount - availableAmount) + ".", 
+                "You are currently within budget, but an upcoming expense will put you over " + user_currency + String(amountRemaining) + ".", 
                 "Keep this in mind while making plans and consider making some changes to your upcoming expenses."
             )
         } else {
             updateQuickStat(
-                "You are over budget by " + String(user_currency) + String(totalUsedAmount - availableAmount) + "!",
+                "You are over budget by " + String(user_currency) + String(amountRemaining) + "!",
                 "That's okay! It happens. Try to take some time to figure out where you may have overspent and think about adjusting your expenses for next month."
             )
         }
@@ -303,7 +334,7 @@ function budgetUsedAmount(budget) {
         } else {
             updateQuickStat(
                 "You are within your budget! Nice Job!",
-                "You have " + String(user_currency) + String(parseFloat((availableAmount - totalUsedAmount).toFixed(2))) + " left in this budget. Don't forget to take into account your upcoming expenses."
+                "You have " + String(user_currency) + String(amountRemaining) + " left in this budget. Don't forget to take into account your upcoming expenses."
             )
         }
         const colors = [COLORS_GREEN, COLORS_GREY, COLORS_NAVY];
