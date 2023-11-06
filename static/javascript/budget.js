@@ -1,14 +1,19 @@
 const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"];
 const options = getDateFormattingOptions();
 var user_currency = null;
+var yearExpenseDict = null;
+var viewYear = null;
 
 function loadBudget(id, startDate, endDate) {
     fillProfilePics(); // Get the profile images on the page filled.
+    viewYear = startDate.split("-")[2];
 
-    fetch('/data/budget-expenses?id=' + id + '&date=' + startDate).then(response => response.json()).then((responseData) => {
+    fetch('/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullYear=True').then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
         const expenses = responseData.expenses;
         user_currency = responseData.currency;
+        yearExpenseDict = responseData.yearExpenses;
+
         configureViewDates(startDate, budget.budgetPeriod);
         document.getElementById('viewing-start-date').addEventListener('change', (e) => {
             configureViewDates(e.target.value, budget.budgetPeriod);
@@ -87,9 +92,25 @@ function loadBudget(id, startDate, endDate) {
 }
 
 function changeBudgetDates(id, startDate) {
-    fetch('/data/budget-expenses?id=' + id + '&date=' + startDate).then(response => response.json()).then((responseData) => {
+    var newYear = startDate.split("-")[2];
+
+    var fetchRequest = "";
+    var fullYear = false;
+
+    if (newYear != viewYear) {
+        viewYear = newYear;
+        fullYear = true;
+        fetchRequest = '/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullYear=True';
+    } else {
+        fetchRequest = '/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullYear=False';
+    }
+
+    fetch(fetchRequest).then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
         const expenses = responseData.expenses;
+        if (fullYear) {
+            yearExpenseDict = responseData.yearExpenses;
+        }
 
         const chartData = allChartDataAsArray(budget, expenses);
         const currentChart = generateVariousCharts(chartData, 0, 1);
@@ -121,6 +142,9 @@ function changeBudgetDates(id, startDate) {
         } else {
             document.getElementById('upcoming-expenses').style.display = "none";
         }
+
+        // Activate Carousel dots
+        changeActiveDot(0, "details-chart-dots");
     });
 }
 
