@@ -130,6 +130,7 @@ h4 {
 
 #filter-form {
     gap: var(--mobilePad);
+    flex-wrap: wrap;
 }
 
 .filter-img {
