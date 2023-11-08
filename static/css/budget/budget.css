@@ -201,6 +201,9 @@
     position:absolute;
     display: flex;
     justify-content: center;
+}
+
+.doughnut {
     gap: var(--smallPad);
 }
 

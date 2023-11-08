@@ -14,14 +14,18 @@ function getDateFormattingOptions(long=true) {
 
 function getShortDateFormattingOptions(year=false) {
     if (year) {
-        return { year: 'numeric', month: 'numeric', day: 'numeric', timeZone: 'UTC' };
+        return { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' };
     } else {
         return { month: 'short', day: 'numeric', timeZone: 'UTC' };
     }
 }
 
 function getUTCDateFromString(date) {
-    var UTCDate = date.split('-');
+    if (date instanceof Date) {
+        return date;
+    }
+    
+    var UTCDate = String(date).split('-');
     UTCDate[1] = UTCDate[1] - 1;
     return new Date(...UTCDate);
 }
@@ -44,7 +48,7 @@ function getEmptySevenDaysMap(startDate) {
     for (var i = 6; i >= 0; i--) {
         tempDate = new Date(startDate);
         tempDate.setDate(startDate.getDate() - i);
-        
+
         weekDates.push({
             "startDate": tempDate,
             "endDate": tempDate
@@ -71,24 +75,20 @@ function getEmptyFourWeeksMap(startDate) {
     weekLabels = [];
     weekValues = [];
 
-    weekDates.unshift({
-        "startDate": startDate,
-        "endDate": endDate
-    });
     const formatting = getShortDateFormattingOptions(false);
-    weekLabels.unshift(startDate.toLocaleDateString("en-us", formatting) + " - " + endDate.toLocaleDateString("en-us", formatting));
-    weekValues.push(0);
 
+    for (var i = 0; i < 4; i++) {
+        newStart = new Date(startDate)
+        newStart.setDate(startDate.getDate() - (i * 7));
 
-    while (weekValues.length < 4) {
-        newStart = startDate.setDate(startDate.getDate() - 7);
-        newEnd = endDate.setDate(endDate.getDate() - 7);
+        newEnd = new Date(endDate)
+        newEnd.setDate(endDate.getDate() - (i * 7));
 
         weekDates.unshift({
-            "startDate": startDate,
-            "endDate": endDate
+            "startDate": newStart,
+            "endDate": newEnd
         });
-        weekLabels.unshift(startDate.toLocaleDateString("en-us", formatting) + " - " + endDate.toLocaleDateString("en-us", formatting));
+        weekLabels.unshift(newStart.toLocaleDateString("en-us", formatting) + " - " + newEnd.toLocaleDateString("en-us", formatting));
         weekValues.push(0);
     }
 
@@ -290,11 +290,13 @@ function configureFilterDate(date, period, changePeriod=false) {
     }
 
     // Creating UTC dates
-    var tempDate = null;
+    var tempDate = date;
     if (date != "") {
-        var UTCDate = date.split('-');
-        UTCDate[1] = UTCDate[1] - 1;
-        tempDate = new Date(...UTCDate);
+        if (!(date instanceof Date)) {
+            var UTCDate = date.split('-');
+            UTCDate[1] = UTCDate[1] - 1;
+            tempDate = new Date(...UTCDate);
+        }
     } else {
         return date;
     }
@@ -732,7 +734,7 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
         budgetPanel.classList.add('budget-info');
         budgetPanel.addEventListener('click', function(e) {
             if (!e.target.classList.contains('options')) {
-                window.location = "/expand-budget?id=" + key + "&date=" + formatDateString + "&inactive=" + inactive;
+                window.location = "/expand-budget?id=" + key + "&date=" + formatDateString + "&period=" + budgets[key].budgetPeriod + "&inactive=" + inactive;
             }
         })
 
@@ -827,7 +829,7 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
         const budget_more = document.createElement('div');
         budget_more.classList.add('budget-more', 'options');
         budget_more.addEventListener('click', function() {
-            window.location = "/expand-budget?id=" + key + "&date=" + formatDateString + "&inactive=" + inactive;
+            window.location = "/expand-budget?id=" + key + "&date=" + formatDateString + "&period=" + budgets[key].budgetPeriod + "&inactive=" + inactive;
         })
         budget_more.append(budget_more_img, budget_more_text)
 

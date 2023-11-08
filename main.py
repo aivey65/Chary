@@ -309,7 +309,7 @@ def renderBudget():
     currentDate = request.args.get('date')
     period = request.args.get('period')
 
-    startDate, endDate = database.getCurrentStartEnd(currentDate, period)
+    startDate, endDate = database.getCurrentStartEnd(currentDate, int(period))
     
     return render_template('budget.html', id=request.args.get('id'), currentStartDate=startDate, currentEndDate=endDate, nav=renderedNav())
 

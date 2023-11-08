@@ -466,7 +466,7 @@ def getBudgetAndExpenses(email, id, targetDate=date.today(), getFullExpenseData=
 
         # Check for valid start and end dates
         if (startDate == None or endDate == None):
-            return {"budget": budgetDoc, "expenses": [], "currency": userData["currency"]}
+            return {"budget": budgetDoc, "expenses": [], "fullExpenses": [], "currency": userData["currency"]}
 
         # Run a query for expenses with the same email, budget category
         expenseList = db.collection('expenses')\
@@ -534,7 +534,7 @@ def getBudgetAndExpenses(email, id, targetDate=date.today(), getFullExpenseData=
                     "allDates": dates
                 }
 
-        return {"budget": budgetDoc, "expenses": expenseDict, "fullExpenses": fullExpenseDict, "currency": userData["currency"]}
+        return { "budget": budgetDoc, "expenses": expenseDict, "fullExpenses": fullExpenseDict, "currency": userData["currency"] }
     except Exception as e:
         raise RuntimeError(e)
 
@@ -581,7 +581,7 @@ def getBudgetBalance(id, budgetDoc, targetDate=date.today()):
 
         # Check for valid start and end dates
         if (startDate == None or endDate == None):
-            return 0
+            return 0, 0
 
         # Run a query for expenses with the same email, budget category
         expenseList = db.collection('expenses')\
@@ -1172,8 +1172,7 @@ def updateExpense(email, id, method, name, category, startDate, endDate="", curr
             # Create a new expense for the one changing instance
             newStart = currentDate.isoformat()
             newEnd = currentDate + getTimeDelta(int(recurPeriod)) - getTimeDelta(0)
-            print("new start", newStart)
-            print("newEnd", newEnd)
+
             createExpense(email, name, category, newStart, newEnd.isoformat(), amount, description, recurPeriod, recurring, oldOriginal)
 
             # Create a new expense for the future instance, matching the past instance in everything but start dates

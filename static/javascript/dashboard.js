@@ -543,6 +543,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                         }
                     },
                     y: {
+                        beginAtZero: true,
                         display: true,
                         grid: {
                             drawTicks: true,
@@ -626,6 +627,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                         }
                     },
                     y: {
+                        beginAtZero: true,
                         display: true,
                         grid: {
                             drawTicks: true,
@@ -695,7 +697,7 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
             const budgetSnippet = document.createElement('div');
             budgetSnippet.classList.add('budget-snippet');
             budgetSnippet.addEventListener('click', function() {
-                window.location = "/expand-budget?id=" + key + "&date=" + formatDateString + "&inactive=False";
+                window.location = "/expand-budget?id=" + key + "&date=" + formatDateString + "&period=" + budget.budgetPeriod + "&inactive=False";
             })
 
             var recur_img = null;
@@ -716,7 +718,7 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
             budget_more.title = "See More";
             budget_more.classList.add("more-img");
             budget_more.addEventListener('click', function() {
-                window.location.href = "/expand-budget?id=" + key + "&date=" + formatDateString + "&inactive=" + inactive;
+                window.location.href = "/expand-budget?id=" + key + "&date=" + formatDateString + "&period=" + budget.budgetPeriod + "&inactive=" + inactive;
             })
 
             // Progess SVG

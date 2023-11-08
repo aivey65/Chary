@@ -2,18 +2,20 @@ const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"];
 const options = getDateFormattingOptions();
 var user_currency = null;
 var fullExpenseDict = null;
-var viewYear = null;
+var viewStart = null;
+var viewEnd = null;
+var budgetPeriodConst = 0;
 
 function loadBudget(id, startDate, endDate) {
     fillProfilePics(); // Get the profile images on the page filled.
-    viewYear = startDate.split("-")[2];
 
     fetch('/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullExpenses=True').then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
         const expenses = responseData.expenses;
         user_currency = responseData.currency;
         fullExpenseDict = responseData.fullExpenses;
-        console.log(responseData)
+        budgetPeriodConst = budget.budgetPeriod;
+        setViewDates(startDate, budgetPeriodConst)
 
         configureViewDates(startDate, budget.budgetPeriod);
         document.getElementById('viewing-start-date').addEventListener('change', (e) => {
@@ -93,13 +95,16 @@ function loadBudget(id, startDate, endDate) {
 }
 
 function changeBudgetDates(id, startDate) {
-    var newYear = startDate.split("-")[2];
-
     var fetchRequest = "";
     var fullExpenses = false;
+    
+    tempStart = getUTCDateFromString(startDate);
+    if (startDate instanceof Date) {
+        startDate.toLocaleDateString("en-us", { timeZone:'UTC' })
+    }
 
-    if (newYear != viewYear) {
-        viewYear = newYear;
+    if (tempStart < viewStart || tempStart > viewEnd) {
+        setViewDates(startDate, budgetPeriodConst);
         fullExpenses = true;
         fetchRequest = '/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullExpenses=True';
     } else {
@@ -109,12 +114,12 @@ function changeBudgetDates(id, startDate) {
     fetch(fetchRequest).then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
         const expenses = responseData.expenses;
-        console.log(responseData)
-        if (fullExpenses) {
+
+        if (fullExpenses == true) {
             fullExpenseDict = responseData.fullExpenses;
         }
 
-        const chartData = allChartDataAsArray(budget, expenses);
+        const chartData = allChartDataAsArray(budget, startDate);
         const currentChart = generateVariousCharts(chartData, 0, 1);
         const limitedChartsContainer = document.getElementById("limited-charts-container");
         limitedChartsContainer.innerHTML = "";
@@ -148,6 +153,28 @@ function changeBudgetDates(id, startDate) {
         // Activate Carousel dots
         changeActiveDot(0, "details-chart-dots");
     });
+}
+
+function setViewDates(startDate, period) {
+    startDate = getUTCDateFromString(startDate);
+
+    if (period == 0) {
+        viewEnd = calculateEndDate(startDate, 2);
+        viewStart = getUTCDateFromString(configureFilterDate(startDate, 2));
+    } else if (period == 1 || period == 2) {
+        viewEnd = calculateEndDate(startDate, 2);
+
+        tempStart = getUTCDateFromString(configureFilterDate(startDate, 2));
+        viewStart = new Date(tempStart.setDate(tempStart.getDate() - 28))
+    } else if (period == 3) {
+        viewEnd = calculateEndDate(startDate, 4);
+        viewStart = getUTCDateFromString(configureFilterDate(startDate, 4));
+    } else if (period == 4) {
+        viewEnd = calculateEndDate(startDate, 4);
+
+        tempStart = getUTCDateFromString(configureFilterDate(startDate, 4));
+        viewStart = new Date(tempStart.setFullYear(tempStart.getFullYear() - 4))
+    }
 }
 
 function dashboardBudgetAction() {
@@ -214,7 +241,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
         donutHeader.textContent = "Budget Amount Used";
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
-        returnDiv.classList.add('vertical-container');
+        returnDiv.classList.add('vertical-container', 'doughnut');
         returnDiv.append(donutHeader, fullchart1);
         return returnDiv;
     } else if (slideNum == 1) {
@@ -277,6 +304,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                         }
                     },
                     y: {
+                        beginAtZero: true,
                         display: true,
                         grid: {
                             drawTicks: true,
@@ -346,7 +374,7 @@ function configureViewDates(startDate, period) {
         endDateValue = new Date(...UTCDate);
     }
 
-    endDate.innerText = calculateEndDate(startDate, period).toLocaleDateString({ timeZone: 'UTC' });;
+    endDate.innerText = calculateEndDate(startDate, period).toLocaleDateString({ timeZone: 'UTC' });
 }
 
 function updateQuickStat(summary, message) {
@@ -425,27 +453,32 @@ function budgetUsePerPeriod(period, startDate) {
         dataGrey = [...data.values];
 
         // Set the dates to be used as a chart title
-        firstDate = data.ranges[0];
-        lastDate = data.ranges[6];
+        firstDate = data.ranges[0].startDate;
+        lastDate = data.ranges[6].endDate;
         descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
     } else if (period == 1 || period == 2) { // Weekly or Biweekly
         data = getEmptyFourWeeksMap(startDate);
         dataGrey = [...data.values];
 
         // Set the dates to be used as a chart title
-        firstDate = data.ranges[0];
-        lastDate = data.ranges[3];
+        firstDate = data.ranges[0].startDate;
+        lastDate = data.ranges[3].endDate;
         descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
     } else if (period == 3) { // Monthly
         data = getEmptyMonthMap();
         dataGrey = [...data.values];
+        if (!(startDate instanceof Date)) {
+            descriptionDates = getUTCDateFromString(startDate).getFullYear();
+        } else {
+            descriptionDates = startDate.getFullYear();
+        }
     } else if (period == 4) { // Yearly
         data = getEmptyFiveYearsMap(startDate);
         dataGrey = [...data.values];
 
         // Set the dates to be used as a chart title
-        firstDate = data.ranges[0];
-        lastDate = data.ranges[4];
+        firstDate = data.ranges[0].startDate;
+        lastDate = data.ranges[4].endDate;
         descriptionDates = firstDate.getFullYear() + " - " + lastDate.getFullYear();
     }
 
@@ -466,11 +499,6 @@ function budgetUsePerPeriod(period, startDate) {
                 }
                     
                 dataGrey[curMonth] = parseFloat((dataGrey[curMonth] + amount).toFixed(2));
-
-                // Set the dates to be used as a chart title
-                if (descriptionDates == "") {
-                    descriptionDates = curDate.getFullYear();
-                }
             } else {
                 const index = getIndexOfRanges(curDate, data.ranges)
 
