@@ -12,6 +12,95 @@ function getDateFormattingOptions(long=true) {
     return { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' };
 }
 
+function getShortDateFormattingOptions(year=false) {
+    if (year) {
+        return { year: 'numeric', month: 'numeric', day: 'numeric', timeZone: 'UTC' };
+    } else {
+        return { month: 'short', day: 'numeric', timeZone: 'UTC' };
+    }
+}
+
+function getUTCDateFromString(date) {
+    var UTCDate = date.split('-');
+    UTCDate[1] = UTCDate[1] - 1;
+    return new Date(...UTCDate);
+}
+
+/**
+ * Returns a map with two properties:
+ *      labels: list of date strings
+ *      values: list of ints
+ * 
+ * Both lists are of length 7 for the 7 days of the week.
+ */
+function getEmptySevenDaysMap(startDate) {
+    startDate = getUTCDateFromString(startDate);
+
+    weekDates = [];
+    weekLabels = [];
+    weekValues = [];
+    formattingOptions = getShortDateFormattingOptions();
+
+    for (var i = 6; i >= 0; i--) {
+        tempDate = new Date(startDate);
+        tempDate.setDate(startDate.getDate() - i);
+        
+        weekDates.push({
+            "startDate": tempDate,
+            "endDate": tempDate
+        });
+        weekLabels.push(tempDate.toLocaleDateString('en-us', formattingOptions))
+        weekValues.push(0);
+    }
+
+    const weekMap = {
+        "ranges": weekDates,
+        "labels": weekLabels,
+        "values": weekValues
+    }
+
+    return weekMap;
+}
+
+function getEmptyFourWeeksMap(startDate) {
+    UTCStartDate = getUTCDateFromString(startDate);
+    startDate = new Date(UTCStartDate.setDate(UTCStartDate.getDate() - UTCStartDate.getDay()));
+    endDate = new Date(UTCStartDate.setDate(UTCStartDate.getDate() + (6 - UTCStartDate.getDay())));
+
+    weekDates = [];
+    weekLabels = [];
+    weekValues = [];
+
+    weekDates.unshift({
+        "startDate": startDate,
+        "endDate": endDate
+    });
+    const formatting = getShortDateFormattingOptions(false);
+    weekLabels.unshift(startDate.toLocaleDateString("en-us", formatting) + " - " + endDate.toLocaleDateString("en-us", formatting));
+    weekValues.push(0);
+
+
+    while (weekValues.length < 4) {
+        newStart = startDate.setDate(startDate.getDate() - 7);
+        newEnd = endDate.setDate(endDate.getDate() - 7);
+
+        weekDates.unshift({
+            "startDate": startDate,
+            "endDate": endDate
+        });
+        weekLabels.unshift(startDate.toLocaleDateString("en-us", formatting) + " - " + endDate.toLocaleDateString("en-us", formatting));
+        weekValues.push(0);
+    }
+
+    const weekMap = {
+        "ranges": weekDates,
+        "labels": weekLabels,
+        "values": weekValues
+    };
+
+    return weekMap;
+}
+
 function getEmptyMonthMap() {
     var monthValues = []
     for(var i = 0; i < 12; i++) {
@@ -26,6 +115,36 @@ function getEmptyMonthMap() {
     }
 
     return monthMap;
+}
+
+function getEmptyFiveYearsMap(startDate) {
+    UTCStartDate = getUTCDateFromString(startDate);
+    startDate = new Date(UTCStartDate.getFullYear(), 0, 1);
+    endDate = new Date(UTCStartDate.getFullYear(), 11, 31);
+
+    yearDates = [];
+    yearLabels = [];
+    yearValues = [];
+
+    for (var i = 0; i < 5; i++) {
+        tempStart = new Date(startDate.getFullYear() - i, 0, 1);
+        tempEnd = new Date(endDate.getFullYear() - i, 11, 31);
+
+        yearDates.unshift({
+            "startDate": tempStart,
+            "endDate": tempEnd
+        });
+        yearLabels.unshift(tempStart.getFullYear());
+        yearValues.push(0);
+    }
+
+    const yearMap = {
+        "ranges": yearDates,
+        "labels": yearLabels,
+        "values": yearValues
+    }
+
+    return yearMap;
 }
 
 // Navigation functions
@@ -220,10 +339,18 @@ function configureFilterUpcoming(date, period, previous) {
     }
 }
 
+/** 
+ * Parameters
+ * ------------
+ * startDate: Date Object
+ * period: Int
+*/
 function calculateEndDate(startDate, period) {
     var endDate;
     
-    if (period == 1 || period == 2) { // Weekly
+    if (period == 0) {
+        endDate = startDate;
+    } else if (period == 1 || period == 2) { // Weekly
         endDate = startDate;
         endDate = new Date(endDate.setDate(startDate.getDate() + (6 - startDate.getDay())));
     } else if (period == 3) { // Monthly

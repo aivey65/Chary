@@ -89,6 +89,9 @@ function loadOverviewTab() {
     tabBody.innerHTML = "";
     tabBody.append(overviewTab);
 
+    // Scroll to top once the screen has cleared.
+    window.scrollTo(0, 0);
+
     const chartPanel = generateOverviewCharts();
     chartPanel.classList.add('module');
     overviewTab.append(chartPanel);
@@ -164,6 +167,9 @@ function loadBudgetTab(budgets=userData.budgets) {
     tabBody.innerHTML = "";
     tabBody.append(budgetTab);
 
+    // Scroll to top once the screen has cleared.
+    window.scrollTo(0, 0);
+
     changeActiveTab(document.getElementById('budget-tab'));
 }
 
@@ -222,6 +228,9 @@ function loadEarningTab(earnings=userData.earnings) {
     tabBody.innerHTML = "";
     tabBody.append(earningTab);
 
+    // Scroll to top once the screen has cleared.
+    window.scrollTo(0, 0);
+
     changeActiveTab(document.getElementById('earning-tab'));
 }
 
@@ -279,6 +288,9 @@ function loadExpenseTab(expenses=userData.expenses) {
     const tabBody = document.getElementById('dashboard-main');
     tabBody.innerHTML = "";
     tabBody.append(expenseTab);
+
+    // Scroll to top once the screen has cleared.
+    window.scrollTo(0, 0);
 
     changeActiveTab(document.getElementById('expense-tab'));
 }
@@ -347,8 +359,10 @@ function generateOverviewProfile() {
     const overviewProfileContainer = document.createElement('div');
     overviewProfileContainer.id = 'profile-snip-container';
     overviewProfileContainer.classList.add('snip-containers');
-    overviewProfileContainer.addEventListener('click', function() {
-        window.location.href = "/profile";
+    overviewProfileContainer.addEventListener('click', function(e) {
+        if (!e.target.classList.contains("edit-img")) {
+            window.location.href = "/profile";
+        }
     })
 
     const overviewHeader = document.createElement('h3');
@@ -370,6 +384,9 @@ function generateOverviewBudgets(budgets) {
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Budget Information";
     overviewHeader.classList.add('module-header');
+    overviewHeader.addEventListener('click', () => {
+        loadBudgetTab();
+    })
     overviewBudgetContainer.append(overviewHeader);
 
     const addButton = document.createElement('button');
@@ -551,6 +568,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 },
                 plugins: {
                     tooltip: {
+                        displayColors: false,
                         callbacks: {
                             label: function(context) {
                                 let dataObject = context.dataset;
@@ -570,6 +588,9 @@ function generateVariousCharts(items, slideNum, maxShow) {
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
         returnDiv.classList.add('vertical-container');
+        returnDiv.addEventListener('click', () => {
+            loadExpenseTab();
+        })
         returnDiv.append(expenseHeader, fullchart1);
         return returnDiv;
     } else if (slideNum == 2) {
@@ -630,6 +651,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 },
                 plugins: {
                     tooltip: {
+                        displayColors: false,
                         callbacks: {
                             label: function(context) {
                                 let dataObject = context.dataset;
@@ -649,6 +671,9 @@ function generateVariousCharts(items, slideNum, maxShow) {
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
         returnDiv.classList.add('vertical-container');
+        returnDiv.addEventListener('click', () => {
+            loadEarningTab();
+        })
         returnDiv.append(earningHeader, fullchart2);
         return returnDiv;
     }
@@ -760,6 +785,9 @@ function generateOverviewExpenses() {
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Recent Expenses";
     overviewHeader.classList.add('module-header');
+    overviewHeader.addEventListener('click', () => {
+        loadExpenseTab();
+    })
 
     const addButton = document.createElement('button');
     addButton.onclick = goToExpenseForm;
@@ -784,6 +812,9 @@ function generateOverviewEarnings() {
     const overviewHeader = document.createElement('h3');
     overviewHeader.textContent = "Recent Earnings";
     overviewHeader.classList.add('module-header');
+    overviewHeader.addEventListener('click', () => {
+        loadEarningTab();
+    })
 
     const addButton = document.createElement('button');
     addButton.onclick = goToEarningForm;

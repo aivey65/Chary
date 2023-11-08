@@ -21,7 +21,7 @@ function loadBudget(id, startDate, endDate) {
             changeBudgetDates(id, e.target.value);
         })
 
-        const chartData = allChartDataAsArray(budget, expenses);
+        const chartData = allChartDataAsArray(budget, startDate);
         const currentChart = generateVariousCharts(chartData, 0, 1);
         const limitedChartsContainer = document.createElement("div");
         limitedChartsContainer.append(currentChart);
@@ -160,10 +160,12 @@ function createExpenseLink() {
 
 function generateVariousCharts(items, slideNum, maxShow) {
     Chart.defaults.plugins.legend.display = false;
+    var description = "";
 
     if (slideNum == 0) {
         const donutChart = document.createElement('canvas');
         const data = items[0];
+        description = data.description;
 
         new Chart(donutChart, {
             type: "doughnut",
@@ -192,6 +194,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 responsive: true,
                 plugins: {
                     tooltip: {
+                        displayColors: false,
                         callbacks: {
                             label: function(context) {
                                 let dataObject = context.dataset;
@@ -217,23 +220,49 @@ function generateVariousCharts(items, slideNum, maxShow) {
     } else if (slideNum == 1) {
         const lineChart = document.createElement('canvas');
         const data = items[1];
+        description = data.description;
 
         new Chart(lineChart, {
             type: "line",
             data: {
-                labels: data.map(row => row.year),
+                labels: data.labels,
                 datasets: [{
-                    data: data.map(row => row.count),
+                    data: data.data,
                     backgroundColor: COLORS_DARK,
                     borderColor: COLORS_GREEN,
                     borderWidth: 2.5,
+                    tooltipText: "Current Amount",
+                }, {
+                    data: data.dataGrey,
+                    backgroundColor: COLORS_DARK,
+                    borderColor: COLORS_GREY,
+                    borderWidth: 2,
+                    tooltipText: "Total Expected Amount",
                 }],
             },
             options: {
-                title: {
-                    display: true,
-                    text: "Amount Used per Budget Period",
-                    class: "chart-title"
+                hover:{
+                    mode: 'nearest'
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: data.descriptionDates,
+                        color: COLORS_GREY,
+                        font: {
+                            size: 15,
+                            weight: 400
+                        },
+                    },
+                    tooltip: {
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                let dataObject = context.dataset;
+                                return dataObject.tooltipText + ": " + user_currency + dataObject.data[context.dataIndex];
+                            },
+                        }
+                    }
                 },
                 maintainAspectRatio: false,
                 scales: {
@@ -265,9 +294,10 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             color: COLORS_GREY,
                             font: {
                                 size: 15,
+                                weight: 400
                             },
                             display: true,
-                            text: "Amount (" + user_currency + ")"
+                            text: "Amount ( " + user_currency + " )"
                         }
                     }
                 },
@@ -281,9 +311,16 @@ function generateVariousCharts(items, slideNum, maxShow) {
             }
         });
 
+        const fullchart2 = document.createElement("div");
+        fullchart2.classList.add("full-size-chart");
+        fullchart2.append(lineChart);
+
+        const lineHeader = document.createElement("p");
+        lineHeader.textContent = description;
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
-        returnDiv.append(lineChart);
+        returnDiv.classList.add('vertical-container');
+        returnDiv.append(lineHeader, fullchart2);
         return returnDiv;
     }
 }
@@ -319,9 +356,9 @@ function updateQuickStat(summary, message) {
     quickStat.innerText = message;
 }
 
-function allChartDataAsArray(budget, expenses) {
+function allChartDataAsArray(budget, startDate) {
     var toReturn = [];
-    toReturn.push(budgetUsedAmount(budget), budgetUsePerPeriod(budget.period, expenses));
+    toReturn.push(budgetUsedAmount(budget), budgetUsePerPeriod(budget.budgetPeriod, startDate));
     return toReturn;
 }
 
@@ -371,53 +408,101 @@ function budgetUsedAmount(budget) {
             parseFloat((availableAmount - totalUsedAmount).toFixed(2)) // How much is remaining after upcoming expenses
         ];
 
-        return { "data": data, "colors": colors, "labels": labels, "dataText": [totalUsedAmount, availableAmount]};
+        return { "data": data, "colors": colors, "labels": labels, "dataText": [totalUsedAmount, availableAmount], "description": "Budget Amount Used" };
     }
 }
 
-function budgetUsePerPeriod(period) {
+function budgetUsePerPeriod(period, startDate) {
     const keys = Object.keys(fullExpenseDict);
+    var data = null;
+    var dataGrey = null;
+    var description = "Expenses Per Budget Period";
+    var descriptionDates = "";
+    const formattingOptions = getShortDateFormattingOptions(true);
 
     if (period == 0) { // Daily
-        // Should show 7 days for a full week
+        data = getEmptySevenDaysMap(startDate);
+        dataGrey = [...data.values];
 
+        // Set the dates to be used as a chart title
+        firstDate = data.ranges[0];
+        lastDate = data.ranges[6];
+        descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
     } else if (period == 1 || period == 2) { // Weekly or Biweekly
-        // Should show 4 weeks for about a full month
+        data = getEmptyFourWeeksMap(startDate);
+        dataGrey = [...data.values];
+
+        // Set the dates to be used as a chart title
+        firstDate = data.ranges[0];
+        lastDate = data.ranges[3];
+        descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
     } else if (period == 3) { // Monthly
-        // Should show all 12 months
-        
+        data = getEmptyMonthMap();
+        dataGrey = [...data.values];
     } else if (period == 4) { // Yearly
-        // Should show past 5 years
-        
+        data = getEmptyFiveYearsMap(startDate);
+        dataGrey = [...data.values];
+
+        // Set the dates to be used as a chart title
+        firstDate = data.ranges[0];
+        lastDate = data.ranges[4];
+        descriptionDates = firstDate.getFullYear() + " - " + lastDate.getFullYear();
     }
-    const data = getEmptyMonthMap();
 
     for (const key of keys) {
-        const amount = earningList[key].data.amount
-        const dates = earningList[key].passedDates
+        const amount = fullExpenseDict[key].data.amount;
+        const dates = fullExpenseDict[key].allDates;
         
         for (const date of dates) {
             const localDate = new Date(date);
             var curDate = new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
             const todayDate = new Date().setHours(0,0,0,0);
 
-            if (curDate <= todayDate) {
+            if (period == 3) {
                 const curMonth = curDate.getMonth();
-                data.values[curMonth] = parseFloat((data.values[curMonth] + amount).toFixed(2));
+
+                if (curDate <= todayDate) {
+                    data.values[curMonth] = parseFloat((data.values[curMonth] + amount).toFixed(2));
+                }
+                    
+                dataGrey[curMonth] = parseFloat((dataGrey[curMonth] + amount).toFixed(2));
+
+                // Set the dates to be used as a chart title
+                if (descriptionDates == "") {
+                    descriptionDates = curDate.getFullYear();
+                }
+            } else {
+                const index = getIndexOfRanges(curDate, data.ranges)
+
+                if (index < 0) {
+                    continue;
+                }
+
+                if (curDate <= todayDate) {
+                    data.values[index] = parseFloat((data.values[index] + amount).toFixed(2));
+                }
+
+                dataGrey[index] = parseFloat((dataGrey[index] + amount).toFixed(2));
             }
         }
     }
 
-    return [
-        { year: 2010, count: 10 },
-        { year: 2011, count: 20 },
-        { year: 2012, count: 15 },
-        { year: 2013, count: 25 },
-        { year: 2014, count: 22 },
-        { year: 2015, count: 30 },
-        { year: 2016, count: 28 },
-    ];
+    return { "data": data.values, "dataGrey": dataGrey, "labels": data.labels, "description": description, "descriptionDates": descriptionDates };
 }
+
+function getIndexOfRanges(date, ranges) {
+    for (var i = 0; i < ranges.length; i++) {
+        tempRange = ranges[i];
+
+        if (date >= tempRange.startDate && date <= tempRange.endDate) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+
 // Plugin credited to stackoverflow users: https://stackoverflow.com/questions/20966817/how-to-add-text-inside-the-doughnut-chart-using-chart-js
 const doughnutText = {
     id: 'doughnut-centertext',
