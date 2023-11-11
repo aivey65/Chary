@@ -218,10 +218,13 @@ function createFiltersSection(type) {
     const period3 = document.createElement("option");
     period3.textContent = "Month";
     period3.value = "3";
+    if (type == 'charts') {
+        period3.selected = true;
+    }
     const period4 = document.createElement("option");
     period4.textContent = "Year";
     period4.value = "4";
-    if (type != 'budgets') {
+    if (type == 'expenses' || type == 'earnings') {
         period4.selected = true;
     }
 
@@ -257,7 +260,7 @@ function createFiltersSection(type) {
     form.append(periodSelector, dateSelector);
 
     // For expenses and earnings, a user might want to toggle view of upcoming occurances
-    if (type != "budgets") {
+    if (type != "budgets" && type != "charts") {
         const upcoming1 = document.createElement("option");
         upcoming1.textContent = "Hide Upcoming";
         upcoming1.value = "0";

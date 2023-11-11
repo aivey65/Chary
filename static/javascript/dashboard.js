@@ -340,6 +340,12 @@ function generateOverviewCharts() {
     overviewChartContainer.id = 'chart-snip-container';
     overviewChartContainer.classList.add('snip-containers');
 
+    // Filter section for filtering the graph information
+    const filterSection = createFiltersSection('charts');
+    filterSection.style.display = "flex";
+    filterSection.style.justifyContent = "center";
+    overviewChartContainer.append(filterSection);
+
     // Configure data for creating all charts
     const chartData = allChartDataAsArray();
     const currentChart = generateVariousCharts(chartData, 0, 1);
