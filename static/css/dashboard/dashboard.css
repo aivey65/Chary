@@ -153,7 +153,7 @@ h4 {
 }
 
 #chart-container {
-    min-height: 40vh;
+    min-height: 35vh;
 }
 
 #chart-snip-container {
@@ -435,7 +435,7 @@ h4 {
     grid-column: 1/3;
 }
 
-.recur-img {
+.recur-img, .non-recur-img {
     align-self: start;
     vertical-align: middle;
     z-index: +1;

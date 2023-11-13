@@ -411,11 +411,50 @@ h4 {
     height: fit-content;
     max-height: 350px;
     display: grid;
-    grid-template-rows: .8fr .8fr 1fr .1fr;
+    grid-template-rows: 0.8fr 1fr .7fr 1fr auto;
     grid-template-columns: 1fr 1fr;
     justify-items: center;
     border-radius: var(--medPad);
     cursor: pointer;
+}
+
+#recur-icon-div {
+    align-self: start;
+    justify-self: start;
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.recur-flag {
+    height: 1.7rem;
+    width: auto;
+    position: absolute;
+    transform: scaleX(0);
+    transform-box: fill-box;
+    transform-origin: 25%;
+    transition: transform .2s ease-out;
+}
+
+.budget-info:hover .recur-flag {
+    transform: scaleX(1);
+}
+
+.recur-text {
+    margin: 0px;
+    font-size: .9rem;
+    padding-left: var(--smallPad);
+    color: var(--Light);
+    transform: scaleX(0);
+    transform-box: fill-box;
+    transform-origin: 25%;
+    transition: transform .2s ease-out;
+}
+
+.budget-info:hover .recur-text {
+    transform: scaleX(1);
 }
 
 .svg-div {
@@ -437,12 +476,15 @@ h4 {
     vertical-align: middle;
 }
 
+.non-recur-img {
+    display: none;
+}
+
 .options-div {
     grid-column: 2;
     grid-row: 1;
     align-self: start;
     justify-self: end;
-    z-index: 2;
 }
 
 .options-img {
@@ -450,22 +492,23 @@ h4 {
 }
 
 .options-panel {
-    position: absolute;
-    width: fit-content;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
     background-color: var(--Navy);
     border-radius: 10px;
-    box-shadow: black 5px 5px 10px;
     cursor: pointer;
     z-index: 2;
 }
 
-.budget-more, .budget-edit {
+.budget-more, .budget-edit, .budget-copy{
     display: grid;
     grid-template-columns: auto 1fr;
     padding: var(--smallPad);
 }
 
-.budget-more h4, .budget-edit h4 {
+.budget-more h4, .budget-edit h4, .budget-copy h4 {
     color: var(--Light);
     font-size: 1rem;
     font-weight: 200;
@@ -480,6 +523,10 @@ h4 {
 .budget-edit:hover {
     background-color: var(--faded);
     border-radius: 10px 10px 0px 0px;
+}
+
+.budget-copy:hover {
+    background-color: var(--faded);
 }
 
 .budget-name {
