@@ -1043,6 +1043,11 @@ Creating the navigation bar depending on the size of the user's screen
         width: 1.7rem;
         height: auto;
     }
+
+    .non-recur-img {
+        width: 1.5rem;
+        height: auto;
+    }
     
     .trash-icon {
         width: 1.2rem;

@@ -944,6 +944,13 @@ function generateTableUI(type, entityList, currency, dateType, limit=null) {
                 const period = PERIODS[current.recurPeriod].toLocaleLowerCase();
                 recur_img.title = "This " + TYPES[type] + " recurs " + period;
                 recur.append(recur_img);
+            } else {
+                const recur_img = document.createElement('img');
+                recur_img.classList.add('non-recur-img');
+                recur_img.src = "static/images/grey-x.svg";
+                const period = PERIODS[current.recurPeriod].toLocaleLowerCase();
+                recur_img.title = "This " + TYPES[type] + " does not recur";
+                recur.append(recur_img);
             }
 
             const date = document.createElement('td');
