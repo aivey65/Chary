@@ -692,6 +692,7 @@ function generateProfileUI(username, email, color, img, currency) {
     const edit_button = document.createElement('img');
     edit_button.src = "../static/images/EditButtonSM.svg";
     edit_button.classList.add('edit-img');
+    edit_button.alt = "Edit Button"
     edit_button.addEventListener('click', function() {
         window.location.href = "/form/update-user";
     })
