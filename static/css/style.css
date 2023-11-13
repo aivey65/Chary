@@ -61,6 +61,7 @@ body {
 
 input, select {
     font-family: 'Kanit', sans-serif;
+    cursor: pointer;
 }
 
 h1 {

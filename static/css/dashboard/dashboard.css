@@ -163,10 +163,13 @@ h4 {
     gap: var(--smallPad);
 }
 
+#chart-container .vertical-container {
+    cursor: pointer;
+}
+
 #limited-charts {
     display: flex;
     justify-content: center;
-    gap: var(--medPad);
 }
 
 #limited-charts p {

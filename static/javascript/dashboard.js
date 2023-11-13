@@ -597,7 +597,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                                 size: 15,
                             },
                             display: true,
-                            text: "Amount (" + userData.currency + ")"
+                            text: "Amount ( " + userData.currency + " )"
                         }
                     }
                 },
@@ -693,7 +693,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                                 size: 15,
                             },                            
                             display: true,
-                            text: "Amount (" + userData.currency + ")"
+                            text: "Amount ( " + userData.currency + " )"
                         }
                     }
                 },
