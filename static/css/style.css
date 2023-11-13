@@ -718,7 +718,7 @@ Creating the navigation bar depending on the size of the user's screen
 
     tbody {
         display: block;
-        border-bottom: solid 1px var(--Navy);
+        border-bottom: solid 1px var(--Grey);
         padding-top: var(--mobilePad);
         padding-bottom: var(--mobilePad);
     }
