@@ -1,5 +1,6 @@
 var userData = null;
 const PERIODS = ["Daily", "Weekly", "Biweekly", "Monthly", "Yearly"]
+const DESCRIPTION_PERIODS = ["Day", "Week", "Week", "Month", "Year"]
 
 // Function gets called everytime the dashboard is visited or refreshed
 async function loadDashboard(refresh="false", tab="overview") {
@@ -48,7 +49,7 @@ async function updateUserData() {
 
 function updateData(type, period, date, upcoming) {
     const currentYear = (new Date()).getFullYear();
-    if (type != 'budgets' && period == 4 && date.split('-')[0] == String(currentYear)) {
+    if ((type == 'expenses' || type == 'earnings') && period == 4 && date.split('-')[0] == String(currentYear)) {
         if (type == 'expenses') {
             expenseContainer = document.getElementById("expense-container");
             expenseContainer.innerHTML = "";
@@ -58,6 +59,27 @@ function updateData(type, period, date, upcoming) {
             earningContainer.innerHTML = "";
             earningContainer.append(generateTableUI(1, userData.earnings, userData.currency, upcoming));        
         }
+    } else if(type == 'charts') {
+        fetch('/data/all-current?period=' + period + '&target=' + date + '&chartData=True').then(response => response.json()).then((responseData) => {
+            // Configure data for creating all charts
+            responseData = responseData.data;
+
+            const chartData = allChartDataAsArray(responseData.budgets, responseData.expenses.expenses, responseData.earnings, period, date);
+            const currentChart = generateVariousCharts(chartData, 0, 1);
+
+            const chartContainer = document.getElementById("chart-container");
+            chartContainer.innerHTML = "";
+            chartContainer.append(currentChart);
+            
+            const dotCarousel = document.getElementById("chart-snip-container").querySelector(".carousel");
+            dotCarousel.innerHTML = "";
+            dotCarousel.append(...(carouselButtons(chartData, "overview-chart-dots", "chart-container", 1, generateVariousCharts)).children);
+            
+            // Get the correct slide number
+            console.log(document.getElementById("limited-charts").dataset.slideNum)
+            const slideNum = document.getElementById("limited-charts").dataset.slideNum;
+            changeActiveDot(slideNum, "overview-chart-dots");
+        });
     } else {
         fetch('/data/' + type + '?period=' + period + '&target=' + date).then(response => response.json()).then((responseData) => {        
         if (type == 'budgets') {
@@ -347,7 +369,7 @@ function generateOverviewCharts() {
     overviewChartContainer.append(filterSection);
 
     // Configure data for creating all charts
-    const chartData = allChartDataAsArray();
+    const chartData = allChartDataAsArray(userData.budgets, userData.expenses.expenses, userData.earnings, 3);
     const currentChart = generateVariousCharts(chartData, 0, 1);
 
     const chartContainer = document.createElement("div");
@@ -513,6 +535,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
         returnDiv.classList.add('horizontal-container');
+        returnDiv.dataset.slideNum = slideNum;
         returnDiv.append(totalChartContainer, actualChartContainer);
         return returnDiv;
     } else if (slideNum == 1) {
@@ -525,14 +548,14 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 labels: data.labels,
                 datasets: [{
                     label: "Spent",
-                    data: data.values,
+                    data: data.data,
                     backgroundColor: COLORS_GREEN,
                 }],
             },
             options: {
                 title: {
                     display: true,
-                    text: "",
+                    text: data.descriptionDates,
                     class: "chart-title"
                 },
                 maintainAspectRatio: false,
@@ -591,9 +614,10 @@ function generateVariousCharts(items, slideNum, maxShow) {
         fullchart1.append(expenseChart);
 
         const expenseHeader = document.createElement("p");
-        expenseHeader.textContent = "Expenses per Month";
+        expenseHeader.textContent = data.description;
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
+        returnDiv.dataset.slideNum = slideNum;
         returnDiv.classList.add('vertical-container');
         returnDiv.addEventListener('click', () => {
             loadExpenseTab();
@@ -603,6 +627,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
     } else if (slideNum == 2) {
         const earningChart = document.createElement('canvas');
         const data = items[2];
+        console.log(data)
 
         new Chart(earningChart, {
             type: "bar",
@@ -610,14 +635,14 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 labels: data.labels,
                 datasets: [{
                     label: "Earned",
-                    data: data.values,
+                    data: data.data,
                     backgroundColor: COLORS_GREEN,
                 }],
             },
             options: {
                 title: {
                     display: true,
-                    text: "",
+                    text: data.descriptionDates,
                     class: "chart-title"
                 },
                 maintainAspectRatio: false,
@@ -675,9 +700,10 @@ function generateVariousCharts(items, slideNum, maxShow) {
         fullchart2.append(earningChart);
 
         earningHeader = document.createElement("p");
-        earningHeader.textContent = "Earnings per Month";
+        earningHeader.textContent = data.description;
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
+        returnDiv.dataset.slideNum = slideNum;
         returnDiv.classList.add('vertical-container');
         returnDiv.addEventListener('click', () => {
             loadEarningTab();
@@ -842,14 +868,13 @@ function generateOverviewEarnings() {
 ///////////////////////////////////
 // Chart Configurating Functions //
 ///////////////////////////////////
-function allChartDataAsArray() {
+function allChartDataAsArray(budgets, expenses, earnings, period=3, startDate=new Date()) {
     var toReturn = [];
-    toReturn.push(totalBudgetsAndAmounts(), expensesPerMonth(), earningsPerMonth());
+    toReturn.push(totalBudgetsAndAmounts(budgets, period), expensesPerMonth(expenses, period, startDate), earningsPerMonth(earnings, period, startDate));
     return toReturn;
 }
 
-function totalBudgetsAndAmounts() {
-    const budgetList = userData.budgets;
+function totalBudgetsAndAmounts(budgetList, period) {
     const keys = Object.keys(budgetList);
     const colors = DATA_COLORS.sort(() => Math.random() - 0.5);
     const colorLength = colors.length;
@@ -862,6 +887,10 @@ function totalBudgetsAndAmounts() {
     var index = 0;
     for (const key of keys) {
         var current = budgetList[key];
+
+        if (current.budgetPeriod != period) {
+            continue;
+        }
 
         var currName = current.name;
         currName = currName.length > 15 ? currName.substring(0, 15) + '...' : currName;
@@ -893,52 +922,160 @@ function totalBudgetsAndAmounts() {
     return { "total": totalData, "actual": actualData, "totalSum": totalSum, "actualSum": actualSum };
 }
 
-function expensesPerMonth(currentYear) {
-    const expenseList = userData.expenses.expenses;
-
+function expensesPerMonth(expenseList, period=3, startDate) {
     const keys = Object.keys(expenseList);
-    const data = getEmptyMonthMap();
+    var data = null;
+    var dataGrey = null;
+
+    var description = "Expenses Per " + DESCRIPTION_PERIODS[period];
+    var descriptionDates = "";
+    const formattingOptions = getShortDateFormattingOptions(true);
+
+    if (period == 0) { // Daily
+        data = getEmptySevenDaysMap(startDate);
+        dataGrey = [...data.values];
+
+        // Set the dates to be used as a chart title
+        firstDate = data.ranges[0].startDate;
+        lastDate = data.ranges[6].endDate;
+        descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
+    } else if (period == 1 || period == 2) { // Weekly or Biweekly
+        data = getEmptyFourWeeksMap(startDate);
+        dataGrey = [...data.values];
+
+        // Set the dates to be used as a chart title
+        firstDate = data.ranges[0].startDate;
+        lastDate = data.ranges[3].endDate;
+        descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
+    } else if (period == 3) { // Monthly
+        data = getEmptyMonthMap();
+        dataGrey = [...data.values];
+        if (!(startDate instanceof Date)) {
+            descriptionDates = getUTCDateFromString(startDate).getFullYear();
+        } else {
+            descriptionDates = startDate.getFullYear();
+        }
+    } else if (period == 4) { // Yearly
+        data = getEmptyFiveYearsMap(startDate);
+        dataGrey = [...data.values];
+
+        // Set the dates to be used as a chart title
+        firstDate = data.ranges[0].startDate;
+        lastDate = data.ranges[4].endDate;
+        descriptionDates = firstDate.getFullYear() + " - " + lastDate.getFullYear();
+    }
 
     for (const key of keys) {
-        const amount = expenseList[key].data.amount
-        const dates = expenseList[key].passedDates
+        const amount = expenseList[key].data.amount;
+        const dates = expenseList[key].allDates;
         
         for (const date of dates) {
             const localDate = new Date(date);
             var curDate = new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
             const todayDate = new Date().setHours(0,0,0,0);
 
-            if (curDate <= todayDate) {
+            if (period == 3) {
                 const curMonth = curDate.getMonth();
-                data.values[curMonth] = parseFloat((data.values[curMonth] + amount).toFixed(2));
+
+                if (curDate <= todayDate) {
+                    data.values[curMonth] = parseFloat((data.values[curMonth] + amount).toFixed(2));
+                }
+                    
+                dataGrey[curMonth] = parseFloat((dataGrey[curMonth] + amount).toFixed(2));
+            } else {
+                const index = getIndexOfRanges(curDate, data.ranges)
+
+                if (index < 0) {
+                    continue;
+                }
+
+                if (curDate <= todayDate) {
+                    data.values[index] = parseFloat((data.values[index] + amount).toFixed(2));
+                }
+
+                dataGrey[index] = parseFloat((dataGrey[index] + amount).toFixed(2));
             }
         }
     }
 
-    return data;
+    return { "data": data.values, "dataGrey": dataGrey, "labels": data.labels, "description": description, "descriptionDates": descriptionDates };
 }
 
-function earningsPerMonth() {
-    const earningList = userData.earnings;
-
+function earningsPerMonth(earningList, period=3, startDate) {
     const keys = Object.keys(earningList);
-    const data = getEmptyMonthMap();
+    var data = null;
+    var dataGrey = null;
+
+    var description = "Earnings Per " + DESCRIPTION_PERIODS[period];
+    var descriptionDates = "";
+    const formattingOptions = getShortDateFormattingOptions(true);
+
+    if (period == 0) { // Daily
+        data = getEmptySevenDaysMap(startDate);
+        dataGrey = [...data.values];
+
+        // Set the dates to be used as a chart title
+        firstDate = data.ranges[0].startDate;
+        lastDate = data.ranges[6].endDate;
+        descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
+    } else if (period == 1 || period == 2) { // Weekly or Biweekly
+        data = getEmptyFourWeeksMap(startDate);
+        dataGrey = [...data.values];
+
+        // Set the dates to be used as a chart title
+        firstDate = data.ranges[0].startDate;
+        lastDate = data.ranges[3].endDate;
+        descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
+    } else if (period == 3) { // Monthly
+        data = getEmptyMonthMap();
+        dataGrey = [...data.values];
+        if (!(startDate instanceof Date)) {
+            descriptionDates = getUTCDateFromString(startDate).getFullYear();
+        } else {
+            descriptionDates = startDate.getFullYear();
+        }
+    } else if (period == 4) { // Yearly
+        data = getEmptyFiveYearsMap(startDate);
+        dataGrey = [...data.values];
+
+        // Set the dates to be used as a chart title
+        firstDate = data.ranges[0].startDate;
+        lastDate = data.ranges[4].endDate;
+        descriptionDates = firstDate.getFullYear() + " - " + lastDate.getFullYear();
+    }
 
     for (const key of keys) {
-        const amount = earningList[key].data.amount
-        const dates = earningList[key].passedDates
+        const amount = earningList[key].data.amount;
+        const dates = earningList[key].allDates;
         
         for (const date of dates) {
             const localDate = new Date(date);
             var curDate = new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
             const todayDate = new Date().setHours(0,0,0,0);
 
-            if (curDate <= todayDate) {
+            if (period == 3) {
                 const curMonth = curDate.getMonth();
-                data.values[curMonth] = parseFloat((data.values[curMonth] + amount).toFixed(2));
+
+                if (curDate <= todayDate) {
+                    data.values[curMonth] = parseFloat((data.values[curMonth] + amount).toFixed(2));
+                }
+                    
+                dataGrey[curMonth] = parseFloat((dataGrey[curMonth] + amount).toFixed(2));
+            } else {
+                const index = getIndexOfRanges(curDate, data.ranges)
+
+                if (index < 0) {
+                    continue;
+                }
+
+                if (curDate <= todayDate) {
+                    data.values[index] = parseFloat((data.values[index] + amount).toFixed(2));
+                }
+
+                dataGrey[index] = parseFloat((dataGrey[index] + amount).toFixed(2));
             }
         }
     }
 
-    return data;
+    return { "data": data.values, "dataGrey": dataGrey, "labels": data.labels, "description": description, "descriptionDates": descriptionDates };
 }

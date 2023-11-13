@@ -332,23 +332,33 @@ def getOccurancesWithinPeriod(startDate, endDate, targetStartDate, targetEndDate
             newStartDate = newStartDate + timeDelta
     return occurances, occurranceDates
 
-def getAllCurrent(email, period, targetDate):
+def getAllCurrent(email, period, targetDate, getFullChartData = False):
     try:
-        startDate, endDate = getDatesFromPeriod(period, targetDate)
-        user = getUser(email)['data']
+        if not getFullChartData:    
+            startDate, endDate = getDatesFromPeriod(period, targetDate)
+            user = getUser(email)['data']
 
-        budgetData = getAllActiveBudgets(email, -2)
-        budgetsDict = budgetData["data"]
-        budgetCategories = budgetData["categories"]
+            budgetData = getAllActiveBudgets(email, -2)
+            budgetsDict = budgetData["data"]
+            budgetCategories = budgetData["categories"]
 
-        expenseDict = getExpensesInRange(email, startDate, endDate)
-        earningDict = getEarningsInRange(email, startDate, endDate)
+            expenseDict = getExpensesInRange(email, startDate, endDate)
+            earningDict = getEarningsInRange(email, startDate, endDate)
 
-        user['budgets'] = budgetsDict
-        user['expenses'] = expenseDict
-        user['earnings'] = earningDict
-        user['budgetCategories'] = budgetCategories
-        return {"data":user}
+            user['budgets'] = budgetsDict
+            user['expenses'] = expenseDict
+            user['earnings'] = earningDict
+            user['budgetCategories'] = budgetCategories
+            return {"data":user}
+        else:
+            startDate, endDate = getDatesFromPeriod(period, targetDate)
+            budgetData = getAllActiveBudgets(email, period, targetDate)
+
+            fullStart, fullEnd = getFullExpenseDates(targetDate, period)
+            expenseDict = getExpensesInRange(email, fullStart, fullEnd)
+            earningDict = getEarningsInRange(email, fullStart, fullEnd)
+
+            return {  "budgets": budgetData["data"], "expenses": expenseDict, "earnings": earningDict  }
     except Exception as e:
         raise RuntimeError(str(e))
     

@@ -151,7 +151,8 @@ function changeBudgetDates(id, startDate) {
         }
 
         // Activate Carousel dots
-        changeActiveDot(0, "details-chart-dots");
+        const slideNum = document.getElementById("limited-charts").dataset.slideNum;
+        changeActiveDot(slideNum, "details-chart-dots");
     });
 }
 
@@ -241,6 +242,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
         donutHeader.textContent = "Budget Amount Used";
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
+        returnDiv.dataset.slideNum = slideNum;
         returnDiv.classList.add('vertical-container', 'doughnut');
         returnDiv.append(donutHeader, fullchart1);
         return returnDiv;
@@ -347,6 +349,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
         lineHeader.textContent = description;
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
+        returnDiv.dataset.slideNum = slideNum;
         returnDiv.classList.add('vertical-container');
         returnDiv.append(lineHeader, fullchart2);
         return returnDiv;
@@ -517,19 +520,6 @@ function budgetUsePerPeriod(period, startDate) {
 
     return { "data": data.values, "dataGrey": dataGrey, "labels": data.labels, "description": description, "descriptionDates": descriptionDates };
 }
-
-function getIndexOfRanges(date, ranges) {
-    for (var i = 0; i < ranges.length; i++) {
-        tempRange = ranges[i];
-
-        if (date >= tempRange.startDate && date <= tempRange.endDate) {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
 
 // Plugin credited to stackoverflow users: https://stackoverflow.com/questions/20966817/how-to-add-text-inside-the-doughnut-chart-using-chart-js
 const doughnutText = {

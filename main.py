@@ -499,7 +499,9 @@ def getAllCurrent():
     try:
         period = request.args.get("period")
         targetDate = request.args.get("target")
-        return database.getAllCurrent(session["email"], int(period), str(targetDate))
+        getChartData = True if request.args.get("chartData") and request.args.get("chartData") == "True" else False
+
+        return database.getAllCurrent(session["email"], int(period), str(targetDate), getChartData)
     except Exception as e:
         return custom_error(e)
 

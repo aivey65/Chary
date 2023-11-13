@@ -367,6 +367,18 @@ function calculateEndDate(startDate, period) {
     return endDate;
 }
 
+function getIndexOfRanges(date, ranges) {
+    for (var i = 0; i < ranges.length; i++) {
+        tempRange = ranges[i];
+
+        if (date >= tempRange.startDate && date <= tempRange.endDate) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 function closeMenu() {
     const navbar = document.getElementsByTagName('nav')[0]
     const logo = document.getElementById('toggle-icon')
