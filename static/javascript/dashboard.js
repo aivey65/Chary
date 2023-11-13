@@ -528,7 +528,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
         halfchart2.append(actualChart);
 
         const actualHeader = document.createElement("p");
-        actualHeader.textContent = "Actual Amount Used";
+        actualHeader.textContent = "Amount Used";
         const actualnumber = document.createElement("p");
         actualnumber.classList.add("chart-number");
         actualnumber.textContent = userData.currency + actualSum;
