@@ -111,6 +111,9 @@ function changeBudgetDates(id, startDate) {
         fetchRequest = '/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullExpenses=False';
     }
 
+    // Save this slide number to show the user the correct slide
+    const slideNum = document.getElementById("limited-charts").dataset.slideNum;
+
     fetch(fetchRequest).then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
         const expenses = responseData.expenses;
@@ -120,7 +123,7 @@ function changeBudgetDates(id, startDate) {
         }
 
         const chartData = allChartDataAsArray(budget, startDate);
-        const currentChart = generateVariousCharts(chartData, 0, 1);
+        const currentChart = generateVariousCharts(chartData, slideNum, 1);
         const limitedChartsContainer = document.getElementById("limited-charts-container");
         limitedChartsContainer.innerHTML = "";
         limitedChartsContainer.append(currentChart);
@@ -151,7 +154,6 @@ function changeBudgetDates(id, startDate) {
         }
 
         // Activate Carousel dots
-        const slideNum = document.getElementById("limited-charts").dataset.slideNum;
         changeActiveDot(slideNum, "details-chart-dots");
     });
 }

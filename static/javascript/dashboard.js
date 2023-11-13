@@ -60,24 +60,25 @@ function updateData(type, period, date, upcoming) {
             earningContainer.append(generateTableUI(1, userData.earnings, userData.currency, upcoming));        
         }
     } else if(type == 'charts') {
+        // Save the slide number so that the current chart updates and stays in view
+        const slideNum = document.getElementById("limited-charts").dataset.slideNum;
+        console.log("slide nummmmm", slideNum)
+
         fetch('/data/all-current?period=' + period + '&target=' + date + '&chartData=True').then(response => response.json()).then((responseData) => {
             // Configure data for creating all charts
-            responseData = responseData.data;
+            console.log(responseData)
 
             const chartData = allChartDataAsArray(responseData.budgets, responseData.expenses.expenses, responseData.earnings, period, date);
-            const currentChart = generateVariousCharts(chartData, 0, 1);
+            const currentChart = generateVariousCharts(chartData, slideNum, 1);
 
             const chartContainer = document.getElementById("chart-container");
             chartContainer.innerHTML = "";
             chartContainer.append(currentChart);
             
-            const dotCarousel = document.getElementById("chart-snip-container").querySelector(".carousel");
-            dotCarousel.innerHTML = "";
-            dotCarousel.append(...(carouselButtons(chartData, "overview-chart-dots", "chart-container", 1, generateVariousCharts)).children);
+            const dotContainer = document.getElementById("dot-container");
+            dotContainer.innerHTML = "";
+            dotContainer.append(carouselButtons(chartData, "overview-chart-dots", "chart-container", 1, generateVariousCharts));
             
-            // Get the correct slide number
-            console.log(document.getElementById("limited-charts").dataset.slideNum)
-            const slideNum = document.getElementById("limited-charts").dataset.slideNum;
             changeActiveDot(slideNum, "overview-chart-dots");
         });
     } else {
@@ -378,7 +379,10 @@ function generateOverviewCharts() {
     overviewChartContainer.append(chartContainer);
     
     const dotCarousel = carouselButtons(chartData, "overview-chart-dots", "chart-container", 1, generateVariousCharts);
-    overviewChartContainer.append(dotCarousel);
+    const dotContainer = document.createElement('div');
+    dotContainer.id = "dot-container";
+    dotContainer.append(dotCarousel);
+    overviewChartContainer.append(dotContainer);
 
     return overviewChartContainer;
 }
@@ -550,18 +554,18 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     label: "Spent",
                     data: data.data,
                     backgroundColor: COLORS_GREEN,
+                }, {
+                    label: "Upcoming Expenses",
+                    data: data.dataGrey,
+                    backgroundColor: COLORS_GREY,
                 }],
             },
             options: {
-                title: {
-                    display: true,
-                    text: data.descriptionDates,
-                    class: "chart-title"
-                },
                 maintainAspectRatio: false,
                 responsive: true,
                 scales: {
                     x: {
+                        stacked: true,
                         display: true,
                         grid: {
                             drawTicks: true,
@@ -572,6 +576,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                         }
                     },
                     y: {
+                        stacked: true,
                         beginAtZero: true,
                         display: true,
                         grid: {
@@ -597,6 +602,15 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     }
                 },
                 plugins: {
+                    title: {
+                        display: true,
+                        text: data.descriptionDates,
+                        color: COLORS_GREY,
+                        font: {
+                            size: 15,
+                            weight: 400
+                        },
+                    },
                     tooltip: {
                         displayColors: false,
                         callbacks: {
@@ -637,17 +651,17 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     label: "Earned",
                     data: data.data,
                     backgroundColor: COLORS_GREEN,
+                }, {
+                    label: "Upcoming Earnings",
+                    data: data.dataGrey,
+                    backgroundColor: COLORS_GREY,
                 }],
             },
             options: {
-                title: {
-                    display: true,
-                    text: data.descriptionDates,
-                    class: "chart-title"
-                },
                 maintainAspectRatio: false,
                 scales: {
                     x: {
+                        stacked: true,
                         display: true,
                         grid: {
                             drawTicks: true,
@@ -658,6 +672,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                         }
                     },
                     y: {
+                        stacked: true,
                         beginAtZero: true,
                         display: true,
                         grid: {
@@ -683,6 +698,15 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     }
                 },
                 plugins: {
+                    title: {
+                        display: true,
+                        text: data.descriptionDates,
+                        color: COLORS_GREY,
+                        font: {
+                            size: 15,
+                            weight: 400
+                        },
+                    },
                     tooltip: {
                         displayColors: false,
                         callbacks: {
@@ -870,6 +894,7 @@ function generateOverviewEarnings() {
 ///////////////////////////////////
 function allChartDataAsArray(budgets, expenses, earnings, period=3, startDate=new Date()) {
     var toReturn = [];
+
     toReturn.push(totalBudgetsAndAmounts(budgets, period), expensesPerMonth(expenses, period, startDate), earningsPerMonth(earnings, period, startDate));
     return toReturn;
 }
@@ -923,6 +948,9 @@ function totalBudgetsAndAmounts(budgetList, period) {
 }
 
 function expensesPerMonth(expenseList, period=3, startDate) {
+    console.log("period", period)
+    console.log(period == 4)
+
     const keys = Object.keys(expenseList);
     var data = null;
     var dataGrey = null;
@@ -979,9 +1007,9 @@ function expensesPerMonth(expenseList, period=3, startDate) {
 
                 if (curDate <= todayDate) {
                     data.values[curMonth] = parseFloat((data.values[curMonth] + amount).toFixed(2));
+                } else {
+                    dataGrey[curMonth] = parseFloat((dataGrey[curMonth] + amount).toFixed(2));
                 }
-                    
-                dataGrey[curMonth] = parseFloat((dataGrey[curMonth] + amount).toFixed(2));
             } else {
                 const index = getIndexOfRanges(curDate, data.ranges)
 
@@ -991,9 +1019,9 @@ function expensesPerMonth(expenseList, period=3, startDate) {
 
                 if (curDate <= todayDate) {
                     data.values[index] = parseFloat((data.values[index] + amount).toFixed(2));
+                } else {
+                    dataGrey[index] = parseFloat((dataGrey[index] + amount).toFixed(2));
                 }
-
-                dataGrey[index] = parseFloat((dataGrey[index] + amount).toFixed(2));
             }
         }
     }
@@ -1058,9 +1086,9 @@ function earningsPerMonth(earningList, period=3, startDate) {
 
                 if (curDate <= todayDate) {
                     data.values[curMonth] = parseFloat((data.values[curMonth] + amount).toFixed(2));
-                }
-                    
-                dataGrey[curMonth] = parseFloat((dataGrey[curMonth] + amount).toFixed(2));
+                } else {
+                    dataGrey[curMonth] = parseFloat((dataGrey[curMonth] + amount).toFixed(2));
+                } 
             } else {
                 const index = getIndexOfRanges(curDate, data.ranges)
 
@@ -1070,9 +1098,9 @@ function earningsPerMonth(earningList, period=3, startDate) {
 
                 if (curDate <= todayDate) {
                     data.values[index] = parseFloat((data.values[index] + amount).toFixed(2));
+                } else {
+                    dataGrey[index] = parseFloat((dataGrey[index] + amount).toFixed(2));
                 }
-
-                dataGrey[index] = parseFloat((dataGrey[index] + amount).toFixed(2));
             }
         }
     }
