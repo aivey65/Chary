@@ -407,7 +407,7 @@ h4 {
 .budget-info {
     padding: 1.3em;
     background-color: var(--Dark);
-    width: 44%;
+    max-width: 44vw;
     height: fit-content;
     max-height: 350px;
     display: grid;
@@ -428,34 +428,43 @@ h4 {
     align-items: center;
 }
 
-.recur-flag {
-    height: 1.7rem;
-    width: auto;
-    position: absolute;
-    transform: scaleX(0);
-    transform-box: fill-box;
-    transform-origin: 25%;
-    transition: transform .2s ease-out;
+@media screen and (min-width:460px) {
+    .recur-flag {
+        height: 1.7rem;
+        width: auto;
+        position: absolute;
+        transform: scaleX(0);
+        transform-box: fill-box;
+        transform-origin: 25%;
+        transition: transform .2s ease-out;
+    }
+    
+    .budget-info:hover .recur-flag {
+        transform: scaleX(1);
+    }
+    
+    .recur-text {
+        margin: 0px;
+        font-size: .9rem;
+        padding-left: var(--smallPad);
+        color: var(--Light);
+        transform: scaleX(0);
+        transform-box: fill-box;
+        transform-origin: 25%;
+        transition: transform .2s ease-out;
+    }
+    
+    .budget-info:hover .recur-text {
+        transform: scaleX(1);
+    }
 }
 
-.budget-info:hover .recur-flag {
-    transform: scaleX(1);
+@media screen and (max-width:459px) {
+    .recur-flag, .recur-text {
+        display: none;
+    }
 }
 
-.recur-text {
-    margin: 0px;
-    font-size: .9rem;
-    padding-left: var(--smallPad);
-    color: var(--Light);
-    transform: scaleX(0);
-    transform-box: fill-box;
-    transform-origin: 25%;
-    transition: transform .2s ease-out;
-}
-
-.budget-info:hover .recur-text {
-    transform: scaleX(1);
-}
 
 .svg-div {
     height: 0px;
