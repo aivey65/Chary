@@ -34,3 +34,7 @@ function loadEarningTab () {
 function goToProfileForm() {
     window.location.href = "/form/update-user";
 }
+
+function deleteAccountPopup() {
+    alert("warning!");
+}
