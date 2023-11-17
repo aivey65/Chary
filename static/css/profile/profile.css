@@ -68,7 +68,7 @@
     margin-left: auto;
     margin-right: auto;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 20% 10% 5% 5% 60%;
+    grid-template-rows: 20% 12% 7% 7% 53%;
     gap: var(--smallPad);
 }
 
@@ -124,6 +124,13 @@
 #currency-container, #date-container, #email-container {
     display: flex;
     flex-direction: column;
+}
+
+#profile-edit {
+    grid-row: 4;
+    grid-column: 2;
+    justify-self: end;
+    align-self: end;
 }
 
 #delete-button {
