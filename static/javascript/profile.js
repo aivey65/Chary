@@ -86,10 +86,10 @@ function deleteAccountConfirmed() {
         }
     }).then(response => response.json()).then((responseData) => {
         if (responseData.status != 200) {
-            message = "- Error: " + String(responseData.message) + " Please try again later."
+            message = "- Error: " + String(responseData.message) + " Please try again later.";
             updateAlertSection(message);
             window.scrollTo(0, 0);
-            return
+            return;
         } else {
             window.location.href = "/logout";
         }
