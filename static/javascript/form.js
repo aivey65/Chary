@@ -291,7 +291,7 @@ function submitBudgetForm(method=null) {
                 message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
-                return
+                return;
             } else {
                 window.location = "/dashboard?refresh=true&tab=budgets";
             }
@@ -316,7 +316,7 @@ function submitBudgetForm(method=null) {
                 message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
-                return
+                return;
             } else {
                 window.location = "/dashboard?refresh=true&tab=budgets";
             }
@@ -362,7 +362,7 @@ function submitExpenseForm(method=null) {
                 message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
-                return
+                return;
             } else {
                 window.location = "/dashboard?refresh=true&tab=expenses";
             }
@@ -388,7 +388,7 @@ function submitExpenseForm(method=null) {
                 message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
-                return
+                return;
             } else {
                 window.location = "/dashboard?refresh=true&tab=expenses";
             }
@@ -464,7 +464,7 @@ function submitEarningForm(method=null) {
                 message = "- Error: " + String(responseData.message) + " Please revise your earning and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
-                return
+                return;
             } else {
                 window.location = "/dashboard?refresh=true&tab=earnings";
             }
@@ -695,10 +695,10 @@ function finalizeDelete(entityType, method=null) {
         })
     }).then(response => response.json()).then((responseData) => {
         if (responseData.status != 200) {
-            message = "- Error: " + String(responseData.message) + " Please try again later."
+            message = "- Error: " + String(responseData.message) + " Please try again later.";
             updateAlertSection(message);
             window.scrollTo(0, 0);
-            return
+            return;
         } else {
             if (String(entityType) == "user") {
                 window.location = "/";
