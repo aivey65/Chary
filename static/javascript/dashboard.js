@@ -501,7 +501,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
             data: {
                 labels: dataActual.map(row => row.budgetName),
                 datasets: [{
-                    label: "Amount Used",
+                    label: "Amount",
                     data: dataActual.map(row => row.amount),
                     backgroundColor: dataActual.map(row => row.color),
                     borderWidth: 1,

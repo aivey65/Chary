@@ -144,6 +144,7 @@ def google_auth():
     )
 
     if (id_info.get("email_verified") == True):
+        session.permanent = False
         session["google_id"] = id_info.get("sub")
         session["name"] = id_info.get("name")
         session["email"] = id_info.get("email")
@@ -151,6 +152,9 @@ def google_auth():
             'token': credentials.token,
             'refresh_token': credentials.refresh_token
         }
+        user = database.getUser(session["email"])
+        if not user:
+            createUserGoogle()
         return redirect("/enter")
     else:
         abort(403)
@@ -176,6 +180,7 @@ def chary_auth():
             givenPassHash = bcrypt.hashpw(b64encode(givenPassPepper), salt)
 
             if (givenPassHash == hashedPassword):
+                session.permanent = False
                 session["email"] = givenEmail
                 session["chary_id"] = b64encode(os.urandom(32))
                 return {
@@ -246,7 +251,7 @@ def createUserChary():
 def createUserGoogle():
     email = session["email"]
     username = ""
-    password = request.json["password"]
+    password = ""
     salt = ""
     image = ""
     color = ""
@@ -285,7 +290,7 @@ def createUserGoogle():
 @login_is_required
 def redirectUserEnter():
     user = database.getUser(session["email"])
-    if user["data"]["profileCreation"] == True:
+    if user["data"] and user["data"]["profileCreation"] == True:
         return redirect("/dashboard")
     else:
         return redirect("/form/create-user")
@@ -841,7 +846,6 @@ def updateEarning():
 def deleteUser():
     try:
         database.deleteUser(session["email"])
-        logout()
         return {
             "status": 200,
             "message": "Delete successful!"

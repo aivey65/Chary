@@ -90,6 +90,8 @@ function deleteAccountConfirmed() {
             updateAlertSection(message);
             window.scrollTo(0, 0);
             return
+        } else {
+            window.location.href = "/logout";
         }
     });
 }
