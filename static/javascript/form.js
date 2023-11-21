@@ -249,7 +249,13 @@ function submitUserForm() {
             window.scrollTo({top: 0, behavior: 'smooth'});
             return;
         } else {
-            window.location = "/dashboard?refresh=true&tab=overview";
+            const referrer = document.referrer;
+
+            if (referrer && referrer != "") {
+                window.location.href = updateURLRefresh(referrer);
+            } else {
+                window.location = "/dashboard?refresh=true&tab=overview";
+            }
         }
     })
 }
@@ -293,7 +299,13 @@ function submitBudgetForm(method=null) {
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return;
             } else {
-                window.location = "/dashboard?refresh=true&tab=budgets";
+                const referrer = document.referrer;
+
+                if (referrer && referrer != "") {
+                    window.location.href = updateURLRefresh(referrer);
+                } else {
+                    window.location = "/dashboard?refresh=true&tab=budgets";
+                }
             }
         })
     } else {
@@ -318,7 +330,13 @@ function submitBudgetForm(method=null) {
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return;
             } else {
-                window.location = "/dashboard?refresh=true&tab=budgets";
+                const referrer = document.referrer;
+
+                if (referrer && referrer != "") {
+                    window.location.href = updateURLRefresh(referrer);
+                } else {
+                    window.location = "/dashboard?refresh=true&tab=budgets";
+                }
             }
         })
     }
@@ -364,7 +382,13 @@ function submitExpenseForm(method=null) {
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return;
             } else {
-                window.location = "/dashboard?refresh=true&tab=expenses";
+                const referrer = document.referrer;
+
+                if (referrer && referrer != "") {
+                    window.location.href = updateURLRefresh(referrer);
+                } else {
+                    window.location = "/dashboard?refresh=true&tab=expenses";
+                }
             }
         });
     } else {
@@ -390,7 +414,13 @@ function submitExpenseForm(method=null) {
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return;
             } else {
-                window.location = "/dashboard?refresh=true&tab=expenses";
+                const referrer = document.referrer;
+
+                if (referrer && referrer != "") {
+                    window.location.href = updateURLRefresh(referrer);
+                } else {
+                    window.location = "/dashboard?refresh=true&tab=expenses";
+                }
             }
         });
     }
@@ -440,7 +470,13 @@ function submitEarningForm(method=null) {
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return;
             } else {
-                window.location = "/dashboard?refresh=true&tab=earnings";
+                const referrer = document.referrer;
+
+                if (referrer && referrer != "") {
+                    window.location.href = updateURLRefresh(referrer);
+                } else {
+                    window.location = "/dashboard?refresh=true&tab=earnings";
+                }
             }
         });     
     } else {
@@ -466,7 +502,13 @@ function submitEarningForm(method=null) {
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return;
             } else {
-                window.location = "/dashboard?refresh=true&tab=earnings";
+                const referrer = document.referrer;
+
+                if (referrer && referrer != "") {
+                    window.location.href = updateURLRefresh(referrer);
+                } else {
+                    window.location = "/dashboard?refresh=true&tab=earnings";
+                }
             }
         });
     }
@@ -703,7 +745,13 @@ function finalizeDelete(entityType, method=null) {
             if (String(entityType) == "user") {
                 window.location = "/";
             } else {
-                window.location = "/dashboard?refresh=true&tab=" + String(entityType) + "s";
+                const referrer = document.referrer;
+
+                if (referrer && referrer != "") {
+                    window.location.href = updateURLRefresh(referrer);
+                } else {
+                    window.location = "/dashboard?refresh=true&tab=" + String(entityType) + "s";
+                }
             }
         }
     })

@@ -502,8 +502,43 @@ function navConfig() {
 }
 
 function back() {
-    window.history.back();
+    const referrer = document.referrer;
+
+    if (referrer && referrer != "") {
+        window.location.href = referrer;
+    } else {
+        window.history.back();
+    }
 }
+
+function updateURLRefresh(url) {
+    var tempArray = url.split("?");
+    var baseURL = tempArray[0];
+    var oldArgs = tempArray[1];
+    var newArgs = "";
+
+    if (oldArgs) {
+        tempArray = oldArgs.split("&");
+        for (var i = 0; i < tempArray.length; i++){
+            currentArg = tempArray[i].split('=')
+
+            if (currentArg[0] == "refresh"){
+                newArgs += currentArg[0] + "=True&";
+            } else {
+                newArgs += currentArg[0] + "=" + currentArg[1] + "&";
+            }
+        }
+    }
+
+    return baseURL + "?" + newArgs;
+}
+
+////////////////////////////////////////////////////////////////////
+// Force reload when going back in window history to pushed state //
+////////////////////////////////////////////////////////////////////
+window.addEventListener("popstate", (e) => {
+    location.reload();
+});
 
 //////////////////////
 // Scroll Functions //

@@ -33,7 +33,6 @@ async function loadDashboard(refresh="false", tab="overview") {
             loadEarningTab();
         }
     }
-    history.replaceState(null, "", "/dashboard");
 }
 
 // Refresh boolean should be set to true when there is already user data saved, but it
@@ -105,6 +104,8 @@ function updateData(type, period, date, upcoming) {
 }
 
 function loadOverviewTab() {
+    window.history.pushState(null, "", "/dashboard?refresh=false&tab=overview");
+
     const overviewTab = document.createElement('div');
     overviewTab.id = 'overview-section';
 
@@ -141,6 +142,8 @@ function loadOverviewTab() {
 }
 
 function loadBudgetTab(budgets=userData.budgets) {
+    window.history.pushState(null, "", "/dashboard?refresh=false&tab=budgets");
+
     const header = document.createElement('h1');
     header.id = 'tab-header';    
     header.textContent = "Budgets";
@@ -197,6 +200,8 @@ function loadBudgetTab(budgets=userData.budgets) {
 }
 
 function loadEarningTab(earnings=userData.earnings) {
+    window.history.pushState(null, "", "/dashboard?refresh=false&tab=earnings");
+
     const header = document.createElement('h1');
     header.id = 'tab-header';
     header.textContent = "Earnings";
@@ -258,6 +263,8 @@ function loadEarningTab(earnings=userData.earnings) {
 }
 
 function loadExpenseTab(expenses=userData.expenses) {
+    window.history.pushState(null, "", "/dashboard?refresh=false&tab=expenses");
+
     const header = document.createElement('h1');
     header.id = 'tab-header';
     header.textContent = "Expenses";
