@@ -841,6 +841,7 @@ def updateEarning():
 def deleteUser():
     try:
         database.deleteUser(session["email"])
+        logout()
         return {
             "status": 200,
             "message": "Delete successful!"
