@@ -250,7 +250,11 @@ function createFiltersSection(type) {
     dateSelector.title = "Select the start date for the time period you want to view"
     dateSelector.value = configureFilterDate(new Date().toLocaleDateString("en-CA", { timeZone: 'UTC' }), periodSelector.value);
     dateSelector.addEventListener("change", () => {
-        dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value, true);
+        if (periodSelector.value == 4 || periodSelector.value == -1 || periodSelector.value == -2) {
+            dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value, true);
+        } else {
+            dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value, false);
+        }
         upcomingSelector.value = configureFilterUpcoming(dateSelector.value, periodSelector.value, upcomingSelector.value)
         updateData(type, periodSelector.value, dateSelector.value, upcomingSelector.value);
     });

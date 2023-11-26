@@ -183,6 +183,10 @@ h4 {
     color: var(--Grey);
 }
 
+.no-pie {
+    margin-top: var(--medPad) !important;
+}
+
 #profile-snip-container {
     cursor: pointer;
     display: grid;

@@ -454,37 +454,47 @@ function generateVariousCharts(items, slideNum, maxShow) {
 
     if (slideNum == 0) {
         // First create a 'total' chart to show the expected budget amounts
-        const totalChart = document.createElement('canvas');
         const dataExpected = items[0].total;
-        let expectedSum = items[0].totalSum;
+        const expectedSum = items[0].totalSum;
 
-        new Chart(totalChart, {
-            type: "pie",
-            data: {
-                labels: dataExpected.map(row => row.budgetName),
-                datasets: [{
-                    label: "Budgeted Amount",
-                    data: dataExpected.map(row => row.amount),
-                    backgroundColor: dataExpected.map(row => row.color),
-                    borderWidth: 1,
-                    borderColor: COLORS_DARK
-                }],
-            },
-            options: {
-                maintainAspectRatio: false,
-                responsive: true,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let dataObject = context.dataset;
-                                return dataObject.label + ": " + userData.currency + dataObject.data[context.dataIndex];
+        var totalChart;
+
+        if (expectedSum == 0) {
+            totalChart = document.createElement("p");
+            totalChart.textContent = "No Data";
+            totalChart.classList.add("no-pie");
+        } else {
+            totalChart = document.createElement('canvas');
+
+            new Chart(totalChart, {
+                type: "pie",
+                data: {
+                    labels: dataExpected.map(row => row.budgetName),
+                    datasets: [{
+                        label: "Budgeted Amount",
+                        data: dataExpected.map(row => row.amount),
+                        backgroundColor: dataExpected.map(row => row.color),
+                        borderWidth: 1,
+                        borderColor: COLORS_DARK
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let dataObject = context.dataset;
+                                    return dataObject.label + ": " + userData.currency + dataObject.data[context.dataIndex];
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
+        
         const halfchart1 = document.createElement("div");
         halfchart1.classList.add("half-size-chart");
         halfchart1.append(totalChart);
@@ -499,37 +509,46 @@ function generateVariousCharts(items, slideNum, maxShow) {
         totalChartContainer.classList.add("half-size");
 
         // Create an 'actual' chart to show the current amount spent of each budget
-        const actualChart = document.createElement('canvas');
         const dataActual = items[0].actual;
-        let actualSum = items[0].actualSum;
+        const actualSum = items[0].actualSum;
 
-        new Chart(actualChart, {
-            type: "pie",
-            data: {
-                labels: dataActual.map(row => row.budgetName),
-                datasets: [{
-                    label: "Amount",
-                    data: dataActual.map(row => row.amount),
-                    backgroundColor: dataActual.map(row => row.color),
-                    borderWidth: 1,
-                    borderColor: COLORS_DARK
-                }],
-            },
-            options: {                 
-                maintainAspectRatio: false,
-                responsive: true,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let dataObject = context.dataset;
-                                return dataObject.label + ": " + userData.currency + dataObject.data[context.dataIndex];
+        var actualChart;
+
+        if (expectedSum == 0) {
+            actualChart = document.createElement("p");
+            actualChart.textContent = "No Data";
+            actualChart.classList.add("no-pie");
+        } else {
+            actualChart = document.createElement('canvas');
+            new Chart(actualChart, {
+                type: "pie",
+                data: {
+                    labels: dataActual.map(row => row.budgetName),
+                    datasets: [{
+                        label: "Amount",
+                        data: dataActual.map(row => row.amount),
+                        backgroundColor: dataActual.map(row => row.color),
+                        borderWidth: 1,
+                        borderColor: COLORS_DARK
+                    }],
+                },
+                options: {                 
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let dataObject = context.dataset;
+                                    return dataObject.label + ": " + userData.currency + dataObject.data[context.dataIndex];
+                                }
                             }
                         }
                     }
                 }
-            }
-        });  
+            }); 
+        }
+         
         const halfchart2 = document.createElement("div");
         halfchart2.classList.add("half-size-chart");
         halfchart2.append(actualChart);
