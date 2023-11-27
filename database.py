@@ -18,6 +18,11 @@ def notNull(variable):
     else:
         return True
     
+def getOneWeek(currentDate=date.today()):
+    start = currentDate - timedelta(days=6)
+
+    return start, currentDate
+    
 def getCurrentWeek(currentDate=date.today()):
     start = currentDate - timedelta(days=((currentDate.weekday() + 1) % 7))
     end = start + timedelta(days=6)
@@ -68,7 +73,7 @@ def getFullExpenseDates(targetDate, period):
         targetDate = date.fromisoformat(targetDate)
 
     if (period == None or period == 0): # Daily, get full week
-        start, end = getCurrentWeek(targetDate)
+        start, end = getOneWeek(targetDate)
         return start, end
     elif (period == 1 or period == 2): # Weekly or biweekly, get 4 weeks
         start, end = getCurrentWeek(targetDate)

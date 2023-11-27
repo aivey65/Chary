@@ -17,6 +17,8 @@ function loadBudget(id, startDate, endDate) {
         fullExpenseDict = responseData.fullExpenses;
         budgetPeriodConst = budget.budgetPeriod;
         setViewDates(startDate, budgetPeriodConst)
+        console.log(fullExpenseDict)
+
 
         configureViewDates(startDate, budget.budgetPeriod);
         document.getElementById('viewing-start-date').addEventListener('change', (e) => {
@@ -119,6 +121,8 @@ function changeBudgetDates(id, startDate) {
         if (fullExpenses == true) {
             fullExpenseDict = responseData.fullExpenses;
         }
+
+        console.log(fullExpenseDict)
 
         const chartData = allChartDataAsArray(budget, startDate);
         const currentChart = generateVariousCharts(chartData, slideNum, 1);
