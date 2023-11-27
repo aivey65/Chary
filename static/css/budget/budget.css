@@ -87,11 +87,45 @@
     font-weight: 200;
 }
 
-#details-edit {
+#options-container {
     grid-row: 5;
     grid-column: 3;
     align-self: end;
     justify-self: end;
+}
+
+.options-panel {
+    position: absolute;
+    right: 30px;
+    width: fit-content;
+    background-color: var(--Navy);
+    border-radius: 10px;
+    box-shadow: black 5px 5px 10px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.budget-edit, .budget-copy {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    padding: var(--smallPad);
+}
+
+.budget-edit h4, .budget-copy h4 {
+    color: var(--Light);
+    font-size: 1rem;
+    font-weight: 200;
+    margin: 0px 0px 0px var(--smallPad);
+}
+
+.budget-copy:hover {
+    background-color: var(--faded);
+    border-radius: 0px 0px 10px 10px;
+}
+
+.budget-edit:hover {
+    background-color: var(--faded);
+    border-radius: 10px 10px 0px 0px;
 }
 
 #date-start {

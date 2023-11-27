@@ -8,6 +8,7 @@ var budgetPeriodConst = 0;
 
 function loadBudget(id, startDate, endDate) {
     fillProfilePics(); // Get the profile images on the page filled.
+    createOptionsPanel(id);
 
     fetch('/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullExpenses=True').then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
@@ -59,10 +60,6 @@ function loadBudget(id, startDate, endDate) {
             const endDate = new Date(budget.endDate);
             document.getElementById('details-date-end').textContent = endDate.toLocaleDateString('en-us', options);
         }
-
-        document.getElementById('details-edit').onclick = () => {
-            window.location.href = "/form/update-budget?id=" + id;
-        };
 
         if (budget.recurring) {
             document.getElementById('recur-img').src = 'static/images/recurIcon.svg';
@@ -186,6 +183,21 @@ function dashboardBudgetAction() {
 
 function createExpenseLink() {
     window.location.href = "/form/create-expense";
+}
+
+function createOptionsPanel(id) {
+    document.getElementById("edit-div").addEventListener('click', function() {
+        const dateString = String(document.getElementById("viewing-start-date").value);
+        window.location = "/form/update-budget?id=" + id + "&duplicate=False&date=" + dateString;
+    })
+
+    document.getElementById("copy-div").addEventListener('click', function() {
+        window.location = "/form/update-budget?id=" + id + "&duplicate=True";
+    })
+
+    document.getElementById("options-icon-toggle").addEventListener('click', (event) => {
+        optionsToggle(event.target, document.getElementById("options-panel"));
+    }, false);
 }
 
 function generateVariousCharts(items, slideNum, maxShow) {

@@ -20,6 +20,10 @@ function getShortDateFormattingOptions(year=false) {
     }
 }
 
+function formatCurrency(amount) {
+
+}
+
 function getUTCDateFromString(date) {
     if (date instanceof Date) {
         return date;
@@ -174,7 +178,7 @@ function dashboardAction() {
 }
 
 function formatNumber(number) {
-    const numberFormatter = Intl.NumberFormat("en", { maximumFractionDigits: 2, notation: "compact" });
+    const numberFormatter = Intl.NumberFormat("en", { maximumFractionDigits: 2, notation: "compact", minimumFractionDigits: 2 });
     return numberFormatter.format(number);
 }
 

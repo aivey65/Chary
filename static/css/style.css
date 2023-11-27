@@ -167,6 +167,71 @@ a.normal-link:hover {
     top: 0px;
 }
 
+.placeholder-fullscreen {
+    height: 80vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.placeholder-fullscreen div {
+    border-radius: 50%;
+    background-color: var(--Light);
+    width: 20px;
+    height: 20px;
+    position: absolute;
+}
+
+.placeholder-fullscreen div:nth-child(1) {
+    left: calc(50% - 40px);
+    animation-name: placeholder-fullscreen1;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+.placeholder-fullscreen div:nth-child(2) {
+    left: calc(50% - 40px);
+    animation-name: placeholder-fullscreen2;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+.placeholder-fullscreen div:nth-child(3) {
+    left: calc(50% - 10px);
+    animation-name: placeholder-fullscreen3;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+.placeholder-fullscreen div:nth-child(4) {
+    left: calc(50% + 20px);
+    animation-name: placeholder-fullscreen4;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes placeholder-fullscreen1 {
+    0%   {transform: scale(0);}
+    100%  {transform: scale(1);}
+}
+
+@keyframes placeholder-fullscreen2 {
+    0%   {transform: translateX(0px)}
+    100%  {transform: translateX(30px);}
+}
+
+@keyframes placeholder-fullscreen3 {
+    0%   {transform: translateX(0px)}
+    100%  {transform: translateX(30px);}
+}
+
+@keyframes placeholder-fullscreen4 {
+    0%   {transform: scale(1);}
+    100%  {transform: scale(0);}
+}
+
 .empty-table {
     text-align: center;
     height: 40vh;
