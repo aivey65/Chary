@@ -226,7 +226,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
             options: {
                 elements: {
                     center: {
-                        text: user_currency + data.dataText[0] + "\n／\n" + user_currency + data.dataText[1],
+                        text: user_currency + formatNumber(data.dataText[0]) + "\n／\n" + user_currency + formatNumber(data.dataText[1]),
                         color: COLORS_LIGHT,
                         minFontSize: 14, // Default is 20 (in px), set to false and text will not wrap.
                         lineHeight: 25 // Default is 25 (in px), used for when text wraps
@@ -240,7 +240,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                         callbacks: {
                             label: function(context) {
                                 let dataObject = context.dataset;
-                                return user_currency + dataObject.data[context.dataIndex];
+                                return user_currency + formatNumber(dataObject.data[context.dataIndex]);
                             }
                         }
                     }
@@ -302,7 +302,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                         callbacks: {
                             label: function(context) {
                                 let dataObject = context.dataset;
-                                return dataObject.tooltipText + ": " + user_currency + dataObject.data[context.dataIndex];
+                                return dataObject.tooltipText + ": " + user_currency + formatNumber(dataObject.data[context.dataIndex]);
                             },
                         }
                     }
@@ -348,7 +348,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                 tooltips: {
                     callbacks: {
                         label: function(tooltipItems, data) {
-                            return user_currency + tooltipItems.yLabel.toString();
+                            return user_currency + formatNumber(tooltipItems.yLabel.toString());
                         }
                     }
                 }

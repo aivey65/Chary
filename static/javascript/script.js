@@ -20,10 +20,6 @@ function getShortDateFormattingOptions(year=false) {
     }
 }
 
-function formatCurrency(amount) {
-
-}
-
 function getUTCDateFromString(date) {
     if (date instanceof Date) {
         return date;
@@ -178,8 +174,15 @@ function dashboardAction() {
 }
 
 function formatNumber(number) {
-    const numberFormatter = Intl.NumberFormat("en", { maximumFractionDigits: 2, notation: "compact", minimumFractionDigits: 2 });
-    return numberFormatter.format(number);
+    if (number < 1000) {
+        const numberFormatter = Intl.NumberFormat("en", { maximumFractionDigits: 2, notation: "compact", minimumFractionDigits: 2 });
+        var formattedNumber = numberFormatter.format(number);
+        return formattedNumber.replace(/\.00$/, '');
+    } else {
+        const numberFormatter = Intl.NumberFormat("en", { maximumFractionDigits: 2, notation: "compact" });
+        return numberFormatter.format(number);
+    }
+    
 }
 
 // Function displays a message and 

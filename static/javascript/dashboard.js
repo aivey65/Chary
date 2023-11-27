@@ -486,7 +486,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             callbacks: {
                                 label: function(context) {
                                     let dataObject = context.dataset;
-                                    return dataObject.label + ": " + userData.currency + dataObject.data[context.dataIndex];
+                                    return dataObject.label + ": " + userData.currency + formatNumber(dataObject.data[context.dataIndex]);
                                 }
                             }
                         }
@@ -503,7 +503,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
         totalHeader.textContent = "Total Amount Budgeted";
         const totalnumber = document.createElement("p");
         totalnumber.classList.add("chart-number");
-        totalnumber.textContent = userData.currency + expectedSum;
+        totalnumber.textContent = userData.currency + formatNumber(expectedSum);
         const totalChartContainer = document.createElement("div");
         totalChartContainer.append(totalHeader, totalnumber, halfchart1);
         totalChartContainer.classList.add("half-size");
@@ -540,7 +540,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             callbacks: {
                                 label: function(context) {
                                     let dataObject = context.dataset;
-                                    return dataObject.label + ": " + userData.currency + dataObject.data[context.dataIndex];
+                                    return dataObject.label + ": " + userData.currency + formatNumber(dataObject.data[context.dataIndex]);
                                 }
                             }
                         }
@@ -557,7 +557,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
         actualHeader.textContent = "Amount Used";
         const actualnumber = document.createElement("p");
         actualnumber.classList.add("chart-number");
-        actualnumber.textContent = userData.currency + actualSum;
+        actualnumber.textContent = userData.currency + formatNumber(actualSum);
         const actualChartContainer = document.createElement("div");
         actualChartContainer.append(actualHeader, actualnumber, halfchart2);
         actualChartContainer.classList.add("half-size");
@@ -642,7 +642,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                         callbacks: {
                             label: function(context) {
                                 let dataObject = context.dataset;
-                                return dataObject.label + ": " + userData.currency + dataObject.data[context.dataIndex];
+                                return dataObject.label + ": " + userData.currency + formatNumber(dataObject.data[context.dataIndex]);
                             }
                         }
                     }
@@ -738,7 +738,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                         callbacks: {
                             label: function(context) {
                                 let dataObject = context.dataset;
-                                return dataObject.label + ": " + userData.currency + dataObject.data[context.dataIndex];
+                                return dataObject.label + ": " + userData.currency + formatNumber(dataObject.data[context.dataIndex]);
                             }
                         }
                     }
