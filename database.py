@@ -19,7 +19,7 @@ def notNull(variable):
         return True
     
 def getCurrentWeek(currentDate=date.today()):
-    start = currentDate - timedelta(days=(currentDate.weekday() + 1) % 7)
+    start = currentDate - timedelta(days=((currentDate.weekday() + 1) % 7))
     end = start + timedelta(days=6)
 
     return start, end
@@ -268,13 +268,13 @@ def getSinglePeriod(startDate, period, includeDate, endDate=None):
     newStartDate = startDate
     newEndDate = (startDate + timeDelta) - timedelta(days=1)
     
-    while includeDate >= newEndDate:
+    while includeDate > newStartDate:
         newStartDate = newEndDate + timedelta(days=1) # The day after the current end date.
-        newEndDate = newEndDate + timeDelta
+        newEndDate = (newStartDate + timeDelta) - timedelta(days=1)
     
     if (endDate != None and endDate < newEndDate):
         newEndDate = endDate
-    
+
     return newStartDate, newEndDate
 
 def getOccurancesWithinPeriod(startDate, endDate, targetStartDate, targetEndDate, targetPeriod, recurring=True):

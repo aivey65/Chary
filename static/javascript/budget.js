@@ -70,6 +70,7 @@ function loadBudget(id, startDate, endDate) {
 
         // Create 'expenses' section
         document.getElementById('expense-container').append(generateTableUI(0, expenses, responseData.currency, 0));
+        console.log(expenses);
 
         // Check to see if an 'upcoming expenses' section is needed
         upcomingTable = generateTableUI(0, expenses, responseData.currency, 1)
@@ -465,6 +466,7 @@ function budgetUsePerPeriod(period, startDate) {
     var descriptionDates = "";
     const formattingOptions = getShortDateFormattingOptions(true);
 
+    // First get the date ranges for the line graph
     if (period == 0) { // Daily
         data = getEmptySevenDaysMap(startDate);
         dataGrey = [...data.values];
@@ -499,6 +501,7 @@ function budgetUsePerPeriod(period, startDate) {
         descriptionDates = firstDate.getFullYear() + " - " + lastDate.getFullYear();
     }
 
+    // Calculate the data values for the line graph by adding up the amounts of each expense in each period
     for (const key of keys) {
         const amount = fullExpenseDict[key].data.amount;
         const dates = fullExpenseDict[key].allDates;
