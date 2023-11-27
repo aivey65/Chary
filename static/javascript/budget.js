@@ -17,8 +17,6 @@ function loadBudget(id, startDate, endDate) {
         fullExpenseDict = responseData.fullExpenses;
         budgetPeriodConst = budget.budgetPeriod;
         setViewDates(startDate, budgetPeriodConst)
-        console.log(fullExpenseDict)
-
 
         configureViewDates(startDate, budget.budgetPeriod);
         document.getElementById('viewing-start-date').addEventListener('change', (e) => {
@@ -72,7 +70,6 @@ function loadBudget(id, startDate, endDate) {
 
         // Create 'expenses' section
         document.getElementById('expense-container').append(generateTableUI(0, expenses, responseData.currency, 0));
-        console.log(expenses);
 
         // Check to see if an 'upcoming expenses' section is needed
         upcomingTable = generateTableUI(0, expenses, responseData.currency, 1)
@@ -121,8 +118,6 @@ function changeBudgetDates(id, startDate) {
         if (fullExpenses == true) {
             fullExpenseDict = responseData.fullExpenses;
         }
-
-        console.log(fullExpenseDict)
 
         const chartData = allChartDataAsArray(budget, startDate);
         const currentChart = generateVariousCharts(chartData, slideNum, 1);

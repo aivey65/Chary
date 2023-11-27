@@ -61,12 +61,9 @@ function updateData(type, period, date, upcoming) {
     } else if(type == 'charts') {
         // Save the slide number so that the current chart updates and stays in view
         const slideNum = document.getElementById("limited-charts").dataset.slideNum;
-        console.log("slide nummmmm", slideNum)
 
         fetch('/data/all-current?period=' + period + '&target=' + date + '&chartData=True').then(response => response.json()).then((responseData) => {
             // Configure data for creating all charts
-            console.log(responseData)
-
             const chartData = allChartDataAsArray(responseData.budgets, responseData.expenses.expenses, responseData.earnings, period, date);
             const currentChart = generateVariousCharts(chartData, slideNum, 1);
 
@@ -667,7 +664,6 @@ function generateVariousCharts(items, slideNum, maxShow) {
     } else if (slideNum == 2) {
         const earningChart = document.createElement('canvas');
         const data = items[2];
-        console.log(data)
 
         new Chart(earningChart, {
             type: "bar",
@@ -974,9 +970,6 @@ function totalBudgetsAndAmounts(budgetList, period) {
 }
 
 function expensesPerMonth(expenseList, period=3, startDate) {
-    console.log("period", period)
-    console.log(period == 4)
-
     const keys = Object.keys(expenseList);
     var data = null;
     var dataGrey = null;
