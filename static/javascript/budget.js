@@ -417,12 +417,12 @@ function budgetUsedAmount(budget) {
     if (totalUsedAmount > availableAmount) { // The user has overspent in their budget
         if (currentUsedAmount <= availableAmount) {
             updateQuickStat(
-                "You are currently within budget, but an upcoming expense will put you over " + user_currency + String(amountRemaining) + ".", 
+                "You are currently within budget, but an upcoming expense will put you over " + user_currency + String(formatNumber(amountRemaining)) + ".", 
                 "Keep this in mind while making plans and consider making some changes to your upcoming expenses."
             )
         } else {
             updateQuickStat(
-                "You are over budget by " + String(user_currency) + String(amountRemaining) + "!",
+                "You are over budget by " + String(user_currency) + String(formatNumber(amountRemaining)) + "!",
                 "That's okay! It happens. Try to take some time to figure out where you may have overspent and think about adjusting your expenses for next month."
             )
         }
@@ -442,7 +442,7 @@ function budgetUsedAmount(budget) {
         } else {
             updateQuickStat(
                 "You are within your budget! Nice Job!",
-                "You have " + String(user_currency) + String(amountRemaining) + " left in this budget. Don't forget to take into account your upcoming expenses."
+                "You have " + String(user_currency) + String(formatNumber(amountRemaining)) + " left in this budget. Don't forget to take into account your upcoming expenses."
             )
         }
         const colors = [COLORS_GREEN, COLORS_GREY, COLORS_NAVY];
