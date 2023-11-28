@@ -100,7 +100,7 @@
     width: fit-content;
     background-color: var(--Navy);
     border-radius: 10px;
-    box-shadow: black 5px 5px 10px;
+    box-shadow: var(--Dark) 5px 5px 10px;
     cursor: pointer;
     z-index: 2;
 }
@@ -148,39 +148,6 @@
     margin-bottom: var(--smallPad);
 }
 
-#details-amount {
-    grid-row: 2/4;
-    grid-column: 3;
-    justify-self: center;
-    align-self: center;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    align-items: center;
-    justify-items: center;
-    width: 25%;
-    margin-top: var(--lgPad);
-}
-
-.fraction-slash {
-    font-size: 2em;
-    grid-row: 1/3;
-    grid-column: 1/3;
-}
-
-.fraction-top {
-    text-align: right;
-    font-weight: 300;
-    grid-row: 1;
-    grid-column: 1;
-}
-
-.fraction-bottom {
-    font-weight: 300;
-    grid-row: 2;
-    grid-column: 2;
-}
-
 #viewing-date-container {
     grid-row: 1;
     grid-column: 3;
@@ -189,7 +156,7 @@
     justify-items: center;
     justify-self: center;
     align-self: end;
-    gap:var(--mobilePad);
+    gap: var(--mobilePad);
 }
 
 #viewing-dates {
@@ -229,9 +196,7 @@
 }
 
 #limited-charts {
-    /* height: fit-content; */
     width: 100%;
-    /* min-width: 250px; */
     position:absolute;
     display: flex;
     justify-content: center;

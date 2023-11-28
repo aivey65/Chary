@@ -354,6 +354,7 @@ h4 {
 
 .td-recur {
     grid-column: 1;
+    text-overflow: clip;
 }
 
 .td-name {
@@ -506,9 +507,17 @@ h4 {
     left: 0;
     bottom: 0;
     background-color: var(--Navy);
-    border-radius: 10px;
+    border-radius: 20px 20px 0px 0px;
+    box-shadow: 0px -5px 10px var(--Dark);
     cursor: pointer;
     z-index: 2;
+    padding-bottom: var(--medPad);
+}
+
+.options-title {
+    padding: var(--smallPad);
+    margin: 0px;
+    border-bottom: solid 1px var(--Grey);
 }
 
 .budget-more, .budget-edit, .budget-copy{
@@ -526,12 +535,10 @@ h4 {
 
 .budget-more:hover {
     background-color: var(--faded);
-    border-radius: 0px 0px 10px 10px;
 }
 
 .budget-edit:hover {
     background-color: var(--faded);
-    border-radius: 10px 10px 0px 0px;
 }
 
 .budget-copy:hover {

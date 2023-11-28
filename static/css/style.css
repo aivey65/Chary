@@ -612,10 +612,18 @@ table {
     margin-right: 10px;
 }
 
+.report-button a, span {
+    color: var(--MainL);
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 #legal {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     grid-row: 3;
 }
 
@@ -760,8 +768,9 @@ Creating the navigation bar depending on the size of the user's screen
         padding: var(--mobilePad);
     }
 
-    .legal-button a, span {
+    .legal-button a, span, .report-button a {
         font-size: .8em;
+        white-space: nowrap;
     }
 
     #chart-container {
@@ -795,12 +804,32 @@ Creating the navigation bar depending on the size of the user's screen
     tbody .main-row {
         display: grid;
         gap: var(--mobilePad);
-        grid-template-columns: .2fr 1fr .3fr;
+        grid-template-columns: .3fr 1fr .5fr;
         grid-template-rows: auto auto auto;
+    }
+
+    .empty-table tr {
+        display: block;
+        width: 100%;
+    }
+    
+    .empty-body {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    td {
+        color: var(--Light);
+        font-size: 1em;
+        font-weight: 200;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .main-row td {
-        color:var(--Light);
+        color: var(--Light);
         text-align: left;
     }
 
@@ -903,11 +932,15 @@ Creating the navigation bar depending on the size of the user's screen
     }
 
     .shadow-left {
-        box-shadow: inset 8rem 0rem 2rem -8rem var(--Light);
+        box-shadow: inset 8rem 0rem 2rem -8rem var(--Grey);
     }
 
     .shadow-right {
-        box-shadow: inset -8rem 0rem 2rem -8rem var(--Light);
+        box-shadow: inset -8rem 0rem 2rem -8rem var(--Grey);
+    }
+
+    .shadow-both {
+        box-shadow: inset -8rem 0rem 2rem -8rem var(--Grey), inset 8rem 0rem 2rem -8rem var(--Grey);
     }
 }
 
@@ -981,7 +1014,7 @@ Creating the navigation bar depending on the size of the user's screen
         grid-template-rows: 1fr 1fr;
         background-color: var(--Navy);
         border-radius: 10px;
-        box-shadow: black 5px 5px 10px;
+        box-shadow: var(--Dark) 5px 5px 10px;
     }
 
     #profile-options a {

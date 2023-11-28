@@ -583,21 +583,26 @@ window.addEventListener('scroll', () => {
 function sideScrollShadow(parent, child) {
     if (child.scrollWidth > parent.scrollWidth) { // There is overflow
         if (child.scrollLeft != 0 && (child.scrollLeft + parent.scrollWidth != child.scrollWidth)) {
-            parent.classList.add("shadow-right");
-            parent.classList.add("shadow-left");
+            parent.classList.add("shadow-both");
+            parent.classList.remove("shadow-right");
+            parent.classList.remove("shadow-left");
         } else if (child.scrollLeft == 0) {
             parent.classList.add("shadow-right");
             parent.classList.remove("shadow-left");
+            parent.classList.remove("shadow-both");
         } else if (child.scrollLeft + parent.scrollWidth == child.scrollWidth) {
             parent.classList.add("shadow-left");
             parent.classList.remove("shadow-right");
+            parent.classList.remove("shadow-both");
         } else { // Is scrolled somewhere in the middle
-            parent.classList.add("shadow-right"); 
-            parent.classList.add("shadow-left");
+            parent.classList.add("shadow-both");
+            parent.classList.remove("shadow-right");
+            parent.classList.remove("shadow-left");
         }
     } else {
         parent.classList.remove("shadow-right");
         parent.classList.remove("shadow-left");
+        parent.classList.remove("shadow-both");
     }
 }
 
@@ -895,10 +900,14 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
         })
         budget_more.append(budget_more_img, budget_more_text)
 
+        const optionsPanelTitle = document.createElement("p");
+        optionsPanelTitle.classList.add("options-title");
+        optionsPanelTitle.textContent = budgets[key].name;
+
         const optionsPanel = document.createElement('div');
         optionsPanel.classList.add('options-panel', 'options');
         optionsPanel.style.display = "none";
-        optionsPanel.append(budget_update, budget_copy, budget_more);
+        optionsPanel.append(optionsPanelTitle, budget_update, budget_copy, budget_more);
         optionsImg.addEventListener('click', (event) => {
             optionsToggle(event.target, optionsPanel);
         }, false);

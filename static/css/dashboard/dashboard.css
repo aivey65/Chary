@@ -462,9 +462,13 @@ h4 {
     width: fit-content;
     background-color: var(--Navy);
     border-radius: 10px;
-    box-shadow: black 5px 5px 10px;
+    box-shadow: var(--Dark) 5px 5px 10px;
     cursor: pointer;
     z-index: 2;
+}
+
+.options-title {
+    display: none;
 }
 
 .budget-more, .budget-edit, .budget-copy {
