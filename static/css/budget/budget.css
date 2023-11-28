@@ -105,6 +105,10 @@
     z-index: 2;
 }
 
+.options-title {
+    display: none;
+}
+
 .budget-edit, .budget-copy {
     display: grid;
     grid-template-columns: auto 1fr;
