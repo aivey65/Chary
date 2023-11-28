@@ -29,7 +29,7 @@ CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 # Get the path to the client secret JSON file generated 
 # using Google Cloud Platform
-secret_file = os.path.join(pathlib.Path(__file__).parent.parent, "client_secret.json")
+secret_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
 
 flow = Flow.from_client_secrets_file(
     client_secrets_file=secret_file,
