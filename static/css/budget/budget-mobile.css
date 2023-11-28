@@ -261,6 +261,10 @@
     justify-self: end;
 }
 
+.non-recur-img {
+    display: none;
+}
+
 .td-recur {
     grid-column: 1;
     text-overflow: clip;
