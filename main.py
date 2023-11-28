@@ -44,7 +44,7 @@ flow = Flow.from_client_secrets_file(
 
 @app.route("/")
 def renderHome():
-    return render_template('landing.html', loggedIn=isLoggedIn(), nav=renderedNav())
+    return render_template('index.html', loggedIn=isLoggedIn(), nav=renderedNav())
 
 @app.route("/about")
 def renderAbout():
