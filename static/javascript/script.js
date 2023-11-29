@@ -849,6 +849,10 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
         budget_amount.classList.add('fraction-bottom');
         budget_amount.textContent = currency + formatNumber(budgets[key].amount);
 
+        const amount_div = document.createElement("div");
+        amount_div.classList.add("fraction-container");
+        amount_div.append(budget_used, budget_slash, budget_amount);
+
         // Progess SVG
         const svgDiv = document.createElement('div');
         svgDiv.classList.add('svg-div');
@@ -915,7 +919,7 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
         budget_options.classList.add('options-div', 'options');
         budget_options.append(optionsImg, optionsPanel);
 
-        budgetPanel.append(budget_options, recur_div, budget_name, svgDiv, budget_used, budget_slash, budget_amount);
+        budgetPanel.append(budget_options, recur_div, budget_name, svgDiv, amount_div);
         budgetContainer.append(budgetPanel);
     }
 
