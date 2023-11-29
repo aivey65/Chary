@@ -202,7 +202,7 @@ function configureRecurOptions() {
 /////////////////////////////////////////
 // Create/Update form submit functions //
 /////////////////////////////////////////
-function submitUserForm() {
+function submitUserForm(create=false) {
     const username = document.getElementById("name").value;
     const currency = document.getElementById("currency").value;
     const image = document.querySelector("input[name='image-radio']:checked").value;
@@ -251,7 +251,7 @@ function submitUserForm() {
         } else {
             const referrer = document.referrer;
 
-            if (referrer && referrer != "") {
+            if (!create && referrer && referrer != "") {
                 window.location.href = updateURLRefresh(referrer);
             } else {
                 window.location = "/dashboard?refresh=true&tab=overview";

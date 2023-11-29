@@ -47,7 +47,7 @@ function submitSignupForm() {
             window.scrollTo(0, 0);
             return;
         } else {
-            window.location = "/dashboard";
+            window.location = "/enter";
         }
     })
 }
