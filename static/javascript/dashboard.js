@@ -793,7 +793,7 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
 
             const budget_more = document.createElement('img');
             budget_more.src = "static/images/MoreButtonsmall.svg";
-            budget_more.title = "See More";
+            budget_more.title = "See more details";
             budget_more.classList.add("more-img");
             budget_more.addEventListener('click', function() {
                 window.location.href = "/expand-budget?id=" + key + "&date=" + formatDateString + "&period=" + budget.budgetPeriod + "&inactive=" + inactive;

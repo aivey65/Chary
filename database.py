@@ -272,11 +272,10 @@ def getSinglePeriod(startDate, period, includeDate, endDate=None):
     timeDelta = getTimeDelta(period)
     newStartDate = startDate
     newEndDate = (startDate + timeDelta) - timedelta(days=1)
-    
-    while includeDate > newStartDate:
+    while includeDate > newStartDate and includeDate > newEndDate:
         newStartDate = newEndDate + timedelta(days=1) # The day after the current end date.
         newEndDate = (newStartDate + timeDelta) - timedelta(days=1)
-    
+        
     if (endDate != None and endDate < newEndDate):
         newEndDate = endDate
 
@@ -426,7 +425,7 @@ def getAllActiveBudgets(email, period=3, targetDate=date.today()):
             elif start != None and end != None and period != -1:
                 currentAmount, totalAmount = getBudgetBalance(budgetID, budgetDoc, targetDate)
                 budgetDoc['usedAmount'] = currentAmount
-                budgetDoc['TotalUsedAmount'] = totalAmount
+                budgetDoc['totalUsedAmount'] = totalAmount
                 budgetsDict[budgetID] = budgetDoc
             
             budgetCategories.append(budgetDoc['name'])

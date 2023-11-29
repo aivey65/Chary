@@ -832,7 +832,7 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
             recur_div.append(recur_img, recur_flag, recur_text);
             recur_div.id = "recur-icon-div";
         }
-        
+                
         const budget_name = document.createElement('h2');
         budget_name.classList.add('budget-name');
         budget_name.textContent = budgets[key].name;
@@ -892,7 +892,7 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
         budget_more_img.classList.add('more-img');        
         
         const budget_more_text = document.createElement('h4');
-        budget_more_text.textContent = "See More";
+        budget_more_text.textContent = "See Details";
         const budget_more = document.createElement('div');
         budget_more.classList.add('budget-more', 'options');
         budget_more.addEventListener('click', function() {
