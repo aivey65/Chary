@@ -768,6 +768,18 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
     const keys = Object.keys(budgetList)
     const start = slideNum * maxShow;
 
+    if (keys.length == 0) {
+        const emptyText = document.createElement("p");
+        emptyText.textContent = "Empty";
+        emptyText.id = "empty-budgets";
+
+        const emptyDiv = document.createElement("div");
+        emptyDiv.id = "empty-budgets-div";
+        emptyDiv.append(emptyText);
+
+        return emptyDiv;
+    }
+
     for (var index = 0; index < keys.length; index++) {
         if (index >= start && index < start + maxShow) {
             const formatDateString = (new Date()).toLocaleDateString("en-CA", { timeZone: 'UTC' });

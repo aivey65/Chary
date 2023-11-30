@@ -62,6 +62,10 @@ def renderSignup():
 def renderPrivacyPolicy():
     return render_template('privacy-policy.html', loggedIn=isLoggedIn(), nav=renderedNav())
 
+@app.route("/terms_of_service")
+def renderTermsService():
+    return render_template('tos.html', loggedIn=isLoggedIn(), nav=renderedNav())
+
 ####################################
 # Functions for logging in and out #
 ####################################

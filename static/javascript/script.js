@@ -429,7 +429,7 @@ function toggleMenu() {
 function hidePlaceholders() {
     const placeholders = document.getElementsByClassName("placeholder");
     for (var i = 0; i < placeholders.length; i++) {
-        placeholders[i].style.display = "None";
+        placeholders[i].style.display = "none";
     }
 }
 
@@ -792,6 +792,18 @@ function generateCurveProgress(fillAmount, totalAmount, width='200', height='120
 function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=false) {
     budgetContainer = document.createElement('div');
     budgetContainer.id = 'budget-container';
+
+    if (Object.keys(budgets).length == 0) {
+        const emptyText = document.createElement("p");
+        emptyText.textContent = "Empty";
+        emptyText.id = "empty-budgets";
+
+        const emptyDiv = document.createElement("div");
+        emptyDiv.id = "empty-budgets-div";
+        emptyDiv.append(emptyText);
+
+        return emptyDiv;
+    }
     
     for (const key in budgets) {
         // Meta data
@@ -1136,7 +1148,7 @@ function generateTableUI(type, entityList, currency, dateType, limit=null) {
         const emptyRow = document.createElement('tr');
         const emptyCol = document.createElement('td');
         emptyCol.classList.add("empty-body");
-        emptyCol.textContent = "None";
+        emptyCol.textContent = "Empty";
         emptyCol.colSpan = headRow.cells.length;
 
         emptyRow.append(emptyCol);

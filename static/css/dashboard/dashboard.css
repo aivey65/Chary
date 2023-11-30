@@ -379,6 +379,13 @@ h4 {
     flex-wrap: wrap;
 }
 
+#empty-budgets-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30vh;
+}
+
 .budget-info {
     padding: 1.3em;
     margin: 10px;
