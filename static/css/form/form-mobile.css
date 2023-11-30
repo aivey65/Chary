@@ -72,18 +72,25 @@ input[type='date'] {
     color: var(--MainD);
 }
 
+#current-date-view {
+    margin: 0px;
+}
+
 #recurring-true:checked ~ .label-recurring-true,
 #recurring-false:checked ~ .label-recurring-false,
 #daily:checked ~ .label-daily,
 #weekly:checked ~ .label-weekly,
 #biweekly:checked ~ .label-biweekly,
 #monthly:checked ~ .label-monthly,
-#yearly:checked ~ .label-yearly {
+#yearly:checked ~ .label-yearly,
+#all:checked ~ .all-label,
+#one:checked ~ .one-label,
+#future:checked ~ .future-label {
     background-color: var(--MainD);
     border-color: var(--MainD);
 }
 
-.label-recurring, .budget-period, .expense-period, .earning-period {
+.label-recurring, .budget-period, .expense-period, .earning-period, .label-update-method {
     cursor: pointer;
     background-color: var(--Background);
     color: var(--Light);
@@ -97,12 +104,16 @@ input[type='date'] {
     min-width: 5rem;
 }
 
+.label-update-method {
+    width: min-content;
+}
+
 #name-div, #description-div,
 #amount-div, #start-div,
 #end-div, #category-div {
     display: flex;
     flex-direction: column;
-    margin-top: var(--smallPad);
+    margin-top: var(--medPad);
 }
 
 #recurring-div, #period-div {
@@ -137,12 +148,12 @@ input[type='date'] {
 
 #period-label, #recurring-label {
     grid-column: 1/3;
-    margin-top: var(--smallPad);
+    margin-top: var(--medPad);
 }
 
 #period-div {
     grid-column: 1/3;
-    justify-content: space-evenly;
+    justify-content: start;
 }
 
 #start-div {
@@ -182,4 +193,48 @@ input[type='date'] {
 
 .row8 {
     grid-row: 8;
+}
+
+/* Styles for the update method form */
+#popup {
+    width: 80%;
+}
+
+#popup-header {
+    margin-bottom: var(--lgPad);
+}
+
+.update-method {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr auto;
+    gap: var(--lgPad) var(--smallPad);
+    margin-top: var(--smallPad);
+    margin-bottom: var(--smallPad);
+}
+
+.update-method .cta-button {
+    justify-self: end;
+}
+
+#option-div-collection {
+    grid-column: 1/3;
+    grid-row: 1;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--smallPad);
+    align-items: start;
+}
+
+.option-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--smallPad);
+}
+
+.option-img {
+    width: 100%;
+    height: auto;
 }
