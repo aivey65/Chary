@@ -1,4 +1,4 @@
-const DATA_COLORS = ["#ce6c75", "#e08677", "#eda27d", "#f6bf89", "#fcdd9c", "#fffab6", "#eaf6a0", "#cef38f", "#acf182", "#80ee7c", "#33eb7c"];
+const DATA_COLORS = ["#C3B3E5", "#B9E2F3", "#BFD0EE", "#E7B1BE", "#DAB1E7", "#D293DC", "#DD8E9C", "#E5988D", "#eda27d", "#f6bf89", "#fcdd9c", "#fffab6", "#eaf6a0", "#cef38f", "#acf182", "#96F193"];
 const COLORS_GREEN = "#33EB7C";
 const COLORS_NAVY = "#2C2440";
 const COLORS_RED = "#AE1326";
