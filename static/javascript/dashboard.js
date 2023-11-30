@@ -618,6 +618,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             color: COLORS_GREY,
                             font: {
                                 size: 15,
+                                weight: 300,
                             },
                             display: true,
                             text: "Amount ( " + userData.currency + " )"
@@ -713,6 +714,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             color: COLORS_GREY,
                             font: {
                                 size: 15,
+                                weight: 300,
                             },                            
                             display: true,
                             text: "Amount ( " + userData.currency + " )"

@@ -358,7 +358,7 @@ h4 {
 }
 
 .td-name {
-    font-size: 1em;
+    font-size: 1.3em;
     grid-column: 2;
     grid-row: 1;
     font-weight: 300;
@@ -367,14 +367,12 @@ h4 {
 .start-date {
     grid-column: 2;
     grid-row: 2;
-    font-size: .8em;
     font-weight: 200;
 }
 
 .td-category {
     grid-column: 2;
     grid-row: 3;
-    font-size: .8em;
     font-style: italic;
     font-weight: 200;
 }
@@ -528,7 +526,7 @@ h4 {
 .budget-more h4, .budget-edit h4, .budget-copy h4 {
     color: var(--Light);
     font-size: 1rem;
-    font-weight: 200;
+    font-weight: 300;
     margin: 0px 0px 0px var(--smallPad);
 }
 

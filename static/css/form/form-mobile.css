@@ -22,7 +22,7 @@ form {
 
 label, p {
     font-size: 1rem;
-    font-weight: 200;
+    font-weight: 300;
     margin-bottom: .2rem;
 }
 
@@ -41,7 +41,7 @@ select, input[type='date'] {
 }
 
 select {
-    border-radius: 1rem 1rem 0rem 0rem;
+    border-radius: 1rem;
     appearance: none;
     background-image: url("../../images/down-icon.svg");
     background-repeat: no-repeat;

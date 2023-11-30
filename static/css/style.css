@@ -59,9 +59,10 @@ body {
     width: 100%;
 }
 
-input, select {
+input, select, button {
     font-family: 'Kanit', sans-serif;
     cursor: pointer;
+    font-weight: 400;
 }
 
 h1 {
@@ -79,8 +80,8 @@ h2 {
 }
 
 h3 {
-    font-weight: 200;
-    font-size: 1.3rem;
+    font-weight: 300;
+    font-size: 1.2rem;
     color: var(--Light)
 }
 
@@ -90,10 +91,17 @@ h4 {
     color: var(--Light)
 }
 
+p, a, li {
+    font-weight: 300;
+}
+
 p, button, a, li {
     color: var(--Light);
-    font-weight: 200;
     font-size: 1rem;
+}
+
+p i {
+    font-weight: 100;
 }
 
 img {
@@ -318,7 +326,7 @@ button {
     border: solid 2px var(--Light);
     border-radius: 50rem 50rem 50rem 50rem;
     padding: 10px 20px 10px 20px;
-    font: inherit;
+    font-family: inherit;
     cursor: pointer;
     outline: inherit;
     width: fit-content;
@@ -805,7 +813,7 @@ Creating the navigation bar depending on the size of the user's screen
 
     tbody .main-row {
         display: grid;
-        gap: var(--mobilePad);
+        gap: 5px;
         grid-template-columns: .3fr 1fr .5fr;
         grid-template-rows: auto auto auto;
     }
@@ -825,7 +833,7 @@ Creating the navigation bar depending on the size of the user's screen
     td {
         color: var(--Light);
         font-size: 1em;
-        font-weight: 200;
+        font-weight: 300;
         overflow: hidden;
         text-overflow: ellipsis;
     }
@@ -883,7 +891,8 @@ Creating the navigation bar depending on the size of the user's screen
 
     .expanse-div p {
         margin: 0px;
-        font-size: .8rem;
+        font-size: 1rem;
+        font-weight: 200;
     }
 
     .expanse-div h4 {
@@ -1022,7 +1031,7 @@ Creating the navigation bar depending on the size of the user's screen
     #profile-options a {
         color: var(--Light);
         font-size: 1rem;
-        font-weight: 200;
+        font-weight: 300;
         width: 100%;
         padding: 15px 25px 15px 25px;
         text-align: center;
@@ -1080,7 +1089,7 @@ Creating the navigation bar depending on the size of the user's screen
         background-color: var(--MainL);
         color: var(--Dark);
         font-size: 1em;
-        font-weight: 300;
+        font-weight: 400;
         padding: var(--smallPad);
     }
     
