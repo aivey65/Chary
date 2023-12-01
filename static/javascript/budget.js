@@ -9,6 +9,9 @@ var budgetPeriodConst = 0;
 function loadBudget(id, startDate, endDate) {
     fillProfilePics(); // Get the profile images on the page filled.
     createOptionsPanel(id);
+    setTimeout(() => {
+        showCookieConsent(true);
+    }, 1000);
 
     fetch('/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullExpenses=True').then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;

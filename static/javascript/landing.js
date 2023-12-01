@@ -1,6 +1,9 @@
 function configureLanding() {
     fillProfilePics();
     configureHeight();
+    setTimeout(() => {
+        showCookieConsent(true);
+    }, 1000);
 }
 
 function downAction() {

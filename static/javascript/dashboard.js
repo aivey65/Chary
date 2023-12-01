@@ -10,6 +10,9 @@ async function loadDashboard(refresh="false", tab="overview") {
         response.then(() => {
             fillProfilePics(userData.profileImage);
             addHorizontalScrollShadow();
+            setTimeout(() => {
+                showCookieConsent(true);
+            }, 1000);
             document.getElementById("dashboard-tabs").style.display = "block";
              
             if (tab == "overview") {

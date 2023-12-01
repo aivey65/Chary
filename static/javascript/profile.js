@@ -1,5 +1,8 @@
 function loadProfile() {
     fillProfilePics(); // Get the profile images on the page filled.
+    setTimeout(() => {
+        showCookieConsent(true);
+    }, 1000);
 
     fetch('/data/user').then(response => response.json()).then((responseData) => {
         const profile = responseData.data;

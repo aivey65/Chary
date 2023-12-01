@@ -16,6 +16,9 @@ const imageList = ["undraw_dog", "undraw_person1", "undraw_person2", "undraw_per
 
 function userFormLoad() {
     fillProfilePics();
+    setTimeout(() => {
+        showCookieConsent(true);
+    }, 1000);
 }
 
 function independantChange() {
@@ -53,6 +56,10 @@ function formChange() {
 
 function formLoad(startDate=null, configureDate=false) {
     fillProfilePics();
+    setTimeout(() => {
+        showCookieConsent(true);
+    }, 1000);
+
     currentStartDate = startDate;
 
     if (currentStartDate != null && currentStartDate != "") {

@@ -11,13 +11,12 @@
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
-        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/landing/landing.css'>
-        <link rel='stylesheet' media='screen and (max-width:767px)' href='../static/css/landing/landing-mobile.css'>
+        <link rel='stylesheet' href='../static/css/legal.css'>
 
         <!-- JavaScript links -->
         <script src='../static/javascript/script.js'></script>
 
-        <Title>Chary</Title>
+        <Title>Chary | Terms of Service</Title>
     </head>
 
     <body onload="fillProfilePics()">
@@ -30,79 +29,73 @@
             </header>
         </div>
 
-        <h1>
-            Terms of Service
-        </h1>
-        <button onclick="homeAction()">Back to Home</button>
-        {% if showLogin %}
-            <button class='cta-button' onclick="loginAction()">Log In</button>
-        {% endif %}
-        {% if showDashboard %}
-            <button class='cta-button' onclick="dashboardAction()">Dashboard</button>
-        {% endif %}
-
-        <h2>Introduction</h2>
-        <p>
-            This cookie policy explains how Chary uses cookies and similar technologies when you visit our web app.
-        </p>
-
-        <h2>What is a Cookie?</h2>
-        <p>
-            A cookie is a small text file that a website saves on your device when you visit it. This data can be read from your device when you revisit the site later.
-        </p>
-        <p>
-            A cookie can store information about your login information, interactions, settings, and preferences to provide a personalized experience.
-        </p>
-
-        <h2>What types of Cookies does Chary use?</h2>
-        <p>
-            We use only one type of cookie on our app:
-        </p>
-        <ul>
-            <li>
-                Session Cookies: These cookies are temporary and necessary for the basic functionality of our app. These session cookies are deleted when you close the app, log out of your account, or when the cookie expires. They are used to remember your login information once you are authenticated so that you can view your own personal data. Once a session has ended, the cookie is deleted, and the user would need to sign in again.
-            </li>
-        </ul>
-
-        <h2>How do we use Cookies?</h2>
-        <p>
-            We use cookies for the following purposes:
-        </p>
-        <ul>
-            <li>
-                To remember your login information
-            </li>
-            <li>
-                To check that a user has been authenticated before taking certain actions
-            </li>
-            <li>
-                To improve our services
-            </li>
-        </ul>
-        <p>
-            Chary does not create cookies that are not vital to the functionality of the website and Chary does not sell your information or use your information for analytics.
-        </p>
-
-        <h2>What choices do you have?</h2>
-        <p>
-            You have the right to choose whether or not to allow us to use cookies. You can exercise your choice by using the settings in your browser or mobile device to block cookies. Since cookies are vital to the functionality of Chary, you also have the choice to not use Chary.
-        </p>
-
-        <h2>How can you control Cookies></h2>
-        <p>
-            You can control cookies by using the settings in your browser. In your browser settings, search for terms like /'Cookies/' or /'Site Data/'. There, you can find directions to manage, restrict, and delete your cookies at any time.
-        </p>
-
-        <h2>Changes to our Cookie policy</h2>
-        <p>
-            Chary is unlikely to make updates to our cookie policy, as we have no need to store more information or use the information we collect in a different way. However, if we were to make any material changes, we will notify you by posting a notice on our app so that you can review the updated policies.
-        </p>
-
-        <h2>Contact us </h2>
-        <p>
-            If you have any questions about this cookie policy, please contact us by filling out our contact form
-            <a href="/contact" alt="contact form">here</a>.
-        </p>
+        <div class="content non-header" id="legal-content">
+            <h1>
+                Terms of Service
+            </h1>
+            <button onclick="homeAction()">Back to Home</button>
+            {% if showLogin %}
+                <button class='cta-button' onclick="loginAction()">Log In</button>
+            {% endif %}
+            {% if showDashboard %}
+                <button class='cta-button' onclick="dashboardAction()">Dashboard</button>
+            {% endif %}
+    
+            <h2>1. Account Registration</h2>
+            <p>
+                In order to use certain features of the Services, you will be required to create an account. To create an account, you must provide us with accurate and complete information about yourself, including your email address, and unless you sign in using Google or another 3rd party, a password. You are responsible for maintaining the confidentiality of your login information and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account.
+            </p>
+    
+            <h2>2. User Conduct</h2>
+            <p>
+                You agree to use the Services in a manner that is consistent with all applicable laws and regulations. You agree not to use the Services for any purpose that is illegal, harmful, offensive, or that infringes the rights of others. You also agree not to use the Services to transmit any material that is confidential, proprietary, or trade secret information of any third party.
+            </p>
+    
+            <h2>3. Data Security</h2>
+            <p>
+                Chary uses encryption to hide passwords from the database. Chary authenticates users to ensure that information is accessed by the person who owns it. However, no method of transmission over the Internet or method of electronic storage is 100% secure. Therefore, we cannot guarantee the absolute security of your data.
+            </p>
+    
+            <h2>4. Third-Party Links</h2>
+            <p>
+                The Services may contain links to websites or services that are not operated by us. We have no control over the content, privacy policies, or practices of third-party websites or services. You further acknowledge and agree that we shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with the use of or reliance on any such content, goods or services available on or through any such websites or services.        </p>
+    
+            <h2>5. Disclaimer of Warranties</h2>
+            <p>
+                THE SERVICES ARE PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS. WE MAKE NO WARRANTIES, EXPRESS OR IMPLIED, ABOUT THE OPERATION OF THE SERVICES OR THE INFORMATION, CONTENT, MATERIALS, OR PRODUCTS INCLUDED IN THE SERVICES. YOU EXPRESSLY AGREE THAT YOUR USE OF THE SERVICES IS AT YOUR SOLE RISK.
+            </p>
+    
+            <h2>6. Limitation of Liability</h2>
+            <p>
+                IN NO EVENT SHALL WE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR LOSS OF PROFITS, GOODWILL, USE, DATA, OR OTHER INTANGIBLE LOSSES (EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES), ARISING OUT OF OR IN CONNECTION WITH THE USE OR INABILITY TO USE THE SERVICES.        
+            </p>
+    
+            <h2>7. Indemnification</h2>
+            <p>
+                You agree to indemnify, defend, and hold us harmless from and against any and all claims, liabilities, damages, losses, costs, expenses, and fees (including reasonable attorneys' fees) arising out of or in connection with your use of the Services, your violation of these Terms, or your violation of any applicable laws or regulations.
+            </p>
+    
+            <h2>8. Entire Agreement</h2>
+            <p>
+                These Terms constitute the entire agreement between you and us and supersede all prior or contemporaneous communications, representations, or agreements, whether oral or written.
+            </p>
+    
+            <h2>9. Governing Law and Jurisdiction</h2>
+            <p>
+                These Terms shall be governed by and construed in accordance with the laws of the State of Illinois, without regard to its conflict of laws principles. Any dispute arising out of or relating to these Terms shall be subject to the exclusive jurisdiction of the courts of the State of Illinois.
+            </p>
+    
+            <h2>10. Change to Terms</h2>
+            <p>
+                We may update these Terms from time to time. If we make any material changes, we will notify you through a pop-up on the Services. You are responsible for reviewing these Terms periodically. Your continued use of the Services following the posting of updated Terms will constitute your agreement to such updated Terms.
+            </p>
+    
+            <h2>11. Contact Us</h2>
+            <p>
+                If you have any questions about these Terms, please contact us 
+                <a class="normal-link" href="/contact" alt="Contact us link" >here</a>.
+            </p>
+        </div>
 
         <div class="footer">
             <div class='contact-methods'> 

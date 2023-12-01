@@ -551,6 +551,51 @@ window.addEventListener("popstate", (e) => {
     location.reload();
 });
 
+//////////////////////////
+// Cookie Consent Popup //
+//////////////////////////
+function showCookieConsent(show) {
+    if (show && localStorage.getItem("popupWasShown") != "1") {
+        const popupHeader = document.createElement("h3");
+        popupHeader.id = "popup-header";
+        popupHeader.textContent = "Cookie Consent";
+
+        const popupText = document.createElement("p");
+        popupText.id = "popup-text";
+        popupText.innerText = "This website uses cookies to provide a personalized experience. Cookies are essential to the functionality of this website. When you click 'I Accept', you consent to our use of cookies.";
+
+        const privacy = document.createElement("a");
+        privacy.href = "/privacy#cookie-section";
+        privacy.alt = "Link to cookie policy";
+        privacy.textContent = "Cookie Policy";
+        privacy.classList.add("normal-link");
+        privacy.rel = "noopener noreferrer";
+        privacy.target = "_blank";
+
+        const acceptButton = document.createElement("button");
+        acceptButton.textContent = "I Accept";
+        acceptButton.addEventListener("click", () => {
+            // Set local storage to indicate that the popup has been shown
+            localStorage.setItem("popupWasShown", "1");
+
+            popupWrapper.remove();
+        })
+
+        const popup = document.createElement("div");
+        popup.id = "popup";
+        popup.append(popupHeader, popupText, privacy, acceptButton);
+
+        const popupWrapper = document.createElement("div");
+        popupWrapper.id = "popup-wrapper";
+        popupWrapper.append(popup);
+        acceptButton.addEventListener("click", () => {
+            popupWrapper.remove();
+        })
+
+        document.getElementById("header-container").append(popupWrapper);
+    }
+}
+
 //////////////////////
 // Scroll Functions //
 //////////////////////

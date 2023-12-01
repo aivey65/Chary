@@ -11,13 +11,12 @@
 
         <!-- CSS Stylesheets -->
         <link rel='stylesheet' href='../static/css/style.css'>
-        <link rel='stylesheet' media='screen and (min-width:768px)' href='../static/css/landing/landing.css'>
-        <link rel='stylesheet' media='screen and (max-width:767px)' href='../static/css/landing/landing-mobile.css'>
+        <link rel='stylesheet' href='../static/css/legal.css'>
 
         <!-- JavaScript links -->
         <script src='../static/javascript/script.js'></script>
 
-        <Title>Chary</Title>
+        <Title>Chary | Privacy & Cookie Policy</Title>
     </head>
 
     <body onload="fillProfilePics()">
@@ -30,79 +29,164 @@
             </header>
         </div>
 
-        <h1>
-            Cookie Policy / Privacy Policy
-        </h1>
-        <button onclick="homeAction()">Back to Home</button>
-        {% if showLogin %}
-            <button class='cta-button' onclick="loginAction()">Log In</button>
-        {% endif %}
-        {% if showDashboard %}
-            <button class='cta-button' onclick="dashboardAction()">Dashboard</button>
-        {% endif %}
+        <div class="content non-header" id="legal-content">
+            <h1>
+                Cookie Policy & Privacy Policy
+            </h1>
+            <button onclick="homeAction()">Back to Home</button>
+            {% if showLogin %}
+                <button class='cta-button' onclick="loginAction()">Log In</button>
+            {% endif %}
+            {% if showDashboard %}
+                <button class='cta-button' onclick="dashboardAction()">Dashboard</button>
+            {% endif %}
+    
+            <h2 id="cookie-section">Cookie Policy</h2>
+            <a class="normal-link" href="#privacy-section" alt="Link to privacy policy">Go to privacy policy</a>
 
-        <h2>Introduction</h2>
-        <p>
-            This cookie policy explains how Chary uses cookies and similar technologies when you visit our web app.
-        </p>
-
-        <h2>What is a Cookie?</h2>
-        <p>
-            A cookie is a small text file that a website saves on your device when you visit it. This data can be read from your device when you revisit the site later.
-        </p>
-        <p>
-            A cookie can store information about your login information, interactions, settings, and preferences to provide a personalized experience.
-        </p>
-
-        <h2>What types of Cookies does Chary use?</h2>
-        <p>
-            We use only one type of cookie on our app:
-        </p>
-        <ul>
-            <li>
-                Session Cookies: These cookies are temporary and necessary for the basic functionality of our app. These session cookies are deleted when you close the app, log out of your account, or when the cookie expires. They are used to remember your login information once you are authenticated so that you can view your own personal data. Once a session has ended, the cookie is deleted, and the user would need to sign in again.
-            </li>
-        </ul>
-
-        <h2>How do we use Cookies?</h2>
-        <p>
-            We use cookies for the following purposes:
-        </p>
-        <ul>
-            <li>
-                To remember your login information
-            </li>
-            <li>
-                To check that a user has been authenticated before taking certain actions
-            </li>
-            <li>
-                To improve our services
-            </li>
-        </ul>
-        <p>
-            Chary does not create cookies that are not vital to the functionality of the website and Chary does not sell your information or use your information for analytics.
-        </p>
-
-        <h2>What choices do you have?</h2>
-        <p>
-            You have the right to choose whether or not to allow us to use cookies. You can exercise your choice by using the settings in your browser or mobile device to block cookies. Since cookies are vital to the functionality of Chary, you also have the choice to not use Chary.
-        </p>
-
-        <h2>How can you control Cookies></h2>
-        <p>
-            You can control cookies by using the settings in your browser. In your browser settings, search for terms like /'Cookies/' or /'Site Data/'. There, you can find directions to manage, restrict, and delete your cookies at any time.
-        </p>
-
-        <h2>Changes to our Cookie policy</h2>
-        <p>
-            Chary is unlikely to make updates to our cookie policy, as we have no need to store more information or use the information we collect in a different way. However, if we were to make any material changes, we will notify you by posting a notice on our app so that you can review the updated policies.
-        </p>
-
-        <h2>Contact us </h2>
-        <p>
-            If you have any questions about this cookie policy, please contact us by filling out our contact form
-            <a href="/contact" alt="contact form">here</a>.
-        </p>
+            <h3>Introduction</h3>
+            <p>
+                This cookie policy explains how Chary uses cookies and similar technologies when you visit our web app.
+            </p>
+    
+            <h3>What is a Cookie?</h3>
+            <p>
+                A cookie is a small text file that a website saves on your device when you visit it. This data can be read from your device when you revisit the site later.
+            </p>
+            <p>
+                A cookie can store information about your login information, interactions, settings, and preferences to provide a personalized experience.
+            </p>
+    
+            <h3>What types of Cookies does Chary use?</h3>
+            <p>
+                We use only one type of cookie on our app:
+            </p>
+            <ul>
+                <li>
+                    Session Cookies: These cookies are temporary and necessary for the basic functionality of our app. These session cookies are deleted when you close the app, log out of your account, or when the cookie expires. They are used to remember your login information once you are authenticated so that you can view your own personal data. Once a session has ended, the cookie is deleted, and the user would need to sign in again.
+                </li>
+            </ul>
+    
+            <h3>How do we use Cookies?</h3>
+            <p>
+                We use cookies for the following purposes:
+            </p>
+            <ul>
+                <li>
+                    To remember your login information
+                </li>
+                <li>
+                    To check that a user has been authenticated before taking certain actions
+                </li>
+                <li>
+                    To improve our services
+                </li>
+            </ul>
+            <p>
+                Chary does not create cookies that are not vital to the functionality of the website and Chary does not sell your information or use your information for analytics.
+            </p>
+    
+            <h3>What choices do you have?</h3>
+            <p>
+                You have the right to choose whether or not to allow us to use cookies. You can exercise your choice by using the settings in your browser or mobile device to block cookies. Since cookies are vital to the functionality of Chary, you also have the choice to not use Chary.
+            </p>
+    
+            <h3>How can you control Cookies></h3>
+            <p>
+                You can control cookies by using the settings in your browser. In your browser settings, search for terms like /'Cookies/' or /'Site Data/'. There, you can find directions to manage, restrict, and delete your cookies at any time.
+            </p>
+    
+            <h3>Changes to our Cookie policy</h3>
+            <p>
+                Chary is unlikely to make updates to our cookie policy, as we have no need to store more information or use the information we collect in a different way. However, if we were to make any material changes, we will notify you by posting a notice on our app so that you can review the updated policies.
+            </p>
+    
+            <h3>Contact us </h3>
+            <p>
+                If you have any questions about this cookie policy, please contact us by filling out our contact form
+                <a class="normal-link" href="/contact" alt="contact form">here</a>.
+            </p>
+    
+            <h2 id="privacy-section">Privacy Policy</h2>
+            <a class="normal-link" href="#cookie-section" alt="Link to cookie policy">Go to cookie policy</a>
+    
+            <h3>Introduction</h3>
+            <p>
+                Chary is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and share your personal information when you visit our website or use our web application.
+            </p>
+    
+            <h3>Information we collect</h3>
+            <p>
+                We collect the following types of personal information from you:
+            </p>
+            <ul>
+                <li>
+                    Email Address: We collect your email address when you create an account with Chary. This email is used to personally identify and authenticate you. We would only use your email address for communication in the case of an emergency.
+                </li>
+                <li>
+                    Password: If you sign in with a password rather than using 'Sign in with Google' or another 3rd party sign-in method, we will also store your password. We use this password to authenticate your identity. Passwords are encrypted in our database, so anyone with access to Chary's database will not be able to view them.
+                </li>
+            </ul>
+    
+            <h3>How we use your information</h3>
+            <p>
+                We use your personal information to:
+            </p>
+            <ul>
+                <li>
+                    Provide you with access to our app
+                </li>
+                <li>
+                    Authenticate your identity when you log in
+                </li>
+            </ul>
+    
+            <h3>How we share your information</h3>
+            <p>
+                Chary does not share your information with any 3rd parties except in the following limited circumstances:
+            </p>
+            <ul>
+                <li>
+                    Service Providers: If you create an account with Chary, we share your personal information with 3rd-party services that help us to operate our app. These service providers are only authorized to use your personal information for the purpose of providing services to us and to you. This includes our use of Google Cloud Platform's Firestore database. 
+                </li>
+                <li>
+                    Legal Compliance: We may share your personal information if we believe that such disclosure is necessary to comply with the law, to enforce our Terms of Service, or to protect the rights, property, or safety of our users or others.
+                </li>
+            </ul>
+    
+            <h3>Data security</h3>
+            <p>
+                Chary uses encryption to hide passwords from the database. Chary also authenticates users to ensure that information is accessed by the person who owns it. However, no method of transmission over the Internet or method of electronic storage is 100% secure. Therefore, we cannot guarantee the absolute security of your data.
+            </p>
+    
+            <h3>What choices do you have?</h3>
+            <p>
+                You have the following choices when it comes to your personal information:
+            </p>
+            <ul>
+                <li>
+                    Accessing and changing your information: Aside from your email and password, you can modify any information that you give to Chary by logging in visiting your 'Profile' or by editing any of the properties you create. 
+                </li>
+                <li>
+                    Deleting your account: You can delete your account by logging in an visiting your 'Profile'. At the bottom, there is a link to 'Delete Account'. Deleting your account will permanently delete any and all information associated with your account from our database. 
+                </li>
+                <li>
+                    Contacting Chary: In the case where you are having difficulties with managing your account, you can contact us 
+                    <a class="normal-link" href="/contact" alt="Contact us link" >here</a>.
+                </li>
+            </ul>
+    
+            <h3>Changes to our privacy policy</h3>
+            <p>
+                We may update this Privacy Policy from time to time. If we make any material changes, we will notify you through a pop-up on our website. You are responsible for reviewing this Privacy Policy periodically. Your continued use of our website following the posting of the updated Privacy Policy will constitute your agreement to such updated Privacy Policy.
+            </p>
+    
+            <h3>Contact us</h3>
+            <p>
+                If you have any questions about this Privacy Policy, please contact us 
+                <a class="normal-link" href="/contact" alt="Contact us link">here</a>.
+            </p>
+        </div>
 
         <div class="footer">
             <div class='contact-methods'> 

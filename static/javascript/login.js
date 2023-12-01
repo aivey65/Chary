@@ -9,6 +9,12 @@ window.addEventListener('scroll', () => {
     document.body.style.backgroundPosition = "left " + yvalue + "px";
 });
 
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        showCookieConsent(true);
+    }, 1000);
+})
+
 function updateAlertSection(message, add=false) {
     alertSection = document.getElementById('alert-section');
     if (!add) {

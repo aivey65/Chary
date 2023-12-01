@@ -1,0 +1,16 @@
+a, h3 {
+    color: var(--MainL);
+}
+
+/* Mobile */
+@media screen and (max-width:767px) {
+    .non-header {
+        padding: var(--mobilePad);
+    }
+}
+
+@media screen and (min-width:767px) {
+    .non-header {
+        padding-left: var(--DesktopPadBody);
+    }
+}
