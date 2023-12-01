@@ -421,6 +421,7 @@ def getAllActiveBudgets(email, period=3, targetDate=date.today()):
             if start == None and end == None:
                 if period == -1: # 'Inactive' period
                     budgetDoc['usedAmount'] = 0
+                    budgetDoc['totalUsedAmount'] = 0
                     budgetsDict[budgetID] = budgetDoc
             elif start != None and end != None and period != -1:
                 currentAmount, totalAmount = getBudgetBalance(budgetID, budgetDoc, targetDate)

@@ -384,6 +384,7 @@ h4 {
     align-items: center;
     justify-content: center;
     min-height: 30vh;
+    width: 100%;
 }
 
 .budget-info {

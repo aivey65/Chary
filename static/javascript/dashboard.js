@@ -41,7 +41,7 @@ async function loadDashboard(refresh="false", tab="overview") {
 // Refresh boolean should be set to true when there is already user data saved, but it
 // needs to be updated.
 async function updateUserData() {
-    const targetDate = new Date().toLocaleDateString("en-CA", {timeZone:"UTC"})
+    const targetDate = new Date().toLocaleDateString("en-CA")
 
     const response = await fetch('/data/all-current?period=4&target=' + targetDate).then(response => response.json()).then((responseData) => {
         userData = responseData.data;
@@ -785,7 +785,7 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
 
     for (var index = 0; index < keys.length; index++) {
         if (index >= start && index < start + maxShow) {
-            const formatDateString = (new Date()).toLocaleDateString("en-CA", { timeZone: 'UTC' });
+            const formatDateString = (new Date()).toLocaleDateString("en-CA");
             const key = keys[index]
             const budget = budgetList[key];
 
@@ -1036,7 +1036,7 @@ function expensesPerMonth(expenseList, period=3, startDate) {
         for (const date of dates) {
             const localDate = new Date(date);
             var curDate = new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
-            const todayDate = new Date().setHours(0,0,0,0);
+            const todayDate = new Date();
 
             if (period == 3) {
                 const curMonth = curDate.getMonth();
@@ -1115,7 +1115,7 @@ function earningsPerMonth(earningList, period=3, startDate) {
         for (const date of dates) {
             const localDate = new Date(date);
             var curDate = new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
-            const todayDate = new Date().setHours(0,0,0,0);
+            const todayDate = new Date();
 
             if (period == 3) {
                 const curMonth = curDate.getMonth();

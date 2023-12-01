@@ -9,14 +9,14 @@ const COLORS_GREY = "#8E7c89";
 
 // Date formatting
 function getDateFormattingOptions(long=true) {
-    return { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' };
+    return { year: 'numeric', month: 'short', day: 'numeric' };
 }
 
 function getShortDateFormattingOptions(year=false) {
     if (year) {
-        return { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' };
+        return { year: 'numeric', month: 'short', day: 'numeric' };
     } else {
-        return { month: 'short', day: 'numeric', timeZone: 'UTC' };
+        return { month: 'short', day: 'numeric' };
     }
 }
 
@@ -255,7 +255,7 @@ function createFiltersSection(type) {
     dateSelector.id = "date-selector";
     dateSelector.type = "date";
     dateSelector.title = "Select the start date for the time period you want to view"
-    dateSelector.value = configureFilterDate(new Date().toLocaleDateString("en-CA", { timeZone: 'UTC' }), periodSelector.value);
+    dateSelector.value = configureFilterDate(new Date().toLocaleDateString("en-CA"), periodSelector.value);
     dateSelector.addEventListener("change", () => {
         if (periodSelector.value == 4 || periodSelector.value == -1 || periodSelector.value == -2) {
             dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value, true);
@@ -316,19 +316,19 @@ function configureFilterDate(date, period, changePeriod=false) {
     }
     
     if (period == 0) {
-        return tempDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+        return tempDate.toLocaleDateString("en-CA");
     } else if (period == 1 || period == 2) { // Weekly
         tempDate = new Date(tempDate.setDate(tempDate.getDate() - tempDate.getDay()));
-        return tempDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+        return tempDate.toLocaleDateString("en-CA");
     } else if (period == 3) { // Monthly
         tempDate = new Date(tempDate.getFullYear(), tempDate.getMonth(), 1);
-        return tempDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+        return tempDate.toLocaleDateString("en-CA");
     } else if (period == 4) { // Yearly
         tempDate = new Date(tempDate.getFullYear(), 0, 1);
-        return  tempDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+        return  tempDate.toLocaleDateString("en-CA");
     } else if (period == -1 || period == -2) {
         tempDate = new Date();
-        return tempDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+        return tempDate.toLocaleDateString("en-CA");
     }
 }
 
@@ -860,7 +860,7 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
     
     for (const key in budgets) {
         // Meta data
-        const formatDateString = viewingDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+        const formatDateString = viewingDate.toLocaleDateString("en-CA");
 
         const budgetPanel = document.createElement('div');
         budgetPanel.classList.add('budget-info');
