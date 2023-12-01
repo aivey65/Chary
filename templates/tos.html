@@ -30,16 +30,14 @@
         </div>
 
         <div class="content non-header" id="legal-content">
+            <button onclick="homeAction()">Back to Home</button>
+            {% if loggedIn %}
+                <button class='cta-button' onclick="dashboardAction()">Dashboard</button>
+            {% endif %}
+
             <h1>
                 Terms of Service
             </h1>
-            <button onclick="homeAction()">Back to Home</button>
-            {% if showLogin %}
-                <button class='cta-button' onclick="loginAction()">Log In</button>
-            {% endif %}
-            {% if showDashboard %}
-                <button class='cta-button' onclick="dashboardAction()">Dashboard</button>
-            {% endif %}
     
             <h2>1. Account Registration</h2>
             <p>

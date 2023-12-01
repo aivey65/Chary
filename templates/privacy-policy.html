@@ -30,16 +30,14 @@
         </div>
 
         <div class="content non-header" id="legal-content">
+            <button onclick="homeAction()">Back to Home</button>
+            {% if loggedIn %}
+                <button class='cta-button' onclick="dashboardAction()">Dashboard</button>
+            {% endif %}
+
             <h1>
                 Cookie Policy & Privacy Policy
             </h1>
-            <button onclick="homeAction()">Back to Home</button>
-            {% if showLogin %}
-                <button class='cta-button' onclick="loginAction()">Log In</button>
-            {% endif %}
-            {% if showDashboard %}
-                <button class='cta-button' onclick="dashboardAction()">Dashboard</button>
-            {% endif %}
     
             <h2 id="cookie-section">Cookie Policy</h2>
             <a class="normal-link" href="#privacy-section" alt="Link to privacy policy">Go to privacy policy</a>
