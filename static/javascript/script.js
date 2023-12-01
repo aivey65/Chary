@@ -651,6 +651,14 @@ function sideScrollShadow(parent, child) {
     }
 }
 
+function scrollToCookie() {
+    document.getElementById("cookie-section").scrollIntoView();
+}
+
+function scrollToPrivacy() {
+    document.getElementById("privacy-section").scrollIntoView();
+}
+
 ////////////////////////////
 // Functions for Carousel //
 ////////////////////////////
