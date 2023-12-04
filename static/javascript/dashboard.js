@@ -775,9 +775,8 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
                 window.location = "/expand-budget?id=" + key + "&date=" + formatDateString + "&period=" + budget.budgetPeriod + "&inactive=False";
             })
 
-            var recur_img = null;
+            var recur_img = document.createElement('img');
             if (budget.recurring) {
-                recur_img = document.createElement('img');
                 recur_img.src = 'static/images/recurIcon.svg';
                 recur_img.classList.add('recur-img');
                 const period = PERIODS[budget.budgetPeriod].toLocaleLowerCase();
