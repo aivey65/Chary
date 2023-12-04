@@ -131,3 +131,4 @@ dmypy.json
 # Other
 **/.DS_Store
 client_secret.json
+quick-lint-js.config

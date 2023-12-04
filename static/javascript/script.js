@@ -40,13 +40,13 @@ function getUTCDateFromString(date) {
 function getEmptySevenDaysMap(startDate) {
     startDate = getUTCDateFromString(startDate);
 
-    weekDates = [];
-    weekLabels = [];
-    weekValues = [];
-    formattingOptions = getShortDateFormattingOptions();
+    var weekDates = [];
+    var weekLabels = [];
+    var weekValues = [];
+    var formattingOptions = getShortDateFormattingOptions();
 
     for (var i = 6; i >= 0; i--) {
-        tempDate = new Date(startDate);
+        var tempDate = new Date(startDate);
         tempDate.setDate(startDate.getDate() - i);
 
         weekDates.push({
@@ -67,21 +67,21 @@ function getEmptySevenDaysMap(startDate) {
 }
 
 function getEmptyFourWeeksMap(startDate) {
-    UTCStartDate = getUTCDateFromString(startDate);
+    var UTCStartDate = getUTCDateFromString(startDate);
     startDate = new Date(UTCStartDate.setDate(UTCStartDate.getDate() - UTCStartDate.getDay()));
-    endDate = new Date(UTCStartDate.setDate(UTCStartDate.getDate() + (6 - UTCStartDate.getDay())));
+    var endDate = new Date(UTCStartDate.setDate(UTCStartDate.getDate() + (6 - UTCStartDate.getDay())));
 
-    weekDates = [];
-    weekLabels = [];
-    weekValues = [];
+    var weekDates = [];
+    var weekLabels = [];
+    var weekValues = [];
 
     const formatting = getShortDateFormattingOptions(false);
 
     for (var i = 0; i < 4; i++) {
-        newStart = new Date(startDate)
+        var newStart = new Date(startDate)
         newStart.setDate(startDate.getDate() - (i * 7));
 
-        newEnd = new Date(endDate)
+        var newEnd = new Date(endDate)
         newEnd.setDate(endDate.getDate() - (i * 7));
 
         weekDates.unshift({
@@ -118,17 +118,17 @@ function getEmptyMonthMap() {
 }
 
 function getEmptyFiveYearsMap(startDate) {
-    UTCStartDate = getUTCDateFromString(startDate);
+    var UTCStartDate = getUTCDateFromString(startDate);
     startDate = new Date(UTCStartDate.getFullYear(), 0, 1);
-    endDate = new Date(UTCStartDate.getFullYear(), 11, 31);
+    var endDate = new Date(UTCStartDate.getFullYear(), 11, 31);
 
-    yearDates = [];
-    yearLabels = [];
-    yearValues = [];
+    var yearDates = [];
+    var yearLabels = [];
+    var yearValues = [];
 
     for (var i = 0; i < 5; i++) {
-        tempStart = new Date(startDate.getFullYear() - i, 0, 1);
-        tempEnd = new Date(endDate.getFullYear() - i, 11, 31);
+        var tempStart = new Date(startDate.getFullYear() - i, 0, 1);
+        var tempEnd = new Date(endDate.getFullYear() - i, 11, 31);
 
         yearDates.unshift({
             "startDate": tempStart,
@@ -208,31 +208,43 @@ function createAlert(message) {
 
 function createFiltersSection(type) {
     const period00 = document.createElement("option");
-    period00.textContent = "All Active";
     period00.value = "-2";
-    if (type == 'budgets') {
-        period00.selected = true;
-    }
     const period0 = document.createElement("option");
-    period0.textContent = "All Inactive";
     period0.value = "-1";
     const period1 = document.createElement("option");
-    period1.textContent = "Day";
     period1.value = "0";
     const period2 = document.createElement("option");
-    period2.textContent = "Week";
     period2.value = "1";
     const period3 = document.createElement("option");
-    period3.textContent = "Month";
     period3.value = "3";
-    if (type == 'charts') {
-        period3.selected = true;
-    }
     const period4 = document.createElement("option");
-    period4.textContent = "Year";
     period4.value = "4";
-    if (type == 'expenses' || type == 'earnings') {
-        period4.selected = true;
+
+    // Set options specific to the type of entity
+    if (type == 'budgets') {
+        // Set the default selected option
+        period00.selected = true;
+
+        // Set the option text
+        period00.textContent = "Active Budgets";
+        period0.textContent = "Inactive Budgets";
+        period1.textContent = "Daily Budgets";
+        period2.textContent = "Weekly Budgets";
+        period3.textContent = "Monthly Budgets";
+        period4.textContent = "Yearly Budgets";
+    } else {   
+        // Set the default selected option
+        if (type == 'expenses' || type == 'earnings') {
+            period4.selected = true;
+        } else if (type == 'charts') {
+            period3.selected = true;
+        }
+
+        // Set the option text
+        period1.textContent = "Day View";
+        period2.textContent = "Week View";
+        period3.textContent = "Month View";
+        period4.textContent = "Year View";
     }
 
     const dateSelector = document.createElement("input"); // Placed up here so that the value can be changed by the periodSelector
@@ -240,7 +252,7 @@ function createFiltersSection(type) {
     const upcomingSelector = document.createElement("select"); // Placed up here so that the value can be changed by the dateSelector
 
     periodSelector.id = "period-selector";
-    periodSelector.title = "Select the duration of the time period you want to view";
+    periodSelector.title = "Select the type of time period you want to view";
     if (type == 'budgets') {
         periodSelector.append(period00, period0, period1, period2, period3, period4);
     } else {
@@ -254,7 +266,7 @@ function createFiltersSection(type) {
 
     dateSelector.id = "date-selector";
     dateSelector.type = "date";
-    dateSelector.title = "Select the start date for the time period you want to view"
+    dateSelector.title = "Select the start date for the period you want to view"
     dateSelector.value = configureFilterDate(new Date().toLocaleDateString("en-CA"), periodSelector.value);
     dateSelector.addEventListener("change", () => {
         if (periodSelector.value == 4 || periodSelector.value == -1 || periodSelector.value == -2) {
@@ -345,7 +357,7 @@ function configureFilterUpcoming(date, period, previous) {
 
     var endDate = calculateEndDate(startDate, period);
 
-    todayDate = new Date();
+    const todayDate = new Date();
     if (endDate < todayDate) { // The viewing period ends before today's date, so there are no upcoming things to show.
         return 0;
     } else if (startDate > todayDate) { // The viewing period starts after today's date, so there are no "past" items.
@@ -361,6 +373,22 @@ function configureFilterUpcoming(date, period, previous) {
  * startDate: Date Object
  * period: Int
 */
+function calculateStartDate(includeDate, period) {
+    var startDate;
+    
+    if (period == 0) {
+        startDate = includeDate;
+    } else if (period == 1 || period == 2) { // Weekly
+        startDate = new Date(includeDate.setDate(includeDate.getDate() - includeDate.getDay()));
+    } else if (period == 3) { // Monthly
+        startDate = new Date(includeDate.getFullYear(), includeDate.getMonth(), 1);
+    } else if (period == 4) { // Yearly
+        startDate = new Date(includeDate.getFullYear(), 0, 1);
+    }
+
+    return startDate;
+}
+
 function calculateEndDate(startDate, period) {
     var endDate;
     
@@ -380,7 +408,7 @@ function calculateEndDate(startDate, period) {
 
 function getIndexOfRanges(date, ranges) {
     for (var i = 0; i < ranges.length; i++) {
-        tempRange = ranges[i];
+        const tempRange = ranges[i];
 
         if (date >= tempRange.startDate && date <= tempRange.endDate) {
             return i;
@@ -441,7 +469,7 @@ function hidePlaceholders() {
 */
 function optionsToggle(button, optionsPanel, displayOption='block') {
     const panelHidden = optionsPanel.style.display == "none";
-    boundFunction = windowClick.bind(window, optionsPanel, button);
+    const boundFunction = windowClick.bind(window, optionsPanel, button);
 
     if (panelHidden) {
         optionsPanel.style.display = displayOption;
@@ -482,7 +510,7 @@ async function fillProfilePics(image=null) {
     var imageToUse = image;
 
     const pictures = document.getElementsByClassName('profile-icon');
-    for (pic of pictures) {
+    for (var pic of pictures) {
         if (imageToUse == null) {
             await fetch('/data/user').then(response => response.json()).then((responseData) => {
                 imageToUse = responseData.data.profileImage;
@@ -531,7 +559,7 @@ function updateURLRefresh(url) {
     if (oldArgs) {
         tempArray = oldArgs.split("&");
         for (var i = 0; i < tempArray.length; i++){
-            currentArg = tempArray[i].split('=')
+            const currentArg = tempArray[i].split('=')
 
             if (currentArg[0] == "refresh"){
                 newArgs += currentArg[0] + "=True&";
@@ -667,8 +695,8 @@ function carouselButtons(items, uniqueClass, containerId, maxShow=3, nextSlideGe
     var dotsToReturn = document.createElement("div");
     dotsToReturn.classList.add("carousel");
 
-    itemsLength = Object.keys(items).length
-    numSlides = Math.ceil(itemsLength / maxShow);
+    const itemsLength = Object.keys(items).length
+    const numSlides = Math.ceil(itemsLength / maxShow);
 
     for (var slideNum = 0; slideNum < numSlides; slideNum++) {
         const dot = document.createElement("div");
@@ -825,7 +853,7 @@ function generateCurveProgress(fillAmount, totalAmount, width='200', height='120
     if (fillAmount != 0) {
         const path2 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
         path2.setAttribute('d', 'M15,100 a60,60 0 0,1 170,0');
-        path2Length = path2.getTotalLength();
+        const path2Length = path2.getTotalLength();
         path2.setAttribute('stroke-dasharray', (fillAmount/totalAmount) * path2Length + ' ' + path2Length);
         path2.classList.add('inner-progress');
         path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
@@ -843,7 +871,7 @@ function generateCurveProgress(fillAmount, totalAmount, width='200', height='120
  * @param currency (string): A single character representing the user's currency symbol
  */
 function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=false) {
-    budgetContainer = document.createElement('div');
+    const budgetContainer = document.createElement('div');
     budgetContainer.id = 'budget-container';
 
     if (Object.keys(budgets).length == 0) {

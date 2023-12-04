@@ -53,11 +53,11 @@ function updateData(type, period, date, upcoming) {
     const currentYear = (new Date()).getFullYear();
     if ((type == 'expenses' || type == 'earnings') && period == 4 && date.split('-')[0] == String(currentYear)) {
         if (type == 'expenses') {
-            expenseContainer = document.getElementById("expense-container");
+            const expenseContainer = document.getElementById("expense-container");
             expenseContainer.innerHTML = "";
             expenseContainer.append(generateTableUI(0, userData.expenses.expenses, userData.currency, upcoming));
         } else if (type == 'earnings') {
-            earningContainer = document.getElementById("earning-container");
+            const earningContainer = document.getElementById("earning-container");
             earningContainer.innerHTML = "";
             earningContainer.append(generateTableUI(1, userData.earnings, userData.currency, upcoming));        
         }
@@ -67,7 +67,7 @@ function updateData(type, period, date, upcoming) {
 
         fetch('/data/all-current?period=' + period + '&target=' + date + '&chartData=True').then(response => response.json()).then((responseData) => {
             // Configure data for creating all charts
-            const chartData = allChartDataAsArray(responseData.budgets, responseData.expenses.expenses, responseData.earnings, period, date);
+            const chartData = allChartDataAsArray(responseData.expenses.expenses, responseData.earnings, period, date);
             const currentChart = generateVariousCharts(chartData, slideNum, 1);
 
             const chartContainer = document.getElementById("chart-container");
@@ -83,7 +83,7 @@ function updateData(type, period, date, upcoming) {
     } else {
         fetch('/data/' + type + '?period=' + period + '&target=' + date).then(response => response.json()).then((responseData) => {        
         if (type == 'budgets') {
-            budgetContainer = document.getElementById("budget-container");
+            var budgetContainer = document.getElementById("budget-container");
             budgetContainer.innerHTML = "";
             if (period == -1) {
                 budgetContainer.append(generateBudgetsUI(responseData.data, userData.currency, new Date(date), true));
@@ -91,11 +91,11 @@ function updateData(type, period, date, upcoming) {
                 budgetContainer.append(generateBudgetsUI(responseData.data, userData.currency, new Date(date), false));
             }
         } else if (type == 'expenses') {
-            expenseContainer = document.getElementById("expense-container");
+            const expenseContainer = document.getElementById("expense-container");
             expenseContainer.innerHTML = "";
             expenseContainer.append(generateTableUI(0, responseData.expenses, userData.currency, upcoming));
         } else if (type == 'earnings') {
-            earningContainer = document.getElementById("earning-container");
+            const earningContainer = document.getElementById("earning-container");
             earningContainer.innerHTML = "";
             earningContainer.append(generateTableUI(1, responseData, userData.currency, upcoming));        
         }
@@ -183,7 +183,7 @@ function loadBudgetTab(budgets=userData.budgets) {
     tabHead.append(header, addButton, filterContainer);
     tabHead.id = 'tab-head';
 
-    budgetContainer = generateBudgetsUI(budgets, userData.currency);
+    const budgetContainer = generateBudgetsUI(budgets, userData.currency);
 
     const budgetTab = document.createElement('div');
     budgetTab.id = 'budget-section';
@@ -241,7 +241,7 @@ function loadEarningTab(earnings=userData.earnings) {
     tabHead.append(header, addButton, filterContainer);
     tabHead.id = 'tab-head';
 
-    table = generateTableUI(1, earnings, userData.currency, 0);
+    const table = generateTableUI(1, earnings, userData.currency, 0);
 
     const earningContainer = document.createElement('div');
     earningContainer.id = 'earning-container';
@@ -377,7 +377,7 @@ function generateOverviewCharts() {
     overviewChartContainer.append(filterSection);
 
     // Configure data for creating all charts
-    const chartData = allChartDataAsArray(userData.budgets, userData.expenses.expenses, userData.earnings, 3);
+    const chartData = allChartDataAsArray(userData.expenses.expenses, userData.earnings, 3);
     const currentChart = generateVariousCharts(chartData, 0, 1);
 
     const chartContainer = document.createElement("div");
@@ -451,29 +451,35 @@ function generateOverviewBudgets(budgets) {
 
 function generateVariousCharts(items, slideNum, maxShow) {
     Chart.defaults.plugins.legend.display = false;
+    Chart.defaults.color = COLORS_GREY;
+    Chart.defaults.font.weight = 500;
+    Chart.defaults.font.size = 15;
+    Chart.defaults.plugins.tooltip.titleColor = COLORS_LIGHT;
 
     if (slideNum == 0) {
-        // First create a 'total' chart to show the expected budget amounts
-        const dataExpected = items[0].total;
-        const expectedSum = items[0].totalSum;
+        // Create pie chart to compare expenses by budget category
+        const data = items[0];
+        const totalSum = data.totalSum;
 
         var totalChart;
+        console.log(data.total)
 
-        if (expectedSum == 0) {
+        if (totalSum == 0) {
             totalChart = document.createElement("p");
             totalChart.textContent = "No Data";
             totalChart.classList.add("no-pie");
         } else {
             totalChart = document.createElement('canvas');
+            console.log(Object.entries(data.total).map(([key, value]) => value.total))
 
             new Chart(totalChart, {
                 type: "pie",
                 data: {
-                    labels: dataExpected.map(row => row.budgetName),
+                    labels: Object.keys(data.total),
                     datasets: [{
-                        label: "Budgeted Amount",
-                        data: dataExpected.map(row => row.amount),
-                        backgroundColor: dataExpected.map(row => row.color),
+                        label: "Amount",
+                        data: Object.entries(data.total).map(([key, value]) => value.total),
+                        backgroundColor: DATA_COLORS,
                         borderWidth: 1,
                         borderColor: COLORS_DARK
                     }],
@@ -483,14 +489,40 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     responsive: true,
                     plugins: {
                         tooltip: {
+                            labels: {
+                                boxHeight: 20,
+                                boxWidth: 20,
+                                usePointStyle: true,
+                                pointStyle: 'rectRounded'
+                            },
                             callbacks: {
                                 label: function(context) {
                                     let dataObject = context.dataset;
                                     return dataObject.label + ": " + userData.currency + formatNumber(dataObject.data[context.dataIndex]);
+                                },
+                                labelColor: function(context) {
+                                    return {
+                                        backgroundColor: context.element.options.backgroundColor,
+                                        borderColor: COLORS_DARK,
+                                        borderRadius: 5,
+                                    };
+                                },
+                                labelTextColor: function(context) {
+                                    return COLORS_LIGHT;
                                 }
                             }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'chartArea',
+                            labels: {
+                                boxHeight: 20,
+                                boxWidth: 20,
+                                usePointStyle: true,
+                                pointStyle: 'rectRounded'
+                            }
                         }
-                    }
+                    },
                 }
             });
         }
@@ -500,73 +532,19 @@ function generateVariousCharts(items, slideNum, maxShow) {
         halfchart1.append(totalChart);
 
         const totalHeader = document.createElement("p");
-        totalHeader.textContent = "Total Amount Budgeted";
+        totalHeader.textContent = data.totalTitle;
         const totalnumber = document.createElement("p");
         totalnumber.classList.add("chart-number");
-        totalnumber.textContent = userData.currency + formatNumber(expectedSum);
+        totalnumber.textContent = userData.currency + formatNumber(totalSum);
         const totalChartContainer = document.createElement("div");
         totalChartContainer.append(totalHeader, totalnumber, halfchart1);
         totalChartContainer.classList.add("half-size");
-
-        // Create an 'actual' chart to show the current amount spent of each budget
-        const dataActual = items[0].actual;
-        const actualSum = items[0].actualSum;
-
-        var actualChart;
-
-        if (expectedSum == 0) {
-            actualChart = document.createElement("p");
-            actualChart.textContent = "No Data";
-            actualChart.classList.add("no-pie");
-        } else {
-            actualChart = document.createElement('canvas');
-            new Chart(actualChart, {
-                type: "pie",
-                data: {
-                    labels: dataActual.map(row => row.budgetName),
-                    datasets: [{
-                        label: "Amount",
-                        data: dataActual.map(row => row.amount),
-                        backgroundColor: dataActual.map(row => row.color),
-                        borderWidth: 1,
-                        borderColor: COLORS_DARK
-                    }],
-                },
-                options: {                 
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let dataObject = context.dataset;
-                                    return dataObject.label + ": " + userData.currency + formatNumber(dataObject.data[context.dataIndex]);
-                                }
-                            }
-                        }
-                    }
-                }
-            }); 
-        }
-         
-        const halfchart2 = document.createElement("div");
-        halfchart2.classList.add("half-size-chart");
-        halfchart2.append(actualChart);
-
-        const actualHeader = document.createElement("p");
-        actualHeader.textContent = "Amount Used";
-        const actualnumber = document.createElement("p");
-        actualnumber.classList.add("chart-number");
-        actualnumber.textContent = userData.currency + formatNumber(actualSum);
-        const actualChartContainer = document.createElement("div");
-        actualChartContainer.append(actualHeader, actualnumber, halfchart2);
-        actualChartContainer.classList.add("half-size");
         
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
         returnDiv.classList.add('horizontal-container');
         returnDiv.dataset.slideNum = slideNum;
-        returnDiv.append(totalChartContainer, actualChartContainer);
+        returnDiv.append(totalChartContainer);
         return returnDiv;
     } else if (slideNum == 1) {
         const expenseChart = document.createElement('canvas');
@@ -618,11 +596,9 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             }
                         },
                         title: {
-                            color: COLORS_GREY,
                             font: {
-                                size: 15,
-                                weight: 300,
-                            },
+                                weight: 400,
+                            }, 
                             display: true,
                             text: "Amount ( " + userData.currency + " )"
                         }
@@ -644,6 +620,9 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             label: function(context) {
                                 let dataObject = context.dataset;
                                 return dataObject.label + ": " + userData.currency + formatNumber(dataObject.data[context.dataIndex]);
+                            },
+                            labelTextColor: function(context) {
+                                return COLORS_LIGHT;
                             }
                         }
                     }
@@ -714,10 +693,8 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             }
                         },
                         title: {
-                            color: COLORS_GREY,
                             font: {
-                                size: 15,
-                                weight: 300,
+                                weight: 400,
                             },                            
                             display: true,
                             text: "Amount ( " + userData.currency + " )"
@@ -740,6 +717,9 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             label: function(context) {
                                 let dataObject = context.dataset;
                                 return dataObject.label + ": " + userData.currency + formatNumber(dataObject.data[context.dataIndex]);
+                            },
+                            labelTextColor: function(context) {
+                                return COLORS_LIGHT;
                             }
                         }
                     }
@@ -750,7 +730,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
         fullchart2.classList.add("full-size-chart");
         fullchart2.append(earningChart);
 
-        earningHeader = document.createElement("p");
+        const earningHeader = document.createElement("p");
         earningHeader.textContent = data.description;
         const returnDiv = document.createElement('div');
         returnDiv.id = 'limited-charts';
@@ -846,7 +826,7 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
                 path2.setAttribute('y2', '10');
                 path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
         
-                path2Length = path2.getAttribute('x2') - path2.getAttribute('x1');
+                const path2Length = path2.getAttribute('x2') - path2.getAttribute('x1');
                 path2.setAttribute('stroke-dasharray', (fillAmount/budget.amount) * path2Length + ' ' + path2Length);
                 path2.classList.add('snip-inner-progress');
 
@@ -931,59 +911,81 @@ function generateOverviewEarnings() {
 ///////////////////////////////////
 // Chart Configurating Functions //
 ///////////////////////////////////
-function allChartDataAsArray(budgets, expenses, earnings, period=3, startDate=new Date()) {
+function allChartDataAsArray(expenses, earnings, period=3, startDate=new Date()) {
     var toReturn = [];
 
-    toReturn.push(totalBudgetsAndAmounts(budgets, period), expensesPerMonth(expenses, period, startDate), earningsPerMonth(earnings, period, startDate));
+    toReturn.push(totalBudgetsAndAmounts(expenses, period, startDate), expensesPerMonth(expenses, period, startDate), earningsPerMonth(earnings, period, startDate));
     return toReturn;
 }
 
-function totalBudgetsAndAmounts(budgetList, period) {
-    const keys = Object.keys(budgetList);
+function totalBudgetsAndAmounts(expenseList, period, startDate) {
+    // Process start date
+    if (!(startDate instanceof Date)) {
+        startDate = getUTCDateFromString(startDate);
+    }
+
+    startDate = calculateStartDate(startDate, period);
+    const endDate = calculateEndDate(startDate, period);
+
+    const keys = Object.keys(expenseList);
     const colors = DATA_COLORS.sort(() => Math.random() - 0.5);
-    const colorLength = colors.length;
 
-    const totalData = [];
+    const amountPerCategory = {};
     var totalSum = 0;
-    const actualData = [];
-    var actualSum = 0;
 
-    var index = 0;
+    console.log(expenseList)
+
     for (const key of keys) {
-        var current = budgetList[key];
+        const current = expenseList[key];
+        const amount = current.data.amount;
 
-        if (current.budgetPeriod != period) {
-            continue;
+        var currCategory = String(current.data.budgetCategory);
+        currCategory = currCategory.length > 15 ? currCategory.substring(0, 15) + '...' : currCategory;
+        
+        const passedDates = current.passedDates;
+        for (var date of passedDates) {
+            date = new Date(date)
+
+            if (date >= startDate && date <= endDate) {
+                if (!amountPerCategory.hasOwnProperty(currCategory)) {
+                    amountPerCategory[currCategory] = {
+                        "finalized": 0,
+                        "upcoming": 0,
+                        "total": 0
+                    }
+                }
+                amountPerCategory[currCategory]["finalized"] = amountPerCategory[currCategory]["finalized"] + amount;
+                amountPerCategory[currCategory]["total"] = amountPerCategory[currCategory]["total"] + amount;
+                totalSum += amount;
+            }
         }
 
-        var currName = current.name;
-        currName = currName.length > 15 ? currName.substring(0, 15) + '...' : currName;
+        const upcomingDates = current.upcomingDates;
+        for (var date of upcomingDates) {
+            date = new Date(date)
 
-        totalData.push({ budgetName: currName, amount: current.amount, color: colors[index % colorLength] });
-        totalSum += current.amount;
-
-        actualData.push({ budgetName: currName, amount: current.usedAmount, color: colors[index % colorLength] });
-        actualSum += current.usedAmount;
-
-        index++;
+            if (date >= startDate && date <= endDate) {
+                if (!amountPerCategory.hasOwnProperty(currCategory)) {
+                    amountPerCategory[currCategory] = {
+                        "finalized": 0,
+                        "upcoming": 0,
+                        "total": 0
+                    }
+                }
+                amountPerCategory[currCategory]["upcoming"] = amountPerCategory[currCategory]["upcoming"] + amount;
+                amountPerCategory[currCategory]["total"] = amountPerCategory[currCategory]["total"] + amount;
+                totalSum += amount;
+            }
+        }
     }
 
     // Round sums before adding the 'unused' amount
     totalSum = parseFloat(totalSum.toFixed(2));
-    actualSum = parseFloat(actualSum.toFixed(2));
 
-    if (actualSum < totalSum) {
-        actualData.push({ budgetName: "Unused", amount: parseFloat((totalSum - actualSum).toFixed(2)), color: COLORS_NAVY });
-    }
+    // Create the Titles to be used to describe the pie charts
+    const totalTitle = "Expenses per Budget Category";
 
-    totalData.sort((a, b) => {
-        return a.amount - b.amount;
-    })
-    actualData.sort((a, b) => {
-        return a.amount - b.amount;
-    })
-
-    return { "total": totalData, "actual": actualData, "totalSum": totalSum, "actualSum": actualSum };
+    return { "total": amountPerCategory, "totalSum": totalSum, "totalTitle": totalTitle};
 }
 
 function expensesPerMonth(expenseList, period=3, startDate) {
@@ -991,7 +993,7 @@ function expensesPerMonth(expenseList, period=3, startDate) {
     var data = null;
     var dataGrey = null;
 
-    var description = "Expenses Per " + DESCRIPTION_PERIODS[period];
+    var description = "Total Expenses Per " + DESCRIPTION_PERIODS[period];
     var descriptionDates = "";
     const formattingOptions = getShortDateFormattingOptions(true);
 
@@ -1000,16 +1002,16 @@ function expensesPerMonth(expenseList, period=3, startDate) {
         dataGrey = [...data.values];
 
         // Set the dates to be used as a chart title
-        firstDate = data.ranges[0].startDate;
-        lastDate = data.ranges[6].endDate;
+        const firstDate = data.ranges[0].startDate;
+        const lastDate = data.ranges[6].endDate;
         descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
     } else if (period == 1 || period == 2) { // Weekly or Biweekly
         data = getEmptyFourWeeksMap(startDate);
         dataGrey = [...data.values];
 
         // Set the dates to be used as a chart title
-        firstDate = data.ranges[0].startDate;
-        lastDate = data.ranges[3].endDate;
+        const firstDate = data.ranges[0].startDate;
+        const lastDate = data.ranges[3].endDate;
         descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
     } else if (period == 3) { // Monthly
         data = getEmptyMonthMap();
@@ -1024,8 +1026,8 @@ function expensesPerMonth(expenseList, period=3, startDate) {
         dataGrey = [...data.values];
 
         // Set the dates to be used as a chart title
-        firstDate = data.ranges[0].startDate;
-        lastDate = data.ranges[4].endDate;
+        const firstDate = data.ranges[0].startDate;
+        const lastDate = data.ranges[4].endDate;
         descriptionDates = firstDate.getFullYear() + " - " + lastDate.getFullYear();
     }
 
@@ -1079,16 +1081,16 @@ function earningsPerMonth(earningList, period=3, startDate) {
         dataGrey = [...data.values];
 
         // Set the dates to be used as a chart title
-        firstDate = data.ranges[0].startDate;
-        lastDate = data.ranges[6].endDate;
+        const firstDate = data.ranges[0].startDate;
+        const lastDate = data.ranges[6].endDate;
         descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
     } else if (period == 1 || period == 2) { // Weekly or Biweekly
         data = getEmptyFourWeeksMap(startDate);
         dataGrey = [...data.values];
 
         // Set the dates to be used as a chart title
-        firstDate = data.ranges[0].startDate;
-        lastDate = data.ranges[3].endDate;
+        const firstDate = data.ranges[0].startDate;
+        const lastDate = data.ranges[3].endDate;
         descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
     } else if (period == 3) { // Monthly
         data = getEmptyMonthMap();
@@ -1103,8 +1105,8 @@ function earningsPerMonth(earningList, period=3, startDate) {
         dataGrey = [...data.values];
 
         // Set the dates to be used as a chart title
-        firstDate = data.ranges[0].startDate;
-        lastDate = data.ranges[4].endDate;
+        const firstDate = data.ranges[0].startDate;
+        const lastDate = data.ranges[4].endDate;
         descriptionDates = firstDate.getFullYear() + " - " + lastDate.getFullYear();
     }
 

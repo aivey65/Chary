@@ -8,7 +8,7 @@ var independantChangeFlag = false;
 var formChangeFlag = false;
 
 // Meta Data
-currentStartDate = null;
+var currentStartDate = null;
 
 // Specific value arrays
 const colorList = ["#AE1326", "#34E1EB", "#33EB7C", "#E8EB34", "#EB8F34", "#C16BCF"];
@@ -65,7 +65,7 @@ function formLoad(startDate=null, configureDate=false) {
     if (currentStartDate != null && currentStartDate != "") {
         var UTCDate = currentStartDate.split('-');
         UTCDate[1] = UTCDate[1] - 1;
-        currentDate = new Date(...UTCDate);
+        const currentDate = new Date(...UTCDate);
 
         document.getElementById('current-date-view').innerText = "Currently viewing date: " + currentDate.toLocaleDateString('en-us', getDateFormattingOptions());
     }
@@ -89,12 +89,12 @@ function formLoad(startDate=null, configureDate=false) {
 }
 
 function updateAlertSection(message, add=false) {
-    alertSection = document.getElementById('alert-section');
+    const alertSection = document.getElementById('alert-section');
     if (!add) {
         alertSection.innerHTML = "";
     }
 
-    newAlert = document.createElement('h4');
+    const newAlert = document.createElement('h4');
     newAlert.textContent = message;
 
     alertSection.appendChild(newAlert);
@@ -167,11 +167,11 @@ function configureDateInput() {
 }
 
 function configureRecurOptions() {
-    recurTrue = document.getElementById('recurring-true');
-    recurFalse = document.getElementById('recurring-false');
+    const recurTrue = document.getElementById('recurring-true');
+    const recurFalse = document.getElementById('recurring-false');
 
-    items = document.getElementsByClassName('recurring-items');
-    options = document.getElementsByName('radio');
+    const items = document.getElementsByClassName('recurring-items');
+    const options = document.getElementsByName('radio');
 
     if (recurTrue.checked) {
         // Show options for recurring
@@ -218,21 +218,21 @@ function submitUserForm(create=false) {
     alertSection.innerHTML = "";
 
     if(!checkCurrency(currency)) {
-        message = "- The currency you entered is invalid. Make sure you are entering a recognized currency symbol.";
+        const message = "- The currency you entered is invalid. Make sure you are entering a recognized currency symbol.";
         updateAlertSection(message);
         window.scrollTo({top: 0, behavior: 'smooth'});
         return;
     }
 
     if(!checkUsername(username)) {
-        message = "- This username contains invalid characters. Use only letters and numbers.";
+        const message = "- This username contains invalid characters. Use only letters and numbers.";
         updateAlertSection(message);
         window.scrollTo({top: 0, behavior: 'smooth'});
         return;
     }
 
     if (!checkNumber(image) || !checkNumber(color)) {
-        message = "- Something went wrong when submitting this form. Please try again.";
+        const message = "- Something went wrong when submitting this form. Please try again.";
         updateAlertSection(message);
         window.scrollTo({top: 0, behavior: 'smooth'});
         return;
@@ -251,7 +251,7 @@ function submitUserForm(create=false) {
         })
     }).then((response) => response.json()).then((responseData) => {
         if (responseData.status != 201) {
-            message = "- Error: " + String(responseData.message) + ". Please try again later.";
+            const message = "- Error: " + String(responseData.message) + ". Please try again later.";
             updateAlertSection(message);
             window.scrollTo({top: 0, behavior: 'smooth'});
             return;
@@ -273,7 +273,7 @@ function submitBudgetForm(method=null) {
     alertSection.innerHTML = "";
 
     if(!checkAmount(budgetAmount.value)) {
-        message = "- The budget amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
+        const message = "- The budget amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
         updateAlertSection(message);
         window.scrollTo({top: 0, behavior: 'smooth'});
         return;
@@ -301,7 +301,7 @@ function submitBudgetForm(method=null) {
             })
         }).then((response) => response.json()).then((responseData) => {
             if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again.";
+                const message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return;
@@ -332,7 +332,7 @@ function submitBudgetForm(method=null) {
             })
         }).then((response) => response.json()).then((responseData) => {
             if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again.";
+                const message = "- Error: " + String(responseData.message) + ". Please revise your budget and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return;
@@ -355,7 +355,7 @@ function submitExpenseForm(method=null) {
     alertSection.innerHTML = "";
 
     if(!checkAmount(expenseAmount.value)) {
-        message = "- The expense amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
+        const message = "- The expense amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
         updateAlertSection(message);
         window.scrollTo({top: 0, behavior: 'smooth'});
         return;
@@ -384,7 +384,7 @@ function submitExpenseForm(method=null) {
             })
         }).then((response) => response.json()).then((responseData) => {
             if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again.";
+                const message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return;
@@ -416,7 +416,7 @@ function submitExpenseForm(method=null) {
             })
         }).then((response) => response.json()).then((responseData) => {
             if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again.";
+                const message = "- Error: " + String(responseData.message) + ". Please revise your expense and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return;
@@ -443,7 +443,7 @@ function submitEarningForm(method=null) {
     alertSection.innerHTML = "";
 
     if(!checkAmount(earningAmount.value)) {
-        message = "- The earning amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
+        const message = "- The earning amount you entered is invalid. Make sure you are only entering numbers and one decimal point (Example: 123.45).";
         updateAlertSection(message);
         window.scrollTo({top: 0, behavior: 'smooth'});
         return;
@@ -472,7 +472,7 @@ function submitEarningForm(method=null) {
             })
         }).then((response) => response.json()).then((responseData) => {
             if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + ". Please revise your earning and try again.";
+                const message = "- Error: " + String(responseData.message) + ". Please revise your earning and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return;
@@ -504,7 +504,7 @@ function submitEarningForm(method=null) {
             })
         }).then(response => response.json()).then((responseData) => {
             if (responseData.status != 201) {
-                message = "- Error: " + String(responseData.message) + " Please revise your earning and try again.";
+                const message = "- Error: " + String(responseData.message) + " Please revise your earning and try again.";
                 updateAlertSection(message);
                 window.scrollTo({top: 0, behavior: 'smooth'});
                 return;
@@ -744,7 +744,7 @@ function finalizeDelete(entityType, method=null) {
         })
     }).then(response => response.json()).then((responseData) => {
         if (responseData.status != 200) {
-            message = "- Error: " + String(responseData.message) + " Please try again later.";
+            const message = "- Error: " + String(responseData.message) + " Please try again later.";
             updateAlertSection(message);
             window.scrollTo(0, 0);
             return;

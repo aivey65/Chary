@@ -75,7 +75,7 @@ function loadBudget(id, startDate, endDate) {
         document.getElementById('expense-container').append(generateTableUI(0, expenses, responseData.currency, 0));
 
         // Check to see if an 'upcoming expenses' section is needed
-        upcomingTable = generateTableUI(0, expenses, responseData.currency, 1)
+        const upcomingTable = generateTableUI(0, expenses, responseData.currency, 1)
         if (!upcomingTable.classList.contains('empty-table')) {
             document.getElementById('upcoming-expenses').style.display = "grid";
 
@@ -98,7 +98,7 @@ function changeBudgetDates(id, startDate) {
     var fetchRequest = "";
     var fullExpenses = false;
     
-    tempStart = getUTCDateFromString(startDate);
+    const tempStart = getUTCDateFromString(startDate);
     if (startDate instanceof Date) {
         startDate.toLocaleDateString("en-us", { timeZone:'UTC' })
     }
@@ -142,7 +142,7 @@ function changeBudgetDates(id, startDate) {
         expensesSection.append(generateTableUI(0, expenses, responseData.currency, 0));
 
         // Check to see if an 'upcoming expenses' section is needed
-        upcomingTable = generateTableUI(0, expenses, responseData.currency, 1)
+        const upcomingTable = generateTableUI(0, expenses, responseData.currency, 1)
         if (!upcomingTable.classList.contains('empty-table')) {
             document.getElementById('upcoming-expenses').style.display = "grid";
 
@@ -167,7 +167,7 @@ function setViewDates(startDate, period) {
     } else if (period == 1 || period == 2) {
         viewEnd = calculateEndDate(startDate, 2);
 
-        tempStart = getUTCDateFromString(configureFilterDate(startDate, 2));
+        var tempStart = getUTCDateFromString(configureFilterDate(startDate, 2));
         viewStart = new Date(tempStart.setDate(tempStart.getDate() - 28))
     } else if (period == 3) {
         viewEnd = calculateEndDate(startDate, 4);
@@ -175,7 +175,7 @@ function setViewDates(startDate, period) {
     } else if (period == 4) {
         viewEnd = calculateEndDate(startDate, 4);
 
-        tempStart = getUTCDateFromString(configureFilterDate(startDate, 4));
+        var tempStart = getUTCDateFromString(configureFilterDate(startDate, 4));
         viewStart = new Date(tempStart.setFullYear(tempStart.getFullYear() - 4))
     }
 }
@@ -474,16 +474,16 @@ function budgetUsePerPeriod(period, startDate) {
         dataGrey = [...data.values];
 
         // Set the dates to be used as a chart title
-        firstDate = data.ranges[0].startDate;
-        lastDate = data.ranges[6].endDate;
+        const firstDate = data.ranges[0].startDate;
+        const lastDate = data.ranges[6].endDate;
         descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
     } else if (period == 1 || period == 2) { // Weekly or Biweekly
         data = getEmptyFourWeeksMap(startDate);
         dataGrey = [...data.values];
 
         // Set the dates to be used as a chart title
-        firstDate = data.ranges[0].startDate;
-        lastDate = data.ranges[3].endDate;
+        const firstDate = data.ranges[0].startDate;
+        const lastDate = data.ranges[3].endDate;
         descriptionDates = firstDate.toLocaleDateString("en-us", formattingOptions) + " - " + lastDate.toLocaleDateString("en-us", formattingOptions);
     } else if (period == 3) { // Monthly
         data = getEmptyMonthMap();
@@ -498,8 +498,8 @@ function budgetUsePerPeriod(period, startDate) {
         dataGrey = [...data.values];
 
         // Set the dates to be used as a chart title
-        firstDate = data.ranges[0].startDate;
-        lastDate = data.ranges[4].endDate;
+        const firstDate = data.ranges[0].startDate;
+        const lastDate = data.ranges[4].endDate;
         descriptionDates = firstDate.getFullYear() + " - " + lastDate.getFullYear();
     }
 

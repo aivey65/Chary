@@ -19,9 +19,9 @@ function configureHeight() {
 }
 
 function adjustHeroHeight() {
-    vh = window.innerHeight;
-    hero = document.getElementById('landing-hero');
-    header = document.getElementById('header-container');
+    const vh = window.innerHeight;
+    const hero = document.getElementById('landing-hero');
+    const header = document.getElementById('header-container');
 
     hero.style.height = vh - header.offsetHeight + 'px'
 }
