@@ -525,6 +525,14 @@ table {
     border: solid 2px var(--Grey);
 }
 
+.view-date-container {
+    display: flex;
+    flex-direction: row;
+    gap: var(--smallPad);
+    justify-content: center;
+    align-items: center;
+}
+
 /*
 *** Annimations ***
 */ 

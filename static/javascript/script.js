@@ -22,7 +22,7 @@ function getShortDateFormattingOptions(year=false) {
 
 function getUTCDateFromString(date) {
     if (date instanceof Date) {
-        return date;
+        return new Date(date);
     }
     
     var UTCDate = String(date).split('-');
@@ -173,14 +173,19 @@ function dashboardAction() {
     closeMenu()
 }
 
-function formatNumber(number) {
+function formatNumber(number, showDecimal=true) {
     if (number < 1000) {
         const numberFormatter = Intl.NumberFormat("en", { maximumFractionDigits: 2, notation: "compact", minimumFractionDigits: 2 });
         var formattedNumber = numberFormatter.format(number);
         return formattedNumber.replace(/\.00$/, '');
     } else {
-        const numberFormatter = Intl.NumberFormat("en", { maximumFractionDigits: 2, notation: "compact" });
+        if (showDecimal) {
+            const numberFormatter = Intl.NumberFormat("en", { maximumFractionDigits: 2, notation: "compact" });
         return numberFormatter.format(number);
+        } else {
+            const numberFormatter = Intl.NumberFormat("en", { maximumFractionDigits: 0, notation: "compact" });
+            return numberFormatter.format(number);
+        }
     }
     
 }
@@ -308,6 +313,23 @@ function createFiltersSection(type) {
     return form;
 }
 
+function createViewingDates(startDate, endDate) {
+    const dateContainer = document.createElement('div');
+    dateContainer.classList.add('view-date-container');
+
+    const start = document.createElement("p");
+    start.textContent = startDate.toLocaleDateString('en-ca');
+
+    const middle = document.createElement("p");
+    middle.textContent = "to";
+
+    const end = document.createElement("p");
+    end.textContent = end.toLocaleDateString('en-ca');
+
+    dateContainer.append(start, middle, end);
+    return dateContainer;
+}
+
 function configureFilterDate(date, period, changePeriod=false) {
     // When the period is 'All Active', but the date was changed first, change the period to 'monthly' as a placeholder.
     if (changePeriod) {
@@ -374,33 +396,28 @@ function configureFilterUpcoming(date, period, previous) {
  * period: Int
 */
 function calculateStartDate(includeDate, period) {
-    var startDate;
+    var startDate = new Date(includeDate);
     
-    if (period == 0) {
-        startDate = includeDate;
-    } else if (period == 1 || period == 2) { // Weekly
-        startDate = new Date(includeDate.setDate(includeDate.getDate() - includeDate.getDay()));
+    if (period == 1 || period == 2) { // Weekly
+        startDate = new Date(startDate.setDate(startDate.getDate() - startDate.getDay()));
     } else if (period == 3) { // Monthly
-        startDate = new Date(includeDate.getFullYear(), includeDate.getMonth(), 1);
+        startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
     } else if (period == 4) { // Yearly
-        startDate = new Date(includeDate.getFullYear(), 0, 1);
+        startDate = new Date(startDate.getFullYear(), 0, 1);
     }
 
     return startDate;
 }
 
 function calculateEndDate(startDate, period) {
-    var endDate;
+    var endDate = new Date(startDate);
     
-    if (period == 0) {
-        endDate = startDate;
-    } else if (period == 1 || period == 2) { // Weekly
-        endDate = startDate;
-        endDate = new Date(endDate.setDate(startDate.getDate() + (6 - startDate.getDay())));
+    if (period == 1 || period == 2) { // Weekly
+        endDate = new Date(endDate.setDate(endDate.getDate() + (6 - endDate.getDay())));
     } else if (period == 3) { // Monthly
-        endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+        endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0);
     } else if (period == 4) {
-        endDate = new Date(startDate.getFullYear(), 11, 31);
+        endDate = new Date(endDate.getFullYear(), 11, 31);
     }
 
     return endDate;
@@ -634,7 +651,7 @@ window.addEventListener('scroll', () => {
     // Hide/show nav bar when scrolling
     const logo = document.getElementById('toggle-icon');
     if(window.getComputedStyle(logo).getPropertyValue("display") != 'none') {
-        if (prevScrollpos > currentScrollPos) {
+        if (prevScrollpos > currentScrollPos || currentScrollPos == 0) {
             if (document.getElementById('dashboard-left')) {
                 document.getElementById("dashboard-left").style.transform = "translateY(0px)";
             }

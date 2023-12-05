@@ -65,7 +65,7 @@ function updateData(type, period, date, upcoming) {
         // Save the slide number so that the current chart updates and stays in view
         const slideNum = document.getElementById("limited-charts").dataset.slideNum;
 
-        fetch('/data/all-current?period=' + period + '&target=' + date + '&chartData=True').then(response => response.json()).then((responseData) => {
+        fetch('/data/all-current?period=' + period + '&target=' + date + '&chartData=True').then(response => response.json()).then((responseData) => {            
             // Configure data for creating all charts
             const chartData = allChartDataAsArray(responseData.expenses.expenses, responseData.earnings, period, date);
             const currentChart = generateVariousCharts(chartData, slideNum, 1);
@@ -116,9 +116,12 @@ function loadOverviewTab() {
     // Scroll to top once the screen has cleared.
     window.scrollTo(0, 0);
 
+    const statPanel = generateEmptyStats();
+    statPanel.classList.add('module');
+    overviewTab.append(statPanel);
     const chartPanel = generateOverviewCharts();
     chartPanel.classList.add('module');
-    overviewTab.append(chartPanel);
+    overviewTab.prepend(chartPanel);
 
     const budgetPanel = generateOverviewBudgets(userData.budgets)
     budgetPanel.classList.add('module');
@@ -394,6 +397,96 @@ function generateOverviewCharts() {
     return overviewChartContainer;
 }
 
+/**
+ * This function should generate all the elements for the stat section on the overview:
+ *  -   2 headers for total expenses and total earnings
+ *  -   Total expense amount for that defined period
+ *  -   Total earning amount for that defined period
+ *  -   A smaller breakdown of both to show what is finalized and what is upcoming
+ */
+function generateEmptyStats() {
+    const overviewStatContainer = document.createElement('div');
+    overviewStatContainer.id = 'stat-snip-container';
+    overviewStatContainer.classList.add('snip-containers');
+
+    // Viewing dates
+    const start = document.createElement("p");
+    start.id = "stat-start-date";
+    const middle = document.createElement("p");
+    middle.textContent = "to";
+    const end = document.createElement("p");
+    end.id = "stat-end-date";
+    
+    const dateContainer = document.createElement('div');
+    dateContainer.classList.add('view-date-container');
+    dateContainer.append(start, middle, end);
+
+    // Create Expense Section
+    const expenseTotalHeader = document.createElement('p');
+    expenseTotalHeader.textContent = "Total Expenses";
+
+    const expenseTotalText = document.createElement('p');
+    expenseTotalText.id = "total-expense-stat";
+    expenseTotalText.classList.add('big-stat');
+
+    const expenseTotal = document.createElement('div');
+    expenseTotal.append(expenseTotalHeader, expenseTotalText);
+
+    const expenseFinalHeader = document.createElement('p');
+    expenseFinalHeader.classList.add("breakdown-headers");
+    expenseFinalHeader.textContent = "Finalized";
+    const expenseFinalText = document.createElement('p');
+    expenseFinalText.classList.add("breakdown-text");
+    expenseFinalText.id = "final-expense-stat";
+
+    const expenseFinal = document.createElement('div');
+    expenseFinal.append(expenseFinalHeader, expenseFinalText);
+
+    const expenseUpcomingHeader = document.createElement('p');
+    expenseUpcomingHeader.classList.add("breakdown-headers");
+    expenseUpcomingHeader.textContent = "Upcoming";
+    const expenseUpcomingText = document.createElement('p');
+    expenseUpcomingText.classList.add("breakdown-text");
+    expenseUpcomingText.id = "upcoming-expense-stat";
+
+    const expenseUpcoming = document.createElement('div');
+    expenseUpcoming.append(expenseUpcomingHeader, expenseUpcomingText);
+
+    // Create Earning Section
+    const earningTotalHeader = document.createElement('p');
+    earningTotalHeader.textContent = "Total Earnings";
+
+    const earningTotalText = document.createElement('p');
+    earningTotalText.id = "total-earning-stat";
+    earningTotalText.classList.add('big-stat');
+
+    const earningTotal = document.createElement('div');
+    earningTotal.append(earningTotalHeader, earningTotalText);
+
+    const earningFinalHeader = document.createElement('p');
+    earningFinalHeader.classList.add("breakdown-headers");
+    earningFinalHeader.textContent = "Finalized";
+    const earningFinalText = document.createElement('p');
+    earningFinalText.classList.add("breakdown-text");
+    earningFinalText.id = "final-earning-stat";
+
+    const earningFinal = document.createElement('div');
+    earningFinal.append(earningFinalHeader, earningFinalText);
+
+    const earningUpcomingHeader = document.createElement('p');
+    earningUpcomingHeader.classList.add("breakdown-headers");
+    earningUpcomingHeader.textContent = "Upcoming";
+    const earningUpcomingText = document.createElement('p');
+    earningUpcomingText.classList.add("breakdown-text");
+    earningUpcomingText.id = "upcoming-earning-stat";
+
+    const earningUpcoming = document.createElement('div');
+    earningUpcoming.append(earningUpcomingHeader, earningUpcomingText);
+
+    overviewStatContainer.append(dateContainer, expenseTotal, expenseFinal, expenseUpcoming, earningTotal, earningFinal, earningUpcoming);
+    return overviewStatContainer;
+}
+
 function generateOverviewProfile() {
     const overviewProfileContainer = document.createElement('div');
     overviewProfileContainer.id = 'profile-snip-container';
@@ -421,7 +514,7 @@ function generateOverviewBudgets(budgets) {
     overviewBudgetContainer.classList.add('snip-containers');
 
     const overviewHeader = document.createElement('h3');
-    overviewHeader.textContent = "Budget Information";
+    overviewHeader.textContent = "Active Budgets";
     overviewHeader.classList.add('module-header');
     overviewHeader.addEventListener('click', () => {
         loadBudgetTab();
@@ -449,12 +542,24 @@ function generateOverviewBudgets(budgets) {
     return overviewBudgetContainer;
 }
 
+window.addEventListener('resize', setChartLegendPosition);
+
+function setChartLegendPosition() {
+    const mediaQ = window.matchMedia("(min-width:768px)");
+    if (mediaQ.matches) {
+        Chart.defaults.plugins.legend.position = 'chartArea';
+    } else {
+        Chart.defaults.plugins.legend.position = 'top';
+    }
+}
+
 function generateVariousCharts(items, slideNum, maxShow) {
     Chart.defaults.plugins.legend.display = false;
     Chart.defaults.color = COLORS_GREY;
     Chart.defaults.font.weight = 500;
     Chart.defaults.font.size = 15;
     Chart.defaults.plugins.tooltip.titleColor = COLORS_LIGHT;
+    setChartLegendPosition();
 
     if (slideNum == 0) {
         // Create pie chart to compare expenses by budget category
@@ -462,7 +567,6 @@ function generateVariousCharts(items, slideNum, maxShow) {
         const totalSum = data.totalSum;
 
         var totalChart;
-        console.log(data.total)
 
         if (totalSum == 0) {
             totalChart = document.createElement("p");
@@ -470,19 +574,26 @@ function generateVariousCharts(items, slideNum, maxShow) {
             totalChart.classList.add("no-pie");
         } else {
             totalChart = document.createElement('canvas');
-            console.log(Object.entries(data.total).map(([key, value]) => value.total))
 
             new Chart(totalChart, {
                 type: "pie",
                 data: {
                     labels: Object.keys(data.total),
                     datasets: [{
-                        label: "Amount",
                         data: Object.entries(data.total).map(([key, value]) => value.total),
                         backgroundColor: DATA_COLORS,
                         borderWidth: 1,
                         borderColor: COLORS_DARK
-                    }],
+                    },
+                    {
+                        data: Object.entries(data.total).map(([key, value]) => value.finalized),
+                        hidden: true
+                    },
+                    {
+                        data: Object.entries(data.total).map(([key, value]) => value.upcoming),
+                        hidden: true
+                    }
+                ],
                 },
                 options: {
                     maintainAspectRatio: false,
@@ -498,7 +609,12 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             callbacks: {
                                 label: function(context) {
                                     let dataObject = context.dataset;
-                                    return dataObject.label + ": " + userData.currency + formatNumber(dataObject.data[context.dataIndex]);
+                                    return [
+                                        "Total: " + userData.currency + formatNumber(dataObject.data[context.dataIndex]),
+                                        "━━━━━━━━━━",
+                                        "Finalized: " + userData.currency + formatNumber(context.chart.data.datasets[1].data[context.dataIndex]),
+                                        "Upcoming: " + userData.currency + formatNumber(context.chart.data.datasets[2].data[context.dataIndex])
+                                    ];
                                 },
                                 labelColor: function(context) {
                                     return {
@@ -514,7 +630,6 @@ function generateVariousCharts(items, slideNum, maxShow) {
                         },
                         legend: {
                             display: true,
-                            position: 'chartArea',
                             labels: {
                                 boxHeight: 20,
                                 boxWidth: 20,
@@ -576,7 +691,8 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             color: COLORS_NAVY
                         },
                         ticks: {
-                            color: COLORS_GREY
+                            color: COLORS_GREY,
+                            autoSkip: false
                         }
                     },
                     y: {
@@ -673,7 +789,8 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             color: COLORS_NAVY
                         },
                         ticks: {
-                            color: COLORS_GREY
+                            color: COLORS_GREY,
+                            autoSkip: false
                         }
                     },
                     y: {
@@ -776,6 +893,7 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
             })
 
             var recur_img = document.createElement('img');
+            recur_img.classList.add('recur-img');
             if (budget.recurring) {
                 recur_img.src = 'static/images/recurIcon.svg';
                 recur_img.classList.add('recur-img');
@@ -785,7 +903,7 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
 
             const budget_used = document.createElement('p');
             budget_used.classList.add('snip-budget-used');
-            budget_used.textContent = (budget.usedAmount / budget.amount * 100).toFixed(1) + "% used";
+            budget_used.textContent = formatNumber((budget.usedAmount / budget.amount * 100), false) + "% used";
 
             const budget_more = document.createElement('img');
             budget_more.src = "static/images/MoreButtonsmall.svg";
@@ -910,29 +1028,53 @@ function generateOverviewEarnings() {
 ///////////////////////////////////
 // Chart Configurating Functions //
 ///////////////////////////////////
-function allChartDataAsArray(expenses, earnings, period=3, startDate=new Date()) {
-    var toReturn = [];
+function updateStatData(expenseSums, earningSums, startDate, endDate) {
+    // Sums for expenses
+    document.getElementById('total-expense-stat').textContent = expenseSums.totalSum;
+    document.getElementById('final-expense-stat').textContent = expenseSums.totalFinalized;
+    document.getElementById('upcoming-expense-stat').textContent = expenseSums.totalUpcoming;
 
-    toReturn.push(totalBudgetsAndAmounts(expenses, period, startDate), expensesPerMonth(expenses, period, startDate), earningsPerMonth(earnings, period, startDate));
+    // Sums for earnings
+    document.getElementById('total-earning-stat').textContent = earningSums.totalSum;
+    document.getElementById('final-earning-stat').textContent = earningSums.totalFinalized;
+    document.getElementById('upcoming-earning-stat').textContent = earningSums.totalUpcoming;
+
+    // Update dates in the viewing-dates section
+    const formattingOptions = getShortDateFormattingOptions();
+    document.getElementById('stat-start-date').textContent = startDate.toLocaleDateString('en-ca', formattingOptions);
+    document.getElementById('stat-end-date').textContent = endDate.toLocaleDateString('en-ca', formattingOptions);
+}
+
+function allChartDataAsArray(expenses, earnings, period=3, startDate=new Date()) {
+    // Process new start date
+    var temp = startDate;
+    if (!(temp instanceof Date)) {
+        temp = getUTCDateFromString(temp);
+    }
+    const newStartDate = calculateStartDate(temp, period);
+    const newEndDate = calculateEndDate(temp, period);
+
+    // Get the data for the charts and stats sections
+    const totalAmounts = totalBudgetsAndAmounts(expenses, period, newStartDate, newEndDate);
+    const expensesData = expensesPerMonth(expenses, period, startDate);
+    const earningsData = earningsPerMonth(earnings, period, startDate, newStartDate, newEndDate);
+
+    // Update the stats section on the overview with the extra data gained from the above functions
+    updateStatData(totalAmounts.Sums, earningsData.Sums, newStartDate, newEndDate);
+
+    var toReturn = [];
+    toReturn.push(totalAmounts.Data, expensesData, earningsData.Data);
     return toReturn;
 }
 
-function totalBudgetsAndAmounts(expenseList, period, startDate) {
-    // Process start date
-    if (!(startDate instanceof Date)) {
-        startDate = getUTCDateFromString(startDate);
-    }
-
-    startDate = calculateStartDate(startDate, period);
-    const endDate = calculateEndDate(startDate, period);
-
+function totalBudgetsAndAmounts(expenseList, period, newStartDate, newEndDate) {
     const keys = Object.keys(expenseList);
     const colors = DATA_COLORS.sort(() => Math.random() - 0.5);
 
     const amountPerCategory = {};
     var totalSum = 0;
-
-    console.log(expenseList)
+    var totalFinalized = 0;
+    var totalUpcoming = 0;
 
     for (const key of keys) {
         const current = expenseList[key];
@@ -945,7 +1087,7 @@ function totalBudgetsAndAmounts(expenseList, period, startDate) {
         for (var date of passedDates) {
             date = new Date(date)
 
-            if (date >= startDate && date <= endDate) {
+            if (date >= newStartDate && date <= newEndDate) {
                 if (!amountPerCategory.hasOwnProperty(currCategory)) {
                     amountPerCategory[currCategory] = {
                         "finalized": 0,
@@ -956,6 +1098,7 @@ function totalBudgetsAndAmounts(expenseList, period, startDate) {
                 amountPerCategory[currCategory]["finalized"] = amountPerCategory[currCategory]["finalized"] + amount;
                 amountPerCategory[currCategory]["total"] = amountPerCategory[currCategory]["total"] + amount;
                 totalSum += amount;
+                totalFinalized += amount;
             }
         }
 
@@ -963,7 +1106,7 @@ function totalBudgetsAndAmounts(expenseList, period, startDate) {
         for (var date of upcomingDates) {
             date = new Date(date)
 
-            if (date >= startDate && date <= endDate) {
+            if (date >= newStartDate && date <= newEndDate) {
                 if (!amountPerCategory.hasOwnProperty(currCategory)) {
                     amountPerCategory[currCategory] = {
                         "finalized": 0,
@@ -974,6 +1117,7 @@ function totalBudgetsAndAmounts(expenseList, period, startDate) {
                 amountPerCategory[currCategory]["upcoming"] = amountPerCategory[currCategory]["upcoming"] + amount;
                 amountPerCategory[currCategory]["total"] = amountPerCategory[currCategory]["total"] + amount;
                 totalSum += amount;
+                totalUpcoming += amount;
             }
         }
     }
@@ -984,7 +1128,18 @@ function totalBudgetsAndAmounts(expenseList, period, startDate) {
     // Create the Titles to be used to describe the pie charts
     const totalTitle = "Expenses per Budget Category";
 
-    return { "total": amountPerCategory, "totalSum": totalSum, "totalTitle": totalTitle};
+    return { 
+        "Sums": {
+            "totalSum": totalSum,
+            "totalFinalized": totalFinalized,
+            "totalUpcoming": totalUpcoming
+        },
+        "Data": {
+            "total": amountPerCategory, 
+            "totalSum": totalSum, 
+            "totalTitle": totalTitle
+        }
+    };
 }
 
 function expensesPerMonth(expenseList, period=3, startDate) {
@@ -1066,7 +1221,7 @@ function expensesPerMonth(expenseList, period=3, startDate) {
     return { "data": data.values, "dataGrey": dataGrey, "labels": data.labels, "description": description, "descriptionDates": descriptionDates };
 }
 
-function earningsPerMonth(earningList, period=3, startDate) {
+function earningsPerMonth(earningList, period=3, startDate, newStartDate, newEndDate) {
     const keys = Object.keys(earningList);
     var data = null;
     var dataGrey = null;
@@ -1109,6 +1264,10 @@ function earningsPerMonth(earningList, period=3, startDate) {
         descriptionDates = firstDate.getFullYear() + " - " + lastDate.getFullYear();
     }
 
+    var totalSum = 0;
+    var totalFinalized = 0;
+    var totalUpcoming = 0;
+
     for (const key of keys) {
         const amount = earningList[key].data.amount;
         const dates = earningList[key].allDates;
@@ -1121,9 +1280,17 @@ function earningsPerMonth(earningList, period=3, startDate) {
             if (period == 3) {
                 const curMonth = curDate.getMonth();
 
-                if (curDate <= todayDate) {
+                if (curDate <= todayDate) { // Finalized
+                    if (date >= newStartDate && date <= newEndDate) {
+                        totalFinalized += amount;
+                        totalSum += amount;
+                    }
                     data.values[curMonth] = parseFloat((data.values[curMonth] + amount).toFixed(2));
-                } else {
+                } else { // Upcoming
+                    if (date >= newStartDate && date <= newEndDate) {
+                        totalUpcoming += amount;
+                        totalSum += amount;
+                    }
                     dataGrey[curMonth] = parseFloat((dataGrey[curMonth] + amount).toFixed(2));
                 } 
             } else {
@@ -1134,13 +1301,34 @@ function earningsPerMonth(earningList, period=3, startDate) {
                 }
 
                 if (curDate <= todayDate) {
+                    if (date >= newStartDate && date <= newEndDate) {
+                        totalFinalized += amount;
+                        totalSum += amount;
+                    }
                     data.values[index] = parseFloat((data.values[index] + amount).toFixed(2));
                 } else {
+                    if (date >= newStartDate && date <= newEndDate) {
+                        totalUpcoming += amount;
+                        totalSum += amount;
+                    }
                     dataGrey[index] = parseFloat((dataGrey[index] + amount).toFixed(2));
                 }
             }
         }
     }
 
-    return { "data": data.values, "dataGrey": dataGrey, "labels": data.labels, "description": description, "descriptionDates": descriptionDates };
+    return { 
+        "Sums": {
+            "totalSum": totalSum,
+            "totalFinalized": totalFinalized,
+            "totalUpcoming": totalUpcoming
+        },
+        "Data": {
+            "data": data.values, 
+            "dataGrey": dataGrey, 
+            "labels": data.labels, 
+            "description": description, 
+            "descriptionDates": descriptionDates 
+        }
+    };
 }

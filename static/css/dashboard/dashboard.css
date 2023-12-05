@@ -187,6 +187,12 @@ h4 {
     margin-top: var(--medPad) !important;
 }
 
+#stat-snip-container {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
 #profile-snip-container {
     cursor: pointer;
     display: grid;
