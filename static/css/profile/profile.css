@@ -131,6 +131,7 @@
     grid-column: 2;
     justify-self: end;
     align-self: end;
+    cursor: pointer;
 }
 
 #delete-button {
