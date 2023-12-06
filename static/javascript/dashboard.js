@@ -127,10 +127,6 @@ function loadOverviewTab() {
     budgetPanel.classList.add('module');
     overviewTab.append(budgetPanel);
 
-    const profilePanel = generateOverviewProfile();
-    profilePanel.classList.add('module');
-    overviewTab.append(profilePanel);
-
     const earningPanel = generateOverviewEarnings();
     earningPanel.classList.add('module');
     overviewTab.append(earningPanel);
@@ -430,6 +426,7 @@ function generateEmptyStats() {
     expenseTotalText.classList.add('big-stat');
 
     const expenseTotal = document.createElement('div');
+    expenseTotal.id = "total-expense";
     expenseTotal.append(expenseTotalHeader, expenseTotalText);
 
     const expenseFinalHeader = document.createElement('p');
@@ -440,6 +437,7 @@ function generateEmptyStats() {
     expenseFinalText.id = "final-expense-stat";
 
     const expenseFinal = document.createElement('div');
+    expenseFinal.id = "final-expense";
     expenseFinal.append(expenseFinalHeader, expenseFinalText);
 
     const expenseUpcomingHeader = document.createElement('p');
@@ -450,6 +448,7 @@ function generateEmptyStats() {
     expenseUpcomingText.id = "upcoming-expense-stat";
 
     const expenseUpcoming = document.createElement('div');
+    expenseUpcoming.id = "upcoming-expense";
     expenseUpcoming.append(expenseUpcomingHeader, expenseUpcomingText);
 
     // Create Earning Section
@@ -461,6 +460,7 @@ function generateEmptyStats() {
     earningTotalText.classList.add('big-stat');
 
     const earningTotal = document.createElement('div');
+    earningTotal.id = "total-earning";
     earningTotal.append(earningTotalHeader, earningTotalText);
 
     const earningFinalHeader = document.createElement('p');
@@ -471,6 +471,7 @@ function generateEmptyStats() {
     earningFinalText.id = "final-earning-stat";
 
     const earningFinal = document.createElement('div');
+    earningFinal.id = "final-earning";
     earningFinal.append(earningFinalHeader, earningFinalText);
 
     const earningUpcomingHeader = document.createElement('p');
@@ -481,9 +482,17 @@ function generateEmptyStats() {
     earningUpcomingText.id = "upcoming-earning-stat";
 
     const earningUpcoming = document.createElement('div');
+    earningUpcoming.id = "upcoming-earning";
     earningUpcoming.append(earningUpcomingHeader, earningUpcomingText);
 
-    overviewStatContainer.append(dateContainer, expenseTotal, expenseFinal, expenseUpcoming, earningTotal, earningFinal, earningUpcoming);
+    // Break divs for styling
+    const expenseBreak = document.createElement('div');
+    expenseBreak.classList.add('stat-break');
+
+    const earningBreak = document.createElement('div');
+    earningBreak.classList.add('stat-break');
+
+    overviewStatContainer.append(dateContainer, expenseTotal, expenseFinal, expenseBreak, expenseUpcoming, earningTotal, earningFinal, earningBreak,  earningUpcoming);
     return overviewStatContainer;
 }
 
@@ -556,7 +565,7 @@ function setChartLegendPosition() {
 function generateVariousCharts(items, slideNum, maxShow) {
     Chart.defaults.plugins.legend.display = false;
     Chart.defaults.color = COLORS_GREY;
-    Chart.defaults.font.weight = 500;
+    Chart.defaults.font.weight = 400;
     Chart.defaults.font.size = 15;
     Chart.defaults.plugins.tooltip.titleColor = COLORS_LIGHT;
     setChartLegendPosition();
@@ -600,18 +609,20 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     responsive: true,
                     plugins: {
                         tooltip: {
+                            boxPadding: 10,
+                            border: 0,
                             labels: {
                                 boxHeight: 20,
                                 boxWidth: 20,
                                 usePointStyle: true,
-                                pointStyle: 'rectRounded'
+                                pointStyle: 'rectRounded',
                             },
                             callbacks: {
                                 label: function(context) {
                                     let dataObject = context.dataset;
                                     return [
                                         "Total: " + userData.currency + formatNumber(dataObject.data[context.dataIndex]),
-                                        "━━━━━━━━━━",
+                                        "━━━━━━━━━",
                                         "Finalized: " + userData.currency + formatNumber(context.chart.data.datasets[1].data[context.dataIndex]),
                                         "Upcoming: " + userData.currency + formatNumber(context.chart.data.datasets[2].data[context.dataIndex])
                                     ];
@@ -1030,17 +1041,28 @@ function generateOverviewEarnings() {
 ///////////////////////////////////
 function updateStatData(expenseSums, earningSums, startDate, endDate) {
     // Sums for expenses
-    document.getElementById('total-expense-stat').textContent = expenseSums.totalSum;
-    document.getElementById('final-expense-stat').textContent = expenseSums.totalFinalized;
-    document.getElementById('upcoming-expense-stat').textContent = expenseSums.totalUpcoming;
+    const bigExpense = document.getElementById('total-expense-stat')
+    bigExpense.textContent = userData.currency + formatNumber(expenseSums.totalSum);
+    document.getElementById('final-expense-stat').textContent = userData.currency + formatNumber(expenseSums.totalFinalized);
+    document.getElementById('upcoming-expense-stat').textContent = userData.currency + formatNumber(expenseSums.totalUpcoming);
 
     // Sums for earnings
-    document.getElementById('total-earning-stat').textContent = earningSums.totalSum;
-    document.getElementById('final-earning-stat').textContent = earningSums.totalFinalized;
-    document.getElementById('upcoming-earning-stat').textContent = earningSums.totalUpcoming;
+    const bigEarning = document.getElementById('total-earning-stat')
+    bigEarning.textContent = userData.currency + formatNumber(earningSums.totalSum);
+    document.getElementById('final-earning-stat').textContent = userData.currency + formatNumber(earningSums.totalFinalized);
+    document.getElementById('upcoming-earning-stat').textContent = userData.currency + formatNumber(earningSums.totalUpcoming);
+
+    // Style the big numbers
+    if (userData.profileColor == COLORS_RED) {
+        bigExpense.style.color = COLORS_PINK;
+        bigEarning.style.color = COLORS_PINK;
+    } else {
+        bigExpense.style.color = userData.profileColor;
+        bigEarning.style.color = userData.profileColor;
+    }
 
     // Update dates in the viewing-dates section
-    const formattingOptions = getShortDateFormattingOptions();
+    const formattingOptions = getShortDateFormattingOptions(true);
     document.getElementById('stat-start-date').textContent = startDate.toLocaleDateString('en-ca', formattingOptions);
     document.getElementById('stat-end-date').textContent = endDate.toLocaleDateString('en-ca', formattingOptions);
 }

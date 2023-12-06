@@ -533,6 +533,11 @@ table {
     align-items: center;
 }
 
+.big-stat {
+    font-size: 5rem;
+    font-weight: 200;
+}
+
 /*
 *** Annimations ***
 */ 

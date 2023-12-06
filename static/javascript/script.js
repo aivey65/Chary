@@ -478,7 +478,7 @@ function hidePlaceholders() {
     }
 }
 
-/* Creates and enables a toggling eventlistener for the entire window when opening the an options panel.
+/* Creates and enables a toggling eventlistener for the entire window when opening an options panel.
  * 
  * @param button (document object): The object being used as a toggling button.
  * @param optionsPanel (document object): The element (usually a div) to show or hide.
@@ -513,8 +513,6 @@ function windowClick(optionsPanel, button) {
         if (!propagation) { // To avoid propagation issues, do not set to 'none' if it was the options' button click
             optionsPanel.style.display = "none";
         }
-
-        windowClickDisable(boundFunction);
     }
 }
 
