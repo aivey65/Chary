@@ -91,12 +91,16 @@ label, p {
 
 .label-profile-img {
     cursor: pointer;
-    background-color: var(--Light);
     border: 5px solid transparent;
     border-radius: 50%;
     width: 4rem;
     height: 4rem;
     display: flex;
+}
+
+.label-profile-img img {
+    border-radius: 50%;
+    z-index: -1;
 }
 
 .color-label {
@@ -127,7 +131,15 @@ label, p {
 #person1:checked ~ .label-person1,
 #person2:checked ~ .label-person2,
 #person3:checked ~ .label-person3,
-#person4:checked ~ .label-person4 {
+#person4:checked ~ .label-person4,
+#person5:checked ~ .label-person5,
+#person6:checked ~ .label-person6,
+#person7:checked ~ .label-person7,
+#person8:checked ~ .label-person8,
+#person9:checked ~ .label-person9,
+#person10:checked ~ .label-person10,
+#person11:checked ~ .label-person11,
+#person12:checked ~ .label-person12 {
     border-color: var(--Navy);
     background-image: url("../../images/check-icon.svg");
     background-size: 3rem;
