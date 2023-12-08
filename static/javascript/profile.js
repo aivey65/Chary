@@ -11,7 +11,10 @@ function loadProfile() {
         document.getElementById('user-join-date').innerText = "Joined " + new Date(profile.joinDate).toLocaleDateString("en-CA", getDateFormattingOptions());
         document.getElementById('user-email').innerText = profile.email;
         document.getElementById('user-currency').innerText = profile.currency;
-        document.getElementById('profile-image').src = "../static/images/profileImages/" + profile.profileImage + ".svg"
+
+        const profileImage = document.getElementById('profile-image');
+        profileImage.src = "../static/images/profileImages/" + profile.profileImage + ".svg";
+        profileImage.style.backgroundColor = profile.profileColor;
 
         // Hide placeholder content
         hidePlaceholders();

@@ -516,7 +516,7 @@ function windowClick(optionsPanel, button) {
     }
 }
 
-async function fillProfilePics(image=null) {
+async function fillProfilePics(image=null, color=null) {
     navConfig();
     window.addEventListener('resize', () => {
         navConfig();
@@ -529,10 +529,26 @@ async function fillProfilePics(image=null) {
         if (imageToUse == null) {
             await fetch('/data/user').then(response => response.json()).then((responseData) => {
                 imageToUse = responseData.data.profileImage;
-                pic.src = "../static/images/profileImages/" + imageToUse + ".svg"
+                const colorToUse = responseData.data.profileColor;
+
+                pic.src = "../static/images/profileImages/" + imageToUse + ".svg";
+                pic.style.backgroundColor = colorToUse;
+
+                // Check for profile labels
+                const options = document.getElementsByClassName("label-profile-img");
+                for (var element of options) {
+                    element.children[0].style.backgroundColor = colorToUse;
+                }
             });
         } else {
             pic.src = "../static/images/profileImages/" + imageToUse + ".svg"
+            pic.style.backgroundColor = color;
+
+            // Check for profile labels
+            const options = document.getElementsByClassName("label-profile-img");
+            for (var element of options) {
+                element.children[0].style.backgroundColor = color;
+            }
         }
     }
 }

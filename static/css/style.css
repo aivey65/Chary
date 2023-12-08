@@ -520,9 +520,8 @@ table {
     height: 2.5rem;
     margin: 10px 25px 10px 25px;
     white-space: nowrap;
-    background-color: var(--Light);
     border-radius: 50%;
-    border: solid 2px var(--Grey);
+    border: solid 2px var(--Light);
 }
 
 .view-date-container {
