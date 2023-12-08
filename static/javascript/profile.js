@@ -6,7 +6,6 @@ function loadProfile() {
 
     fetch('/data/user').then(response => response.json()).then((responseData) => {
         const profile = responseData.data;
-        document.getElementById('color-block').style.backgroundColor = profile.profileColor;
         document.getElementById('user-name').innerText = profile.username;
         document.getElementById('user-join-date').innerText = "Joined " + new Date(profile.joinDate).toLocaleDateString("en-CA", getDateFormattingOptions());
         document.getElementById('user-email').innerText = profile.email;

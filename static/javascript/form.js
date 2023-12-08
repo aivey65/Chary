@@ -12,7 +12,7 @@ var currentStartDate = null;
 
 // Specific value arrays
 const colorList = ["#AE1326", "#34E1EB", "#33EB7C", "#E8EB34", "#EB8F34", "#C16BCF"];
-const imageList = ["undraw_dog", "undraw_person1", "undraw_person2", "undraw_person3", "undraw_person4", "undraw_cat"];
+const imageList = ["undraw_dog", "undraw_person1", "undraw_person2", "undraw_person3", "undraw_person4", "undraw_person5", "undraw_person6", "undraw_person7", "undraw_person8", "undraw_person9", "undraw_cat"];
 
 function userFormLoad() {
     fillProfilePics();
@@ -114,7 +114,7 @@ function checkAmount(amount) {
 
 function checkNumber(entity) {
     entity = Number(entity)
-    return (entity >= 0 && entity <= 5)
+    return (entity >= 0 && entity <= 9)
 }
 
 function configureDateInput() {
