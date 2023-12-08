@@ -8,7 +8,7 @@ async function loadDashboard(refresh="false", tab="overview") {
     if (refresh == "true" || userData == null) {
         const response = updateUserData();
         response.then(() => {
-            fillProfilePics(userData.profileImage);
+            fillProfilePics(userData.profileImage, userData.profileColor);
             addHorizontalScrollShadow();
             setTimeout(() => {
                 showCookieConsent(true);
