@@ -521,6 +521,7 @@ table {
     margin: 10px 25px 10px 25px;
     white-space: nowrap;
     border-radius: 50%;
+    border: solid 2px var(--Grey);
 }
 
 .view-date-container {
