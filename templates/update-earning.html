@@ -53,11 +53,6 @@
                     <label for="description">Description</label>
                     <textarea id="description" name="description" rows="4" cols="50" onchange="independantChange()">{{description}}</textarea>
                 </div>
-
-                <div id="start-div" class="row6">
-                    <label class="required-input" for="start">Date Initialized</label>
-                    <input type="date" id="start" name="start" value={{startDate}} onchange="formChange()" required>
-                </div>
                 
                 <!-- Recurring Inputs -->
                 <p id="recurring-label" class="required-input row4" for="recurring"> Is this a recurring source of income?</p><br>
@@ -114,6 +109,11 @@
                         <input type="radio" id="yearly" name="radio" value="4" onchange="formChange()">
                     {% endif %} 
                     <label for='yearly' class="earning-period label-yearly">Yearly</label>
+                </div>
+
+                <div id="start-div" class="row6">
+                    <label class="required-input" for="start">Date Initialized</label>
+                    <input type="date" id="start" name="start" value={{startDate}} onchange="formChange()" required>
                 </div>
 
                 <div id="end-div" class="recurring-items row6">

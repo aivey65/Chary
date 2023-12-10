@@ -114,7 +114,7 @@ function checkAmount(amount) {
 
 function checkNumber(entity) {
     entity = Number(entity)
-    return (entity >= 0 && entity <= 9)
+    return (entity >= 0 && entity <= 10)
 }
 
 function configureDateInput() {

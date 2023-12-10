@@ -46,6 +46,11 @@
                     <input type="text" id="amount" name="amount" value={{amount}} required>
                 </div>
 
+                <div id="description-div">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4" cols="50">{{description}}</textarea>
+                </div>
+
                 <div id="category-div">
                     <label class="required-input" for="category">Budget Category</label>
                     <select id="category" name="category" required>
@@ -57,16 +62,6 @@
                             {% endif %} 
                         {% endfor %}
                     </select>
-                </div>
-
-                <div id="description-div">
-                    <label for="description">Description</label>
-                    <textarea id="description" name="description" rows="4" cols="50">{{description}}</textarea>
-                </div>
-
-                <div id="start-div">
-                    <label class="required-input row6" for="start">Date Initialized</label>
-                    <input type="date" id="start" name="start" value={{startDate}} required>
                 </div>
 
                 <!-- Recurring Inputs -->
@@ -85,6 +80,16 @@
                         <input type="radio" id="recurring-false" name="recurring" value="False" checked="checked">
                     {% endif %}
                     <label for='recurring-false' class="label-recurring label-recurring-false">No</label>
+                </div>
+
+                <div id="start-div">
+                    <label class="required-input row6" for="start">Date Initialized</label>
+                    <input type="date" id="start" name="start" value={{startDate}} required>
+                </div>
+
+                <div id="end-div" class="recurring-items row6">
+                    <label for="end">End Date</label>
+                    <input type="date" id="end" name="end" value={{endDate}}>
                 </div>
                 
                 <!-- Expense Period Inputs -->
@@ -124,11 +129,6 @@
                         <input type="radio" id="yearly" name="radio" value="4" required>
                     {% endif %}
                     <label for='yearly' class="expense-period label-yearly">Yearly</label>
-                </div>
-
-                <div id="end-div" class="recurring-items row6">
-                    <label for="end">End Date</label>
-                    <input type="date" id="end" name="end" value={{endDate}}>
                 </div>
 
                 <button id="submit-entity-button" class="cta-button submit-button" type="submit" value="Submit">Submit</button>           

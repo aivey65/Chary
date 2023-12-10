@@ -50,11 +50,6 @@
                     <label for="description">Description</label>
                     <textarea id="description" name="description" rows="4" cols="50"></textarea>
                 </div>
-                
-                <div id="start-div" class="row6">
-                    <label class="required-input" for="start">Date Initialized</label>
-                    <input type="date" id="start" name="start" required>
-                </div>
 
                 <!-- Recurring Inputs -->
                 <p id="recurring-label" class="required-input row4"> Is this a recurring source of income?</p><br>
@@ -64,6 +59,16 @@
     
                     <input type="radio" id="recurring-false" name="recurring" value="False">
                     <label for='recurring-false' class="label-recurring label-recurring-false">No</label>
+                </div>
+
+                <div id="start-div" class="row6">
+                    <label class="required-input" for="start">Date Initialized</label>
+                    <input type="date" id="start" name="start" required>
+                </div>
+
+                <div id="end-div" class="recurring-items row6">
+                    <label for="end">End Date</label>
+                    <input type="date" id="end" name="end" value="">
                 </div>
                 
                 <!-- Earning Period Inputs -->
@@ -83,11 +88,6 @@
                     
                     <input type="radio" id="yearly" name="radio" value="4">
                     <label for='yearly' class="earning-period label-yearly">Yearly</label>
-                </div>
-
-                <div id="end-div" class="recurring-items row6">
-                    <label for="end">End Date</label>
-                    <input type="date" id="end" name="end" value="">
                 </div>
 
                 <button id="submit-entity-button" class="submit-button cta-button" type="submit" value="Submit">Submit</button>

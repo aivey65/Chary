@@ -41,19 +41,14 @@
                     <input type="text" id="name" name="name" value="{{name}}" required>
                 </div>
 
-                <div id="description-div">
-                    <label for="description">Description</label>
-                    <textarea id="description" name="description" rows="4" cols="50">{{description}}</textarea>
-                </div>
-
                 <div id="amount-div">
                     <label class="required-input" for="amount">Amount</label>
                     <input type="text" id="amount" name="amount" value={{amount}} required>
                 </div>
 
-                <div id="start-div" class="row8">
-                    <label class="required-input" for="start">Date Initialized</label>
-                    <input type="date" id="start" name="start" value={{startDate}} required>
+                <div id="description-div">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4" cols="50">{{description}}</textarea>
                 </div>
 
                 <!-- Budget Period Inputs -->
@@ -108,6 +103,11 @@
                         <input type="radio" id="recurring-false" name="recurring" value="False" checked="checked">
                     {% endif %} 
                     <label for='recurring-false' class="label-recurring label-recurring-false">No</label>
+                </div>
+
+                <div id="start-div" class="row8">
+                    <label class="required-input" for="start">Date Initialized</label>
+                    <input type="date" id="start" name="start" value={{startDate}} required>
                 </div>
 
                 <div id="end-div" class="recurring-items row8">
