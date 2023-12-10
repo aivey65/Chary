@@ -543,11 +543,6 @@ table {
     align-items: center;
 }
 
-.big-stat {
-    font-size: 5rem;
-    font-weight: 300;
-}
-
 /*
 *** Annimations ***
 */ 
@@ -987,6 +982,11 @@ Creating the navigation bar depending on the size of the user's screen
     .shadow-both {
         box-shadow: inset -8rem 0rem 2rem -8rem var(--Grey), inset 8rem 0rem 2rem -8rem var(--Grey);
     }
+
+    .big-stat {
+        font-size: 3rem;
+        font-weight: 300;
+    }
 }
 
 /*
@@ -1218,5 +1218,10 @@ Creating the navigation bar depending on the size of the user's screen
         background-color: var(--Background);
         padding: var(--medPad);
         border-radius: var(--medPad);
+    }
+
+    .big-stat {
+        font-size: 5rem;
+        font-weight: 300;
     }
 }
