@@ -162,6 +162,7 @@ label, p {
     align-items: center;
     justify-content: flex-start;
     gap: var(--smallPad);
+    max-width: 440px;
 }
 
 #submit-entity-button {

@@ -13,7 +13,7 @@ function loadProfile() {
 
         const profileImage = document.getElementById('profile-image');
         profileImage.src = "../static/images/profileImages/" + profile.profileImage + ".svg";
-        profileImage.style.backgroundColor = profile.profileColor;
+        profileImage.style.background = "radial-gradient(" + profile.profileColor + " 65%, transparent 90%)";
 
         // Hide placeholder content
         hidePlaceholders();

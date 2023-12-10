@@ -532,22 +532,22 @@ async function fillProfilePics(image=null, color=null) {
                 const colorToUse = responseData.data.profileColor;
 
                 pic.src = "../static/images/profileImages/" + imageToUse + ".svg";
-                pic.style.backgroundColor = colorToUse;
+                pic.style.background = "radial-gradient(" + colorToUse + " 65%, transparent 90%)";
 
                 // Check for profile labels
                 const options = document.getElementsByClassName("label-profile-img");
                 for (var element of options) {
-                    element.children[0].style.backgroundColor = colorToUse;
+                    element.children[0].style.background = "radial-gradient(" + colorToUse + " 65%, transparent 90%)";
                 }
             });
         } else {
             pic.src = "../static/images/profileImages/" + imageToUse + ".svg"
-            pic.style.backgroundColor = color;
+            pic.style.background = "radial-gradient(" + color + " 65%, transparent 90%)";
 
             // Check for profile labels
             const options = document.getElementsByClassName("label-profile-img");
             for (var element of options) {
-                element.children[0].style.backgroundColor = color;
+                element.children[0].style.background = "radial-gradient(" + color + " 65%, transparent 90%)";
             }
         }
     }
