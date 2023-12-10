@@ -177,6 +177,7 @@ h4 {
 
 #chart-snip-container {
     padding-top: calc(var(--lgPad) + var(--navPad));
+    padding-bottom: var(--medPad);
     display: flex;
     flex-direction: column;
     gap: var(--smallPad);
@@ -217,6 +218,79 @@ h4 {
     margin-top: var(--medPad) !important;
 }
 
+#stat-snip-container {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr auto 1fr 1fr auto 1fr;
+    align-items: center;
+    gap: var(--smallPad);
+}
+
+#stat-snip-container p {
+    margin: 0px;
+}
+
+.breakdown-headers {
+    color: var(--Grey);
+}
+
+.stat-break {
+    width: 1px;
+    height: 100%;
+    background-color: var(--Grey);
+}
+
+#total-expense,
+#total-earning {
+    text-align: center;
+}
+
+#final-expense,
+#final-earning {
+    text-align: right;
+}
+
+#upcoming-expense,
+#upcoming-earning {
+    text-align: left;
+}
+
+
+.view-date-container {
+    grid-column: 1/7;
+    grid-row: 1;
+}
+
+#total-expense {
+    grid-column: 1/4;
+    grid-row: 2;
+}
+
+#total-earning {
+    grid-column: 4/7;
+    grid-row: 2;
+}
+
+#final-expense {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+#upcoming-expense {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+#final-earning {
+    grid-column: 4;
+    grid-row: 3;
+}
+
+#upcoming-earning {
+    grid-column: 6;
+    grid-row: 3;
+}
+
 #limited-charts .chart-number {
     font-size: 1rem;
     font-weight: 400;
@@ -229,13 +303,17 @@ h4 {
 
 #budget-snip-container {
     margin-top: var(--mobilePad);
+    padding-bottom: var(--medPad);
     display: grid;
     grid-template-columns: 1fr .2fr;
     grid-template-rows: .1fr .55fr .1fr;
     gap: var(--smallPad);
-    width: 100%;
+    width: auto;
     justify-content: space-between;
     align-items: center;
+    background-color: var(--Dark);
+    border-radius: var(--mobilePad);
+    margin: var(--mobilePad);
 }
 
 #budget-snip-container .module-header {

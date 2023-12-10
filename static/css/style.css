@@ -386,6 +386,7 @@ button {
 .non-header {
     margin-right: auto;
     margin-left: auto;
+    min-height: 80vh;
 }
 
 .icon {
