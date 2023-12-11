@@ -642,6 +642,7 @@ function showCookieConsent(show) {
 
         const popup = document.createElement("div");
         popup.id = "popup";
+        popup.style.maxWidth = "50%";
         popup.append(popupHeader, popupText, privacy, acceptButton);
 
         const popupWrapper = document.createElement("div");
