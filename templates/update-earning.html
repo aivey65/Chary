@@ -72,6 +72,16 @@
                     <label for='recurring-false' class="label-recurring label-recurring-false">No</label>
                 </div>
 
+                <div id="start-div" class="row6">
+                    <label class="required-input" for="start">Date Initialized</label>
+                    <input type="date" id="start" name="start" value={{startDate}} onchange="formChange()" required>
+                </div>
+
+                <div id="end-div" class="recurring-items row6">
+                    <label for="end">End Date</label>
+                    <input type="date" id="end" name="end" value={{endDate}} onchange="formChange()">
+                </div>
+
                 <!-- Earning Period Inputs -->
                 <p id="period-label" class="required-input recurring-items row7" for="radio">Choose how often you receive this income:</p><br>
                 <div id="period-div" class="recurring-items row8">    
@@ -109,16 +119,6 @@
                         <input type="radio" id="yearly" name="radio" value="4" onchange="formChange()">
                     {% endif %} 
                     <label for='yearly' class="earning-period label-yearly">Yearly</label>
-                </div>
-
-                <div id="start-div" class="row6">
-                    <label class="required-input" for="start">Date Initialized</label>
-                    <input type="date" id="start" name="start" value={{startDate}} onchange="formChange()" required>
-                </div>
-
-                <div id="end-div" class="recurring-items row6">
-                    <label for="end">End Date</label>
-                    <input type="date" id="end" name="end" value={{endDate}} onchange="formChange()">
                 </div>
 
                 <button id="submit-entity-button" class="cta-button submit-button" type="submit" value="Submit">Submit</button>

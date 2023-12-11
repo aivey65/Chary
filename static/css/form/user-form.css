@@ -45,7 +45,7 @@ form {
     display: grid;
     align-items: center;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: .5fr 1fr .2fr .2fr .5fr;
+    grid-template-rows: .5fr .5fr .2fr .5fr .2fr .5fr .2fr;
     gap: 0px var(--medPad);
     margin: auto;
 }
@@ -161,8 +161,13 @@ label, p {
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
-    gap: var(--smallPad);
+    gap: var(--smallPad) 0px;
     max-width: 440px;
+    margin-bottom: var(--smallPad);
+}
+
+#color-div label, #image-div label {
+    margin-right: var(--smallPad);
 }
 
 #submit-entity-button {

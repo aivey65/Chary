@@ -107,6 +107,7 @@ span i {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
+    gap: var(--smallPad) 0px;
 }
 
 #recurring-div label, #period-div label {

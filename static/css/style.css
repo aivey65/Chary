@@ -316,17 +316,18 @@ input[type='text'], input[type='date'] {
 }
 
 input[type='radio'] {
-    width: 1px;
-    height: 1px;
+    width: 0px;
+    height: 0px;
     opacity: 0;
+    margin: 0px;
 }
 
-input[type='radio']:focus ~ label {
+input[type='radio']:focus + label {
     outline: 5px auto var(--blue);
     outline: 5px auto -webkit-focus-ring-color;
 }
 
-input[type='button']:focus {
+button:focus {
     outline: 5px auto var(--blue);
     outline: 5px auto -webkit-focus-ring-color;
 }

@@ -131,7 +131,11 @@ label, p {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--smallPad);
+    gap: var(--smallPad) 0px;
+}
+
+#color-div label, #image-div label {
+    margin-right: var(--smallPad);
 }
 
 #submit-entity-button {
