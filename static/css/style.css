@@ -415,7 +415,7 @@ button {
     width: auto;
 }
 
-.icon:hover, #large-logo {
+.icon:hover, #large-logo, .options-img {
     cursor: pointer;
 }
 
