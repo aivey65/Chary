@@ -53,14 +53,18 @@ function loadBudget(id, startDate, endDate) {
         if(budget.startDate == null) {
             document.getElementById('details-date').textContent = "None";
         } else {
-            const startDate = new Date(budget.startDate);
+            const rawDate = new Date(budget.startDate);
+            const startDate = new Date(rawDate.getUTCFullYear(), rawDate.getUTCMonth(), rawDate.getUTCDate());
+
             document.getElementById('details-date').textContent = startDate.toLocaleDateString('en-us', options);
         }
         
         if (budget.endDate == null) {
             document.getElementById('details-date-end').textContent = "None";
         } else {
-            const endDate = new Date(budget.endDate);
+            const rawDate = new Date(budget.endDate);
+            const endDate = new Date(rawDate.getUTCFullYear(), rawDate.getUTCMonth(), rawDate.getUTCDate());
+            
             document.getElementById('details-date-end').textContent = endDate.toLocaleDateString('en-us', options);
         }
 

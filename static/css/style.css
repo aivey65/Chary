@@ -477,6 +477,13 @@ table {
     stroke-width: 20;
 }
 
+.grey-progress {
+    fill: none;
+    stroke-linecap: round;
+    stroke: var(--Grey);
+    stroke-width: 20;
+}
+
 .carousel {
     display: flex;
     flex-direction: row;

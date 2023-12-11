@@ -123,9 +123,13 @@ function loadOverviewTab() {
     chartPanel.classList.add('module');
     overviewTab.prepend(chartPanel);
 
-    const budgetPanel = generateOverviewBudgets(userData.budgets)
+    const budgetPanel = generateOverviewBudgets(userData.budgets);
     budgetPanel.classList.add('module');
     overviewTab.append(budgetPanel);
+
+    const profilePanel = generateOverviewProfile();
+    profilePanel.classList.add('module');
+    overviewTab.append(profilePanel);
 
     const earningPanel = generateOverviewEarnings();
     earningPanel.classList.add('module');
@@ -914,7 +918,7 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
 
             const budget_used = document.createElement('p');
             budget_used.classList.add('snip-budget-used');
-            budget_used.textContent = formatNumber((budget.usedAmount / budget.amount * 100), false) + "% used";
+            budget_used.textContent = formatNumber((budget.totalUsedAmount / budget.amount * 100), false) + "% used";
 
             const budget_more = document.createElement('img');
             budget_more.src = "static/images/MoreButtonsmall.svg";
@@ -931,6 +935,7 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
             const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
             const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
             const path2 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+            const path3 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
 
             svg.setAttribute('width', '200');
             svg.setAttribute('height', '20');
@@ -946,8 +951,8 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
             path1.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
             svg.append(path1);
             
-            const fillAmount = budget.usedAmount;
-            if (fillAmount != 0) {
+            const totalAmount = budget.totalUsedAmount;
+            if (totalAmount != 0) {
                 path2.setAttribute('x1', '10');
                 path2.setAttribute('x2', '190');
                 path2.setAttribute('y1', '10');
@@ -955,10 +960,25 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
                 path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
         
                 const path2Length = path2.getAttribute('x2') - path2.getAttribute('x1');
-                path2.setAttribute('stroke-dasharray', (fillAmount/budget.amount) * path2Length + ' ' + path2Length);
-                path2.classList.add('snip-inner-progress');
+                path2.setAttribute('stroke-dasharray', (totalAmount/budget.amount) * path2Length + ' ' + path2Length);
+                path2.classList.add('snip-grey-progress');
 
-                svg.append(path1, path2);  
+                svg.append(path2);  
+            }
+
+            const fillAmount = budget.usedAmount;
+            if (fillAmount != 0) {
+                path3.setAttribute('x1', '10');
+                path3.setAttribute('x2', '190');
+                path3.setAttribute('y1', '10');
+                path3.setAttribute('y2', '10');
+                path3.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+        
+                const path3Length = path3.getAttribute('x2') - path3.getAttribute('x1');
+                path3.setAttribute('stroke-dasharray', (fillAmount/budget.amount) * path3Length + ' ' + path3Length);
+                path3.classList.add('snip-inner-progress');
+
+                svg.append(path3);  
             }
 
             svgDiv.append(svg);

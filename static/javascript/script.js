@@ -829,6 +829,7 @@ function generateProfileUI(username, email, color, img, currency) {
     user_img.id = "user-thumbnail";
     user_img.alt = "User's profile image."
     user_img.classList.add('profile-icon');
+    user_img.style.background = "radial-gradient(" + color + " 65%, transparent 90%)";
 
     const user_name = document.createElement('p');
     user_name.id = "user-name";
@@ -867,7 +868,7 @@ function generateProfileUI(username, email, color, img, currency) {
     return profileContainer;
 }
 
-function generateCurveProgress(fillAmount, totalAmount, width='200', height='120') {
+function generateCurveProgress(fillAmount, greyAmount, totalAmount, width='200', height='120') {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
     svg.setAttribute('width', width);
     svg.setAttribute('height', height);
@@ -881,15 +882,26 @@ function generateCurveProgress(fillAmount, totalAmount, width='200', height='120
     path1.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
     svg.append(path1);
 
-    if (fillAmount != 0) {
+    if (greyAmount != 0) {
         const path2 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
         path2.setAttribute('d', 'M15,100 a60,60 0 0,1 170,0');
         const path2Length = path2.getTotalLength();
-        path2.setAttribute('stroke-dasharray', (fillAmount/totalAmount) * path2Length + ' ' + path2Length);
-        path2.classList.add('inner-progress');
+        path2.setAttribute('stroke-dasharray', (greyAmount/totalAmount) * path2Length + ' ' + path2Length);
+        path2.classList.add('grey-progress');
         path2.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
         
         svg.append(path2);
+    }
+
+    if (fillAmount != 0) {
+        const path3 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+        path3.setAttribute('d', 'M15,100 a60,60 0 0,1 170,0');
+        const path2Length = path3.getTotalLength();
+        path3.setAttribute('stroke-dasharray', (fillAmount/totalAmount) * path2Length + ' ' + path2Length);
+        path3.classList.add('inner-progress');
+        path3.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+        
+        svg.append(path3);
     }
 
     return svg;
@@ -963,7 +975,7 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
 
         const budget_used = document.createElement('p');
         budget_used.classList.add('fraction-top');
-        budget_used.textContent = currency + formatNumber(budgets[key].usedAmount);
+        budget_used.textContent = currency + formatNumber(budgets[key].totalUsedAmount);
 
         const budget_slash = document.createElement('h2');
         budget_slash.classList.add('fraction-slash');
@@ -981,7 +993,7 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
         const svgDiv = document.createElement('div');
         svgDiv.classList.add('svg-div');
 
-        const svg = generateCurveProgress(budgets[key].usedAmount, budgets[key].amount);
+        const svg = generateCurveProgress(budgets[key].usedAmount, budgets[key].totalUsedAmount, budgets[key].amount);
 
         svgDiv.append(svg);
 
@@ -1131,13 +1143,13 @@ function generateTableUI(type, entityList, currency, dateType, limit=null) {
                 const recur_img = document.createElement('img');
                 recur_img.classList.add('non-recur-img');
                 recur_img.src = "static/images/grey-x.svg";
-                const period = PERIODS[current.recurPeriod].toLocaleLowerCase();
                 recur_img.title = "This " + TYPES[type] + " does not recur";
                 recur.append(recur_img);
             }
 
             const date = document.createElement('td');
-            const formatDate =  new Date(rawDate);
+            const localDate = new Date(rawDate);
+            const formatDate = new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
             const formatDateString = formatDate.toLocaleDateString('en-us', getDateFormattingOptions());
             date.dataset.startDate = formatDate;
             date.classList.add('start-date');

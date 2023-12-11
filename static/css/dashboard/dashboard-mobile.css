@@ -406,6 +406,13 @@ h4 {
     stroke: var(--ContrastL);
 }
 
+.snip-grey-progress {
+    fill: none;
+    stroke-width: 15;
+    stroke-linecap: round;
+    stroke: var(--Grey);
+}
+
 #earning-snip-container, #expense-snip-container {
     display: grid;
     grid-template-columns: 1fr .3fr;
