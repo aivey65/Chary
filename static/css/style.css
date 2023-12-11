@@ -394,6 +394,12 @@ button {
     height: 2rem;
 }
 
+.warning-icon {
+    width: 1rem;
+    height: 1rem;
+    margin-left: 5px;
+}
+
 .add-icon {
     padding: .5rem;
     width: 4rem;
@@ -676,6 +682,12 @@ table {
 
 .horizontal-container {
     flex-direction: row;
+}
+
+.flex-td {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 /*

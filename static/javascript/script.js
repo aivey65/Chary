@@ -1078,11 +1078,15 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
  */
 function generateTableUI(type, entityList, currency, dateType, limit=null) {
     const TYPES = ['expense', 'earning'];
+    var categories;
         
     // Configure some values based on table type
     var columns;
     if (type == 0) {
         columns = ['Name', 'Amount', 'Category', 'Date', 'Recurring?', 'Actions']
+
+        categories = entityList.categories;
+        entityList = entityList.expenses;
     } else {
         columns = ['Name', 'Amount', 'Date', 'Recurring?', 'Actions'];
     }
@@ -1126,8 +1130,18 @@ function generateTableUI(type, entityList, currency, dateType, limit=null) {
             var expense_category;
             if (type == 0) {
                 expense_category = document.createElement('td');
-                expense_category.textContent = current.budgetCategory;
                 expense_category.classList.add('td-category');
+
+                const category_text = document.createElement("p");
+                category_text.textContent = current.budgetCategory;
+                expense_category.append(category_text);
+
+                if (!categories.includes(current.budgetCategory)) {
+                    const warning = createWarningIcon("This budget may not exist anymore. Further action needed.");
+                    expense_category.append(warning);
+                    expense_category.style.display = "flex";
+                    expense_category.classList.add('flex-td')
+                }
             } 
 
             const recur = document.createElement('td');
@@ -1283,6 +1297,16 @@ function generateTableUI(type, entityList, currency, dateType, limit=null) {
     }
 
     return table;
+}
+
+function createWarningIcon(message) {
+    const warning = document.createElement("img");
+    warning.src = "../static/images/WarningIcon.svg";
+    warning.classList.add('warning-icon');
+    warning.title = message;
+    warning.alt = "Warning message icon";
+
+    return warning;
 }
 
 /* 

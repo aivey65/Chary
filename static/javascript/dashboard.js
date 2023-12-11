@@ -55,7 +55,7 @@ function updateData(type, period, date, upcoming) {
         if (type == 'expenses') {
             const expenseContainer = document.getElementById("expense-container");
             expenseContainer.innerHTML = "";
-            expenseContainer.append(generateTableUI(0, userData.expenses.expenses, userData.currency, upcoming));
+            expenseContainer.append(generateTableUI(0, userData.expenses, userData.currency, upcoming));
         } else if (type == 'earnings') {
             const earningContainer = document.getElementById("earning-container");
             earningContainer.innerHTML = "";
@@ -307,7 +307,7 @@ function loadExpenseTab(expenses=userData.expenses) {
     tabHead.append(header, addButton, filterContainer);
     tabHead.id = 'tab-head';
 
-    const table = generateTableUI(0, expenses.expenses, userData.currency, 0);
+    const table = generateTableUI(0, expenses, userData.currency, 0);
 
     const expenseContainer = document.createElement('div');
     expenseContainer.id = 'expense-container';
@@ -1023,7 +1023,7 @@ function generateOverviewExpenses() {
     addIcon.alt = "Add icon";
     addButton.append(addIcon);
 
-    const expenseTable = generateTableUI(0, userData.expenses.expenses, userData.currency, 0, 5);
+    const expenseTable = generateTableUI(0, userData.expenses, userData.currency, 0, 5);
 
     overviewExpenseContainer.append(overviewHeader, addButton, expenseTable);
     return overviewExpenseContainer;
@@ -1127,9 +1127,10 @@ function totalBudgetsAndAmounts(expenseList, period, newStartDate, newEndDate) {
         
         const passedDates = current.passedDates;
         for (var date of passedDates) {
-            date = new Date(date)
+            const localDate = new Date(date);
+            const curDate = new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
 
-            if (date >= newStartDate && date <= newEndDate) {
+            if (curDate >= newStartDate && curDate <= newEndDate) {
                 if (!amountPerCategory.hasOwnProperty(currCategory)) {
                     amountPerCategory[currCategory] = {
                         "finalized": 0,
@@ -1146,9 +1147,10 @@ function totalBudgetsAndAmounts(expenseList, period, newStartDate, newEndDate) {
 
         const upcomingDates = current.upcomingDates;
         for (var date of upcomingDates) {
-            date = new Date(date)
+            const localDate = new Date(date);
+            const curDate = new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
 
-            if (date >= newStartDate && date <= newEndDate) {
+            if (curDate >= newStartDate && curDate <= newEndDate) {
                 if (!amountPerCategory.hasOwnProperty(currCategory)) {
                     amountPerCategory[currCategory] = {
                         "finalized": 0,
@@ -1323,13 +1325,13 @@ function earningsPerMonth(earningList, period=3, startDate, newStartDate, newEnd
                 const curMonth = curDate.getMonth();
 
                 if (curDate <= todayDate) { // Finalized
-                    if (date >= newStartDate && date <= newEndDate) {
+                    if (curDate >= newStartDate && curDate <= newEndDate) {
                         totalFinalized += amount;
                         totalSum += amount;
                     }
                     data.values[curMonth] = parseFloat((data.values[curMonth] + amount).toFixed(2));
                 } else { // Upcoming
-                    if (date >= newStartDate && date <= newEndDate) {
+                    if (curDate >= newStartDate && curDate <= newEndDate) {
                         totalUpcoming += amount;
                         totalSum += amount;
                     }
@@ -1343,13 +1345,13 @@ function earningsPerMonth(earningList, period=3, startDate, newStartDate, newEnd
                 }
 
                 if (curDate <= todayDate) {
-                    if (date >= newStartDate && date <= newEndDate) {
+                    if (curDate >= newStartDate && curDate <= newEndDate) {
                         totalFinalized += amount;
                         totalSum += amount;
                     }
                     data.values[index] = parseFloat((data.values[index] + amount).toFixed(2));
                 } else {
-                    if (date >= newStartDate && date <= newEndDate) {
+                    if (curDate >= newStartDate && curDate <= newEndDate) {
                         totalUpcoming += amount;
                         totalSum += amount;
                     }
