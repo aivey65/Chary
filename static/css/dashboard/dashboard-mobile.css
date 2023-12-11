@@ -223,7 +223,7 @@ h4 {
     grid-template-rows: auto 1fr auto;
     grid-template-columns: 1fr auto 1fr 1fr auto 1fr;
     align-items: center;
-    gap: var(--smallPad);
+    gap: min(3vw, var(--smallPad));
 }
 
 #stat-snip-container p {
@@ -355,7 +355,7 @@ h4 {
 .budget-snippet {
     display: grid;
     grid-template-columns: .3fr 1fr .5fr .3fr;
-    gap: .8rem;
+    gap: min(2vw, .8rem);
     align-items: center;
     margin-top: 1rem;
 }

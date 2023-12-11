@@ -1004,7 +1004,7 @@ Creating the navigation bar depending on the size of the user's screen
     }
 
     .big-stat {
-        font-size: 3rem;
+        font-size: min(8vw, 3rem);
         font-weight: 300;
     }
 }
@@ -1241,7 +1241,7 @@ Creating the navigation bar depending on the size of the user's screen
     }
 
     .big-stat {
-        font-size: 5rem;
+        font-size: min(8vw, 5rem);
         font-weight: 300;
     }
 }
