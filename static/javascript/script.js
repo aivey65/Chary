@@ -30,6 +30,23 @@ function getUTCDateFromString(date) {
     return new Date(...UTCDate);
 }
 
+function getISOFormatDate(date) {
+    var yyyy = date.getFullYear().toString();
+    var mm = (date.getMonth()+1).toString();
+    var dd  = date.getDate().toString();
+
+    if (mm.length == 1) {
+        mm = "0" + mm;
+    }
+
+    if (dd.length == 1) {
+        dd = "0" + dd;
+    }
+
+    console.log(yyyy + "-" + mm + "-" + dd);
+    return yyyy + "-" + mm + "-" + dd;
+}
+
 /**
  * Returns a map with two properties:
  *      labels: list of date strings
@@ -272,7 +289,7 @@ function createFiltersSection(type) {
     dateSelector.id = "date-selector";
     dateSelector.type = "date";
     dateSelector.title = "Select the start date for the period you want to view"
-    dateSelector.value = configureFilterDate(new Date().toLocaleDateString("en-CA"), periodSelector.value);
+    dateSelector.value = configureFilterDate(getISOFormatDate(new Date()), periodSelector.value);
     dateSelector.addEventListener("change", () => {
         if (periodSelector.value == 4 || periodSelector.value == -1 || periodSelector.value == -2) {
             dateSelector.value = configureFilterDate(dateSelector.value, periodSelector.value, true);
@@ -318,13 +335,13 @@ function createViewingDates(startDate, endDate) {
     dateContainer.classList.add('view-date-container');
 
     const start = document.createElement("p");
-    start.textContent = startDate.toLocaleDateString('en-ca');
+    start.textContent = getISOFormatDate(startDate);
 
     const middle = document.createElement("p");
     middle.textContent = "to";
 
     const end = document.createElement("p");
-    end.textContent = end.toLocaleDateString('en-ca');
+    end.textContent = getISOFormatDate(end);
 
     dateContainer.append(start, middle, end);
     return dateContainer;
@@ -350,19 +367,19 @@ function configureFilterDate(date, period, changePeriod=false) {
     }
     
     if (period == 0) {
-        return tempDate.toLocaleDateString("en-CA");
+        return getISOFormatDate(tempDate);
     } else if (period == 1 || period == 2) { // Weekly
         tempDate = new Date(tempDate.setDate(tempDate.getDate() - tempDate.getDay()));
-        return tempDate.toLocaleDateString("en-CA");
+        return getISOFormatDate(tempDate);
     } else if (period == 3) { // Monthly
         tempDate = new Date(tempDate.getFullYear(), tempDate.getMonth(), 1);
-        return tempDate.toLocaleDateString("en-CA");
+        return getISOFormatDate(tempDate);
     } else if (period == 4) { // Yearly
         tempDate = new Date(tempDate.getFullYear(), 0, 1);
-        return  tempDate.toLocaleDateString("en-CA");
+        return getISOFormatDate(tempDate);
     } else if (period == -1 || period == -2) {
         tempDate = new Date();
-        return tempDate.toLocaleDateString("en-CA");
+        return getISOFormatDate(tempDate);
     }
 }
 
@@ -642,7 +659,7 @@ function showCookieConsent(show) {
 
         const popup = document.createElement("div");
         popup.id = "popup";
-        popup.style.maxWidth = "50%";
+        popup.classList.add("cookie-popup");
         popup.append(popupHeader, popupText, privacy, acceptButton);
 
         const popupWrapper = document.createElement("div");
@@ -932,7 +949,7 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
     
     for (const key in budgets) {
         // Meta data
-        const formatDateString = viewingDate.toLocaleDateString("en-CA");
+        const formatDateString = getISOFormatDate(viewingDate);
 
         const budgetPanel = document.createElement('div');
         budgetPanel.classList.add('budget-info');
@@ -1183,7 +1200,7 @@ function generateTableUI(type, entityList, currency, dateType, limit=null) {
             update_img.classList.add("update-img");
             update_img.title = "Update";
             update_img.addEventListener('click', function() {
-                window.location = "/form/update-" + TYPES[type] + "?id=" + key + "&duplicate=False&date=" + formatDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+                window.location = "/form/update-" + TYPES[type] + "?id=" + key + "&duplicate=False&date=" + getISOFormatDate(formatDate);
             })
 
             const actionDiv = document.createElement('div');

@@ -139,29 +139,29 @@ function configureDateInput() {
     if (period == 1 || period == 2) { // Weekly
         if (startDate) {
             startDate = new Date(startDate.setDate(startDate.getDate() - startDate.getDay()));
-            start.value = startDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+            start.value = getISOFormatDate(startDate);
         }
         if (endDate) {
             endDate = new Date(endDate.setDate(endDate.getDate() - endDate.getDay() + 6));
-            end.value = endDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+            end.value = getISOFormatDate(endDate);
         }
     } else if (period == 3) { // Monthly
         if (startDate) {
             startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
-            start.value = startDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+            start.value = getISOFormatDate(startDate);
         }
         if (endDate) {
             endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0);
-            end.value = endDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+            end.value = getISOFormatDate(endDate);
         }
     } else if (period == 4) { // Yearly
         if (startDate) {
             startDate = new Date(startDate.getFullYear(), 0, 1);
-            start.value = startDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+            start.value = getISOFormatDate(startDate);
         }
         if (endDate) {
             endDate = new Date(endDate.getFullYear(), 11, 31);
-            end.value = endDate.toLocaleDateString("en-CA", { timeZone: 'UTC' });
+            end.value = getISOFormatDate(endDate);
         }
     }
 }

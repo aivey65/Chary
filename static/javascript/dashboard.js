@@ -41,7 +41,7 @@ async function loadDashboard(refresh="false", tab="overview") {
 // Refresh boolean should be set to true when there is already user data saved, but it
 // needs to be updated.
 async function updateUserData() {
-    const targetDate = new Date().toLocaleDateString("en-CA")
+    const targetDate = getISOFormatDate(new Date());
 
     const response = await fetch('/data/all-current?period=4&target=' + targetDate).then(response => response.json()).then((responseData) => {
         userData = responseData.data;
@@ -897,7 +897,7 @@ function generateLimitedOverviewBudgets(budgetList, slideNum, maxShow) {
 
     for (var index = 0; index < keys.length; index++) {
         if (index >= start && index < start + maxShow) {
-            const formatDateString = (new Date()).toLocaleDateString("en-CA");
+            const formatDateString = getISOFormatDate(new Date());
             const key = keys[index]
             const budget = budgetList[key];
 
@@ -1083,8 +1083,8 @@ function updateStatData(expenseSums, earningSums, startDate, endDate) {
 
     // Update dates in the viewing-dates section
     const formattingOptions = getShortDateFormattingOptions(true);
-    document.getElementById('stat-start-date').textContent = startDate.toLocaleDateString('en-ca', formattingOptions);
-    document.getElementById('stat-end-date').textContent = endDate.toLocaleDateString('en-ca', formattingOptions);
+    document.getElementById('stat-start-date').textContent = startDate.toLocaleDateString('en-us', formattingOptions);
+    document.getElementById('stat-end-date').textContent = endDate.toLocaleDateString('en-us', formattingOptions);
 }
 
 function allChartDataAsArray(expenses, earnings, period=3, startDate=new Date()) {
