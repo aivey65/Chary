@@ -77,7 +77,7 @@ def renderContact():
 def login_is_required(function):
     @wraps(function)
     def wrapper(*args, **kwargs):
-        if ("google_id" not in session) and ("chary_id" not in session):
+        if (session.get("google_id") is None) and (session.get("chary_id") is None):
             return abort(401)
         else:
             return function()
@@ -85,7 +85,7 @@ def login_is_required(function):
     return wrapper
 
 def isLoggedIn():
-    if ("google_id" not in session) and ("chary_id" not in session):
+    if (session.get("google_id") is None) and (session.get("chary_id") is None):
         return False
     else:
         return True
@@ -123,8 +123,6 @@ def googleLogin():
         include_granted_scopes='true'
     )
     session["state"] = state
-    print("session :0: ", session)
-    print("state in part 1: ", session.get("state"))
     session.modified = True
 
     return redirect(authorization_url)
@@ -138,13 +136,8 @@ def logout():
 @app.route("/google/auth")
 def google_auth(): 
     flow.fetch_token(authorization_response=request.url)
-    print("session :0 part 2: ", session)
-    print("state in part 2: ", session.get("state"))
-
-    print("request.args state: ", request.args.get("state"))
 
     if not session.get("state") == request.args.get("state"):
-        print("We are aborting here...")
         abort(500)
 
     credentials = flow.credentials
