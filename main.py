@@ -123,6 +123,8 @@ def googleLogin():
         include_granted_scopes='true'
     )
     session["state"] = state
+    print("state in part 1: ", session["state"])
+
     return redirect(authorization_url)
 
 @login_is_required
@@ -135,9 +137,11 @@ def logout():
 def google_auth(): 
     flow.fetch_token(authorization_response=request.url)
     print(request.args)
-    print(session["state"])
+    print("request.args state: ", request.args.get("state"))
+    print("state in part 2: ", session["state"])
 
     if not session["state"] == request.args.get("state"):
+        print("We are aborting here...")
         abort(500)
 
     credentials = flow.credentials
