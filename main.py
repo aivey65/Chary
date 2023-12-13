@@ -123,7 +123,11 @@ def googleLogin():
         include_granted_scopes='true'
     )
     session["state"] = state
+    print("session :0: ", session)
     print("state in part 1: ", session["state"])
+    print("is session modified 1?: ", session.modified)
+    session.modified = True
+    print("is session modified 2?: ", session.modified)
 
     return redirect(authorization_url)
 
@@ -136,6 +140,8 @@ def logout():
 @app.route("/google/auth")
 def google_auth(): 
     flow.fetch_token(authorization_response=request.url)
+    print("session :0 part 2: ", session)
+    print("is session modified 3?: ", session.modified)
     print(request.args)
     print("request.args state: ", request.args.get("state"))
     print("state in part 2: ", session["state"])
