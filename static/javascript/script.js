@@ -43,7 +43,6 @@ function getISOFormatDate(date) {
         dd = "0" + dd;
     }
 
-    console.log(yyyy + "-" + mm + "-" + dd);
     return yyyy + "-" + mm + "-" + dd;
 }
 
@@ -631,7 +630,7 @@ window.addEventListener("popstate", (e) => {
 // Cookie Consent Popup //
 //////////////////////////
 function showCookieConsent(show) {
-    if (show && localStorage.getItem("popupWasShown") != "1") {
+    if (show && localStorage.getItem("popupWasShown") != true) {
         const popupHeader = document.createElement("h3");
         popupHeader.id = "popup-header";
         popupHeader.textContent = "Cookie Consent";
@@ -650,12 +649,6 @@ function showCookieConsent(show) {
 
         const acceptButton = document.createElement("button");
         acceptButton.textContent = "I Accept";
-        acceptButton.addEventListener("click", () => {
-            // Set local storage to indicate that the popup has been shown
-            localStorage.setItem("popupWasShown", "1");
-
-            popupWrapper.remove();
-        })
 
         const popup = document.createElement("div");
         popup.id = "popup";
@@ -666,6 +659,9 @@ function showCookieConsent(show) {
         popupWrapper.id = "popup-wrapper";
         popupWrapper.append(popup);
         acceptButton.addEventListener("click", () => {
+            // Set local storage to indicate that the popup has been shown
+            localStorage.setItem("popupWasShown", true);
+
             popupWrapper.remove();
         })
 

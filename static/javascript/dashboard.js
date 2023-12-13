@@ -91,9 +91,10 @@ function updateData(type, period, date, upcoming) {
                 budgetContainer.append(generateBudgetsUI(responseData.data, userData.currency, new Date(date), false));
             }
         } else if (type == 'expenses') {
+            console.log(responseData)
             const expenseContainer = document.getElementById("expense-container");
             expenseContainer.innerHTML = "";
-            expenseContainer.append(generateTableUI(0, responseData.expenses, userData.currency, upcoming));
+            expenseContainer.append(generateTableUI(0, responseData, userData.currency, upcoming));
         } else if (type == 'earnings') {
             const earningContainer = document.getElementById("earning-container");
             earningContainer.innerHTML = "";
