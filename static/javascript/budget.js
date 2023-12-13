@@ -209,6 +209,10 @@ function createOptionsPanel(id) {
 
 function generateVariousCharts(items, slideNum, maxShow) {
     Chart.defaults.plugins.legend.display = false;
+    Chart.defaults.color = COLORS_GREY;
+    Chart.defaults.font.weight = 400;
+    Chart.defaults.font.size = 15;
+    Chart.defaults.plugins.tooltip.titleColor = COLORS_LIGHT;
     var description = "";
 
     if (slideNum == 0) {
@@ -248,6 +252,9 @@ function generateVariousCharts(items, slideNum, maxShow) {
                             label: function(context) {
                                 let dataObject = context.dataset;
                                 return user_currency + formatNumber(dataObject.data[context.dataIndex]);
+                            },
+                            labelTextColor: function(context) {
+                                return COLORS_LIGHT;
                             }
                         }
                     }
@@ -311,6 +318,9 @@ function generateVariousCharts(items, slideNum, maxShow) {
                                 let dataObject = context.dataset;
                                 return dataObject.tooltipText + ": " + user_currency + formatNumber(dataObject.data[context.dataIndex]);
                             },
+                            labelTextColor: function(context) {
+                                return COLORS_LIGHT;
+                            }
                         }
                     }
                 },
