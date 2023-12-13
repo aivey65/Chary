@@ -116,7 +116,6 @@ def renderedNav():
             </ul>
         """
 
-@login_is_required
 @app.route("/google")
 def googleLogin():
     authorization_url, state = flow.authorization_url(
