@@ -124,10 +124,8 @@ def googleLogin():
     )
     session["state"] = state
     print("session :0: ", session)
-    print("state in part 1: ", session["state"])
-    print("is session modified 1?: ", session.modified)
+    print("state in part 1: ", session.get("state"))
     session.modified = True
-    print("is session modified 2?: ", session.modified)
 
     return redirect(authorization_url)
 
@@ -141,12 +139,11 @@ def logout():
 def google_auth(): 
     flow.fetch_token(authorization_response=request.url)
     print("session :0 part 2: ", session)
-    print("is session modified 3?: ", session.modified)
-    print(request.args)
-    print("request.args state: ", request.args.get("state"))
-    print("state in part 2: ", session["state"])
+    print("state in part 2: ", session.get("state"))
 
-    if not session["state"] == request.args.get("state"):
+    print("request.args state: ", request.args.get("state"))
+
+    if not session.get("state") == request.args.get("state"):
         print("We are aborting here...")
         abort(500)
 
