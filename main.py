@@ -1,5 +1,6 @@
 import imp
 import os
+from datetime import timedelta
 from dotenv import load_dotenv
 import pathlib
 import requests
@@ -17,7 +18,13 @@ from functools import wraps
 import database
 
 app = Flask(__name__, template_folder="templates")
+app.config['APPLICATION_ROOT'] = '/'
+app.config['SESSION_COOKIE_PATH'] = '/'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+
+app.config["SESSION_PERMANENT"] = False
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=5)
+
 # Load environment variables and set secret key
 load_dotenv()
 
@@ -34,7 +41,7 @@ secret_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
 flow = Flow.from_client_secrets_file(
     client_secrets_file=secret_file,
     scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-    redirect_uri="http://127.0.0.1:5000/google/auth"  
+    redirect_uri="https://www.charypie.com/google/auth"  
 )
 
 ###################################
