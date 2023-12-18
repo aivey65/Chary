@@ -1130,6 +1130,7 @@ function generateTableUI(type, entityList, currency, dateType, limit=null) {
         } else {
             dates = (entityList[key].passedDates).concat(entityList[key].upcomingDates);
         }
+        
         dates.forEach(rawDate => {
             const current = entityList[key].data;
 

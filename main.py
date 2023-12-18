@@ -22,7 +22,7 @@ app.config['APPLICATION_ROOT'] = '/'
 app.config['SESSION_COOKIE_PATH'] = '/'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
-app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_PERMANENT"] = True
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=5)
 
 # Load environment variables and set secret key
@@ -143,6 +143,7 @@ def logout():
 @app.route("/google/auth")
 def google_auth(): 
     flow.fetch_token(authorization_response=request.url)
+    print(session)
 
     if not session.get("state") == request.args.get("state"):
         abort(500)
