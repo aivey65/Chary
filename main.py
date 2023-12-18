@@ -20,6 +20,7 @@ import database
 app = Flask(__name__, template_folder="templates")
 app.config['APPLICATION_ROOT'] = '/'
 app.config['SESSION_COOKIE_PATH'] = '/'
+app.config['SESSION_COOKIE_DOMAIN'] = '.charypie.com'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 app.config["SESSION_PERMANENT"] = True
