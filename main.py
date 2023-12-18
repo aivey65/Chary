@@ -144,7 +144,6 @@ def logout():
 @app.route("/google/auth")
 def google_auth(): 
     flow.fetch_token(authorization_response=request.url)
-    print(session)
 
     if not session.get("state") == request.args.get("state"):
         abort(500)

@@ -15,11 +15,15 @@ function loadBudget(id, startDate, endDate) {
 
     fetch('/data/budget-expenses?id=' + id + '&date=' + startDate + '&fullExpenses=True').then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
-        const expenses = responseData.expenses;
         user_currency = responseData.currency;
         fullExpenseDict = responseData.fullExpenses;
         budgetPeriodConst = budget.budgetPeriod;
-        setViewDates(startDate, budgetPeriodConst)
+        setViewDates(startDate, budgetPeriodConst);
+
+        const expenses = {
+            "expenses": responseData.expenses,
+            "categories": [budget.name]
+        }
 
         configureViewDates(startDate, budget.budgetPeriod);
         document.getElementById('viewing-start-date').addEventListener('change', (e) => {
@@ -589,7 +593,7 @@ const doughnutText = {
             var wrapText = false;
 
             if (minFontSize === undefined) {
-                minFontSize = 20;
+                minFontSize = 15;
             }
 
             if (minFontSize && fontSizeToUse < minFontSize) {
