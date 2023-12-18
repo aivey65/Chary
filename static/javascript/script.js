@@ -630,7 +630,7 @@ window.addEventListener("popstate", (e) => {
 // Cookie Consent Popup //
 //////////////////////////
 function showCookieConsent(show) {
-    if (show && localStorage.getItem("popupWasShown") != true) {
+    if (show && localStorage.getItem("popupWasShown") != "true") {
         const popupHeader = document.createElement("h3");
         popupHeader.id = "popup-header";
         popupHeader.textContent = "Cookie Consent";
@@ -660,7 +660,7 @@ function showCookieConsent(show) {
         popupWrapper.append(popup);
         acceptButton.addEventListener("click", () => {
             // Set local storage to indicate that the popup has been shown
-            localStorage.setItem("popupWasShown", true);
+            localStorage.setItem("popupWasShown", "true");
 
             popupWrapper.remove();
         })
