@@ -582,6 +582,7 @@ h4 {
 .non-recur-img {
     width: 1.4rem;
     height: auto;
+    visibility: hidden;
 }
 
 .options-div {
