@@ -244,7 +244,7 @@ function generateVariousCharts(items, slideNum, maxShow) {
             options: {
                 elements: {
                     center: {
-                        text: user_currency + formatNumber(data.dataText[0]) + "\n／\n" + user_currency + formatNumber(data.dataText[1]),
+                        text: user_currency + formatNumber(data.dataText[0]) + " " + user_currency + formatNumber(data.dataText[1]),
                         color: COLORS_LIGHT,
                         minFontSize: 14, // Default is 20 (in px), set to false and text will not wrap.
                         lineHeight: 25 // Default is 25 (in px), used for when text wraps
@@ -294,14 +294,22 @@ function generateVariousCharts(items, slideNum, maxShow) {
                     data: data.data,
                     backgroundColor: COLORS_DARK,
                     borderColor: COLORS_GREEN,
+                    pointBackgroundColor: COLORS_GREEN,
+                    pointHoverBackgroundColor: COLORS_DARK,
                     borderWidth: 2.5,
                     tooltipText: "Current Amount",
+                    pointRadius: 1.5,
+                    pointHitRadius: 8,
                 }, {
                     data: data.dataGrey,
                     backgroundColor: COLORS_DARK,
                     borderColor: COLORS_GREY,
+                    pointBackgroundColor: COLORS_GREY,
+                    pointHoverBackgroundColor: COLORS_DARK,
                     borderWidth: 2,
                     tooltipText: "Total Expected Amount",
+                    pointRadius: 1.5,
+                    pointHitRadius: 8,
                 }],
             },
             options: {
@@ -568,6 +576,7 @@ const doughnutText = {
         if (chart.config.options.elements.hasOwnProperty("center")) {
             // Get ctx from string
             var ctx = chart.ctx;
+            ctx.save();
 
             // Get options from the center object in options
             var centerConfig = chart.config.options.elements.center;
@@ -592,11 +601,10 @@ const doughnutText = {
             // Pick a new font size so it will not be larger than the height of label.
             var fontSizeToUse = Math.min(newFontSize, elementHeight, maxFontSize);
             var minFontSize = centerConfig.minFontSize;
-            var lineHeight = centerConfig.lineHeight || 25;
-            var wrapText = false;
+            var wrapText = true;
 
             if (minFontSize === undefined) {
-                minFontSize = 15;
+                minFontSize = 20;
             }
 
             if (minFontSize && fontSizeToUse < minFontSize) {
@@ -609,7 +617,7 @@ const doughnutText = {
             ctx.textBaseline = 'middle';
             var centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
             var centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
-            ctx.font = fontSizeToUse + "px " + fontStyle;
+            ctx.font = "300 " + fontSizeToUse + "px " + fontStyle;
             ctx.fillStyle = color;
 
             if (!wrapText) {
@@ -617,32 +625,30 @@ const doughnutText = {
                 return;
             }
 
-            var words = txt.split(' ');
-            var line = '';
-            var lines = [];
+            const words = txt.split(' ');
+            const lineMetrics = ctx.measureText(words[0]);
+            const lineHeight = lineMetrics.actualBoundingBoxAscent + lineMetrics.actualBoundingBoxDescent;
+            
+            // Top value
+            ctx.fillText(words[0], centerX, centerY - lineHeight);
 
-            // Break words up into multiple lines if necessary
-            for (var n = 0; n < words.length; n++) {
-                var testLine = line + words[n] + ' ';
-                var metrics = ctx.measureText(testLine);
-                var testWidth = metrics.width;
-                if (testWidth > elementWidth && n > 0) {
-                    lines.push(line);
-                    line = words[n] + ' ';
-                } else {
-                    line = testLine;
-                }
-            }
+            // Bottom value
+            ctx.fillText(words[1], centerX, centerY + lineHeight);
 
-            // Move the center up depending on line height and number of lines
-            centerY -= (lines.length / 2) * lineHeight;
+            const width1 = ctx.measureText(words[0]).width;
+            const width2 = ctx.measureText(words[1]).width;
+            const textWidth = (Math.max(width1, width2) + 15) / 2;
+            const chartCenterX = chart.width / 2;
+            const chartCenterY = chart.height / 2;
 
-            for (var n = 0; n < lines.length; n++) {
-                ctx.fillText(lines[n], centerX, centerY);
-                centerY += lineHeight;
-            }
-            //Draw text in center
-            ctx.fillText(line, centerX, centerY);
+            // Fraction bar
+            ctx.beginPath();
+            ctx.strokeStyle = COLORS_LIGHT;
+            ctx.lineWidth = 2;
+            ctx.moveTo(chartCenterX - textWidth, chartCenterY);
+            ctx.lineTo(chartCenterX + textWidth, chartCenterY);
+            ctx.stroke();
+            ctx.restore();
         }
     }
 };
