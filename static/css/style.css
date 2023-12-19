@@ -861,9 +861,10 @@ Creating the navigation bar depending on the size of the user's screen
 
     tbody .main-row {
         display: grid;
-        gap: 5px;
-        grid-template-columns: .3fr 1fr .5fr;
+        gap: 5px var(--mobilePad);
+        grid-template-columns: auto 1fr .5fr;
         grid-template-rows: auto auto auto;
+        align-items: center;
     }
 
     .empty-table tr {

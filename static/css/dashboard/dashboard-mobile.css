@@ -571,7 +571,7 @@ h4 {
     transform: scale(.7);
 }
 
-.recur-img {
+.recur-img, .non-recur-img {
     grid-column: 1;
     grid-row: 1;
     align-self: start;
@@ -580,7 +580,8 @@ h4 {
 }
 
 .non-recur-img {
-    display: none;
+    width: 1.4rem;
+    height: auto;
 }
 
 .options-div {
