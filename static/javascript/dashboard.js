@@ -86,9 +86,9 @@ function updateData(type, period, date, upcoming) {
             var budgetContainer = document.getElementById("budget-container");
             budgetContainer.innerHTML = "";
             if (period == -1) {
-                budgetContainer.append(generateBudgetsUI(responseData.data, userData.currency, new Date(date), true));
+                budgetContainer.append(generateBudgetsUI(responseData.data, userData.currency, date, true));
             } else {
-                budgetContainer.append(generateBudgetsUI(responseData.data, userData.currency, new Date(date), false));
+                budgetContainer.append(generateBudgetsUI(responseData.data, userData.currency, date, false));
             }
         } else if (type == 'expenses') {
             const expenseContainer = document.getElementById("expense-container");

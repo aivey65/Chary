@@ -943,10 +943,13 @@ function generateBudgetsUI(budgets, currency, viewingDate=new Date(), inactive=f
         return emptyDiv;
     }
     
+    // Meta data
+    var formatDateString = viewingDate;
+    if (!(typeof viewingDate == "string")) {
+        formatDateString = getISOFormatDate(viewingDate);
+    }
+    
     for (const key in budgets) {
-        // Meta data
-        const formatDateString = getISOFormatDate(viewingDate);
-
         const budgetPanel = document.createElement('div');
         budgetPanel.classList.add('budget-info');
         budgetPanel.addEventListener('click', function(e) {
