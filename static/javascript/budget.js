@@ -124,7 +124,10 @@ function changeBudgetDates(id, startDate) {
 
     fetch(fetchRequest).then(response => response.json()).then((responseData) => {
         const budget = responseData.budget;
-        const expenses = responseData.expenses;
+        const expenses = {
+            "expenses": responseData.expenses,
+            "categories": [budget.name]
+        }
 
         if (fullExpenses == true) {
             fullExpenseDict = responseData.fullExpenses;
