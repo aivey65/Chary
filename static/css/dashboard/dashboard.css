@@ -313,7 +313,7 @@ h4 {
     grid-template-rows: .2fr 1fr .2fr;
     gap: var(--smallPad);
     width: 25%;
-    min-width: 400px;
+    min-width: 460px;
     min-height: 430px;
     justify-content: space-between;
     align-items: center;
