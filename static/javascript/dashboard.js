@@ -770,9 +770,6 @@ function generateVariousCharts(items, slideNum, maxShow) {
         returnDiv.id = 'limited-charts';
         returnDiv.dataset.slideNum = slideNum;
         returnDiv.classList.add('vertical-container');
-        returnDiv.addEventListener('click', () => {
-            loadExpenseTab();
-        })
         returnDiv.append(expenseHeader, fullchart1);
         return returnDiv;
     } else if (slideNum == 2) {
@@ -868,9 +865,6 @@ function generateVariousCharts(items, slideNum, maxShow) {
         returnDiv.id = 'limited-charts';
         returnDiv.dataset.slideNum = slideNum;
         returnDiv.classList.add('vertical-container');
-        returnDiv.addEventListener('click', () => {
-            loadEarningTab();
-        })
         returnDiv.append(earningHeader, fullchart2);
         return returnDiv;
     }
