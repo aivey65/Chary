@@ -20,3 +20,9 @@ form div {
 label {
     color: var(--Light);
 }
+
+@media screen and (max-width: 767px) {
+    #contact {
+        padding: var(--smallNavPad) var(--mobilePad);
+    }
+}
